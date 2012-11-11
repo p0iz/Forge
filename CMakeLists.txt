@@ -18,7 +18,6 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	set(QT_QMAKE_EXECUTABLE "C:/Qt/4.8.2/bin/qmake.exe")
 	include_directories(
 		${CMAKE_SOURCE_DIR}/deps_w32/glew/include
-		${CMAKE_SOURCE_DIR}/deps_w32/glfw/include
 		${CMAKE_SOURCE_DIR}/deps_w32/glm)
 endif()
 
