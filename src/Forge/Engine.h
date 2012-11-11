@@ -23,7 +23,6 @@
 #include "State/GameStateMachine.hpp"
 
 #include "Time/HighResClock.h"
-#include "Time/Timer.hpp"
 
 namespace Forge {
 
