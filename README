@@ -1,15 +1,19 @@
-README
-======
+Forge - a modular game engine framework
+=======================================
 
-Forge is a modular game engine framework.
+Forge aims to be a game engine framework in the sense that
+you can plug the functionality you need into it and run it
+without getting into every little detail in implementing a
+game.
 
 This project is far from finished yet. At the moment
 you cannot really call it more than a OBJ model viewer.
 
+
 Licensing
 -------
 
-Forge source code is licensed under LGPLv3. 
+Forge source code is licensed under LGPLv3.
 See COPYING and COPYING.LESSER.
 
 All image files, audio and other digital content are
@@ -22,10 +26,10 @@ Some models are textured using modified images from www.cgtextures.com.
 Forge uses the BaroqueScript TrueType font,
 available from http://www.1001freefonts.com/
 
-Building
---------
+Building Forge
+--------------
 
-Forge is built using CMake. 
+Forge is built using CMake.
 
 Verified to build using CMake 2.8 on Win and Linux.
 
@@ -35,6 +39,6 @@ GLM
 GLEW
 Qt (4.8+)
 
-Windows note: Place deps in deps_w32 directory in the repo root for the
-find_library script to find them.
+Windows note: Place deps (GLM and GLEW) in deps_w32 directory in the repo root
+so that the CMake find_library command can find them.
 
