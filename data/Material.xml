@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<Material name="Simple shader">
+	<Technique description="A simple lighting shader">
+		<VertexShader file="SimpleShader.vert" />
+		<FragmentShader file="SimpleShader.frag"/>
+	</Technique>
+</Material>
