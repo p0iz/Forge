@@ -21,7 +21,6 @@
 #include "ForgeGame.h"
 
 #include "Util/Log.h"
-#include "Util/MaterialParser.h"
 
 #include <QApplication>
 #include <QIcon>
@@ -40,8 +39,6 @@ void ForgeGame::init()
 	mRenderer.setCamera(mCamera);
 	mStateMachine.setCurrentState(&mInitialState);
 
-	Forge::MaterialParser parser("./data/Material.xml");
-	parser.parse();
 
 	Log().info() << "Setting icon...\n";
 	QIcon icon("data/images/icon128.png");
