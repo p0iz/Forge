@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -27,7 +27,7 @@
 namespace Forge {
 
 Shader::Shader()
-	: mId(0), mType(0), mFile(nullptr)
+	: mId(0), mType(0)
 {
 }
 
@@ -64,19 +64,15 @@ void Shader::printInfoLog() const
 			char* shaderErrorMessage = new char[logLength];
 
 	glGetShaderInfoLog(mId, logLength, NULL, shaderErrorMessage);
-	printf("Error while compiling %s shader '%s': %s\n",
+	printf("Error while compiling %s shader: %s\n",
 		   (mType == GL_FRAGMENT_SHADER) ? "fragment" : "vertex",
-		   mFile,
 		   shaderErrorMessage);
 	delete[] shaderErrorMessage;
 }
 
-void Shader::loadCode(const char* file)
+void Shader::loadCode(std::string file)
 {
-	mFile = file;
-
-	assert(mFile);
-	std::ifstream shaderFile(mFile);
+	std::ifstream shaderFile(file);
 	if (shaderFile)
 	{
 		std::stringstream shaderBuffer;
