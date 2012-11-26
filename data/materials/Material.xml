@@ -5,14 +5,12 @@
 		<Texture unit="0" src="data/textures/wood.jpg" />
 		<VertexShader file="data/shaders/SimpleShader.vert" />
 		<FragmentShader file="data/shaders/SimpleShader.frag" />
-		<UniformList>
-			<Uniform type="vec4" name="materialAmbient" value="0.1, 0.1, 0.1, 1.0" />
-			<Uniform type="vec4" name="materialDiffuse" value="0.8, 0.8, 0.8, 1.0" /> 
-			<Uniform type="vec4" name="materialSpecular" value="1.0, 1.0, 1.0, 1.0" />
-			<Uniform type="float" name="materialShininess" value="16" />
-			<Uniform type="mat4" name="WorldViewProjectionMatrix" value="WVP" />
-			<Uniform type="mat4" name="WorldViewMatrix" value="WV" />
-			<Uniform type="sampler2D" name="albedo" value="0" />
-		</UniformList>
+		<Uniform type="vec4" name="materialAmbient" value="0.1, 0.1, 0.1, 1.0" />
+		<Uniform type="vec4" name="materialDiffuse" value="0.8, 0.8, 0.8, 1.0" /> 
+		<Uniform type="vec4" name="materialSpecular" value="1.0, 1.0, 1.0, 1.0" />
+		<Uniform type="float" name="materialShininess" value="16" />
+		<Uniform type="mat4" name="WorldViewProjectionMatrix" value="WVP" />
+		<Uniform type="mat4" name="WorldViewMatrix" value="WV" />
+		<Uniform type="sampler2D" name="albedo" value="0" />
 	</Technique>
 </Material>
