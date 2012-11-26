@@ -13,10 +13,12 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories(${CMAKE_SOURCE_DIR}/src/Forge)
 
+add_subdirectory(EditorViews)
+
 add_executable(Editor
 	${Editor_SOURCES}
 	${Editor_HEADERS_MOC}
 	${Editor_UI_SOURCES}
 	${Editor_RESOURCE_SOURCES})
 
-target_link_libraries(Editor Engine ${QT_LIBRARIES})
+target_link_libraries(Editor Engine EditorViews ${QT_LIBRARIES})

@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -23,7 +23,7 @@
 
 #include <QMainWindow>
 
-#include <tr1/memory>
+#include <memory>
 
 namespace Ui {
 class EditorWindow;
@@ -39,6 +39,7 @@ class RendererWidget;
 } // Forge
 
 class EditorInputHandler;
+class MaterialEditorView;
 
 class EditorWindow : public QMainWindow
 {
@@ -54,16 +55,16 @@ private slots:
 	void on_actionToggle_Debug_Axis_triggered();
 
 	void on_debugAxisCheckBox_clicked(bool checked);
-
 private:
 	Ui::EditorWindow *ui;
 
-	std::tr1::shared_ptr<Forge::QtGameStateMachine> mEditorStateMachine;
-	std::tr1::shared_ptr<Forge::Engine> mEngine;
-	std::tr1::shared_ptr<Forge::OrbitalCamera> mCamera;
-	std::tr1::shared_ptr<EditorInputHandler> mInput;
-	std::tr1::shared_ptr<Forge::RendererWidget> mRenderer;
-	std::tr1::shared_ptr<Forge::QtEngineState> mEditorState;
+	std::shared_ptr<Forge::QtGameStateMachine> mEditorStateMachine;
+	std::shared_ptr<Forge::Engine> mEngine;
+	std::shared_ptr<Forge::OrbitalCamera> mCamera;
+	std::shared_ptr<EditorInputHandler> mInput;
+	std::shared_ptr<Forge::RendererWidget> mRenderer;
+	std::shared_ptr<MaterialEditorView> mMaterialEditor;
+	std::shared_ptr<Forge::QtEngineState> mEditorState;
 };
 
 #endif // EDITORWINDOW_H

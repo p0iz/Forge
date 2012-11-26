@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -23,15 +23,17 @@
 
 #include "EditorInputHandler.h"
 
-#include "Engine.h"
+// Editor includes
+#include "EditorViews/MaterialEditorView.hpp"
 
+// Forge includes
+#include "Engine.h"
 #include "Graphics/OrbitalCamera.h"
 #include "Graphics/RendererWidget.h"
-
 #include "State/QtEngineState.h"
 #include "State/QtGameStateMachine.hpp"
 
-#include <QVBoxLayout>
+#include <QTabWidget>
 
 EditorWindow::EditorWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -41,13 +43,24 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	mCamera(new Forge::OrbitalCamera(10.0f)),
 	mInput(new EditorInputHandler(*mCamera)),
 	mRenderer(new Forge::RendererWidget(*mCamera, *mInput)),
+	mMaterialEditor(new MaterialEditorView(*mCamera, *mInput)),
 	mEditorState(new Forge::QtEngineState(*mRenderer, *mInput, mEngine->getGameClock()))
 {
+	QTabWidget* tabWidget = new QTabWidget();
+	tabWidget->addTab(mRenderer.get(), tr("World renderer"));
+	tabWidget->addTab(mMaterialEditor.get(), tr("Material editor"));
+
 	mEditorStateMachine->setCurrentState(mEditorState.get());
 	mEngine->start();
 	ui->setupUi(this);
 	ui->centralwidget->setParent(0);
-	QMainWindow::setCentralWidget(mRenderer.get());
+	QMainWindow::setCentralWidget(tabWidget);
+
+	QObject::connect(
+				tabWidget, SIGNAL(currentChanged(int)), ui->toolStack, SLOT(setCurrentIndex(int)));
+
+	ui->toolStack->setCurrentIndex(0);
+	tabWidget->setCurrentIndex(0);
 }
 
 EditorWindow::~EditorWindow()
