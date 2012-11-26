@@ -1,7 +1,12 @@
 project(Game)
 
-file(GLOB Game_SOURCES *.cpp)
-file(GLOB Game_HEADERS *.h)
+set(Game_SOURCES
+	ForgeGame.cpp
+	GameInputHandler.cpp
+	main.cpp)
+set(Game_HEADERS
+	ForgeGame.h
+	GameInputHandler.h)
 
 include_directories(${CMAKE_SOURCE_DIR}/src/Forge)
 
