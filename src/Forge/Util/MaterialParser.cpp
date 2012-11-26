@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -22,33 +22,36 @@
 
 #include "Util/Log.h"
 
+#include <string>
+
+#include <QXmlStreamReader>
+#include <QFile>
+
 namespace Forge {
 
-MaterialParser::MaterialParser(const char* filename)
-	: mXmlFile(filename), mXmlReader(&mXmlFile)
+Material MaterialParser::parse(std::string filename)
 {
-}
+	QFile xmlFile(filename.c_str());
+	xmlFile.open(QFile::ReadOnly | QFile::Text);
+	QXmlStreamReader xmlReader(&xmlFile);
 
-Material MaterialParser::parse()
-{
-	mXmlFile.open(QFile::ReadOnly | QFile::Text);
 	Material parsedMaterial;
 	Log().info() << "Parsing XML file...\n";
-	while (!mXmlReader.atEnd())
+	while (!xmlReader.atEnd())
 	{
-		if (mXmlReader.readNextStartElement())
+		if (xmlReader.readNextStartElement())
 		{
 			QString element("Read element ");
-			element.append(mXmlReader.name());
+			element.append(xmlReader.name());
 			element.append(" with attributes\n");
-			for (QXmlStreamAttribute attribute : mXmlReader.attributes())
+			for (QXmlStreamAttribute attribute : xmlReader.attributes())
 			{
 				element.append(attribute.name()).append(" : ").append(attribute.value()).append("\n");
 			}
 			Log().info() << element.toLocal8Bit().constData() << "\n";
 		}
 	}
-	mXmlFile.close();
+	xmlFile.close();
 	return parsedMaterial;
 }
 
