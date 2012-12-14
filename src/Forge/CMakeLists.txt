@@ -3,6 +3,9 @@ project(Engine)
 # GLEW dependency (Add PATHS for Windows detection)
 find_library(GLEW_LIBRARY NAMES GLEW glew glew32 PATHS ${CMAKE_SOURCE_DIR}/deps_w32/glew/lib)
 
+# FreeImage dependency
+find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${CMAKE_SOURCE_DIR}/deps_w32/freeimage/lib)
+
 # Copy GLEW dll to Windows build
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	add_custom_command(TARGET Forge
@@ -29,4 +32,5 @@ target_link_libraries(Engine
 	Time
 	Util
 	${GLEW_LIBRARY}
+	${FREEIMAGE_LIBRARY}
 	${OPENGL_LIBRARIES})

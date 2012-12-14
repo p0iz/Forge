@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -55,7 +55,7 @@ void TestData::draw(const glm::mat4x4& viewProjectionMatrix, const glm::mat4x4& 
 void TestData::create()
 {
 	// Craft the test cube
-	testCubeTextureId = ImageLoader::loadBmp("data/textures/wood.bmp");
+	testCubeTextureId = ImageLoader::loadAsTexture("data/textures/wood.png");
 	testCubeVertexShader.create(GL_VERTEX_SHADER);
 	testCubeVertexShader.loadCode("data/shaders/TestCubeShader.vert");
 	testCubeVertexShader.compile();
@@ -113,6 +113,7 @@ void TestData::destroy()
 {
 	delete testCube;
 	testCube = nullptr;
+	glDeleteTextures(1, &testCubeTextureId);
 }
 
 void TestData::updateText(int w, int h)
