@@ -1,3 +1,5 @@
+# Graphics - Text
+
 # FreeType deps
 find_library(FREETYPE_LIB NAMES freetype PATHS ${CMAKE_SOURCE_DIR}/deps_w32/freetype-2.4.10/objs)
 

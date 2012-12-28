@@ -1,3 +1,5 @@
+# Graphics
+
 # Do Qt stuff for Forge headers
 set(MOC_HEADERS
 	RendererWidget.h)
