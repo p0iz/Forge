@@ -61,17 +61,39 @@ const GLint Shader::compile()
 	return result;
 }
 
-void Shader::printInfoLog() const
+std::string Shader::getInfoLog() const
 {
+	std::string infoLog;
 	int logLength;
 	glGetShaderiv(mId, GL_INFO_LOG_LENGTH, &logLength);
-			char* shaderErrorMessage = new char[logLength];
+	char* shaderInfoLog = new char[logLength];
+	glGetShaderInfoLog(mId, logLength, NULL, shaderInfoLog);
+	infoLog.assign(shaderInfoLog);
+	delete[] shaderInfoLog;
+	return infoLog;
+}
 
-	glGetShaderInfoLog(mId, logLength, NULL, shaderErrorMessage);
+void Shader::printInfoLog() const
+{
+	std::string infoLog = getInfoLog();
+
+	const char* shaderType = nullptr;
+	switch (mType)
+	{
+	case GL_FRAGMENT_SHADER:
+		shaderType = "fragment";
+		break;
+	case GL_VERTEX_SHADER:
+		shaderType = "vertex";
+		break;
+	case GL_GEOMETRY_SHADER:
+		shaderType = "geometry";
+		break;
+	}
+
 	printf("Error while compiling %s shader: %s\n",
-		   (mType == GL_FRAGMENT_SHADER) ? "fragment" : "vertex",
-		   shaderErrorMessage);
-	delete[] shaderErrorMessage;
+		   shaderType,
+		   infoLog.c_str());
 }
 
 void Shader::loadCode(std::string file)

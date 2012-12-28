@@ -42,6 +42,8 @@ public:
 		return mId;
 	}
 
+	std::string getInfoLog() const;
+
 private:
 	void printInfoLog() const;
 
