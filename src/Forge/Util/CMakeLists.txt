@@ -1,4 +1,5 @@
 set(UtilSources
+	HashUtils.cpp
 	Log.cpp
 	MaterialParser.cpp)
 
