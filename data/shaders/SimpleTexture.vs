@@ -35,15 +35,18 @@ uniform sampler2D albedo;
 
 uniform mat4 WorldViewMatrix;
 
-struct DirectionalLight
+struct Light
 {
+	vec4 position;
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
-	vec3 direction;
 };
 
-uniform DirectionalLight directional;
+layout (std140) uniform Lights
+{
+  Light lights[];
+}
 
 void main(void)
 {
