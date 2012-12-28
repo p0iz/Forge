@@ -41,6 +41,10 @@ Shader::~Shader()
 
 void Shader::create(GLint type)
 {
+	if (mId)
+	{
+		glDeleteShader(mId);
+	}
 	mType = type;
 	mId = glCreateShader(type);
 }
