@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -47,13 +47,15 @@ void DebugAxis::draw(const glm::mat4x4& mvpMatrix) const
 		return;
 	glBindVertexArray(debugVertexArrayId);
 
+	int previous = 0;
+	glGetIntegerv(GL_CURRENT_PROGRAM, &previous);
 	debugShaderProgram.use();
 
 	glUniformMatrix4fv(debugUniformMVP, 1, GL_FALSE, &mvpMatrix[0][0]);
 
 	glDrawArrays(GL_LINES, 0, 6);
 
-	debugShaderProgram.release();
+	glUseProgram(previous);
 
 	glBindVertexArray(0);
 }
