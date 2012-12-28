@@ -92,6 +92,12 @@ void ShaderProgram::setVertexShader(unsigned int shader)
 	glAttachShader(mId, shader);
 }
 
+void ShaderProgram::setGeometryShader(unsigned int shader)
+{
+	mVertexShaderId = shader;
+	glAttachShader(mId, shader);
+}
+
 void ShaderProgram::setFragmentShader(unsigned int shader)
 {
 	mFragmentShaderId = shader;
