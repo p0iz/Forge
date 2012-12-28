@@ -1,7 +1,9 @@
 project(Editor)
 
 file(GLOB Editor_SOURCES *.cpp)
-file(GLOB Editor_HEADERS *.h)
+set(Editor_HEADERS
+	EditorInputHandler.h
+	EditorWindow.h)
 file(GLOB Editor_UIS *.ui)
 file(GLOB Editor_RESOURCES *.qrc)
 
