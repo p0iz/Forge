@@ -25,7 +25,6 @@
 #include "Graphics/RendererWidget.h"
 #include "Input/QtInputHandler.h"
 #include "Time/HighResClock.h"
-#include "Util/MaterialParser.h"
 
 #include <fstream>
 #include <sstream>
@@ -46,37 +45,6 @@ void Engine::parseEngineConfig()
 	{
 		std::cout << "Could not open config file: " << mConfigFilename << "\n";
 		return;
-	}
-
-	enum SectionType
-	{
-		NONE,
-		MATERIAL
-	};
-
-	SectionType currentSection = NONE;
-	for (std::string configLine; configFile.good(); std::getline(configFile, configLine))
-	{
-		if (configLine.compare("[Materials]") == 0)
-		{
-			currentSection = MATERIAL;
-		}
-		else switch (currentSection)
-		{
-		case NONE:
-			// Skip lines before sections
-			break;
-		case MATERIAL:
-			if (configLine.length() != 0)
-			{
-				MaterialParser matParser;
-				// Parse until next section or EOF
-				matParser.parse(configLine);
-			}
-			break;
-		default:
-			break;
-		}
 	}
 }
 
