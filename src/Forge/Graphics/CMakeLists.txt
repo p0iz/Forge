@@ -24,7 +24,6 @@ set(GraphicsSources
 	RendererWidget.cpp
 	SceneNode.cpp
 	TestData.cpp
-	Uniform.cpp
 	ImageLoader.cpp
 	${MOC_SOURCES})
 
