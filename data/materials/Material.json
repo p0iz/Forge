@@ -1,0 +1,12 @@
+{
+	"Name" : "SimpleTexture",
+	"Description" : "A simple lighting shader",
+	"Technique" : "SimpleTexture",
+	"Properties" : {
+		"DiffuseMap" : "data/textures/wood.png",
+		"AmbientColor" : [ 1.0, 1.0, 1.0 ],
+		"DiffuseColor" : [ 1.0, 1.0, 1.0 ],
+		"SpecularColor" : [ 1.0, 1.0, 1.0 ],
+		"Shininess" : 128.0,
+	}
+}
