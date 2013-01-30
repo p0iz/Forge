@@ -1,9 +1,6 @@
 # Graphics - Light
 
 set(LightSources
-	DirectionalLight.cpp
-	LightSet.cpp
-	PointLight.cpp
-	SpotLight)
+	Light.cpp)
 
 add_library(Light ${LightSources})
