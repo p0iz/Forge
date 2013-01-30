@@ -25,6 +25,7 @@
 #include "Graphics/RendererWidget.h"
 #include "Input/QtInputHandler.h"
 #include "Time/HighResClock.h"
+#include "Util/Log.h"
 
 #include <fstream>
 #include <sstream>
@@ -43,7 +44,7 @@ void Engine::parseEngineConfig()
 	std::ifstream configFile(mConfigFilename);
 	if (!configFile.is_open())
 	{
-		std::cout << "Could not open config file: " << mConfigFilename << "\n";
+		Log::error << "Could not open config file: " << mConfigFilename;
 		return;
 	}
 }
@@ -52,7 +53,8 @@ void Engine::start()
 {
 	if (!mRunning)
 	{
-		std::cout << "Parsing engine config...\n" << std::flush;
+		Log::info << "Parsing engine config...\n";
+		Log::info << "Built on " << __DATE__ << " at " << __TIME__ "\n";
 		parseEngineConfig();
 		mRunning = true;
 		mClock.init();

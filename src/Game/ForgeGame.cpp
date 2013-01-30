@@ -35,16 +35,15 @@ ForgeGame::ForgeGame()
 
 void ForgeGame::init()
 {
-	Log().info() << "Initializing...\n";
+	Forge::Log::info << "Initializing... ";
 	mRenderer.setCamera(mCamera);
 	mStateMachine.setCurrentState(&mInitialState);
 
 
-	Log().info() << "Setting icon...\n";
 	QIcon icon("data/images/icon128.png");
 	mRenderer.setWindowIcon(icon);
 
-	Log().info() << "Initialization done.\n";
+	Forge::Log::info << "done.\n";
 }
 
 int ForgeGame::run()

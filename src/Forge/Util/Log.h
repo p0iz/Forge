@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,31 +12,69 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
 
-#include <fstream>
+#pragma once
 
-class Log
+#include <fstream>
+#include <iostream>
+
+namespace Forge { namespace Log {
+
+class LogStream
 {
 public:
-	Log();
+	LogStream(std::ostream& output, const char* file);
 
-	std::ostream& info();
-	std::ostream& error();
+	template <typename MessageType>
+	LogStream& operator<<(MessageType message);
 
-	static void setInfoFile(const char* infoFileName);
-	static void setErrorFile(const char* errorFileName);
-	static std::string timestamp();
+	bool openLogFile(const char* newFile);
 private:
-	void writeLog(std::ofstream& log, std::ostream& output, const char* message);
-
-	std::ofstream mInfoStream;
-	std::ofstream mErrorStream;
-
-	static const char* infoFileName;
-	static const char* errorFileName;
+	const char* mFileName;
+	std::ofstream mFileStream;
+	std::ostream& mOutputStream;
 };
+
+class LogStreamHandler
+{
+public:
+	LogStreamHandler(std::ostream& output, const char* file);
+
+	bool openLogFile(const char* newFile);
+
+	template <typename MessageType>
+	LogStream& operator<<(MessageType message);
+
+private:
+	static std::string timestamp();
+	LogStream mStream;
+};
+
+template <typename MessageType>
+LogStream& LogStream::operator<<(MessageType logMessage)
+{
+	if (!mFileStream.is_open())
+		openLogFile(mFileName);
+
+	if (mFileStream.good())
+		mFileStream << logMessage;
+
+	mOutputStream << logMessage;
+	return *this;
+}
+
+template <typename MessageType>
+LogStream& LogStreamHandler::operator<<(MessageType message)
+{
+	return mStream << timestamp() << message;
+}
+
+static LogStreamHandler info(std::cout, "./forge.log");
+static LogStreamHandler error(std::cerr, "./forge.err");
+
+}}

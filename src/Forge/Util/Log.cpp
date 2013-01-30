@@ -25,49 +25,40 @@
 #include <sstream>
 #include <ctime>
 
-const char* Log::errorFileName = "./forge.err";
-const char* Log::infoFileName = "./forge.log";
+namespace Forge { namespace Log {
 
-Log::Log()
-{
-	mInfoStream.open(infoFileName, std::ios_base::out|std::ios_base::app);
-	mErrorStream.open(errorFileName, std::ios_base::out|std::ios_base::app);
-}
-
-std::string Log::timestamp()
+std::string LogStreamHandler::timestamp()
 {
 	const time_t currentTime = time(nullptr);
-	char timeStampData[20];
-	strftime(timeStampData, 20, "[%d.%m.%Y %H:%M]", localtime(&currentTime));
+	char timeStampData[23];
+	strftime(timeStampData, 23, "[%d.%m.%Y %H:%M:%S] ", localtime(&currentTime));
 	std::string timeStampString;
 	timeStampString.assign(timeStampData);
 	return timeStampString;
 }
 
-void Log::writeLog(std::ofstream& log, std::ostream& output, const char* message)
+LogStream::LogStream(std::ostream &output, const char* file)
+	: mFileName(file), mOutputStream(output)
 {
-	std::stringstream logLine;
-	logLine << "-=[ " << timestamp() << "]=[ " << message << " ]=-\n";
-	output << logLine.str();
-	log << logLine.str();
 }
 
-std::ostream& Log::info()
+bool LogStream::openLogFile(const char *newFile)
 {
-	return mInfoStream << "[ " << timestamp() << " ] ";
+	if (!mFileStream.is_open())
+		mFileStream.close();
+	mFileStream.open(newFile, std::ios_base::out|std::ios_base::app);
+	return mFileStream.good();
+
 }
 
-std::ostream& Log::error()
+bool LogStreamHandler::openLogFile(const char* newFile)
 {
-	return mErrorStream << "[ " << timestamp() << " ] ";
+	return mStream.openLogFile(newFile);
 }
 
-void Log::setInfoFile(const char* infoFileName)
+LogStreamHandler::LogStreamHandler(std::ostream &output, const char *file)
+	: mStream(output, file)
 {
-	infoFileName = infoFileName;
 }
 
-void Log::setErrorFile(const char* errorFileName)
-{
-	errorFileName = errorFileName;
-}
+}}
