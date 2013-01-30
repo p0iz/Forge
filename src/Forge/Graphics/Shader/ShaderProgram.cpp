@@ -22,6 +22,8 @@
 
 #include <GL/glew.h>
 
+#include <vector>
+
 namespace Forge {
 
 ShaderProgram::ShaderProgram()
@@ -33,12 +35,14 @@ ShaderProgram::~ShaderProgram()
 {
 	int numShaders = 0;
 	glGetProgramiv(mId, GL_ATTACHED_SHADERS, &numShaders);
-	unsigned int shaders[numShaders];
-	glGetAttachedShaders(mId, numShaders, nullptr, shaders);
+
+	std::vector<unsigned int> shaders(numShaders);
+	glGetAttachedShaders(mId, numShaders, nullptr, &shaders[0]);
 	for (unsigned int shader : shaders)
 	{
 		glDetachShader(mId, shader);
 	}
+	glDeleteProgram(mId);
 }
 
 void ShaderProgram::create()
