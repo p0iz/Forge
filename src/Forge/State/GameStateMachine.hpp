@@ -35,7 +35,7 @@ public:
 	virtual void startMachine() = 0;
 	virtual void stopMachine() = 0;
 
-	virtual void setCurrentState(EngineState* state);
+	void setCurrentState(EngineState* state);
 	const EngineState* getCurrentState() const;
 private:
 	EngineState* mCurrentEngineState;
