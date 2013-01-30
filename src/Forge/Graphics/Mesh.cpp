@@ -18,12 +18,8 @@
  *
  */
 
-#include "ImageLoader.h"
 #include "Mesh.h"
 #include "Vertex.h"
-
-#include "Shader/Shader.h"
-#include "Shader/ShaderProgram.h"
 
 #include <cassert>
 #include <vector>
@@ -43,7 +39,6 @@ Mesh::Mesh(
 	  rotationMatrix(),
 	  modelMatrix(1.0f)
 {
-
 	const size_t vertexSize = sizeof(Vertex);
 
 	// Generate vertex array and buffers
@@ -66,6 +61,14 @@ Mesh::Mesh(
 	// Normal attribute
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->normal));
 	glEnableVertexAttribArray(2);
+
+	// Tangent attribute
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->tangent));
+	glEnableVertexAttribArray(3);
+
+	// Bitangent attribute
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->bitangent));
+	glEnableVertexAttribArray(4);
 
 	glGenBuffers(1, &mElementBufferId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBufferId);
@@ -90,9 +93,6 @@ Mesh::~Mesh()
 
 	// Delete vertex array
 	glDeleteVertexArrays(1, &mVertexArrayId);
-
-	// Unbind shader program
-	glUseProgram(0);
 }
 
 const glm::mat4x4 Mesh::getWorldMatrix() const
