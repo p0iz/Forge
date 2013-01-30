@@ -32,9 +32,9 @@ class EditorWindow;
 // Forward declarations
 namespace Forge {
 class Engine;
+class OrbitalCamera;
 class QtEngineState;
 class QtGameStateMachine;
-class OrbitalCamera;
 class RendererWidget;
 } // Forge
 
@@ -55,6 +55,7 @@ private slots:
 	void on_actionToggle_Debug_Axis_triggered();
 
 	void on_debugAxisCheckBox_clicked(bool checked);
+
 private:
 	Ui::EditorWindow *ui;
 
