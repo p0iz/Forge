@@ -27,7 +27,7 @@
      <x>0</x>
      <y>0</y>
      <width>756</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -73,7 +73,7 @@
      <item>
       <widget class="QStackedWidget" name="toolStack">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="page">
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -81,6 +81,13 @@
           <widget class="QCheckBox" name="debugAxisCheckBox">
            <property name="text">
             <string>Show debug axis</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="reloadShaders_world">
+           <property name="text">
+            <string>Reload Shaders</string>
            </property>
           </widget>
          </item>

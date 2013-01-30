@@ -42,6 +42,7 @@ public:
 
 	void setTestUniforms(const glm::mat4x4& viewMatrix);
 
+	void reloadTestMaterial();
 
 private:
 	Material material;

@@ -59,6 +59,9 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	QObject::connect(
 				tabWidget, SIGNAL(currentChanged(int)), ui->toolStack, SLOT(setCurrentIndex(int)));
 
+	QObject::connect(
+				ui->reloadShaders_world, SIGNAL(clicked()), mRenderer.get(), SLOT(reloadMaterials()));
+
 	ui->toolStack->setCurrentIndex(0);
 	tabWidget->setCurrentIndex(0);
 }

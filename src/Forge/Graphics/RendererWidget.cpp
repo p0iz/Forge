@@ -70,6 +70,11 @@ void RendererWidget::toggleFullscreen()
 	}
 }
 
+void RendererWidget::reloadMaterials()
+{
+	mTestData.reloadTestMaterial();
+}
+
 void RendererWidget::setupScene()
 {
 	mTestData.create();

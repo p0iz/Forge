@@ -53,6 +53,9 @@ public:
 
 	void toggleFullscreen();
 
+public slots:
+	void reloadMaterials();
+
 protected:
 	virtual void initializeGL();
 	virtual void resizeGL(int w, int h);

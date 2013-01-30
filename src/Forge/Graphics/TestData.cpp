@@ -134,7 +134,11 @@ void TestData::setTestUniforms(const glm::mat4x4& viewMatrix)
 	std::stringstream viewString;
 	viewString << "Light 2 color: " << mTestLights[1].color.x << ", " << mTestLights[1].color.y << ", " << mTestLights[1].color.z;
 	mViewText.setText(viewString.str().c_str());
+}
 
+void TestData::reloadTestMaterial()
+{
+	material.loadMaterial("data/materials/Material.json", mTechniqueLibrary);
 }
 
 } // namespace Forge
