@@ -11,4 +11,4 @@ set(Game_HEADERS
 include_directories(${CMAKE_SOURCE_DIR}/src/Forge)
 
 add_executable(Game ${Game_SOURCES})
-target_link_libraries(Game Engine ${QT_LIBRARIES})
+target_link_libraries(Game Forge ${QT_LIBRARIES})

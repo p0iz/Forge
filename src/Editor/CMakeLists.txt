@@ -23,4 +23,4 @@ add_executable(Editor
 	${Editor_UI_SOURCES}
 	${Editor_RESOURCE_SOURCES})
 
-target_link_libraries(Editor Engine EditorViews ${QT_LIBRARIES})
+target_link_libraries(Editor Forge EditorViews ${QT_LIBRARIES})

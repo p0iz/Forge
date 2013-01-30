@@ -1,4 +1,4 @@
-project(Engine)
+project(Forge)
 
 # GLEW dependency (Add PATHS for Windows detection)
 find_library(GLEW_LIBRARY NAMES GLEW glew glew32 PATHS ${CMAKE_SOURCE_DIR}/deps_w32/glew/lib)
@@ -24,8 +24,8 @@ add_subdirectory(Input)
 add_subdirectory(Time)
 add_subdirectory(Util)
 
-add_library(Engine Engine.cpp)
-target_link_libraries(Engine
+add_library(Forge Engine.cpp)
+target_link_libraries(Forge
 	State
 	Graphics
 	Input
