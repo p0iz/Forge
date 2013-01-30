@@ -6,8 +6,10 @@ you can plug the functionality you need into it and run it
 without getting into every little detail in implementing a
 game.
 
-This project is far from finished yet. At the moment
-you cannot really call it more than a OBJ model viewer.
+This project is far from finished yet.
+
+It currently just loads a mesh and material from
+hard-coded paths and displays duplicates of it.
 
 
 Licensing
@@ -37,7 +39,7 @@ Forge has the following dependencies:
 
 GLM
 GLEW
-Qt (4.8+)
+Qt (tested on 4.8+)
 
 Windows note: Place deps (GLM and GLEW) in deps_w32 directory in the repo root
 so that the CMake find_library command can find them.
