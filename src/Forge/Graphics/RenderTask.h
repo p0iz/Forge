@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,29 +12,38 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
 
-#ifndef OBJMODELLOADER_H
-#define OBJMODELLOADER_H
+#pragma once
+
+#include "Light/Light.hpp"
 
 #include <glm/glm.hpp>
 
 namespace Forge {
 
-class Mesh;
+class Camera;
 
-/* Class that loads a Mesh from a Wavefront OBJ */
-
-class MeshLoader
+class RenderTask
 {
 public:
-		static Mesh* loadObjModel(const char* objFile);
+	explicit RenderTask(const Camera& camera);
+
+	const Camera& getCamera() const;
+
+	const glm::mat4x4& getModelTransform() const;
+
+	void setModelTransform(const glm::mat4x4& modelTransform);
+
+	Light lights[Light::MAX_LIGHTS];
+
+private:
+	const Camera& mCamera;
+	glm::mat4x4 mModelTransform;
 };
 
-} // namespace Forge
-
-#endif // OBJMODELLOADER_H
+}

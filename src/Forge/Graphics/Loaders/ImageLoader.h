@@ -18,44 +18,11 @@
  *
  */
 
-#ifndef TESTDATA_H
-#define TESTDATA_H
+#pragma once
 
-#include "Mesh.h"
-#include "Material/Material.h"
-#include "Material/Technique/TechniqueLibrary.h"
-#include "Light/Light.hpp"
-#include "Text/Text.hpp"
+/* Loaders for image files. Return OpenGL names for the allocated resources. */
+namespace Forge { namespace ImageLoader {
 
-namespace Forge {
+	unsigned int loadAsTexture(const char* imageFile);
 
-class RenderTask;
-
-class TestData
-{
-public:
-	void draw(RenderTask& task);
-	void create();
-	void destroy();
-
-	void updateText(int w, int h);
-
-	void setTestUniforms(const glm::mat4x4& viewMatrix);
-
-
-private:
-	Material material;
-
-	TechniqueLibrary mTechniqueLibrary;
-
-	std::vector<Mesh*> meshes;
-
-	Text mLightText;
-	Text mViewText;
-
-	Light mTestLights[Light::MAX_LIGHTS];
-};
-
-} // namespace Forge
-
-#endif // TESTDATA_H
+}}

@@ -20,100 +20,103 @@
 
 #include "TestData.h"
 
-#include "Graphics/MeshLoader.h"
-#include "Graphics/ImageLoader.h"
+#include "Camera.h"
+#include "RenderTask.h"
+
+#include "Material/Technique/SimpleTexture.h"
+#include "Material/Technique/DefaultTechnique.h"
+
+#include "Loaders/ImageLoader.h"
+#include "Loaders/MeshLoader.h"
+
 #include "Util/Log.h"
 #include "Time/HighResClock.h"
 
+#include <algorithm>
 #include <cassert>
 #include <sstream>
 
 namespace Forge {
 
-TestData::~TestData()
+void TestData::draw(RenderTask& task)
 {
-	destroy();
-}
+	for (int i=0; i < Light::MAX_LIGHTS ; ++i) {
+		task.lights[i] = mTestLights[i];
+		task.lights[i].position = task.getCamera().getViewMatrix() * task.lights[i].position;
+	}
 
-void TestData::draw(const glm::mat4x4& viewProjectionMatrix, const glm::mat4x4& viewMatrix)
-{
-	wvpMatrix = viewProjectionMatrix * testCube->getWorldMatrix();
-	worldViewMatrix = viewMatrix * testCube->getWorldMatrix();
-	testCubeShaderProgram.use();
-	glBindTexture(GL_TEXTURE_2D, testCubeTextureId);
-	setTestUniforms(viewMatrix);
-	testCube->draw();
-	glBindTexture(GL_TEXTURE_2D, 0);
+	// For each material, draw the meshes that use the material
+	for (Mesh* mesh : meshes)
+	{
+		task.setModelTransform(mesh->getWorldMatrix());
+		material.beginMesh(task);
+		// Draw first cube
+		mesh->draw();
+		// Draw debugging axes
+		DebugAxis::getInstance().draw(task.getCamera().getViewProjectionMatrix() * task.getModelTransform());
+	}
 
-	// Draw debugging axes
-	DebugAxis::getInstance().draw(wvpMatrix);
+	setTestUniforms(task.getCamera().getViewMatrix());
 
+	// Draw GUI
 	mLightText.draw();
 	mViewText.draw();
 }
 
 void TestData::create()
 {
-	// Craft the test cube
-	testCubeTextureId = ImageLoader::loadAsTexture("data/textures/wood.png");
-	testCubeVertexShader.create(GL_VERTEX_SHADER);
-	testCubeVertexShader.loadCode("data/shaders/TestCubeShader.vert");
-	testCubeVertexShader.compile();
-	testCubeFragmentShader.create(GL_FRAGMENT_SHADER);
-	testCubeFragmentShader.loadCode("data/shaders/TestCubeShader.frag");
-	testCubeFragmentShader.compile();
-	testCubeShaderProgram.create();
-	testCubeShaderProgram.setVertexShader(testCubeVertexShader.getId());
-	testCubeShaderProgram.setFragmentShader(testCubeFragmentShader.getId());
-	if (testCubeShaderProgram.link() != GL_TRUE)
+	mTechniqueLibrary.add(new DefaultTechnique);
+	mTechniqueLibrary.add(new SimpleTexture);
+	material.loadMaterial("data/materials/Material.json", mTechniqueLibrary);
+
+#define NUMBER_OF_CUBES 10
+#define CIRCLE_WIDTH 10
+
+	for (int i = 0; i < NUMBER_OF_CUBES; ++i)
 	{
-		std::cout << testCubeShaderProgram.getProgramInfoLog() << std::flush;
+		meshes.push_back(MeshLoader::loadObjModel("data/crate.obj"));
+		meshes[i]->translate(CIRCLE_WIDTH*glm::sin(glm::radians(360.0-i*36)),CIRCLE_WIDTH*glm::cos(glm::radians(360.0-i*36)),0.0f);
+		meshes[i]->rotate(glm::radians(360.0-i*36), glm::vec3(0,1,0));
 	}
-
-	// Get uniform locations
-
-	wvpLocation = testCubeShaderProgram.getUniformLocation("WorldViewProjectionMatrix");
-	worldViewLocation = testCubeShaderProgram.getUniformLocation("WorldViewMatrix");
-
-	testLightAmbientLoc = testCubeShaderProgram.getUniformLocation("directional.ambient");
-	testLightDiffuseLoc = testCubeShaderProgram.getUniformLocation("directional.diffuse");
-	testLightSpecularLoc = testCubeShaderProgram.getUniformLocation("directional.specular");
-	testLightDirectionLoc = testCubeShaderProgram.getUniformLocation("directional.direction");
-
-	materialAmbientLoc = testCubeShaderProgram.getUniformLocation("materialAmbient");
-	materialDiffuseLoc = testCubeShaderProgram.getUniformLocation("materialDiffuse");
-	materialSpecularLoc = testCubeShaderProgram.getUniformLocation("materialSpecular");
-	materialShininessLoc = testCubeShaderProgram.getUniformLocation("materialShininess");
-
-	testCube = MeshLoader::loadObjModel("data/cube.obj");
-	assert(testCube != nullptr);
 
 	// Create the test text
 	mLightText.initialize();
 	mLightText.setFont("data/fonts/BaroqueScript.ttf");
-	mLightText.setFontSize(24);
+	mLightText.setFontSize(12);
 	mLightText.setPosition(-0.99,0.5);
 	mLightText.setColor(0.0f,0.0f,0.0f,1.0f);
-	mLightText.setText("Holy shit! This works! A great success!");
 	mViewText.initialize();
 	mViewText.setFont("data/fonts/BaroqueScript.ttf");
-	mViewText.setFontSize(24);
+	mViewText.setFontSize(12);
 	mViewText.setPosition(-0.99, 0.75);
 	mViewText.setColor(1.0f,0.0f,1.0f,0.2f);
 
 
 	// Add test light
-	mTestLight.ambient = glm::vec4(0.0f, 0.5f, 0.5f, 0.2f);
-	mTestLight.diffuse = glm::vec4(0.0f, 1.0f, 0.8f, 0.8f);
-	mTestLight.specular = glm::vec4(0.9f, 1.0f, 0.9f, 1.0f);
-	mTestLight.direction = glm::vec3(-1.0f, 1.0f, 0.2f);
+	std::for_each(mTestLights, &mTestLights[Light::MAX_LIGHTS], [](Light& light)
+	{
+		light.position =				glm::vec4(0.0f);
+		light.color =					glm::vec4(0.0f);
+		light.attenuation.constant =	0.1f;
+		light.attenuation.linear =		0.1f;
+		light.attenuation.quadratic =	0.000025f;
+	});
+
+	mTestLights[0].position =	glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
+	mTestLights[0].color =		glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	mTestLights[1].position =	glm::vec4(-10.0f, 10.0f, 5.0f, 1.0f);
+	mTestLights[1].color =		glm::vec4(0.0f, 0.0f, 1.0f, 0.8f);
+	mTestLights[2].position =	glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	mTestLights[2].color =		glm::vec4(1.0f, 0.0f, 0.0f, 0.5f);
+	mTestLights[3].position =	glm::vec4(10.0f, -10.0f, 5.0f, 1.0f);
+	mTestLights[4].color =		glm::vec4(1.0f, 0.0f, 0.0f, 0.8f);
+	Light::ambientColor =		glm::vec4(0.1f,0.1f,0.1f,0.8f);
 }
 
 void TestData::destroy()
 {
-	delete testCube;
-	testCube = nullptr;
-	glDeleteTextures(1, &testCubeTextureId);
+	for (Mesh* mesh : meshes)
+		delete mesh;
 }
 
 void TestData::updateText(int w, int h)
@@ -122,23 +125,16 @@ void TestData::updateText(int w, int h)
 	mViewText.setScreenAttributes(w, h);
 }
 
+// Update per frame
 void TestData::setTestUniforms(const glm::mat4x4& viewMatrix)
 {
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &wvpMatrix[0][0]);
-	glUniformMatrix4fv(worldViewLocation, 1, GL_FALSE, &worldViewMatrix[0][0]);
-	glUniform4fv(testLightAmbientLoc, 1, &mTestLight.ambient[0]);
-	glUniform4fv(testLightDiffuseLoc, 1, &mTestLight.diffuse[0]);
-	glUniform4fv(testLightSpecularLoc, 1, &mTestLight.specular[0]);
-	glUniform1f(materialShininessLoc, 16.0f);
-	glm::vec3 lightDirection = (glm::mat3(viewMatrix) * mTestLight.direction);
 	std::stringstream lightString;
-	lightString << "Light direction: " << lightDirection[0] << ", " << lightDirection[1] << ", " << lightDirection[2];
+	lightString << "Light 1 color: " << mTestLights[0].color.x << ", " << mTestLights[0].color.y << ", " << mTestLights[0].color.z;
 	mLightText.setText(lightString.str().c_str());
 	std::stringstream viewString;
-	viewString << "View direction: " << viewMatrix[3][0] << ", " << viewMatrix[3][1] << ", " << viewMatrix[3][2];
+	viewString << "Light 2 color: " << mTestLights[1].color.x << ", " << mTestLights[1].color.y << ", " << mTestLights[1].color.z;
 	mViewText.setText(viewString.str().c_str());
 
-	glUniform3fv(testLightDirectionLoc, 1, &lightDirection[0]);
 }
 
 } // namespace Forge

@@ -20,6 +20,8 @@
 
 #include "RendererWidget.h"
 
+#include "RenderTask.h"
+
 #include "Input/QtInputHandler.h"
 
 #include <iostream>
@@ -75,7 +77,8 @@ void RendererWidget::setupScene()
 
 void RendererWidget::drawScene()
 {
-	mTestData.draw(mCamera.getViewProjectionMatrix(), mCamera.getViewMatrix());
+	RenderTask task(mCamera);
+	mTestData.draw(task);
 }
 
 void RendererWidget::tearDownScene()

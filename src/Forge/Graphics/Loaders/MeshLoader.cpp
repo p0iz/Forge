@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,16 +12,16 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
 
 #include "MeshLoader.h"
-#include "Mesh.h"
 
-#include "Vertex.h"
+#include "Graphics/Mesh.h"
+#include "Graphics/Vertex.h"
 
 #include <fstream>
 #include <sstream>
@@ -34,10 +34,10 @@ Mesh* MeshLoader::loadObjModel(
 		const char *objFile)
 {
 	std::vector<glm::vec3> positions;
-	std::vector<glm::vec2> uvs;
+	std::vector<glm::vec2> texCoords;
 	std::vector<glm::vec3> normals;
 	std::vector<GLuint> positionIndices;
-	std::vector<GLuint> uvIndices;
+	std::vector<GLuint> texIndices;
 	std::vector<GLuint> normalIndices;
 	// Read obj file and instantiate the drawable
 	std::ifstream inputFile;
@@ -55,24 +55,27 @@ Mesh* MeshLoader::loadObjModel(
 		if (readLine.length() > 0)
 		{
 			// Create position, texture and normal data vectors
+			std::string identifier;
+			std::stringstream lineStream(readLine);
+			lineStream >> identifier;
 			glm::vec3 pos;
-			glm::vec2 uv;
-			switch (readLine[0])
+			glm::vec2 texCoord;
+			switch (identifier[0])
 			{
 			case 'v':
 				{
-					switch (readLine[1])
+					switch(identifier[1])
 					{
-					case ' ':
-						sscanf(readLine.c_str(), "v %f %f %f", &pos[0], &pos[1], &pos[2]);
+					case '\0':
+						lineStream >> pos.x >> pos.y >>pos.z;
 						positions.push_back(pos);
 						break;
 					case 't':
-						sscanf(readLine.c_str(), "vt %f %f", &uv[0], &uv[1]);
-						uvs.push_back(uv);
+						lineStream >> texCoord.s >>texCoord.t;
+						texCoords.push_back(texCoord);
 						break;
 					case 'n':
-						sscanf(readLine.c_str(), "vn %f %f %f", &pos[0], &pos[1], &pos[2]);
+						lineStream >> pos.x >> pos.y >>pos.z;
 						normals.push_back(pos);
 						break;
 					}
@@ -84,13 +87,13 @@ Mesh* MeshLoader::loadObjModel(
 					GLuint v[3],t[3],n[3];
 					sscanf(readLine.c_str(),"f %u/%u/%u %u/%u/%u %u/%u/%u", &v[0], &t[0], &n[0], &v[1], &t[1], &n[1], &v[2], &t[2], &n[2]);
 					positionIndices.push_back(v[0]-1);
-					uvIndices.push_back(t[0]-1);
+					texIndices.push_back(t[0]-1);
 					normalIndices.push_back(n[0]-1);
 					positionIndices.push_back(v[1]-1);
-					uvIndices.push_back(t[1]-1);
+					texIndices.push_back(t[1]-1);
 					normalIndices.push_back(n[1]-1);
 					positionIndices.push_back(v[2]-1);
-					uvIndices.push_back(t[2]-1);
+					texIndices.push_back(t[2]-1);
 					normalIndices.push_back(n[2]-1);
 					break;
 				}
@@ -106,11 +109,8 @@ Mesh* MeshLoader::loadObjModel(
 	for (unsigned int i = 0; i < positionIndices.size() ; ++i)
 	{
 		// Create a vertex from the individual indices
-		GLuint iv, it, in;
-		iv = positionIndices[i];
-		it = uvIndices[i];
-		in = normalIndices[i];
-		Vertex vertex(positions[iv], uvs[it], normals[in]);
+		Vertex vertex(
+			positions[positionIndices[i]], texCoords[texIndices[i]], normals[normalIndices[i]]);
 		vertices.push_back(vertex);
 		elements.push_back(i);
 	}

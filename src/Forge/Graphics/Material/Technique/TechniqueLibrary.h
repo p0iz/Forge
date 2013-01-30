@@ -14,16 +14,33 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
 #pragma once
 
-/* Loaders for image files. Return OpenGL names for the allocated resources. */
+#include "Graphics/Material/Technique/Technique.h"
 
-namespace Forge { namespace ImageLoader {
+#include <unordered_map>
+#include <memory>
 
-	unsigned int loadAsTexture(const char* imageFile);
+namespace Forge {
 
-}}
+typedef std::shared_ptr<Technique> TechniquePtr;
+
+/* TechniqueLibrary is a collection of techniques
+ * that can be used to retrieve a technique copies */
+class TechniqueLibrary
+{
+public:
+	~TechniqueLibrary();
+	void add(Technique* technique);
+	TechniquePtr get(size_t techniqueName) const;
+private:
+	typedef std::unordered_map<size_t, TechniquePtr> TechniqueMap;
+	typedef std::pair<size_t, TechniquePtr> TechniquePair;
+	TechniqueMap mTechniqueMap;
+};
+
+}

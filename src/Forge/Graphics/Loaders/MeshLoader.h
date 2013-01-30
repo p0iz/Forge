@@ -18,44 +18,22 @@
  *
  */
 
-#ifndef TESTDATA_H
-#define TESTDATA_H
+#ifndef OBJMODELLOADER_H
+#define OBJMODELLOADER_H
 
-#include "Mesh.h"
-#include "Material/Material.h"
-#include "Material/Technique/TechniqueLibrary.h"
-#include "Light/Light.hpp"
-#include "Text/Text.hpp"
+#include <glm/glm.hpp>
 
 namespace Forge {
 
-class RenderTask;
+class Mesh;
 
-class TestData
+/* Class that loads a Mesh from a Wavefront OBJ */
+class MeshLoader
 {
 public:
-	void draw(RenderTask& task);
-	void create();
-	void destroy();
-
-	void updateText(int w, int h);
-
-	void setTestUniforms(const glm::mat4x4& viewMatrix);
-
-
-private:
-	Material material;
-
-	TechniqueLibrary mTechniqueLibrary;
-
-	std::vector<Mesh*> meshes;
-
-	Text mLightText;
-	Text mViewText;
-
-	Light mTestLights[Light::MAX_LIGHTS];
+		static Mesh* loadObjModel(const char* objFile);
 };
 
 } // namespace Forge
 
-#endif // TESTDATA_H
+#endif // OBJMODELLOADER_H

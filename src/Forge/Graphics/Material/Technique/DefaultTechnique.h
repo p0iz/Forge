@@ -14,48 +14,35 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#ifndef TESTDATA_H
-#define TESTDATA_H
+#pragma once
 
-#include "Mesh.h"
-#include "Material/Material.h"
-#include "Material/Technique/TechniqueLibrary.h"
-#include "Light/Light.hpp"
-#include "Text/Text.hpp"
+#include "Technique.h"
+
+#include "../../Shader/Shader.h"
+#include "../../Shader/ShaderProgram.h"
 
 namespace Forge {
 
-class RenderTask;
-
-class TestData
+/* Default technique that just renders and ugly pink */
+class DefaultTechnique : public Technique
 {
 public:
-	void draw(RenderTask& task);
-	void create();
-	void destroy();
-
-	void updateText(int w, int h);
-
-	void setTestUniforms(const glm::mat4x4& viewMatrix);
-
-
+	DefaultTechnique();
+	virtual Technique* clone();
+	virtual void create();
+	virtual void destroy();
+	virtual void beginMesh(const RenderTask& task);
 private:
-	Material material;
+	Shader vertexShader;
+	Shader fragmentShader;
+	ShaderProgram shaderProgram;
 
-	TechniqueLibrary mTechniqueLibrary;
-
-	std::vector<Mesh*> meshes;
-
-	Text mLightText;
-	Text mViewText;
-
-	Light mTestLights[Light::MAX_LIGHTS];
+	// Uniform location
+	unsigned int wvpLocation;
 };
 
-} // namespace Forge
-
-#endif // TESTDATA_H
+}

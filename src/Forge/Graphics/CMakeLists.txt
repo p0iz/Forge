@@ -14,18 +14,22 @@ add_subdirectory(Text)
 # Add Light component to build
 add_subdirectory(Light)
 
+# Add Loaders component to build
+add_subdirectory(Loaders)
+
+# Add Material component to build
+add_subdirectory(Material)
+
 set(GraphicsSources
 	Camera.cpp
 	DebugAxis.cpp
-	Material.cpp
 	Mesh.cpp
-	MeshLoader.cpp
 	OrbitalCamera.cpp
 	RendererWidget.cpp
+	RenderTask.cpp
 	SceneNode.cpp
 	TestData.cpp
-	ImageLoader.cpp
 	${MOC_SOURCES})
 
 add_library(Graphics ${GraphicsSources})
-target_link_libraries(Graphics Shader Text ${QT_LIBRARIES})
+target_link_libraries(Graphics Light Loaders Shader Material Text ${QT_LIBRARIES})

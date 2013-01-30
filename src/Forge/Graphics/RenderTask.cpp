@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,37 +12,36 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
 
-#pragma once
+#include "RenderTask.h"
 
-#include "Shader/Shader.h"
-#include "Shader/ShaderProgram.h"
+#include "Camera.h"
 
 namespace Forge {
 
-class Material
+RenderTask::RenderTask(const Camera& camera)
+	: mCamera(camera)
 {
-public:
-	void setVertexShader(const char* file);
-	void setFragmentShader(const char* file);
-	void buildShaderProgram();
+}
 
-	void reloadMaterial();
-	void apply();
-private:
-	void compileShaders();
-	void linkShaderProgram();
+const Camera& RenderTask::getCamera() const
+{
+	return mCamera;
+}
 
-	const char* mVertexShaderFile;
-	const char* mFragmentShaderFile;
-	Shader mVertexShader;
-	Shader mFragmentShader;
-	ShaderProgram mShaderProgram;
-};
+const glm::mat4x4& RenderTask::getModelTransform() const
+{
+	return mModelTransform;
+}
 
-} // namespace Forge
+void RenderTask::setModelTransform(const glm::mat4x4& modelTransform)
+{
+	mModelTransform = modelTransform;
+}
+
+}

@@ -18,49 +18,48 @@
  *
  */
 
-#version 330
+#version 330 core
 
-in vec2 UV;
-in vec3 viewNormal;
-in vec3 viewVertex; // View vector
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec2 vertexUV;
+layout(location = 2) in vec3 normal;
 
-out vec3 color;
-
-uniform vec4 materialAmbient;
-uniform vec4 materialDiffuse;
-uniform vec4 materialSpecular;
-uniform float materialShininess;
-
-uniform sampler2D albedo;
-
-uniform mat4 WorldViewMatrix;
+out vec2 UV;
+out vec3 view_space_normal;
+out vec3 view_space_vertex;
 
 struct Light
 {
 	vec4 position;
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
+	vec4 color;
+	float constant;
+	float linear;
+	float quadratic;
 };
 
 layout (std140) uniform Lights
 {
-  Light lights[];
-}
+  Light lights[8]; // max 8 lights per mesh
+};
+
+out float attenuation[8];
+
+uniform mat4 WorldViewProjectionMatrix;
+uniform mat4 WorldViewMatrix;
 
 void main(void)
 {
-	vec3 halfway = normalize(directional.direction + viewVertex);
-
-	float diffuseIntensity =
-		max(0.0f, dot(viewNormal, directional.direction));
-
-	float specularIntensity = 
-		pow(max(0.0f, dot(viewNormal, halfway)), 128.0f);
-
-	color = 
-		texture2D(albedo, UV).rgb * 
-		((directional.ambient.rgb * directional.ambient.a) + 
-		(directional.diffuse.rgb * directional.diffuse.a * diffuseIntensity) +
-		(specularIntensity * directional.specular.rgb * directional.specular.a));
+    gl_Position = WorldViewProjectionMatrix * vec4(position,1);
+	view_space_normal = normalize(mat3(WorldViewMatrix) * normal);
+	view_space_vertex = mat3(WorldViewMatrix) * position;
+    UV = vertexUV;
+	
+	for (int i = 0; i < lights.length(); ++i) {
+		if (lights[i].position.w > 0.0f) {
+			// Calculate attenuation
+			float d = distance(lights[i].position.xyz, view_space_vertex);
+			attenuation[i] = 1.0f / (lights[i].constant + lights[i].linear * d + lights[i].quadratic * d * d);
+		}
+	}
+	
 }

@@ -18,23 +18,58 @@
  *
  */
 
-#version 330 core
+#version 330
 
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec2 vertexUV;
-layout(location = 2) in vec3 normal;
+in vec2 UV;
+in vec3 view_space_normal;
+in vec3 view_space_vertex;
 
-out vec2 UV;
-out vec3 viewNormal;
-out vec3 viewVertex;
+out vec3 color;
 
-uniform mat4 WorldViewProjectionMatrix;
-uniform mat4 WorldViewMatrix;
+uniform vec3 materialAmbient;
+uniform vec3 materialDiffuse;
+uniform vec3 materialSpecular;
+uniform float materialShininess;
+
+uniform sampler2D albedo;
+
+struct Light
+{
+	vec4 position;
+	vec4 color;
+	float constant;
+	float linear;
+	float quadratic;
+};
+
+layout (std140) uniform Lights
+{
+  Light lights[8]; // max 8 lights per mesh
+};
+
+in float attenuation[8];
+
+uniform vec4 ambient;
 
 void main(void)
 {
-    gl_Position = WorldViewProjectionMatrix * vec4(position,1);
-		viewNormal = normalize(mat3(WorldViewMatrix) * normal);
-		viewVertex = normalize(mat3(WorldViewMatrix) * position);
-    UV = vertexUV;
+	vec3 texColor = texture2D(albedo, UV).rgb;
+	vec3 lighting = ambient.rgb * ambient.a * texColor * materialAmbient;
+	for (int i = 0; i < lights.length(); ++i) {
+		vec3 view_space_light = normalize(-vec3(lights[i].position));
+		float diffuseIntensity = dot(view_space_normal, view_space_light);
+		if (diffuseIntensity > 0.0f) {
+			vec3 lightContribution = vec3(0.0f);
+			vec3 halfway = normalize(view_space_light + view_space_vertex);
+			float specularIntensity = pow(max(0.0f, dot(view_space_normal, halfway)), materialShininess);
+			lightContribution += materialDiffuse * texColor * diffuseIntensity;
+			lightContribution += materialSpecular * specularIntensity;
+			lightContribution *= (lights[i].color.rgb * lights[i].color.a);
+			if (lights[i].position.w > 0.0f) {
+				lightContribution *= attenuation[i];
+			}
+			lighting += lightContribution;
+		}
+	}
+	color = texture2D(albedo, UV).rgb * lighting;
 }

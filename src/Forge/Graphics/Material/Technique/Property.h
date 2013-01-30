@@ -14,48 +14,46 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#ifndef TESTDATA_H
-#define TESTDATA_H
+#pragma once
 
-#include "Mesh.h"
-#include "Material/Material.h"
-#include "Material/Technique/TechniqueLibrary.h"
-#include "Light/Light.hpp"
-#include "Text/Text.hpp"
+#include <vector>
 
 namespace Forge {
 
-class RenderTask;
-
-class TestData
+/* Nasty class that can be a pointer-to or a value depending on the implicit conversions
+ * - used for storing a single property value
+ */
+class PropertyValue
 {
 public:
-	void draw(RenderTask& task);
-	void create();
-	void destroy();
+	PropertyValue(float value);
+	PropertyValue(double value);
+	PropertyValue(int value);
+	PropertyValue(unsigned int value);
 
-	void updateText(int w, int h);
-
-	void setTestUniforms(const glm::mat4x4& viewMatrix);
-
+	operator float() const;
+	operator int() const;
+	operator unsigned int() const;
+	operator const float*() const;
+	operator const int*() const;
+	operator const unsigned int*() const;
 
 private:
-	Material material;
+	typedef union
+	{
+		float fval;
+		int ival;
+		unsigned int uval;
+	} PropertyValueType;
 
-	TechniqueLibrary mTechniqueLibrary;
-
-	std::vector<Mesh*> meshes;
-
-	Text mLightText;
-	Text mViewText;
-
-	Light mTestLights[Light::MAX_LIGHTS];
+	PropertyValueType mValue;
 };
 
-} // namespace Forge
+/* This vector describes a single property */
+typedef std::vector<PropertyValue> Property;
 
-#endif // TESTDATA_H
+}

@@ -18,44 +18,30 @@
  *
  */
 
-#ifndef TESTDATA_H
-#define TESTDATA_H
+#pragma once
 
-#include "Mesh.h"
-#include "Material/Material.h"
-#include "Material/Technique/TechniqueLibrary.h"
-#include "Light/Light.hpp"
-#include "Text/Text.hpp"
+#include "Graphics/Material/Technique/TechniqueLibrary.h"
+
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace Forge {
 
 class RenderTask;
 
-class TestData
+/* A material to be used for a mesh
+ *
+ * Material contains a technique and metadata about the technique.
+ * Material is also responsible for parsing the material file. */
+class Material
 {
 public:
-	void draw(RenderTask& task);
-	void create();
-	void destroy();
-
-	void updateText(int w, int h);
-
-	void setTestUniforms(const glm::mat4x4& viewMatrix);
-
-
+	void loadMaterial(const char* materialFile, TechniqueLibrary& techLibrary);
+	void beginMesh(const RenderTask& task);
 private:
-	Material material;
-
-	TechniqueLibrary mTechniqueLibrary;
-
-	std::vector<Mesh*> meshes;
-
-	Text mLightText;
-	Text mViewText;
-
-	Light mTestLights[Light::MAX_LIGHTS];
+	TechniquePtr mTechnique;
+	std::string mMaterialFile;
 };
 
 } // namespace Forge
-
-#endif // TESTDATA_H
