@@ -115,6 +115,7 @@ void Forge::Text::draw()
 
 	textProgram.use();
 
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, glyphTextureId);
 
 	float posX = mPosition.x;
