@@ -23,7 +23,6 @@
 #include "State/EngineState.h"
 #include "Graphics/OrbitalCamera.h"
 #include "Graphics/RendererWidget.h"
-#include "Input/QtInputHandler.h"
 #include "Time/HighResClock.h"
 #include "Util/Log.h"
 
