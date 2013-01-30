@@ -4,14 +4,22 @@ project(Forge)
 find_library(GLEW_LIBRARY NAMES GLEW glew glew32 PATHS ${CMAKE_SOURCE_DIR}/deps_w32/glew/lib)
 
 # FreeImage dependency
-find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${CMAKE_SOURCE_DIR}/deps_w32/freeimage/lib)
+find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${CMAKE_SOURCE_DIR}/deps_w32/freeimage)
 
-# Copy GLEW dll to Windows build
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	# Copy GLEW dll
 	add_custom_command(TARGET Forge
 		COMMAND cmake
 		ARGS -E copy_if_different
 		${CMAKE_SOURCE_DIR}/deps_w32/glew/lib/glew32.dll
+		${CMAKE_BINARY_DIR})
+	# Add FreeImage include
+	include_directories(${CMAKE_SOURCE_DIR}/deps_w32/freeimage)
+	# Copy FreeImage dll
+	add_custom_command(TARGET Forge
+		COMMAND cmake
+		ARGS -E copy_if_different
+		${CMAKE_SOURCE_DIR}/deps_w32/freeimage/FreeImage.dll
 		${CMAKE_BINARY_DIR})
 endif()
 
