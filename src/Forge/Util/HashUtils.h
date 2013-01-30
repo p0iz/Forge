@@ -22,7 +22,7 @@
 
 #include <iosfwd>
 
-namespace Forge { namespace Utils {
+namespace Forge { namespace HashUtils {
 
 /* Template for FNV hash function
  * FNV: http://www.isthe.com/chongo/tech/comp/fnv/
@@ -60,7 +60,7 @@ typedef FnvArchParameters<sizeof(size_t)> FnvParameters;
 template <unsigned int N, unsigned int Iterator>
 struct FnvHash
 {
-	static unsigned int Hash(const char (&str)[N])
+	static size_t Hash(const char (&str)[N])
 	{
 		return (FnvHash<N, Iterator-1>::Hash(str) ^ str[Iterator-1]) * FnvParameters::prime;
 	}
@@ -69,28 +69,33 @@ struct FnvHash
 template <unsigned int N>
 struct FnvHash<N, 1>
 {
-	static unsigned int Hash(const char (&str)[N])
+	static size_t Hash(const char (&str)[N])
 	{
 		return (FnvParameters::init ^ str[0]) * FnvParameters::prime;
 	}
 };
 
+// This class uses template expansion when possible to determine the hash value
 class StringHash
 {
 public:
 	template <unsigned int N>
-	inline StringHash(const char (&str)[N])
-		: value(FnvHash<N, N>::Hash(str))
+	inline StringHash(const char (&str)[N+1])
+		: mValue(FnvHash<N, N>::Hash(str))
 	{
 	}
-	operator unsigned int()
+
+	explicit StringHash(const std::string& targetString);
+
+	operator size_t()
 	{
-		return value;
+		return mValue;
 	}
+
 private:
-	unsigned int value;
+	size_t mValue;
 };
 
-unsigned int calculateFnv(const char* str);
+size_t calculateFnv(const std::string& str);
 
 }}

@@ -20,20 +20,24 @@
 
 #include "HashUtils.h"
 
-#include <cstring>
+#include <string>
 
-namespace Forge { namespace Utils {
+namespace Forge { namespace HashUtils {
 
-unsigned int calculateFnv(const char* str)
+size_t calculateFnv(const std::string& targetString)
 {
-	const size_t length = strlen(str);
-	unsigned int hash = 2166136261u;
-	for (size_t i=0; i<length; ++i)
+	size_t hash = FnvParameters::init;
+	for (char currentChar : targetString)
 	{
-		hash ^= *str++;
-		hash *= 16777619u;
+		hash ^= currentChar;
+		hash *= FnvParameters::prime;
 	}
 	return hash;
+}
+
+StringHash::StringHash(const std::string& targetString)
+	: mValue(calculateFnv(targetString))
+{
 }
 
 }}
