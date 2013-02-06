@@ -32,15 +32,15 @@ struct Vertex
 		position[0] = p[0];
 		position[1] = p[1];
 		position[2] = p[2];
-		uv[0] = u[0];
-		uv[1] = u[1];
+		texcoord[0] = u[0];
+		texcoord[1] = u[1];
 		normal[0] = n[0];
 		normal[1] = n[1];
 		normal[2] = n[2];
 	}
 
 	glm::float_t position[3];
-	glm::float_t uv[2];
+	glm::float_t texcoord[2];
 	glm::float_t normal[3];
 	glm::float_t tangent[3];
 	glm::float_t bitangent[3];
