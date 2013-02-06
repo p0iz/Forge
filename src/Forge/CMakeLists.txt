@@ -6,6 +6,9 @@ find_library(GLEW_LIBRARY NAMES GLEW glew glew32 PATHS ${CMAKE_SOURCE_DIR}/deps_
 # FreeImage dependency
 find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${CMAKE_SOURCE_DIR}/deps_w32/freeimage)
 
+# AssImp dependency
+find_library(ASSIMP_LIBRARY NAMES AssImp assimp PATHS ${CMAKE_SOURCE_DIR}/deps_w32/assimp)
+
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	# Copy GLEW dll
 	add_custom_command(TARGET Forge
@@ -20,6 +23,14 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 		COMMAND cmake
 		ARGS -E copy_if_different
 		${CMAKE_SOURCE_DIR}/deps_w32/freeimage/FreeImage.dll
+		${CMAKE_BINARY_DIR})
+	# Add AssImp include
+	include_directories(${CMAKE_SOURCE_DIR}/deps_w32/assimp/include)
+	# Copy AssImp dll
+	add_custom_command(TARGET Forge
+		COMMAND cmake
+		ARGS -E copy_if_different
+		${CMAKE_SOURCE_DIR}/deps_w32/assimp/AssImp.dll
 		${CMAKE_BINARY_DIR})
 endif()
 
@@ -41,4 +52,5 @@ target_link_libraries(Forge
 	Util
 	${GLEW_LIBRARY}
 	${FREEIMAGE_LIBRARY}
+	${ASSIMP_LIBRARY}
 	${OPENGL_LIBRARIES})
