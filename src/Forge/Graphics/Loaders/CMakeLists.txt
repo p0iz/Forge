@@ -4,8 +4,7 @@
 
 set(LoadersSources
 	ImageLoader.cpp
-	MeshLoader.cpp
-	${CMAKE_SOURCE_DIR}/deps_w32/freeimage/FreeImage.lib)
+	MeshLoader.cpp)
 
 add_library(Loaders ${LoadersSources})
 
