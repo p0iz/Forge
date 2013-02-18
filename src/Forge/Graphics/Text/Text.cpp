@@ -70,6 +70,11 @@ void Forge::Text::createBuffer()
 	glBindVertexArray(0);
 }
 
+Forge::Text::~Text()
+{
+	FT_Done_FreeType(static_cast<FT_Library>(mFontLibrary));
+}
+
 void Forge::Text::initialize()
 {
 	// Initialize FreeType
