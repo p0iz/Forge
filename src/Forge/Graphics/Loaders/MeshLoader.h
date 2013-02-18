@@ -18,22 +18,15 @@
  *
  */
 
-#ifndef OBJMODELLOADER_H
-#define OBJMODELLOADER_H
-
-#include <glm/glm.hpp>
+#pragma once
 
 namespace Forge {
 
 class Mesh;
 
-/* Class that loads a Mesh from a Wavefront OBJ */
-class MeshLoader
-{
-public:
-		static Mesh* loadObjModel(const char* objFile);
-};
+/* Namespace for mesh loading functions */
+namespace MeshLoader {
+	Mesh* loadMesh(const char* file);
+}
 
 } // namespace Forge
-
-#endif // OBJMODELLOADER_H

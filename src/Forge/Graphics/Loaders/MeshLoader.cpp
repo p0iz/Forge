@@ -23,99 +23,55 @@
 #include "Graphics/Mesh.h"
 #include "Graphics/Vertex.h"
 
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <glm/glm.hpp>
+#include "Util/Log.h"
 
-namespace Forge {
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/mesh.h>
+#include <assimp/postprocess.h>
 
-Mesh* MeshLoader::loadObjModel(
-		const char *objFile)
-{
-	std::vector<glm::vec3> positions;
-	std::vector<glm::vec2> texCoords;
-	std::vector<glm::vec3> normals;
-	std::vector<GLuint> positionIndices;
-	std::vector<GLuint> texIndices;
-	std::vector<GLuint> normalIndices;
-	// Read obj file and instantiate the drawable
-	std::ifstream inputFile;
-	inputFile.open(objFile);
-	if (!inputFile.is_open())
-	{
-		std::stringstream error;
-		error << "Could not open file: " << objFile;
-		return nullptr;
-	}
+namespace Forge { namespace MeshLoader {
 
-	std::string readLine;
-	while (getline(inputFile, readLine).good())
-	{
-		if (readLine.length() > 0)
-		{
-			// Create position, texture and normal data vectors
-			std::string identifier;
-			std::stringstream lineStream(readLine);
-			lineStream >> identifier;
-			glm::vec3 pos;
-			glm::vec2 texCoord;
-			switch (identifier[0])
-			{
-			case 'v':
-				{
-					switch(identifier[1])
-					{
-					case '\0':
-						lineStream >> pos.x >> pos.y >>pos.z;
-						positions.push_back(pos);
-						break;
-					case 't':
-						lineStream >> texCoord.s >>texCoord.t;
-						texCoords.push_back(texCoord);
-						break;
-					case 'n':
-						lineStream >> pos.x >> pos.y >>pos.z;
-						normals.push_back(pos);
-						break;
-					}
-					break;
-				}
-			case 'f':
-				{
-					// Create index vectors
-					GLuint v[3],t[3],n[3];
-					sscanf(readLine.c_str(),"f %u/%u/%u %u/%u/%u %u/%u/%u", &v[0], &t[0], &n[0], &v[1], &t[1], &n[1], &v[2], &t[2], &n[2]);
-					positionIndices.push_back(v[0]-1);
-					texIndices.push_back(t[0]-1);
-					normalIndices.push_back(n[0]-1);
-					positionIndices.push_back(v[1]-1);
-					texIndices.push_back(t[1]-1);
-					normalIndices.push_back(n[1]-1);
-					positionIndices.push_back(v[2]-1);
-					texIndices.push_back(t[2]-1);
-					normalIndices.push_back(n[2]-1);
-					break;
+Mesh* loadMesh(const char *file) {
+	Mesh* loadedMesh = nullptr;
+	Assimp::Importer importer;
+
+	const aiScene* importedModel = importer.ReadFile(
+				file, aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+
+	if (importedModel == nullptr) {
+		Log::error << "Error occurred while importing '" <<
+					  file << "'' : " << importer.GetErrorString() << "\n";
+	} else {
+		std::vector<Vertex> vertices;
+		std::vector<unsigned int> elements;
+		for (unsigned int cur_mesh = 0 ; cur_mesh < importedModel->mNumMeshes; ++ cur_mesh) {
+			const aiMesh* mesh = importedModel->mMeshes[cur_mesh];
+			// Load vertex data
+			Vertex vertex;
+			for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+				// Read position
+				memcpy(vertex.position, &mesh->mVertices[i], sizeof(float) * 3);
+				// Read normal
+				memcpy(vertex.normal, &mesh->mNormals[i], sizeof(float) * 3);
+				// Read tangent
+				memcpy(vertex.tangent, &mesh->mTangents[i], sizeof(float) * 3);
+				// Read bitangent
+				memcpy(vertex.bitangent, &mesh->mBitangents[i], sizeof(float) * 3);
+				// Read texture coordinates (currently just one texture supported)
+				memcpy(vertex.texcoord, &mesh->mTextureCoords[0][i], sizeof(float) * 3);
+				vertices.push_back(vertex);
+			}
+			for (unsigned int face_index = 0 ; face_index < mesh->mNumFaces; ++face_index) {
+				const aiFace& cur_face = mesh->mFaces[face_index];
+				for (unsigned int elem_index = 0 ; elem_index < cur_face.mNumIndices; ++elem_index) {
+					elements.push_back(mesh->mFaces[face_index].mIndices[elem_index]);
 				}
 			}
 		}
+		loadedMesh = new Mesh(vertices, elements);
 	}
-
-	// After creating indices, generate a unified element vector and a packed vertex vector
-
-	std::vector<Vertex> vertices;
-	std::vector<GLuint> elements;
-
-	for (unsigned int i = 0; i < positionIndices.size() ; ++i)
-	{
-		// Create a vertex from the individual indices
-		Vertex vertex(
-			positions[positionIndices[i]], texCoords[texIndices[i]], normals[normalIndices[i]]);
-		vertices.push_back(vertex);
-		elements.push_back(i);
-	}
-	// Done, now we have a unified element vector and a vertex vector
-	return new Mesh(vertices, elements);
+	return loadedMesh;
 }
 
-} // namespace Forge
+}}

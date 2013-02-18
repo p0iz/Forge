@@ -74,7 +74,7 @@ void TestData::create()
 
 	for (int i = 0; i < NUMBER_OF_CUBES; ++i)
 	{
-		meshes.push_back(MeshLoader::loadObjModel("data/crate.obj"));
+		meshes.push_back(MeshLoader::loadMesh("data/crate.obj"));
 		meshes[i]->translate(CIRCLE_WIDTH*glm::sin(glm::radians(360.0-i*36)),CIRCLE_WIDTH*glm::cos(glm::radians(360.0-i*36)),0.0f);
 		meshes[i]->rotate(glm::radians(360.0-i*36), glm::vec3(0,1,0));
 	}

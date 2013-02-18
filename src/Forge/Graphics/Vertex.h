@@ -27,6 +27,7 @@ namespace Forge {
 
 struct Vertex
 {
+	Vertex() { }
 	Vertex(const glm::vec3& p, const glm::vec2& u, const glm::vec3& n)
 	{
 		position[0] = p[0];
@@ -40,7 +41,7 @@ struct Vertex
 	}
 
 	glm::float_t position[3];
-	glm::float_t texcoord[2];
+	glm::float_t texcoord[3];
 	glm::float_t normal[3];
 	glm::float_t tangent[3];
 	glm::float_t bitangent[3];
