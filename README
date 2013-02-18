@@ -28,6 +28,17 @@ Some models are textured using modified images from www.cgtextures.com.
 Forge uses the BaroqueScript TrueType font,
 available from http://www.1001freefonts.com/
 
+Forge uses the following third-party, open-source libraries:
+
+(The licensing selected is denoted if several choices are available.)
+
+GLM (http://glm.g-truc.net/copying.txt)
+GLEW (http://glew.sourceforge.net/glew.txt)
+FreeType2 (http://www.freetype.org/license.html, FTL license)
+FreeImage (http://freeimage.sourceforge.net/license.html, FIPL license)
+Open Asset Import Library (http://assimp.sourceforge.net/main_license.html)
+Qt (tested on 4.8+) (http://qt-project.org/products/licensing, LGPL license)
+
 Building Forge
 --------------
 
@@ -37,10 +48,8 @@ Verified to build using CMake 2.8 on Win and Linux.
 
 Forge has the following dependencies:
 
-GLM
-GLEW
-Qt (tested on 4.8+)
-
-Windows note: Place deps (GLM and GLEW) in deps_w32 directory in the repo root
-so that the CMake find_library command can find them.
+Windows note: Place deps in deps_w32 directory in the repo root
+so that the CMake find_library command can find them. Please see
+src/Forge/CMakeLists.txt and src/Forge/Graphics/Text/CMakeLists.txt
+for library search paths.
 
