@@ -46,12 +46,12 @@ void TestData::draw(RenderTask& task)
 	}
 
 	// For each material, draw the meshes that use the material
-	for (Mesh* mesh : meshes)
+	for (Transformation transform : transforms)
 	{
-		task.setModelTransform(mesh->getWorldMatrix());
+		task.setModelTransform(transform.getWorldMatrix());
 		material.beginMesh(task);
 		// Draw first cube
-		mesh->draw();
+		cubeMesh->draw();
 		// Draw debugging axes
 		DebugAxis::getInstance().draw(task.getCamera().getViewProjectionMatrix() * task.getModelTransform());
 	}
@@ -69,14 +69,11 @@ void TestData::create()
 	mTechniqueLibrary.add(new SimpleTexture);
 	material.loadMaterial("data/materials/Material.json", mTechniqueLibrary);
 
-#define NUMBER_OF_CUBES 10
-#define CIRCLE_WIDTH 10
-
+	cubeMesh.reset(MeshLoader::loadMesh("data/crate.obj"));
 	for (int i = 0; i < NUMBER_OF_CUBES; ++i)
 	{
-		meshes.push_back(MeshLoader::loadMesh("data/crate.obj"));
-		meshes[i]->translate(CIRCLE_WIDTH*glm::sin(glm::radians(360.0-i*36)),CIRCLE_WIDTH*glm::cos(glm::radians(360.0-i*36)),0.0f);
-		meshes[i]->rotate(glm::radians(360.0-i*36), glm::vec3(0,1,0));
+		transforms[i].translate(CIRCLE_WIDTH*glm::sin(glm::radians(360.0-i*36)),CIRCLE_WIDTH*glm::cos(glm::radians(360.0-i*36)),0.0f);
+		transforms[i].rotate(glm::radians(360.0-i*36), glm::vec3(0,1,0));
 	}
 
 	// Create the test text
@@ -115,8 +112,10 @@ void TestData::create()
 
 void TestData::destroy()
 {
-	for (Mesh* mesh : meshes)
-		delete mesh;
+	cubeMesh.reset();
+	for (Transformation& transform : transforms) {
+		transform.reset();
+	}
 }
 
 void TestData::updateText(int w, int h)

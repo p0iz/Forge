@@ -14,41 +14,40 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#ifndef VERTEXLISTDRAWABLE_H
-#define VERTEXLISTDRAWABLE_H
+#include "Transformation.hpp"
 
-#include "DebugAxis.h"
-#include "Vertex.h"
-
-#include "Shader/ShaderProgram.h"
-
-#include <vector>
-#include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
-
-#include <iostream>
 
 namespace Forge {
 
-class Mesh
+const glm::mat4x4 Transformation::getWorldMatrix() const
 {
-public:
-	Mesh(
-		const std::vector<Vertex>& vertices,
-		const std::vector<GLuint>& elements);
-	~Mesh();
-	void draw();
-private:
-	unsigned int mNumberOfVertices;
-	GLuint mVertexArrayId;
-	GLuint mVertexBufferId;
-	GLuint mElementBufferId;
-};
+	return modelMatrix * rotationMatrix;
+}
 
-} // namespace Forge
+void Transformation::translate(float x, float y, float z)
+{
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z));
+}
 
-#endif // VERTEXLISTDRAWABLE_H
+void Transformation::scale(float size)
+{
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(size, size, size));
+}
+
+void Transformation::rotate(float angle, const glm::vec3 &axis)
+{
+	rotationMatrix = glm::rotate(rotationMatrix, angle, axis);
+}
+
+void Transformation::reset()
+{
+	modelMatrix = glm::mat4x4();
+	rotationMatrix = glm::mat4x4();
+}
+
+}

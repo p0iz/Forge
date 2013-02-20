@@ -29,6 +29,7 @@ set(GraphicsSources
 	RenderTask.cpp
 	SceneNode.cpp
 	TestData.cpp
+	Transformation.cpp
 	${MOC_SOURCES})
 
 add_library(Graphics ${GraphicsSources})

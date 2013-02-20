@@ -14,41 +14,29 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#ifndef VERTEXLISTDRAWABLE_H
-#define VERTEXLISTDRAWABLE_H
+#pragma once
 
-#include "DebugAxis.h"
-#include "Vertex.h"
-
-#include "Shader/ShaderProgram.h"
-
-#include <vector>
-#include <GL/glew.h>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <iostream>
+#include <glm/glm.hpp>
 
 namespace Forge {
 
-class Mesh
-{
-public:
-	Mesh(
-		const std::vector<Vertex>& vertices,
-		const std::vector<GLuint>& elements);
-	~Mesh();
-	void draw();
-private:
-	unsigned int mNumberOfVertices;
-	GLuint mVertexArrayId;
-	GLuint mVertexBufferId;
-	GLuint mElementBufferId;
+// A class that contains a single transformation (translation, scaling and rotation)
+// from one space to another.
+struct Transformation {
+	const glm::mat4x4 getWorldMatrix() const;
+
+	void translate(float x, float y, float z);
+	void scale(float size); // Only allow uniform scaling
+	void rotate(float angle, const glm::vec3& axis);
+
+	void reset();
+
+	glm::mat4x4 rotationMatrix;
+	glm::mat4x4 modelMatrix;
 };
 
-} // namespace Forge
-
-#endif // VERTEXLISTDRAWABLE_H
+}

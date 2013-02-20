@@ -26,6 +26,12 @@
 #include "Material/Technique/TechniqueLibrary.h"
 #include "Light/Light.hpp"
 #include "Text/Text.hpp"
+#include "Transformation.hpp"
+
+#include <memory>
+
+#define NUMBER_OF_CUBES 10
+#define CIRCLE_WIDTH 10
 
 namespace Forge {
 
@@ -49,7 +55,8 @@ private:
 
 	TechniqueLibrary mTechniqueLibrary;
 
-	std::vector<Mesh*> meshes;
+	std::shared_ptr<Mesh> cubeMesh;
+	Transformation transforms[NUMBER_OF_CUBES];
 
 	Text mLightText;
 	Text mViewText;

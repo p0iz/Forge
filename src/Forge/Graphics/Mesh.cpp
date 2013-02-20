@@ -35,9 +35,7 @@ Mesh::Mesh(
 		const std::vector<GLuint>& elements)
 	: mNumberOfVertices(elements.size()),
 	  mVertexArrayId(0),
-	  mVertexBufferId(0),
-	  rotationMatrix(),
-	  modelMatrix(1.0f)
+	  mVertexBufferId(0)
 {
 	const size_t vertexSize = sizeof(Vertex);
 
@@ -93,11 +91,6 @@ Mesh::~Mesh()
 
 	// Delete vertex array
 	glDeleteVertexArrays(1, &mVertexArrayId);
-}
-
-const glm::mat4x4 Mesh::getWorldMatrix() const
-{
-	return modelMatrix * rotationMatrix;
 }
 
 void Mesh::draw()
