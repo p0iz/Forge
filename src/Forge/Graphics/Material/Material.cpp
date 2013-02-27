@@ -37,7 +37,7 @@ void Material::loadMaterial(const char* material_file, TechniqueLibrary &techLib
 	JsonParser matParser(material_file);
 	assert(matParser.parse());
 	JsonObject parsed_data = matParser.getRootObject();
-	JsonObject properties = *parsed_data.key_values["Properties"].object;
+	std::shared_ptr<JsonObject> properties = parsed_data.key_values["Properties"].object;
 
 	// Load and setup technique
 	if (mTechnique) {
@@ -46,7 +46,9 @@ void Material::loadMaterial(const char* material_file, TechniqueLibrary &techLib
 	std::string techniqueName = parsed_data.key_values["Technique"].value[0];
 	mTechnique = techLibrary.get(HashUtils::StringHash(techniqueName));
 	mTechnique->create();
-	mTechnique->updateProperties(properties);
+	if (properties) {
+		mTechnique->updateProperties(*properties);
+	}
 }
 
 void Material::beginMesh(const RenderTask& task)
