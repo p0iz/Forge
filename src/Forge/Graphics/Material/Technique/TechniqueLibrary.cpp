@@ -43,13 +43,14 @@ void TechniqueLibrary::add(Technique* technique)
 
 TechniquePtr TechniqueLibrary::get(size_t techniqueName) const
 {
-	TechniquePtr technique(new DefaultTechnique);
+	TechniquePtr technique;
 
 	if (mTechniqueMap.count(techniqueName) > 0)
 		technique.reset(mTechniqueMap.at(techniqueName)->clone());
 	else
 	{
 		Log::error << "Could not find technique '" << techniqueName << "' in technique library!\n";
+		technique.reset(mTechniqueMap.at(HashUtils::StringHash("DefaultTechnique"))->clone());
 	}
 
 	return technique;
