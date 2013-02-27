@@ -67,8 +67,8 @@ void TestData::create()
 {
 	mTechniqueLibrary.add(new DefaultTechnique);
 	mTechniqueLibrary.add(new SimpleTexture);
-	material.loadMaterial("data/materials/Material.json", mTechniqueLibrary);
 
+	cubeMaterial.loadMaterial("data/materials/Crate.json", mTechniqueLibrary);
 	cubeMesh.reset(MeshLoader::loadMesh("data/crate.obj"));
 	for (int i = 0; i < NUMBER_OF_CUBES; ++i)
 	{
@@ -137,7 +137,7 @@ void TestData::setTestUniforms(const glm::mat4x4& viewMatrix)
 
 void TestData::reloadTestMaterial()
 {
-	material.loadMaterial("data/materials/Material.json", mTechniqueLibrary);
+	cubeMaterial.loadMaterial("data/materials/Crate.json", mTechniqueLibrary);
 }
 
 } // namespace Forge

@@ -51,7 +51,7 @@ public:
 	void reloadTestMaterial();
 
 private:
-	Material material;
+	Material cubeMaterial;
 
 	TechniqueLibrary mTechniqueLibrary;
 
