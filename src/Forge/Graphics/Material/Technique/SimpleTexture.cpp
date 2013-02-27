@@ -63,7 +63,6 @@ void SimpleTexture::create()
 	{
 		Log::info << shaderProgram.getProgramInfoLog();
 	}
-
 	// Lighting
 	lightsUniformIndex = glGetUniformBlockIndex(shaderProgram.getId(), "Lights");
 	glUniformBlockBinding(shaderProgram.getId(), lightsUniformIndex, 1);
@@ -106,12 +105,13 @@ void SimpleTexture::updateProperties(const JsonObject& properties)
 	property.clear();
 
 	// Diffuse map
-	unsigned int loadedTexture = ImageLoader::loadAsTexture(properties.key_values.at("DiffuseMap").value[0].c_str());
-	property.push_back(loadedTexture);
-	mLoadedTextures.push_back(loadedTexture);
-	setProperty(HashUtils::StringHash("DiffuseMap"), property);
-
-	property.clear();
+	if (properties.key_values.count("DiffuseMap") > 0) {
+		unsigned int loadedTexture = ImageLoader::loadAsTexture(properties.key_values.at("DiffuseMap").value[0].c_str());
+		property.push_back(loadedTexture);
+		mLoadedTextures.push_back(loadedTexture);
+		setProperty(HashUtils::StringHash("DiffuseMap"), property);
+		property.clear();
+	}
 
 	// Ambient color reflectivity
 	float ambientColor[3];
