@@ -34,14 +34,14 @@ const Camera& RenderTask::getCamera() const
 	return mCamera;
 }
 
-const glm::mat4x4& RenderTask::getModelTransform() const
+const glm::mat4x4& RenderTask::getWorldTransform() const
 {
-	return mModelTransform;
+	return mWorldTransform;
 }
 
-void RenderTask::setModelTransform(const glm::mat4x4& modelTransform)
+void RenderTask::setWorldTransform(const glm::mat4x4& worldTransform)
 {
-	mModelTransform = modelTransform;
+	mWorldTransform = worldTransform;
 }
 
 }

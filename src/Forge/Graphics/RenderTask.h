@@ -35,15 +35,15 @@ public:
 
 	const Camera& getCamera() const;
 
-	const glm::mat4x4& getModelTransform() const;
+	const glm::mat4x4& getWorldTransform() const;
 
-	void setModelTransform(const glm::mat4x4& modelTransform);
+	void setWorldTransform(const glm::mat4x4& worldTransform);
 
 	Light lights[Light::MAX_LIGHTS];
 
 private:
 	const Camera& mCamera;
-	glm::mat4x4 mModelTransform;
+	glm::mat4x4 mWorldTransform;
 };
 
 }
