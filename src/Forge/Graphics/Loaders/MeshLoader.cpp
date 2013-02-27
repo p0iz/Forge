@@ -52,14 +52,20 @@ Mesh* loadMesh(const char *file) {
 			for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
 				// Read position
 				memcpy(vertex.position, &mesh->mVertices[i], sizeof(float) * 3);
-				// Read normal
-				memcpy(vertex.normal, &mesh->mNormals[i], sizeof(float) * 3);
-				// Read tangent
-				memcpy(vertex.tangent, &mesh->mTangents[i], sizeof(float) * 3);
-				// Read bitangent
-				memcpy(vertex.bitangent, &mesh->mBitangents[i], sizeof(float) * 3);
-				// Read texture coordinates (currently just one texture supported)
-				memcpy(vertex.texcoord, &mesh->mTextureCoords[0][i], sizeof(float) * 3);
+				if (mesh->HasNormals()) {
+					// Read normal
+					memcpy(vertex.normal, &mesh->mNormals[i], sizeof(float) * 3);
+				}
+				if (mesh->HasTangentsAndBitangents()) {
+					// Read tangent
+					memcpy(vertex.tangent, &mesh->mTangents[i], sizeof(float) * 3);
+					// Read bitangent
+					memcpy(vertex.bitangent, &mesh->mBitangents[i], sizeof(float) * 3);
+				}
+				if (mesh->HasTextureCoords(0)) {
+					// Read texture coordinates (currently just one texture supported)
+					memcpy(vertex.texcoord, &mesh->mTextureCoords[0][i], sizeof(float) * 3);
+				}
 				vertices.push_back(vertex);
 			}
 			for (unsigned int face_index = 0 ; face_index < mesh->mNumFaces; ++face_index) {
