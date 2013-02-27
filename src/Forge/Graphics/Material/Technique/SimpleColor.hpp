@@ -14,36 +14,36 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Graphics/Material/Technique/TechniqueLibrary.h"
+#include "Technique.h"
 
-#include <memory>
-#include <string>
-#include <vector>
+#include "../../Shader/Shader.h"
+#include "../../Shader/ShaderProgram.h"
 
 namespace Forge {
 
-class RenderTask;
-
-/* A material to be used for a mesh
- *
- * Material contains a technique and metadata about the technique.
- * Material is also responsible for parsing the material file. */
-class Material
+/* This renders anything thrown at it with a single color */
+class SimpleColor : public Technique
 {
 public:
-	void loadMaterial(const char* materialFile, TechniqueLibrary& techLibrary);
-	void beginMesh(const RenderTask& task);
-
-	void setPropertyValue(const char* propertyName, const Property& value);
+	SimpleColor();
+	virtual Technique* clone();
+	virtual void create();
+	virtual void destroy();
+	virtual void beginMesh(const RenderTask& task);
 private:
-	TechniquePtr mTechnique;
-	std::string mMaterialFile;
+	Shader vertexShader;
+	Shader fragmentShader;
+	ShaderProgram shaderProgram;
+
+	// Uniform location
+	unsigned int wvpLocation;
+	unsigned int colorLocation;
 };
 
-} // namespace Forge
+}

@@ -3,6 +3,7 @@
 set(TechniqueSources
 	DefaultTechnique.cpp
 	Property.cpp
+	SimpleColor.cpp
 	SimpleTexture.cpp
 	TechniqueLibrary.cpp)
 

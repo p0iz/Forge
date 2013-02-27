@@ -25,6 +25,7 @@
 
 #include "Material/Technique/SimpleTexture.h"
 #include "Material/Technique/DefaultTechnique.h"
+#include "Material/Technique/SimpleColor.hpp"
 
 #include "Loaders/ImageLoader.h"
 #include "Loaders/MeshLoader.h"
@@ -42,18 +43,38 @@ void TestData::draw(RenderTask& task)
 {
 	for (int i=0; i < Light::MAX_LIGHTS ; ++i) {
 		task.lights[i] = mTestLights[i];
-		task.lights[i].position = task.getCamera().getViewMatrix() * task.lights[i].position;
+		task.lights[i].position = task.getCamera().getViewMatrix() * mTestLights[i].position;
 	}
 
 	// For each material, draw the meshes that use the material
 	for (Transformation transform : transforms)
 	{
-		task.setModelTransform(transform.getWorldMatrix());
-		material.beginMesh(task);
+		task.setWorldTransform(transform.getWorldMatrix());
+		cubeMaterial.beginMesh(task);
 		// Draw first cube
 		cubeMesh->draw();
 		// Draw debugging axes
-		DebugAxis::getInstance().draw(task.getCamera().getViewProjectionMatrix() * task.getModelTransform());
+		DebugAxis::getInstance().draw(
+					task.getCamera().getViewProjectionMatrix() * task.getWorldTransform());
+	}
+
+	// Draw light positions
+	if (DebugAxis::isDebugVisible()) {
+		for (const Light& light : mTestLights) {
+			if (light.position.w > 0.0001f) {
+				// Draw point lights
+				glm::mat4x4 transform =
+						glm::scale(
+							glm::translate(glm::mat4x4(),glm::vec3(light.position)),
+							glm::vec3(0.3f,0.3f,0.3f));
+				task.setWorldTransform(transform);
+				lampMaterial.setPropertyValue("Color", Property(&light.color.r, &light.color.a));
+				lampMaterial.beginMesh(task);
+				lampMesh->draw();
+			} else {
+				// draw directional lights in some other way
+			}
+		}
 	}
 
 	setTestUniforms(task.getCamera().getViewMatrix());
@@ -67,15 +88,16 @@ void TestData::create()
 {
 	mTechniqueLibrary.add(new DefaultTechnique);
 	mTechniqueLibrary.add(new SimpleTexture);
-
+	mTechniqueLibrary.add(new SimpleColor);
 	cubeMaterial.loadMaterial("data/materials/Crate.json", mTechniqueLibrary);
 	cubeMesh.reset(MeshLoader::loadMesh("data/crate.obj"));
+	lampMaterial.loadMaterial("data/materials/Lamp.json", mTechniqueLibrary);
+	lampMesh.reset(MeshLoader::loadMesh("data/lamp.obj"));
 	for (int i = 0; i < NUMBER_OF_CUBES; ++i)
 	{
 		transforms[i].translate(CIRCLE_WIDTH*glm::sin(glm::radians(360.0-i*36)),CIRCLE_WIDTH*glm::cos(glm::radians(360.0-i*36)),0.0f);
 		transforms[i].rotate(glm::radians(360.0-i*36), glm::vec3(0,1,0));
 	}
-
 	// Create the test text
 	mLightText.initialize();
 	mLightText.setFont("data/fonts/BaroqueScript.ttf");
@@ -96,18 +118,15 @@ void TestData::create()
 		light.color =					glm::vec4(0.0f);
 		light.attenuation.constant =	0.1f;
 		light.attenuation.linear =		0.1f;
-		light.attenuation.quadratic =	0.000025f;
+		light.attenuation.quadratic =	0.00025f;
 	});
 
-	mTestLights[0].position =	glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
-	mTestLights[0].color =		glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	mTestLights[1].position =	glm::vec4(-10.0f, 10.0f, 5.0f, 1.0f);
-	mTestLights[1].color =		glm::vec4(0.0f, 0.0f, 1.0f, 0.8f);
+	mTestLights[0].position =	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	mTestLights[0].color =		glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	mTestLights[1].position =	glm::vec4(-10.0f, 10.0f, 10.0f, 1.0f);
+	mTestLights[1].color =		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 	mTestLights[2].position =	glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-	mTestLights[2].color =		glm::vec4(1.0f, 0.0f, 0.0f, 0.5f);
-	mTestLights[3].position =	glm::vec4(10.0f, -10.0f, 5.0f, 1.0f);
-	mTestLights[4].color =		glm::vec4(1.0f, 0.0f, 0.0f, 0.8f);
-	Light::ambientColor =		glm::vec4(0.1f,0.1f,0.1f,0.8f);
+	mTestLights[2].color =		glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void TestData::destroy()

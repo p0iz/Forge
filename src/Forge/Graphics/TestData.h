@@ -52,10 +52,12 @@ public:
 
 private:
 	Material cubeMaterial;
+	Material lampMaterial;
 
 	TechniqueLibrary mTechniqueLibrary;
 
 	std::shared_ptr<Mesh> cubeMesh;
+	std::shared_ptr<Mesh> lampMesh;
 	Transformation transforms[NUMBER_OF_CUBES];
 
 	Text mLightText;

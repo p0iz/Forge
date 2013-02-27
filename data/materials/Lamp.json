@@ -1,0 +1,8 @@
+{
+	"Name" : "LampTexture",
+	"Description" : "A material for rendering light placeholders",
+	"Technique" : "SimpleColor",
+	"Properties" : {
+		"Color" : [ 1.0, 1.0, 1.0 ]
+	}
+}

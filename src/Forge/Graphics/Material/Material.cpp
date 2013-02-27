@@ -51,8 +51,12 @@ void Material::loadMaterial(const char* material_file, TechniqueLibrary &techLib
 
 void Material::beginMesh(const RenderTask& task)
 {
-
 	mTechnique->beginMesh(task);
+}
+
+void Material::setPropertyValue(const char* propertyName, const Property& value)
+{
+	mTechnique->setProperty(HashUtils::StringHash(propertyName), value);
 }
 
 } // namespace Forge

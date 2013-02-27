@@ -152,6 +152,11 @@ void DebugAxis::setDebuggingInfo(bool state)
 	showDebug = state;
 }
 
+bool DebugAxis::isDebugVisible()
+{
+	return showDebug;
+}
+
 DebugAxis::~DebugAxis()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
