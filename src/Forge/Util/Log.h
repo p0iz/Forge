@@ -64,7 +64,7 @@ LogStream& LogStream::operator<<(MessageType logMessage)
 	if (mFileStream.good())
 		mFileStream << logMessage;
 
-	mOutputStream << logMessage;
+	mOutputStream << logMessage << std::flush;
 	return *this;
 }
 
