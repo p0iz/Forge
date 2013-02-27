@@ -41,7 +41,3 @@ add_subdirectory(src/Game)
 # Add Editor to build
 add_subdirectory(src/Editor)
 
-# Add data files to build
-add_custom_target(DataFiles ALL
-	COMMAND cmake -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data)
-
