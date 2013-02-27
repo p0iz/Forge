@@ -9,7 +9,7 @@ Makefile
 obj/*
 bin/*
 build/*
-data/shaders/old/*
+data/*/old/*
 data/test_models/*
 doc/*
 *.config
