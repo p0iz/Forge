@@ -1,11 +1,16 @@
 Makefile
 *.make
 *.creator.*
-*.user
+*.user*
 *.orig
+*.log
+*.err
+*.trace
 obj/*
 bin/*
 build/*
+data/shaders/old/*
+data/test_models/*
 doc/*
 *.config
 *.creator
@@ -18,3 +23,4 @@ doc/*
 deps_w32/*
 *.vcxproj*
 *.sln
+.directory
