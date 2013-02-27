@@ -36,7 +36,6 @@ struct Light {
 
 	float padding; // needed to satisfy OpenGL alignment when getting struct size
 
-	static glm::vec4 ambientColor; // World ambient color
 	static const int MAX_LIGHTS = 8;
 };
 

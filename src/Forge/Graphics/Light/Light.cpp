@@ -22,6 +22,4 @@
 
 namespace Forge {
 
-glm::vec4 Light::ambientColor = glm::vec4(1.0f);
-
 }

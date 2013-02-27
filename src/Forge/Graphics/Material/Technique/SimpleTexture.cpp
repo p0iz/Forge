@@ -75,6 +75,7 @@ void SimpleTexture::create()
 	// Get uniform locations
 	wvpLocation = shaderProgram.getUniformLocation("WorldViewProjectionMatrix");
 	wvLocation = shaderProgram.getUniformLocation("WorldViewMatrix");
+	nLocation = shaderProgram.getUniformLocation("NormalMatrix");
 
 	materialAmbientLoc = shaderProgram.getUniformLocation("materialAmbient");
 	materialDiffuseLoc = shaderProgram.getUniformLocation("materialDiffuse");
@@ -154,9 +155,11 @@ void SimpleTexture::beginMesh(const RenderTask& task)
 
 	// Update
 	const Camera& camera = task.getCamera();
-	const glm::mat4x4& worldTransform = task.getModelTransform();
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(camera.getViewProjectionMatrix() * worldTransform)[0][0]);
-	glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &(camera.getViewMatrix() * worldTransform)[0][0]);
+	const glm::mat4x4& worldViewTransform = camera.getViewMatrix() * task.getWorldTransform();
+	const glm::mat3x3 normalMatrix(worldViewTransform);
+	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(camera.getProjectionMatrix() * worldViewTransform)[0][0]);
+	glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &worldViewTransform[0][0]);
+	glUniformMatrix3fv(nLocation, 1, GL_FALSE, &normalMatrix[0][0]);
 	updateLights(task.lights);
 	if (hasProperty(mDiffuseMapId)) {
 		glActiveTexture(GL_TEXTURE0);

@@ -20,9 +20,9 @@
 
 #version 330
 
-in vec2 UV;
-in vec3 view_space_normal;
-in vec3 view_space_vertex;
+in vec2 texture_coordinate;
+in vec3 eye_space_normal;
+in vec3 eye_space_vertex;
 
 out vec3 color;
 
@@ -46,30 +46,33 @@ layout (std140) uniform Lights
 {
   Light lights[8]; // max 8 lights per mesh
 };
-
 in float attenuation[8];
 
-uniform vec4 ambient;
+vec3 ads_lighting() {
+	// Need to re-normalize interpolated values
+	vec3 normal = normalize(eye_space_normal);
+	vec3 eye = normalize(-eye_space_vertex);
+	
+	// Calculate ADS lighting per light
+	vec3 lighting = vec3(0.0f);
+	for (int i = 0; i < lights.length(); ++i) {
+		vec3 eye_space_light = normalize(vec3(lights[i].position) - eye_space_vertex);
+		vec3 halfway = normalize(eye_space_light + eye);
+		float diffuseIntensity = max(dot(eye_space_light, normal), 0.0f);
+		float specularIntensity = 0.0f;
+		if (diffuseIntensity > 0.0f) {
+			specularIntensity = pow(max(dot(halfway, normal), 0.0f), materialShininess);
+		}
+		vec3 lightContribution = lights[i].color.rgb * lights[i].color.a * 
+			(materialAmbient + 
+			materialDiffuse * diffuseIntensity + 
+			materialSpecular * specularIntensity);
+		lighting += lightContribution * attenuation[i];
+	}
+	return lighting;
+}
 
 void main(void)
 {
-	vec3 texColor = texture2D(albedo, UV).rgb;
-	vec3 lighting = ambient.rgb * ambient.a * texColor * materialAmbient;
-	for (int i = 0; i < lights.length(); ++i) {
-		vec3 view_space_light = normalize(-vec3(lights[i].position));
-		float diffuseIntensity = dot(view_space_normal, view_space_light);
-		if (diffuseIntensity > 0.0f) {
-			vec3 lightContribution = vec3(0.0f);
-			vec3 halfway = normalize(view_space_light + view_space_vertex);
-			float specularIntensity = pow(max(0.0f, dot(view_space_normal, halfway)), materialShininess);
-			lightContribution += materialDiffuse * texColor * diffuseIntensity;
-			lightContribution += materialSpecular * specularIntensity;
-			lightContribution *= (lights[i].color.rgb * lights[i].color.a);
-			if (lights[i].position.w > 0.0f) {
-				lightContribution *= attenuation[i];
-			}
-			lighting += lightContribution;
-		}
-	}
-	color = texture2D(albedo, UV).rgb * lighting;
+	color = texture2D(albedo, texture_coordinate).rgb * ads_lighting();
 }

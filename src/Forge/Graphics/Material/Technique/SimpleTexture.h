@@ -98,10 +98,9 @@ private:
 	unsigned int lightBuffer;
 
 	// Uniform locations
-
-	int wvpLocation;
-	int wvLocation;
-	int vLocation;
+	int wvpLocation; // World->View->Projection
+	int wvLocation; // World->View
+	int nLocation; // Normal matrix (upper 3x3 of WorldView)
 
 	int materialAmbientLoc;
 	int materialDiffuseLoc;
