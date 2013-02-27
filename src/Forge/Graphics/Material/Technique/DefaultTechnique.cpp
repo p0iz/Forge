@@ -70,7 +70,7 @@ void DefaultTechnique::beginMesh(const RenderTask& task)
 	// Update
 	const Camera& camera = task.getCamera();
 	const glm::mat4x4& vp = camera.getViewProjectionMatrix();
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(vp * task.getModelTransform())[0][0]);
+	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(vp * task.getWorldTransform())[0][0]);
 }
 
 }
