@@ -22,4 +22,17 @@
 
 namespace Forge {
 
+Light::Light() :
+	position(0.0f),
+	color(0.0f),
+	exponent(0.0f),
+	direction(0.0f),
+	cutoff(0.0f),
+	falloff(0.0f)
+{
+	attenuation.constant =	0.1f;
+	attenuation.linear =	0.1f;
+	attenuation.quadratic =	0.00025f;
+}
+
 }

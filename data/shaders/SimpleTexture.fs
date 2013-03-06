@@ -37,9 +37,17 @@ struct Light
 {
 	vec4 position;
 	vec4 color;
+	
+	// Attenuation
 	float constant;
 	float linear;
 	float quadratic;
+	
+	// For spot lights
+	float exponent;
+	vec3 direction;
+	float cutoff;
+	float falloff;
 };
 
 layout (std140) uniform Lights
@@ -58,15 +66,26 @@ vec3 ads_lighting() {
 	for (int i = 0; i < lights.length(); ++i) {
 		vec3 eye_space_light = normalize(vec3(lights[i].position) - eye_space_vertex);
 		vec3 halfway = normalize(eye_space_light + eye);
-		float diffuseIntensity = max(dot(eye_space_light, normal), 0.0f);
-		float specularIntensity = 0.0f;
-		if (diffuseIntensity > 0.0f) {
-			specularIntensity = pow(max(dot(halfway, normal), 0.0f), materialShininess);
+		float diffuse = max(dot(eye_space_light, normal), 0.0f);
+		float specular = 0.0f;
+		float spotlight = 1.0f;
+		if (diffuse > 0.0f) {
+			// Spotlight
+			if (lights[i].exponent > 0.0f) {
+				// Calculate fragment illumination
+				spotlight = max(-dot(eye_space_light, normalize(lights[i].direction)), 0.0f);
+				// Fade 
+				float fade = 
+					clamp((lights[i].cutoff - spotlight) / lights[i].cutoff - lights[i].falloff, 0.0f, 1.0f); 
+				spotlight = pow(spotlight * fade, lights[i].exponent);
+			}
+			// Specular
+			specular = pow(max(dot(halfway, normal), 0.0f), materialShininess);
 		}
-		vec3 lightContribution = lights[i].color.rgb * lights[i].color.a * 
+		vec3 lightContribution = lights[i].color.rgb * lights[i].color.a * spotlight *
 			(materialAmbient + 
-			materialDiffuse * diffuseIntensity + 
-			materialSpecular * specularIntensity);
+			materialDiffuse * diffuse + 
+			materialSpecular * specular);
 		lighting += lightContribution * attenuation[i];
 	}
 	return lighting;

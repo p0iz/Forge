@@ -32,9 +32,17 @@ struct Light
 {
 	vec4 position;
 	vec4 color;
+	
+	// Attenuation
 	float constant;
 	float linear;
 	float quadratic;
+	
+	// For spot lights
+	float exponent;
+	vec3 direction;
+	float cutoff;
+	float falloff;
 };
 
 layout (std140) uniform Lights
@@ -56,10 +64,10 @@ void main(void)
     texture_coordinate = texcoord;
 	// calculate attenuation per light
 	for (int i = 0; i < 8; ++i) {
-		if (lights[i].position.w > 0.001f) {
+		if (lights[i].position.w > 0.0f) {
 			float dist = distance(eye_space_vertex, vec3(lights[i].position));
 			attenuation[i] =
-				1.0 / (lights[i].constant + lights[i].linear * dist + lights[i].quadratic * dist * dist);
+			1.0 / (lights[i].constant + lights[i].linear * dist + lights[i].quadratic * dist * dist);
 		}
 	}
 }

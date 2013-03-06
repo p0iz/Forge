@@ -26,15 +26,24 @@ namespace Forge {
 
 /* Describes a light in the game world */
 struct Light {
+	Light();
+
 	glm::vec4 position; // leave w component 0 for directional light
 	glm::vec4 color; // alpha component describes light intensity
 	struct {
 		float constant;
 		float linear;
 		float quadratic;
-	} attenuation; // used for distance attenuation
+	} attenuation; // distance attenuation
 
-	float padding; // needed to satisfy OpenGL alignment when getting struct size
+	// Spotlight
+	float exponent; // Set to 0.0 for point light
+	glm::vec3 direction; // spot direction.
+	float cutoff; // cutoff angle (in degrees when specified, calculated to cosine when used)
+	float falloff; // falloff angle (in degrees when specified, calculated to cosine when used)
+
+	// Padding for std140 GLSL layout
+	float padding[3];
 
 	static const int MAX_LIGHTS = 8;
 };

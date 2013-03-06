@@ -44,6 +44,9 @@ void TestData::draw(RenderTask& task)
 	for (int i=0; i < Light::MAX_LIGHTS ; ++i) {
 		task.lights[i] = mTestLights[i];
 		task.lights[i].position = task.getCamera().getViewMatrix() * mTestLights[i].position;
+		task.lights[i].direction = glm::mat3(task.getCamera().getViewMatrix()) * mTestLights[i].direction;
+		task.lights[i].cutoff = glm::cos(glm::radians(mTestLights[i].cutoff));
+		task.lights[i].falloff = glm::cos(glm::radians(mTestLights[i].falloff));
 	}
 
 	// For each material, draw the meshes that use the material
@@ -110,21 +113,19 @@ void TestData::create()
 	mViewText.setPosition(-0.99, 0.75);
 	mViewText.setColor(1.0f,0.0f,1.0f,0.2f);
 
+	// Spot
+	mTestLights[0].position =	glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	mTestLights[0].color =		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	mTestLights[0].exponent =	100.0f;
+	mTestLights[0].direction =	glm::vec3(1.0f, -1.0f, 0.0f);
+	mTestLights[0].cutoff =		30.0f;
+	mTestLights[0].falloff =	25.0f;
 
-	// Add test light
-	std::for_each(mTestLights, &mTestLights[Light::MAX_LIGHTS], [](Light& light)
-	{
-		light.position =				glm::vec4(0.0f);
-		light.color =					glm::vec4(0.0f);
-		light.attenuation.constant =	0.1f;
-		light.attenuation.linear =		0.1f;
-		light.attenuation.quadratic =	0.00025f;
-	});
-
-	mTestLights[0].position =	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	mTestLights[0].color =		glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	// Point
 	mTestLights[1].position =	glm::vec4(-10.0f, 10.0f, 10.0f, 1.0f);
 	mTestLights[1].color =		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+
+	// Point
 	mTestLights[2].position =	glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	mTestLights[2].color =		glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 }
