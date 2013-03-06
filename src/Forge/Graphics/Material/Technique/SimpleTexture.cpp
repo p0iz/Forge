@@ -147,20 +147,25 @@ void SimpleTexture::updateProperties(const JsonObject& properties)
 	// Shininess
 	property.push_back(::atof(properties.key_values.at("Shininess").value[0].c_str()));
 	setProperty(HashUtils::StringHash("Shininess"), property);
+
+	shaderProgram.use();
+	if (hasProperty(mAmbientColorId)) {
+		glUniform3fv(materialAmbientLoc, 1, getProperty(mAmbientColorId));
+	}
+
+	if (hasProperty(mDiffuseColorId))
+		glUniform3fv(materialDiffuseLoc, 1, getProperty(mDiffuseColorId));
+
+	if (hasProperty(mSpecularColorId))
+		glUniform3fv(materialSpecularLoc, 1, getProperty(mSpecularColorId));
+
+	if (hasProperty(mShininessId))
+		glUniform1f(materialShininessLoc, getProperty(mShininessId));
 }
 
-void SimpleTexture::beginMesh(const RenderTask& task)
+void SimpleTexture::beginMaterial(const RenderTask& task)
 {
 	shaderProgram.use();
-
-	// Update
-	const Camera& camera = task.getCamera();
-	const glm::mat4x4& worldViewTransform = camera.getViewMatrix() * task.getWorldTransform();
-	const glm::mat3x3 normalMatrix(worldViewTransform);
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(camera.getProjectionMatrix() * worldViewTransform)[0][0]);
-	glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &worldViewTransform[0][0]);
-	glUniformMatrix3fv(nLocation, 1, GL_FALSE, &normalMatrix[0][0]);
-	updateLights(task.lights);
 	if (hasProperty(mDiffuseMapId)) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, getProperty(mDiffuseMapId));
@@ -174,19 +179,18 @@ void SimpleTexture::beginMesh(const RenderTask& task)
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, getProperty(mNormalMapId));
 	}
+}
 
-	if (hasProperty(mAmbientColorId)) {
-		glUniform3fv(materialAmbientLoc, 1, getProperty(mAmbientColorId));
-	}
-
-	if (hasProperty(mDiffuseColorId))
-		glUniform3fv(materialDiffuseLoc, 1, getProperty(mDiffuseColorId));
-
-	if (hasProperty(mSpecularColorId))
-		glUniform3fv(materialSpecularLoc, 1, getProperty(mSpecularColorId));
-
-	if (hasProperty(mShininessId))
-		glUniform1f(materialShininessLoc, getProperty(mShininessId));
+void SimpleTexture::beginMesh(const RenderTask& task)
+{
+	// Update
+	const Camera& camera = task.getCamera();
+	const glm::mat4x4& worldViewTransform = camera.getViewMatrix() * task.getWorldTransform();
+	const glm::mat3x3 normalMatrix(worldViewTransform);
+	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(camera.getProjectionMatrix() * worldViewTransform)[0][0]);
+	glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &worldViewTransform[0][0]);
+	glUniformMatrix3fv(nLocation, 1, GL_FALSE, &normalMatrix[0][0]);
+	updateLights(task.lights);
 }
 
 }

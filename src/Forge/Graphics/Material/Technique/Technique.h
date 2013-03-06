@@ -52,6 +52,9 @@ public:
 	virtual void create() = 0;
 	virtual void destroy() = 0;
 
+	// Called when starting to draw with the technique
+	virtual void beginMaterial(const RenderTask&) = 0;
+
 	// Called when starting to draw a mesh
 	virtual void beginMesh(const RenderTask&) = 0;
 
@@ -67,7 +70,7 @@ public:
 		return mNameStr;
 	}
 
-	virtual void updateProperties(const JsonObject&) { }
+	virtual void updateProperties(const JsonObject&) = 0;
 
 	void setProperty(size_t name, Property value)
 	{

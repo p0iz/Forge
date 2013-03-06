@@ -51,6 +51,7 @@ void TestData::draw(RenderTask& task)
 	}
 
 	// For each material, draw the meshes that use the material
+	cubeMaterial.beginMaterial(task);
 	for (Transformation transform : cubeTransforms)
 	{
 		task.setWorldTransform(transform.getWorldMatrix());
@@ -62,12 +63,14 @@ void TestData::draw(RenderTask& task)
 					task.getCamera().getViewProjectionMatrix() * task.getWorldTransform());
 	}
 
+	roomMaterial.beginMaterial(task);
 	task.setWorldTransform(roomTransform.getWorldMatrix());
 	roomMaterial.beginMesh(task);
 	roomMesh->draw();
 
 	// Draw light positions
 	if (DebugAxis::isDebugVisible()) {
+		lampMaterial.beginMaterial(task);
 		for (const Light& light : mTestLights) {
 			if (light.position.w > 0.0001f) {
 				// Draw point lights

@@ -74,6 +74,7 @@ public:
 
 	virtual void updateProperties(const JsonObject &properties);
 
+	virtual void beginMaterial(const RenderTask& task);
 	virtual void beginMesh(const RenderTask& task);
 private:
 	Shader vertexShader;

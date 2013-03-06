@@ -64,18 +64,24 @@ void UnshadedColor::destroy()
 {
 }
 
-void UnshadedColor::beginMesh(const RenderTask& task)
+void UnshadedColor::updateProperties(const JsonObject &)
+{
+}
+
+void UnshadedColor::beginMaterial(const RenderTask& task)
 {
 	shaderProgram.use();
+	if (hasProperty(HashUtils::StringHash("Color"))) {
+		glUniform3fv(colorLocation, 1, getProperty(HashUtils::StringHash("Color")));
+	}
+}
 
+void UnshadedColor::beginMesh(const RenderTask& task)
+{
 	// Update
 	const Camera& camera = task.getCamera();
 	const glm::mat4x4& vp = camera.getViewProjectionMatrix();
 	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(vp * task.getWorldTransform())[0][0]);
-
-	if (hasProperty(HashUtils::StringHash("Color"))) {
-		glUniform3fv(colorLocation, 1, getProperty(HashUtils::StringHash("Color")));
-	}
 }
 
 }

@@ -63,10 +63,17 @@ void DefaultTechnique::destroy()
 {
 }
 
-void DefaultTechnique::beginMesh(const RenderTask& task)
+void DefaultTechnique::updateProperties(const JsonObject &)
+{
+}
+
+void DefaultTechnique::beginMaterial(const RenderTask& task)
 {
 	shaderProgram.use();
+}
 
+void DefaultTechnique::beginMesh(const RenderTask& task)
+{
 	// Update
 	const Camera& camera = task.getCamera();
 	const glm::mat4x4& vp = camera.getViewProjectionMatrix();

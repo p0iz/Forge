@@ -38,6 +38,8 @@ class Material
 {
 public:
 	void loadMaterial(const char* materialFile, TechniqueLibrary& techLibrary);
+
+	void beginMaterial(const RenderTask& task);
 	void beginMesh(const RenderTask& task);
 
 	void setPropertyValue(const char* propertyName, const Property& value);

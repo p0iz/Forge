@@ -28,36 +28,9 @@
 
 #include <glm/glm.hpp>
 
-/*
- * IDEA: RenderTask class to encapsulate render state.
- * The RenderTask keeps track of rendering state, e.g.
- * current camera, scene, material and mesh.
- *
- *	- camera (world-to-view-to-projection)
- *
- *	For drawing scene:
- *	- scene ref
- *		For drawing material:
- *		- material ref
- *			For drawing mesh:
- *			- mesh refs (mesh-to-world)
- *			- collect lights closest to mesh and populate light array for forward lighting
- *
- *	Help:
- *  - get matrices
- *	- get scene lighting
- *
- * Workflow:
- *
- *	1. Create render task.
- *	2. Populate render task with render properties (camera, scene)
- *	3. Iterate materials and meshes in scene.
- *	4. Draw scene -> material -> mesh
- */
-
 namespace Forge {
 
-/* Simple texture technique with albedo, gloss and normal mapping */
+/* Simple color technique without texturing */
 class SimpleColor : public Technique
 {
 public:
@@ -72,6 +45,7 @@ public:
 
 	virtual void updateProperties(const JsonObject &properties);
 
+	virtual void beginMaterial(const RenderTask& task);
 	virtual void beginMesh(const RenderTask& task);
 private:
 	Shader vertexShader;

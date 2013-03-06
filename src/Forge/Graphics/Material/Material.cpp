@@ -51,6 +51,11 @@ void Material::loadMaterial(const char* material_file, TechniqueLibrary &techLib
 	}
 }
 
+void Material::beginMaterial(const RenderTask& task)
+{
+	mTechnique->beginMaterial(task);
+}
+
 void Material::beginMesh(const RenderTask& task)
 {
 	mTechnique->beginMesh(task);
