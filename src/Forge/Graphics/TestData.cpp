@@ -51,7 +51,7 @@ void TestData::draw(RenderTask& task)
 	}
 
 	// For each material, draw the meshes that use the material
-	for (Transformation transform : transforms)
+	for (Transformation transform : cubeTransforms)
 	{
 		task.setWorldTransform(transform.getWorldMatrix());
 		cubeMaterial.beginMesh(task);
@@ -61,6 +61,10 @@ void TestData::draw(RenderTask& task)
 		DebugAxis::getInstance().draw(
 					task.getCamera().getViewProjectionMatrix() * task.getWorldTransform());
 	}
+
+	task.setWorldTransform(roomTransform.getWorldMatrix());
+	roomMaterial.beginMesh(task);
+	roomMesh->draw();
 
 	// Draw light positions
 	if (DebugAxis::isDebugVisible()) {
@@ -100,9 +104,13 @@ void TestData::create()
 	lampMesh.reset(MeshLoader::loadMesh("data/lamp.obj"));
 	for (int i = 0; i < NUMBER_OF_CUBES; ++i)
 	{
-		transforms[i].translate(CIRCLE_WIDTH*glm::sin(glm::radians(360.0-i*36)),CIRCLE_WIDTH*glm::cos(glm::radians(360.0-i*36)),0.0f);
-		transforms[i].rotate(glm::radians(360.0-i*36), glm::vec3(0,1,0));
+		cubeTransforms[i].translate(CIRCLE_WIDTH*glm::sin(glm::radians(360.0-i*36)),CIRCLE_WIDTH*glm::cos(glm::radians(360.0-i*36)),0.0f);
+		cubeTransforms[i].rotate(glm::radians(360.0-i*36), glm::vec3(0,1,0));
 	}
+	roomMesh.reset(MeshLoader::loadMesh("data/room.obj"));
+	roomMaterial.loadMaterial("data/materials/Room.json", mTechniqueLibrary);
+	roomTransform.scale(20);
+
 	// Create the test text
 	mLightText.initialize();
 	mLightText.setFont("data/fonts/BaroqueScript.ttf");
@@ -135,7 +143,7 @@ void TestData::create()
 void TestData::destroy()
 {
 	cubeMesh.reset();
-	for (Transformation& transform : transforms) {
+	for (Transformation& transform : cubeTransforms) {
 		transform.reset();
 	}
 }
