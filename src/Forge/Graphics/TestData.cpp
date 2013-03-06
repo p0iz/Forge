@@ -26,6 +26,7 @@
 #include "Material/Technique/SimpleTexture.h"
 #include "Material/Technique/DefaultTechnique.h"
 #include "Material/Technique/SimpleColor.hpp"
+#include "Material/Technique/UnshadedColor.hpp"
 
 #include "Loaders/ImageLoader.h"
 #include "Loaders/MeshLoader.h"
@@ -92,6 +93,7 @@ void TestData::create()
 	mTechniqueLibrary.add(new DefaultTechnique);
 	mTechniqueLibrary.add(new SimpleTexture);
 	mTechniqueLibrary.add(new SimpleColor);
+	mTechniqueLibrary.add(new UnshadedColor);
 	cubeMaterial.loadMaterial("data/materials/Crate.json", mTechniqueLibrary);
 	cubeMesh.reset(MeshLoader::loadMesh("data/crate.obj"));
 	lampMaterial.loadMaterial("data/materials/Lamp.json", mTechniqueLibrary);

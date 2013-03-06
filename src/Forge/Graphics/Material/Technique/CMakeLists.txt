@@ -5,7 +5,8 @@ set(TechniqueSources
 	Property.cpp
 	SimpleColor.cpp
 	SimpleTexture.cpp
-	TechniqueLibrary.cpp)
+	TechniqueLibrary.cpp
+	UnshadedColor.cpp)
 
 add_library(Technique ${TechniqueSources})
 target_link_libraries(Technique Loaders)

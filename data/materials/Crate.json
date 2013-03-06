@@ -1,6 +1,6 @@
 {
-	"Name" : "SimpleTexture",
-	"Description" : "A simple lighting shader",
+	"Name" : "CrateMaterial",
+	"Description" : "Crate material",
 	"Technique" : "SimpleTexture",
 	"Properties" : {
 		"DiffuseMap" : "data/textures/crate_uv_textured.png",

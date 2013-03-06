@@ -22,28 +22,88 @@
 
 #include "Technique.h"
 
+#include "../../Light/Light.hpp"
 #include "../../Shader/Shader.h"
 #include "../../Shader/ShaderProgram.h"
 
+#include <glm/glm.hpp>
+
+/*
+ * IDEA: RenderTask class to encapsulate render state.
+ * The RenderTask keeps track of rendering state, e.g.
+ * current camera, scene, material and mesh.
+ *
+ *	- camera (world-to-view-to-projection)
+ *
+ *	For drawing scene:
+ *	- scene ref
+ *		For drawing material:
+ *		- material ref
+ *			For drawing mesh:
+ *			- mesh refs (mesh-to-world)
+ *			- collect lights closest to mesh and populate light array for forward lighting
+ *
+ *	Help:
+ *  - get matrices
+ *	- get scene lighting
+ *
+ * Workflow:
+ *
+ *	1. Create render task.
+ *	2. Populate render task with render properties (camera, scene)
+ *	3. Iterate materials and meshes in scene.
+ *	4. Draw scene -> material -> mesh
+ */
+
 namespace Forge {
 
-/* This renders anything thrown at it with a single color */
+/* Simple texture technique with albedo, gloss and normal mapping */
 class SimpleColor : public Technique
 {
 public:
 	SimpleColor();
+
 	virtual Technique* clone();
+
 	virtual void create();
 	virtual void destroy();
+
+	void updateLights(const Light lights[]);
+
+	virtual void updateProperties(const JsonObject &properties);
+
 	virtual void beginMesh(const RenderTask& task);
 private:
 	Shader vertexShader;
 	Shader fragmentShader;
 	ShaderProgram shaderProgram;
 
-	// Uniform location
-	unsigned int wvpLocation;
-	unsigned int colorLocation;
+	// Textures
+	size_t mDiffuseMapId;
+	size_t mSpecularMapId;
+	size_t mNormalMapId;
+
+	// Color IDs
+	size_t mAmbientColorId;
+	size_t mDiffuseColorId;
+	size_t mSpecularColorId;
+	size_t mShininessId;
+
+	// Lighting
+	const int lightBindingPoint = 1;
+	unsigned int lightsUniformIndex;
+	unsigned int lightBuffer;
+
+	// Uniform locations
+	int wvpLocation; // World->View->Projection
+	int wvLocation; // World->View
+	int nLocation; // Normal matrix (upper 3x3 of WorldView)
+
+	int materialAmbientLoc;
+	int materialDiffuseLoc;
+	int materialSpecularLoc;
+	int materialShininessLoc;
+
 };
 
 }
