@@ -67,25 +67,22 @@ vec3 ads_lighting() {
 		vec3 eye_space_light = normalize(vec3(lights[i].position) - eye_space_vertex);
 		vec3 halfway = normalize(eye_space_light + eye);
 		float diffuse = max(dot(eye_space_light, normal), 0.0f);
-		float specular = 0.0f;
-		float spotlight = 1.0f;
-		if (diffuse > 0.0f) {
-			// Spotlight
-			if (lights[i].exponent > 0.0f) {
-				// Calculate fragment illumination
-				spotlight = max(-dot(eye_space_light, normalize(lights[i].direction)), 0.0f);
-				// Fade 
-				float fade = 
-					clamp((lights[i].cutoff - spotlight) / lights[i].cutoff - lights[i].falloff, 0.0f, 1.0f); 
-				spotlight = pow(spotlight * fade, lights[i].exponent);
-			}
-			// Specular
-			specular = pow(max(dot(halfway, normal), 0.0f), materialShininess);
-		}
-		vec3 lightContribution = lights[i].color.rgb * lights[i].color.a * spotlight *
+		float specular = pow(max(dot(halfway, normal), 0.0f), materialShininess);
+		vec3 lightContribution = lights[i].color.rgb * lights[i].color.a *
 			(materialAmbient + 
 			materialDiffuse * diffuse + 
 			materialSpecular * specular);
+		// Spotlight
+		if (lights[i].exponent > 0.0f) {
+			// Calculate fragment illumination
+			float spotlight = max(-dot(eye_space_light, normalize(lights[i].direction)), 0.0f);
+			// Fade 
+			float fade = 
+				clamp((lights[i].cutoff - spotlight) / lights[i].cutoff - lights[i].falloff, 0.0f, 1.0f); 
+			spotlight = pow(spotlight * fade, lights[i].exponent);
+			lightContribution *= spotlight;
+		}
+		
 		lighting += lightContribution * attenuation[i];
 	}
 	return lighting;
