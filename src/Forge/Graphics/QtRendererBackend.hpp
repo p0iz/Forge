@@ -73,8 +73,8 @@ private:
 
 	TestData mTestData;
 
-	virtual void setupScene();
-	virtual void tearDownScene();
+	void setupScene();
+	void tearDownScene();
 
 	QtInputHandler& mInput;
 
