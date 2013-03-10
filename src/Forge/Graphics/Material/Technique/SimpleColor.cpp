@@ -146,6 +146,7 @@ void SimpleColor::updateProperties(const JsonObject& properties)
 void SimpleColor::beginMaterial(const RenderTask &task)
 {
 	shaderProgram.use();
+	updateLights(task.lights);
 }
 
 void SimpleColor::beginMesh(const RenderTask& task)
@@ -157,7 +158,6 @@ void SimpleColor::beginMesh(const RenderTask& task)
 	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(camera.getProjectionMatrix() * worldViewTransform)[0][0]);
 	glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &worldViewTransform[0][0]);
 	glUniformMatrix3fv(nLocation, 1, GL_FALSE, &normalMatrix[0][0]);
-	updateLights(task.lights);
 }
 
 }
