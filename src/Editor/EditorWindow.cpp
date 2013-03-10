@@ -29,7 +29,7 @@
 // Forge includes
 #include "Engine.h"
 #include "Graphics/OrbitalCamera.h"
-#include "Graphics/RendererWidget.h"
+#include "Graphics/QtRenderer.hpp"
 #include "State/QtEngineState.h"
 #include "State/QtGameStateMachine.hpp"
 
@@ -42,7 +42,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	mEngine(new Forge::Engine(*mEditorStateMachine)),
 	mCamera(new Forge::OrbitalCamera(10.0f)),
 	mInput(new EditorInputHandler(*mCamera)),
-	mRenderer(new Forge::RendererWidget(*mCamera, *mInput)),
+	mRenderer(new Forge::QtRenderer(*mCamera, *mInput, 0, 0, 0)),
 	mMaterialEditor(new MaterialEditorView(*mCamera, *mInput)),
 	mEditorState(new Forge::QtEngineState(*mRenderer, *mInput, mEngine->getGameClock()))
 {

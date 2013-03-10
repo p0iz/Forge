@@ -21,14 +21,14 @@
 #include "QtEngineState.h"
 
 #include "Input/QtInputHandler.h"
-#include "Graphics/RendererWidget.h"
+#include "Graphics/QtRenderer.hpp"
 #include "Time/HighResClock.h"
 
 namespace Forge
 {
 
 QtEngineState::QtEngineState(
-		RendererWidget& renderer,
+		QtRenderer& renderer,
 		QtInputHandler& input,
 		HighResClock& clock)
 	: mRenderer(renderer), mInput(input), mClock(clock)
@@ -40,7 +40,7 @@ void QtEngineState::fire() const
 	float delta = mClock.getGameDelta();
 	mClock.updateDeltaTime();
 	mInput.processInput(delta);
-	mRenderer.updateGL();
+	mRenderer.render();
 }
 
 } // namespace Forge

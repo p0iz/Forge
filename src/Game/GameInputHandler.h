@@ -30,7 +30,7 @@ namespace Forge {
 
 class HighResClock;
 class OrbitalCamera;
-class RendererWidget;
+class QtRendererBackend;
 
 } // Forge
 
@@ -55,11 +55,11 @@ class GameInputHandler : public Forge::QtInputHandler
 public:
 	explicit GameInputHandler(Forge::OrbitalCamera& camera, Forge::HighResClock& clock);
 	virtual ~GameInputHandler();
-	virtual void keyPress(QKeyEvent* event, Forge::RendererWidget* renderer);
-	virtual void keyRelease(QKeyEvent* event, Forge::RendererWidget* renderer);
-	virtual void mousePress(QMouseEvent *event, Forge::RendererWidget* renderer);
-	virtual void mouseRelease(QMouseEvent *event, Forge::RendererWidget* renderer);
-	virtual void mouseMove(QMouseEvent *event, Forge::RendererWidget* renderer);
+	virtual void keyPress(QKeyEvent* event, Forge::QtRendererBackend* renderer);
+	virtual void keyRelease(QKeyEvent* event, Forge::QtRendererBackend* renderer);
+	virtual void mousePress(QMouseEvent *event, Forge::QtRendererBackend* renderer);
+	virtual void mouseRelease(QMouseEvent *event, Forge::QtRendererBackend* renderer);
+	virtual void mouseMove(QMouseEvent *event, Forge::QtRendererBackend* renderer);
 
 	virtual void processInput(float delta);
 private:

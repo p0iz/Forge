@@ -14,21 +14,23 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "Graphics/QtRendererBackend.hpp"
+#pragma once
 
-class MaterialEditorView : public Forge::QtRendererBackend
-{
-	Q_OBJECT
-public:
-	MaterialEditorView(Forge::Camera& camera,	Forge::QtInputHandler& input);
-	virtual ~MaterialEditorView();
-private:
-	virtual void setupScene();
-	virtual void drawScene();
-	virtual void tearDownScene();
+#include "QtRendererBackend.hpp"
+#include "Renderer.hpp"
 
-};
+namespace Forge {
+
+typedef Renderer<QtRendererBackend,
+	Camera&,
+	QtInputHandler&,
+	QWidget*,
+	QGLWidget*,
+	Qt::WindowFlags>
+	QtRenderer;
+
+}

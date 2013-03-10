@@ -2,7 +2,7 @@
 
 # Do Qt stuff for Forge headers
 set(MOC_HEADERS
-	RendererWidget.h)
+	QtRendererBackend.hpp)
 qt4_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
 
 # Add Shader component to build
@@ -25,7 +25,9 @@ set(GraphicsSources
 	DebugAxis.cpp
 	Mesh.cpp
 	OrbitalCamera.cpp
-	RendererWidget.cpp
+	QtRendererBackend.cpp
+	QtRenderer.hpp
+	Renderer.hpp
 	RenderTask.cpp
 	SceneNode.cpp
 	TestData.cpp

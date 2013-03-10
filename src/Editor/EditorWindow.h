@@ -21,8 +21,9 @@
 #ifndef EDITORWINDOW_H
 #define EDITORWINDOW_H
 
-#include <QMainWindow>
+#include "Graphics/QtRenderer.hpp"
 
+#include <QMainWindow>
 #include <memory>
 
 namespace Ui {
@@ -35,7 +36,6 @@ class Engine;
 class OrbitalCamera;
 class QtEngineState;
 class QtGameStateMachine;
-class RendererWidget;
 } // Forge
 
 class EditorInputHandler;
@@ -63,7 +63,7 @@ private:
 	std::shared_ptr<Forge::Engine> mEngine;
 	std::shared_ptr<Forge::OrbitalCamera> mCamera;
 	std::shared_ptr<EditorInputHandler> mInput;
-	std::shared_ptr<Forge::RendererWidget> mRenderer;
+	std::shared_ptr<Forge::QtRenderer> mRenderer;
 	std::shared_ptr<MaterialEditorView> mMaterialEditor;
 	std::shared_ptr<Forge::QtEngineState> mEditorState;
 };

@@ -22,7 +22,7 @@
 
 #include "Graphics/DebugAxis.h"
 #include "Graphics/OrbitalCamera.h"
-#include "Graphics/RendererWidget.h"
+#include "Graphics/QtRendererBackend.hpp"
 
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -32,23 +32,23 @@ EditorInputHandler::EditorInputHandler(Forge::OrbitalCamera &camera)
 {
 }
 
-void EditorInputHandler::keyPress(QKeyEvent* event, Forge::RendererWidget* renderer)
+void EditorInputHandler::keyPress(QKeyEvent* event, Forge::QtRendererBackend* renderer)
 {
 }
 
-void EditorInputHandler::keyRelease(QKeyEvent* event, Forge::RendererWidget* renderer)
+void EditorInputHandler::keyRelease(QKeyEvent* event, Forge::QtRendererBackend* renderer)
 {
 }
 
-void EditorInputHandler::mousePress(QMouseEvent *event, Forge::RendererWidget* renderer)
+void EditorInputHandler::mousePress(QMouseEvent *event, Forge::QtRendererBackend* renderer)
 {
 }
 
-void EditorInputHandler::mouseRelease(QMouseEvent *event, Forge::RendererWidget* renderer)
+void EditorInputHandler::mouseRelease(QMouseEvent *event, Forge::QtRendererBackend* renderer)
 {
 }
 
-void EditorInputHandler::mouseMove(QMouseEvent *event, Forge::RendererWidget* renderer)
+void EditorInputHandler::mouseMove(QMouseEvent *event, Forge::QtRendererBackend* renderer)
 {
 	QPoint relativeMovement = event->pos() - mPreviousMouseLocation;
 	if (event->buttons() & Qt::LeftButton)

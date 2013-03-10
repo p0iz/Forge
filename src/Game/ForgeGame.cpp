@@ -28,7 +28,7 @@
 ForgeGame::ForgeGame()
 	: mEngine(mStateMachine),
 	  mInput(mCamera, mEngine.getGameClock()),
-	  mRenderer(mCamera, mInput),
+	  mRenderer(mCamera, mInput, 0, 0, 0),
 	  mInitialState(mRenderer, mInput, mEngine.getGameClock())
 {
 }
@@ -36,9 +36,7 @@ ForgeGame::ForgeGame()
 void ForgeGame::init()
 {
 	Forge::Log::info << "Initializing... ";
-	mRenderer.setCamera(mCamera);
 	mStateMachine.setCurrentState(&mInitialState);
-
 
 	QIcon icon("data/images/icon128.png");
 	mRenderer.setWindowIcon(icon);

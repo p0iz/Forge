@@ -21,6 +21,7 @@
 #pragma once
 
 #include "OrbitalCamera.h"
+#include "Renderer.hpp"
 #include "TestData.h"
 
 #include <GL/glew.h>
@@ -33,23 +34,21 @@ class QtInputHandler;
 class Shader;
 class ShaderProgram;
 
-class RendererWidget : public QGLWidget
+class QtRendererBackend : public QGLWidget
 {
 	Q_OBJECT
 public:
-	explicit RendererWidget(
+	explicit QtRendererBackend(
 			Camera& camera,
 			QtInputHandler& input,
-			QWidget* parent=0,
+			QWidget* parent = 0,
 			const QGLWidget* shareWidget = 0,
 			Qt::WindowFlags f=0);
+	virtual ~QtRendererBackend();
 
-	void setCamera(Camera& camera)
-	{
-		mCamera = camera;
-	}
-
-	virtual ~RendererWidget();
+	void prepareDraw();
+	void performDraw();
+	void finishDraw();
 
 	void toggleFullscreen();
 
@@ -68,15 +67,15 @@ private:
 
 	bool mFullScreen;
 
+	Camera& mCamera;
+
 	glm::mat4x4 mViewProjection;
 
 	TestData mTestData;
 
 	virtual void setupScene();
-	virtual void drawScene();
 	virtual void tearDownScene();
 
-	Camera& mCamera;
 	QtInputHandler& mInput;
 
 	glm::mat4x4 mProjectionTx;

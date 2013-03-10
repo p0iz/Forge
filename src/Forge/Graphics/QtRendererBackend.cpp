@@ -18,7 +18,7 @@
  *
  */
 
-#include "RendererWidget.h"
+#include "QtRendererBackend.hpp"
 
 #include "RenderTask.h"
 
@@ -30,19 +30,35 @@
 namespace Forge
 {
 
-RendererWidget::RendererWidget(
+QtRendererBackend::QtRendererBackend(
 		Camera& camera,
 		QtInputHandler& input,
 		QWidget* parent,
 		const QGLWidget* shareWidget,
 		Qt::WindowFlags f)
-	: QGLWidget(widgetQGLFormat(), parent, shareWidget, f),
-	  mCamera(camera), mInput(input)
+	: QGLWidget(widgetQGLFormat(), parent, shareWidget, f), mCamera(camera), mInput(input)
 {
 	setMouseTracking(true);
 }
 
-const QGLFormat RendererWidget::widgetQGLFormat()
+void QtRendererBackend::prepareDraw()
+{
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	mCamera.updateViewProjectionMatrix();
+}
+
+void QtRendererBackend::performDraw()
+{
+	RenderTask task(mCamera);
+	mTestData.draw(task);
+}
+
+void QtRendererBackend::finishDraw()
+{
+	updateGL();
+}
+
+const QGLFormat QtRendererBackend::widgetQGLFormat()
 {
 	QGLFormat format = QGLFormat::defaultFormat();
 	format.setVersion(3, 3);
@@ -51,12 +67,12 @@ const QGLFormat RendererWidget::widgetQGLFormat()
 	return format;
 }
 
-RendererWidget::~RendererWidget()
+QtRendererBackend::~QtRendererBackend()
 {
 	tearDownScene();
 }
 
-void RendererWidget::toggleFullscreen()
+void QtRendererBackend::toggleFullscreen()
 {
 	if (mFullScreen)
 	{
@@ -70,28 +86,22 @@ void RendererWidget::toggleFullscreen()
 	}
 }
 
-void RendererWidget::reloadMaterials()
+void QtRendererBackend::reloadMaterials()
 {
 	mTestData.reloadTestMaterial();
 }
 
-void RendererWidget::setupScene()
+void QtRendererBackend::setupScene()
 {
 	mTestData.create();
 }
 
-void RendererWidget::drawScene()
-{
-	RenderTask task(mCamera);
-	mTestData.draw(task);
-}
-
-void RendererWidget::tearDownScene()
+void QtRendererBackend::tearDownScene()
 {
 	mTestData.destroy();
 }
 
-void RendererWidget::initializeGL()
+void QtRendererBackend::initializeGL()
 {
 	// Flag to load all extensions, needed by OpenGL 3.3
 	glewExperimental = GL_TRUE;
@@ -107,40 +117,34 @@ void RendererWidget::initializeGL()
 	setupScene();
 }
 
-void RendererWidget::resizeGL(int w, int h)
+void QtRendererBackend::resizeGL(int w, int h)
 {
 	glViewport(0, 0, w, h);
 	mCamera.setPerspectiveProjection(45.0f, w, h, 0.1f, 100.0f);
 	mTestData.updateText(w, h);
 }
 
-void RendererWidget::paintGL()
+void QtRendererBackend::paintGL()
 {
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-	mCamera.updateViewProjectionMatrix();
-
-	drawScene();
-
 	swapBuffers();
 }
 
-void RendererWidget::keyPressEvent(QKeyEvent *event)
+void QtRendererBackend::keyPressEvent(QKeyEvent *event)
 {
 	mInput.keyPress(event, this);
 }
 
-void RendererWidget::keyReleaseEvent(QKeyEvent* event)
+void QtRendererBackend::keyReleaseEvent(QKeyEvent* event)
 {
 	mInput.keyRelease(event, this);
 }
 
-void RendererWidget::mousePressEvent(QMouseEvent *event)
+void QtRendererBackend::mousePressEvent(QMouseEvent *event)
 {
 	mInput.mousePress(event, this);
 }
 
-void RendererWidget::mouseMoveEvent(QMouseEvent *event)
+void QtRendererBackend::mouseMoveEvent(QMouseEvent *event)
 {
 	mInput.mouseMove(event, this);
 }

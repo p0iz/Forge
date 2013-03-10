@@ -22,7 +22,7 @@
 
 #include "Graphics/DebugAxis.h"
 #include "Graphics/OrbitalCamera.h"
-#include "Graphics/RendererWidget.h"
+#include "Graphics/QtRendererBackend.hpp"
 
 #include "Time/HighResClock.h"
 
@@ -42,7 +42,7 @@ GameInputHandler::~GameInputHandler()
 {
 }
 
-void GameInputHandler::keyPress(QKeyEvent* event, Forge::RendererWidget* renderer)
+void GameInputHandler::keyPress(QKeyEvent* event, Forge::QtRendererBackend* renderer)
 {
 	switch (event->key())
 	{
@@ -83,7 +83,7 @@ void GameInputHandler::keyPress(QKeyEvent* event, Forge::RendererWidget* rendere
 	}
 }
 
-void GameInputHandler::keyRelease(QKeyEvent* event, Forge::RendererWidget* renderer)
+void GameInputHandler::keyRelease(QKeyEvent* event, Forge::QtRendererBackend* renderer)
 {
 	switch (event->key())
 	{
@@ -104,15 +104,15 @@ void GameInputHandler::keyRelease(QKeyEvent* event, Forge::RendererWidget* rende
 	}
 }
 
-void GameInputHandler::mousePress(QMouseEvent *event, Forge::RendererWidget* renderer)
+void GameInputHandler::mousePress(QMouseEvent *event, Forge::QtRendererBackend* renderer)
 {
 }
 
-void GameInputHandler::mouseRelease(QMouseEvent *event, Forge::RendererWidget* renderer)
+void GameInputHandler::mouseRelease(QMouseEvent *event, Forge::QtRendererBackend* renderer)
 {
 }
 
-void GameInputHandler::mouseMove(QMouseEvent *event, Forge::RendererWidget* renderer)
+void GameInputHandler::mouseMove(QMouseEvent *event, Forge::QtRendererBackend* renderer)
 {
 	QPoint relativeMovement = event->pos() - mPreviousMouseLocation;
 	if (event->buttons() & Qt::LeftButton)
