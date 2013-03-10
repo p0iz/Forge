@@ -20,6 +20,8 @@
 
 #include "ImageLoader.h"
 
+#include "Util/Log.h"
+
 #include <GL/glew.h>
 #include <fstream>
 #include <iostream>
@@ -45,7 +47,7 @@ unsigned int loadAsTexture(const char* imageFile)
 		glGenTextures(1, &textureId);
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D(
 					GL_TEXTURE_2D,
 					0,
@@ -58,14 +60,17 @@ unsigned int loadAsTexture(const char* imageFile)
 					bitmap->data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glGetError();
 		FreeImage_Unload(bitmap);
 	}
 	else
 	{
-		std::cout
-				<< "Failed to read file '" << imageFile
-				<< "' of type " << FreeImage_GetFormatFromFIF(format) << "\n";
+		const char* formatStr = FreeImage_GetFormatFromFIF(format);
+		Log::LogStream& stream = Log::error << "Failed to read file '" << imageFile << "'";
+		if (formatStr) {
+			stream << " of type " << formatStr << '\n';
+		} else {
+			stream << '\n';
+		}
 	}
 	return textureId;
 }
