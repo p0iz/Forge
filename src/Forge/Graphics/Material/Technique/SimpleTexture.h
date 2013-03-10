@@ -82,16 +82,10 @@ private:
 	ShaderProgram shaderProgram;
 
 	// Textures
-	size_t mDiffuseMapId;
-	size_t mSpecularMapId;
-	size_t mNormalMapId;
+	unsigned int mDiffuseMap;
+	unsigned int mSpecularMap;
+	unsigned int mNormalMap;
 	std::vector<unsigned int> mLoadedTextures;
-
-	// Color IDs
-	size_t mAmbientColorId;
-	size_t mDiffuseColorId;
-	size_t mSpecularColorId;
-	size_t mShininessId;
 
 	// Lighting
 	const int lightBindingPoint = 1;

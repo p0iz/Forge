@@ -39,7 +39,11 @@ struct JsonObject
 {
 	void printContents() const;
 	void printObject(const JsonObject& object, const int indentation) const;
-	std::map<std::string, JsonValue> key_values;
+
+	typedef std::map<std::string, JsonValue> StringValueMap;
+	StringValueMap key_values;
+
+	bool hasValue(const StringValueMap::key_type& key) const;
 };
 
 class JsonParser {

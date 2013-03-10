@@ -30,14 +30,7 @@
 namespace Forge {
 
 SimpleTexture::SimpleTexture()
-	: Technique("SimpleTexture"),
-	  mDiffuseMapId(HashUtils::StringHash("DiffuseMap")),
-	  mSpecularMapId(HashUtils::StringHash("SpecularMap")),
-	  mNormalMapId(HashUtils::StringHash("NormalMap")),
-	  mAmbientColorId(HashUtils::StringHash("AmbientColor")),
-	  mDiffuseColorId(HashUtils::StringHash("DiffuseColor")),
-	  mSpecularColorId(HashUtils::StringHash("SpecularColor")),
-	  mShininessId(HashUtils::StringHash("Shininess"))
+	: Technique("SimpleTexture")
 {
 }
 
@@ -101,84 +94,89 @@ void SimpleTexture::updateLights(const Light lights[Light::MAX_LIGHTS])
 
 void SimpleTexture::updateProperties(const JsonObject& properties)
 {
-	Property property;
-	property.clear();
+	shaderProgram.use();
 
 	// Diffuse map
-	if (properties.key_values.count("DiffuseMap") > 0) {
-		unsigned int loadedTexture = ImageLoader::loadAsTexture(properties.key_values.at("DiffuseMap").value[0].c_str());
-		property.push_back(loadedTexture);
-		mLoadedTextures.push_back(loadedTexture);
-		setProperty(HashUtils::StringHash("DiffuseMap"), property);
-		property.clear();
+	if (properties.hasValue("DiffuseMap")) {
+		unsigned int loadedTexture =
+			ImageLoader::loadAsTexture(properties.key_values.at("DiffuseMap").value[0].c_str());
+		if (loadedTexture > 0) {
+			mDiffuseMap = loadedTexture;
+			mLoadedTextures.push_back(loadedTexture);
+		}
+	}
+
+	// Specular map
+	if (properties.hasValue("SpecularMap")) {
+		unsigned int loadedTexture =
+			ImageLoader::loadAsTexture(properties.key_values.at("SpecularMap").value[0].c_str());
+		if (loadedTexture > 0) {
+			mSpecularMap = loadedTexture;
+			mLoadedTextures.push_back(loadedTexture);
+		}
+	}
+
+	// Normal map
+	if (properties.hasValue("NormalMap")) {
+		unsigned int loadedTexture =
+			ImageLoader::loadAsTexture(properties.key_values.at("NormalMap").value[0].c_str());
+		if (loadedTexture > 0) {
+			mNormalMap = loadedTexture;
+			mLoadedTextures.push_back(loadedTexture);
+		}
 	}
 
 	// Ambient color reflectivity
-	float ambientColor[3];
-	const std::vector<std::string>& ambientValues = properties.key_values.at("AmbientColor").value;
-	ambientColor[0] = ::atof(ambientValues[0].c_str());
-	ambientColor[1] = ::atof(ambientValues[1].c_str());
-	ambientColor[2] = ::atof(ambientValues[2].c_str());
-	property.assign(ambientColor, ambientColor+3);
-	setProperty(HashUtils::StringHash("AmbientColor"), property);
-
-	property.clear();
-
-	// Diffuse color reflectivity
-	float diffuseColor[3];
-	const std::vector<std::string>& diffuseValues = properties.key_values.at("DiffuseColor").value;
-	diffuseColor[0] = ::atof(diffuseValues[0].c_str());
-	diffuseColor[1] = ::atof(diffuseValues[1].c_str());
-	diffuseColor[2] = ::atof(diffuseValues[2].c_str());
-	property.assign(diffuseColor, diffuseColor+3);
-	setProperty(HashUtils::StringHash("DiffuseColor"), property);
-
-	// Specular color reflectivity
-	float specularColor[3];
-	const std::vector<std::string>& specularValues = properties.key_values.at("SpecularColor").value;
-	specularColor[0] = ::atof(specularValues[0].c_str());
-	specularColor[1] = ::atof(specularValues[1].c_str());
-	specularColor[2] = ::atof(specularValues[2].c_str());
-	property.assign(specularColor, specularColor+3);
-	setProperty(HashUtils::StringHash("SpecularColor"), property);
-
-	property.clear();
-
-	// Shininess
-	property.push_back(::atof(properties.key_values.at("Shininess").value[0].c_str()));
-	setProperty(HashUtils::StringHash("Shininess"), property);
-
-	shaderProgram.use();
-	if (hasProperty(mAmbientColorId)) {
-		glUniform3fv(materialAmbientLoc, 1, getProperty(mAmbientColorId));
+	if (properties.hasValue("AmbientColor"))
+	{
+		float ambientColor[3];
+		const std::vector<std::string>& ambientValues = properties.key_values.at("AmbientColor").value;
+		ambientColor[0] = ::atof(ambientValues[0].c_str());
+		ambientColor[1] = ::atof(ambientValues[1].c_str());
+		ambientColor[2] = ::atof(ambientValues[2].c_str());
+		glUniform3fv(materialAmbientLoc, 1, ambientColor);
 	}
 
-	if (hasProperty(mDiffuseColorId))
-		glUniform3fv(materialDiffuseLoc, 1, getProperty(mDiffuseColorId));
+	// Diffuse color reflectivity
+	if (properties.hasValue("DiffuseColor"))
+	{
+		float diffuseColor[3];
+		const std::vector<std::string>& diffuseValues = properties.key_values.at("DiffuseColor").value;
+		diffuseColor[0] = ::atof(diffuseValues[0].c_str());
+		diffuseColor[1] = ::atof(diffuseValues[1].c_str());
+		diffuseColor[2] = ::atof(diffuseValues[2].c_str());
+		glUniform3fv(materialDiffuseLoc, 1, diffuseColor);
+	}
 
-	if (hasProperty(mSpecularColorId))
-		glUniform3fv(materialSpecularLoc, 1, getProperty(mSpecularColorId));
+	// Specular color reflectivity
+	if (properties.hasValue("SpecularColor"))
+	{
+		float specularColor[3];
+		const std::vector<std::string>& specularValues = properties.key_values.at("SpecularColor").value;
+		specularColor[0] = ::atof(specularValues[0].c_str());
+		specularColor[1] = ::atof(specularValues[1].c_str());
+		specularColor[2] = ::atof(specularValues[2].c_str());
+		glUniform3fv(materialSpecularLoc, 1, specularColor);
+	}
 
-	if (hasProperty(mShininessId))
-		glUniform1f(materialShininessLoc, getProperty(mShininessId));
+	// Shininess
+	if (properties.hasValue("Shininess"))
+	{
+		float shininess = ::atof(properties.key_values.at("Shininess").value[0].c_str());
+		glUniform1f(materialShininessLoc, shininess);
+	}
 }
 
 void SimpleTexture::beginMaterial(const RenderTask& task)
 {
 	shaderProgram.use();
-	if (hasProperty(mDiffuseMapId)) {
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, getProperty(mDiffuseMapId));
-	}
-	if (hasProperty(mSpecularMapId)) {
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, getProperty(mSpecularMapId));
-	}
-
-	if (hasProperty(mNormalMapId)) {
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, getProperty(mNormalMapId));
-	}
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mDiffuseMap);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, mSpecularMap);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, mNormalMap);
+	updateLights(task.lights);
 }
 
 void SimpleTexture::beginMesh(const RenderTask& task)
@@ -190,7 +188,6 @@ void SimpleTexture::beginMesh(const RenderTask& task)
 	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(camera.getProjectionMatrix() * worldViewTransform)[0][0]);
 	glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &worldViewTransform[0][0]);
 	glUniformMatrix3fv(nLocation, 1, GL_FALSE, &normalMatrix[0][0]);
-	updateLights(task.lights);
 }
 
 }

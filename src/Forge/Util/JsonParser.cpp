@@ -186,4 +186,9 @@ void JsonObject::printObject(const JsonObject &object, const int indentation) co
 	}
 }
 
+bool JsonObject::hasValue(const StringValueMap::key_type& key) const
+{
+	return key_values.count(key) > 0;
+}
+
 }
