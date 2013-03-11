@@ -52,6 +52,8 @@ public:
 
 	void toggleFullscreen();
 
+	void resize(int w, int h);
+
 public slots:
 	void reloadMaterials();
 

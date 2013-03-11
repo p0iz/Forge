@@ -25,6 +25,7 @@
 #include "Graphics/QtRendererBackend.hpp"
 #include "Time/HighResClock.h"
 #include "Util/Log.h"
+#include "Config/ConfigLoader.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -33,28 +34,23 @@ namespace Forge {
 
 Engine::Engine(GameStateMachine& stateMachine, const char* configFilename)
 	: mRunning(false),
-	  mStateMachine(stateMachine),
-	  mConfigFilename(configFilename)
+	  mStateMachine(stateMachine)
 {
+	Log::info << "Built on " << __DATE__ << " at " << __TIME__ "\n";
+	loadConfig(configFilename);
 }
 
-void Engine::parseEngineConfig()
+void Engine::loadConfig(const char* configFile)
 {
-	std::ifstream configFile(mConfigFilename);
-	if (!configFile.is_open())
-	{
-		Log::error << "Could not open config file: " << mConfigFilename;
-		return;
-	}
+	ConfigLoader loader;
+	loader.setConfig(mConfig);
+	loader.loadFile(configFile);
 }
 
 void Engine::start()
 {
 	if (!mRunning)
 	{
-		Log::info << "Parsing engine config...\n";
-		Log::info << "Built on " << __DATE__ << " at " << __TIME__ "\n";
-		parseEngineConfig();
 		mRunning = true;
 		mClock.init();
 		mStateMachine.startMachine();

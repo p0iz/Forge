@@ -86,6 +86,11 @@ void QtRendererBackend::toggleFullscreen()
 	}
 }
 
+void QtRendererBackend::resize(int w, int h)
+{
+	setGeometry(x(), y(), w, h);
+}
+
 void QtRendererBackend::reloadMaterials()
 {
 	mTestData.reloadTestMaterial();

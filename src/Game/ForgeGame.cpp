@@ -26,11 +26,13 @@
 #include <QIcon>
 
 ForgeGame::ForgeGame()
-	: mEngine(mStateMachine),
+	: mEngine(mStateMachine, "data/game.lua"),
 	  mInput(mCamera, mEngine.getGameClock()),
 	  mRenderer(mCamera, mInput, 0, 0, 0),
 	  mInitialState(mRenderer, mInput, mEngine.getGameClock())
 {
+	const Forge::Configuration& cfg = mEngine.getConfig();
+	mRenderer.resize(cfg.display.width, cfg.display.height);
 }
 
 void ForgeGame::init()

@@ -18,37 +18,40 @@
  *
  */
 
-#pragma once
+#include "ConfigHandler.hpp"
+
+#include "Configuration.hpp"
+#include "Util/Log.h"
+
+#include "lua.hpp"
+#include "lauxlib.h"
+#include "lualib.h"
 
 namespace Forge {
 
-template <class Backend, class... BackendCtorArgs>
-struct Renderer : public Backend {
-	Renderer(BackendCtorArgs... args)
-		: Backend(args...) { }
-
-	void resize(int width, int height);
-	void initialize();
-	void render();
-};
-
-template <class Backend, class... BackendCtorArgs>
-void Renderer<Backend, BackendCtorArgs...>::resize(int width, int height)
+void ConfigHandler::setConfig(Configuration& config)
 {
-	Backend::resize(width, height);
+	mConfig = &config;
 }
 
-template <class Backend, class... BackendCtorArgs>
-void Renderer<Backend, BackendCtorArgs...>::initialize() {
-	Backend::initialize();
-}
-
-template <class Backend, class... BackendCtorArgs>
-void Renderer<Backend, BackendCtorArgs...>::render()
+bool ConfigHandler::handleLoadedLua(lua_State* state) const
 {
-	Backend::prepareDraw();
-	Backend::performDraw();
-	Backend::finishDraw();
+	bool loaded = false;
+
+	if (mConfig == nullptr) {
+		Log::error << "Configuration not set before load!\n";
+		return loaded;
+	}
+	lua_getglobal(state, "width");
+	lua_getglobal(state, "height");
+	if (lua_isnumber(state, -2) && lua_isnumber(state, -1)) {
+		mConfig->display.width = lua_tonumber(state, -2);
+		mConfig->display.height = lua_tonumber(state, -1);
+		loaded = true;
+	} else {
+		Log::error << "Config error: display parameters should be numbers!\n";
+	}
+	return loaded;
 }
 
 }

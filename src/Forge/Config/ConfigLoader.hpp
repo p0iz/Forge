@@ -14,51 +14,17 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Config/Configuration.hpp"
-#include "State/GameStateMachine.hpp"
-#include "Time/HighResClock.h"
-
-#include <string>
+#include "ConfigHandler.hpp"
+#include "Util/LuaLoader.hpp"
 
 namespace Forge {
 
-class EngineState;
+typedef LuaLoader<ConfigHandler> ConfigLoader;
 
-/* This is the main class for the FORGE framework. */
-class Engine
-{
-public:
-	explicit Engine(GameStateMachine& stateMachine, const char* configFilename = "data/forge.lua");
-
-	void start();
-	void stop();
-
-	HighResClock& getGameClock()
-	{
-		return mClock;
-	}
-
-	const Configuration& getConfig() const {
-		return mConfig;
-	}
-
-private:
-
-	void loadConfig(const char* configFile);
-	Configuration mConfig;
-
-	bool mRunning;
-	GameStateMachine& mStateMachine;
-
-
-	// Timing
-	HighResClock mClock;
-};
-
-} // namespace Forge
+}

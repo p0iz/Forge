@@ -37,6 +37,7 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Add subsystems
+add_subdirectory(Config)
 add_subdirectory(State)
 add_subdirectory(Graphics)
 add_subdirectory(Input)
@@ -45,6 +46,7 @@ add_subdirectory(Util)
 
 add_library(Forge Engine.cpp)
 target_link_libraries(Forge
+	Config
 	State
 	Graphics
 	Input
