@@ -30,7 +30,7 @@ namespace Forge {
  *
  * This class is used for all kinds of configuration stuff in Forge.
  *
- * The Handler should implement a 'bool handleLuaState(lua_State*)'
+ * The Handler class should implement a 'bool handleLoadedLua(lua_State*)'
  * function that is called after successfully loading the Lua code.
  */
 template <class Handler>
