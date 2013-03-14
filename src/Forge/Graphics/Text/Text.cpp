@@ -83,17 +83,11 @@ void Forge::Text::initialize()
 	// Create shaders
 	createShaders();
 
-	assert(glGetError() == GL_NO_ERROR);
-
 	// Create glyph texture
 	createTexture();
 
-	assert(glGetError() == GL_NO_ERROR);
-
 	// Create VBO
 	createBuffer();
-
-	assert(glGetError() == GL_NO_ERROR);
 }
 
 void Forge::Text::setFont(const char * fileName)

@@ -112,8 +112,6 @@ void QtRendererBackend::initializeGL()
 	glewExperimental = GL_TRUE;
 	assert(glewInit() == GLEW_OK);
 
-	glGetError();
-
 	glClearColor(0.6f,0.6f,0.7f,1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
