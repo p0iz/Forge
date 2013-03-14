@@ -24,8 +24,6 @@
 #include "Util/Log.h"
 
 #include "lua.hpp"
-#include "lauxlib.h"
-#include "lualib.h"
 
 namespace Forge {
 
