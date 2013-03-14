@@ -26,7 +26,6 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <cassert>
 #include <cstdlib>
 #include <cstring>
 
@@ -34,13 +33,13 @@
 
 namespace Forge { namespace ImageLoader {
 
-unsigned int loadAsTexture(const char* imageFile)
+unsigned int loadAsTexture(const std::string& imageFile)
 {
 	unsigned int textureId = 0;
 
 	// Load image data
-	FREE_IMAGE_FORMAT format = FreeImage_GetFileType(imageFile);
-	FIBITMAP* bitmap = FreeImage_Load(format, imageFile);
+	FREE_IMAGE_FORMAT format = FreeImage_GetFileType(imageFile.c_str());
+	FIBITMAP* bitmap = FreeImage_Load(format, imageFile.c_str());
 	if (bitmap)
 	{
 		bitmap = FreeImage_ConvertTo32Bits(bitmap);

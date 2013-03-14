@@ -34,7 +34,8 @@ class EngineState;
 class Engine
 {
 public:
-	explicit Engine(GameStateMachine& stateMachine, const char* configFilename = "data/forge.lua");
+	explicit Engine(
+			GameStateMachine& stateMachine, const std::string& configFilename = "data/forge.lua");
 
 	void start();
 	void stop();
@@ -50,7 +51,7 @@ public:
 
 private:
 
-	void loadConfig(const char* configFile);
+	void loadConfig(const std::string& configFile);
 	Configuration mConfig;
 
 	bool mRunning;

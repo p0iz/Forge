@@ -32,7 +32,7 @@
 
 namespace Forge { namespace MeshLoader {
 
-Mesh* loadMesh(const char *file) {
+Mesh* loadMesh(const std::string& file) {
 	Mesh* loadedMesh = nullptr;
 	Assimp::Importer importer;
 

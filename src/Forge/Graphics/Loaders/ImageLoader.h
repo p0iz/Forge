@@ -20,9 +20,9 @@
 
 #pragma once
 
+#include <string>
+
 /* Loaders for image files. Return OpenGL names for the allocated resources. */
 namespace Forge { namespace ImageLoader {
-
-	unsigned int loadAsTexture(const char* imageFile);
-
+	unsigned int loadAsTexture(const std::string& imageFile);
 }}

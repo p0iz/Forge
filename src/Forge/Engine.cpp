@@ -29,10 +29,11 @@
 
 #include <fstream>
 #include <sstream>
+#include <string>
 
 namespace Forge {
 
-Engine::Engine(GameStateMachine& stateMachine, const char* configFilename)
+Engine::Engine(GameStateMachine& stateMachine, const std::string& configFilename)
 	: mRunning(false),
 	  mStateMachine(stateMachine)
 {
@@ -40,7 +41,7 @@ Engine::Engine(GameStateMachine& stateMachine, const char* configFilename)
 	loadConfig(configFilename);
 }
 
-void Engine::loadConfig(const char* configFile)
+void Engine::loadConfig(const std::string& configFile)
 {
 	ConfigLoader loader;
 	loader.setConfig(mConfig);

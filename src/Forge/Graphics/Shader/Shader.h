@@ -34,7 +34,7 @@ public:
 	~Shader();
 
 	void create(GLint type);
-	void loadCode(std::string file);
+	void loadCode(const std::string& file);
 	const GLint compile();
 
 	GLuint getId()

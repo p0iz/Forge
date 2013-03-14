@@ -96,7 +96,7 @@ void Shader::printInfoLog() const
 		   infoLog.c_str());
 }
 
-void Shader::loadCode(std::string file)
+void Shader::loadCode(const std::string& file)
 {
 	std::ifstream shaderFile(file);
 	if (shaderFile)
