@@ -36,7 +36,7 @@ namespace Forge {
 template <class Handler>
 class LuaLoader : public Handler {
 public:
-	void loadFile(const char* file) const;
+	bool loadFile(const std::string &file) const;
 private:
 	/* Helper struct to give Lua state some RAII */
 	struct LuaState {
@@ -55,18 +55,21 @@ private:
 };
 
 template <class Handler>
-void LuaLoader<Handler>::loadFile(const char *file) const
+bool LuaLoader<Handler>::loadFile(const std::string& file) const
 {
+	bool loaded = false;
 	LuaState state;
 	lua_State* L = state.get();
-	int error = luaL_loadfile(L, file) || lua_pcall(L, 0, 0, 0);
+	int error = luaL_loadfile(L, file.c_str()) || lua_pcall(L, 0, 0, 0);
 	if (error) {
 		Log::error << lua_tostring(state.get(), -1) << "\n";
 	} else if (Handler::handleLoadedLua(L)) {
-		Log::info << "Loaded configuration from '" << file << "'\n";
+		Log::info << "Loaded Lua code from '" << file << "'\n";
+		loaded = true;
 	} else {
-		Log::error << "Failed to load configuration from file '" << file << "'\n";
+		Log::error << "Failed to load Lua code from file '" << file << "'\n";
 	}
+	return loaded;
 }
 
 }
