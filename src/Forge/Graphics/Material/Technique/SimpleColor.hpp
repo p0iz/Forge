@@ -43,7 +43,7 @@ public:
 
 	void updateLights(const Light lights[]);
 
-	virtual void updateProperties(const JsonObject &properties);
+	virtual void updateProperties(LuaProperties& properties);
 
 	virtual void beginMaterial(const RenderTask& task);
 	virtual void beginMesh(const RenderTask& task);
@@ -51,17 +51,6 @@ private:
 	Shader vertexShader;
 	Shader fragmentShader;
 	ShaderProgram shaderProgram;
-
-	// Textures
-	size_t mDiffuseMapId;
-	size_t mSpecularMapId;
-	size_t mNormalMapId;
-
-	// Color IDs
-	size_t mAmbientColorId;
-	size_t mDiffuseColorId;
-	size_t mSpecularColorId;
-	size_t mShininessId;
 
 	// Lighting
 	const int lightBindingPoint = 1;

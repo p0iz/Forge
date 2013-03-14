@@ -20,7 +20,6 @@
 
 #include "Graphics/Material/Technique/DefaultTechnique.h"
 #include "Graphics/Material/Technique/TechniqueLibrary.h"
-#include "Util/HashUtils.h"
 #include "Util/Log.h"
 
 namespace Forge {
@@ -37,11 +36,10 @@ void TechniqueLibrary::add(Technique* technique)
 {
 	std::shared_ptr<Technique> techPtr(technique);
 	mTechniqueMap[technique->getName()] = techPtr;
-	Log::info << "Added technique '" << technique->getNameStr()
-			  << "' (hash: " << technique->getName() << ") to library.\n";
+	Log::info << "Added technique '" << technique->getName() << "' to library.\n";
 }
 
-TechniquePtr TechniqueLibrary::get(size_t techniqueName) const
+TechniquePtr TechniqueLibrary::get(const std::string& techniqueName) const
 {
 	TechniquePtr technique;
 
@@ -50,7 +48,7 @@ TechniquePtr TechniqueLibrary::get(size_t techniqueName) const
 	else
 	{
 		Log::error << "Could not find technique '" << techniqueName << "' in technique library!\n";
-		technique.reset(mTechniqueMap.at(HashUtils::StringHash("DefaultTechnique"))->clone());
+		technique.reset(mTechniqueMap.at("DefaultTechnique")->clone());
 	}
 
 	return technique;

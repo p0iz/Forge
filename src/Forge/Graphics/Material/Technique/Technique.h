@@ -22,28 +22,23 @@
 
 #include "Property.h"
 
-#include "Util/HashUtils.h"
+#include "LuaProperties.hpp"
 
-#include <cassert>
 #include <glm/glm.hpp>
+#include <memory>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
 namespace Forge {
 
 class RenderTask;
-class JsonObject;
 
 /* Technique is comprised of one or several shader passes and accompanying properties */
 class Technique
 {
 public:
-
-	// Only string literals allowed
-	template <unsigned int N>
-	explicit Technique(const char (&name)[N]) : mName(HashUtils::StringHash(name)), mNameStr(name)
-	{
-	}
+	explicit Technique(const std::string& name) : mName(name) { }
 
 	// Needed for technique library
 	virtual Technique* clone() = 0;
@@ -59,39 +54,30 @@ public:
 	virtual void beginMesh(const RenderTask&) = 0;
 
 	// Use integers to speed up comparisons
-	size_t getName() const
-	{
+	const std::string& getName() const {
 		return mName;
 	}
 
-	// Use only for debugging
-	const char* getNameStr() const
-	{
-		return mNameStr;
+	virtual void updateProperties(LuaProperties&) = 0;
+
+	void setDynamicProperty(const char* name, Property value) {
+		mDynamicProperties[name] = value;
 	}
 
-	virtual void updateProperties(const JsonObject&) = 0;
-
-	void setProperty(size_t name, Property value)
-	{
-		mProperties[name] = value;
+	bool hasDynamicProperty(const char* name) const {
+		return mDynamicProperties.count(name) > 0;
 	}
 
-	bool hasProperty(size_t name) const
-	{
-		return mProperties.count(name) > 0;
-	}
-
-	const PropertyValue& getProperty(size_t name) const
-	{
-		return mProperties.at(name)[0];
+	const PropertyValue& getDynamicProperty(const char* name) const {
+		return mDynamicProperties.at(name)[0];
 	}
 
 private:
-	size_t mName;
-	const char* mNameStr;
-	typedef std::unordered_map<size_t, Property> PropertyMap;
-	PropertyMap mProperties;
+	const std::string mName;
+	typedef std::unordered_map<std::string, Property> PropertyMap;
+	PropertyMap mDynamicProperties;
 };
+
+typedef std::shared_ptr<Technique> TechniquePtr;
 
 }

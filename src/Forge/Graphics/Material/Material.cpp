@@ -19,36 +19,26 @@
  */
 
 #include "Material.h"
+#include "MaterialLoader.hpp"
 #include "Graphics/Loaders/ImageLoader.h"
-#include "Technique/Technique.h"
-#include "Util/HashUtils.h"
-#include "Util/JsonParser.h"
+#include "Technique/TechniqueLibrary.h"
 #include "Util/Log.h"
 
-#include <algorithm>
-#include <cassert>
 #include <GL/glew.h>
 
 namespace Forge {
 
-void Material::loadMaterial(const char* material_file, TechniqueLibrary &techLibrary)
+void Material::loadMaterial(const std::string& materialFile, TechniqueLibrary& techLibrary)
 {
-	// Parse material file
-	JsonParser matParser(material_file);
-	assert(matParser.parse());
-	JsonObject parsed_data = matParser.getRootObject();
-	std::shared_ptr<JsonObject> properties = parsed_data.key_values["Properties"].object;
-
-	// Load and setup technique
+	// First destroy old technique to make room for new
 	if (mTechnique) {
 		mTechnique->destroy();
 	}
-	std::string techniqueName = parsed_data.key_values["Technique"].value[0];
-	mTechnique = techLibrary.get(HashUtils::StringHash(techniqueName));
-	mTechnique->create();
-	if (properties) {
-		mTechnique->updateProperties(*properties);
-	}
+
+	MaterialLoader loader;
+	loader.setTargetMaterial(this);
+	loader.setTechniqueLibrary(techLibrary);
+	loader.loadFile(materialFile);
 }
 
 void Material::beginMaterial(const RenderTask& task)
@@ -61,9 +51,9 @@ void Material::beginMesh(const RenderTask& task)
 	mTechnique->beginMesh(task);
 }
 
-void Material::setPropertyValue(const char* propertyName, const Property& value)
+void Material::setDynamicProperty(const std::string& propertyName, const Property& value)
 {
-	mTechnique->setProperty(HashUtils::StringHash(propertyName), value);
+	mTechnique->setDynamicProperty(propertyName.c_str(), value);
 }
 
 } // namespace Forge

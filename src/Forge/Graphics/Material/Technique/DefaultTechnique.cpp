@@ -22,6 +22,7 @@
 
 #include "Graphics/Camera.h"
 #include "Graphics/RenderTask.h"
+#include "LuaProperties.hpp"
 #include "Util/Log.h"
 
 #include <glm/glm.hpp>
@@ -63,7 +64,7 @@ void DefaultTechnique::destroy()
 {
 }
 
-void DefaultTechnique::updateProperties(const JsonObject &)
+void DefaultTechnique::updateProperties(LuaProperties&)
 {
 }
 

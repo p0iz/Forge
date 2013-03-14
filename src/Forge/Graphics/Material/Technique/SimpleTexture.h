@@ -68,11 +68,9 @@ public:
 	virtual void create();
 	virtual void destroy();
 
-	void freeTextures();
-
 	void updateLights(const Light lights[]);
 
-	virtual void updateProperties(const JsonObject &properties);
+	virtual void updateProperties(LuaProperties& properties);
 
 	virtual void beginMaterial(const RenderTask& task);
 	virtual void beginMesh(const RenderTask& task);
@@ -86,6 +84,9 @@ private:
 	unsigned int mSpecularMap;
 	unsigned int mNormalMap;
 	std::vector<unsigned int> mLoadedTextures;
+
+	unsigned int addTexture(const std::string& textureFile);
+	void freeTextures();
 
 	// Lighting
 	const int lightBindingPoint = 1;

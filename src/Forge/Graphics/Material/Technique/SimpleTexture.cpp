@@ -24,7 +24,6 @@
 #include "Graphics/Loaders/ImageLoader.h"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/RenderTask.h"
-#include "Util/JsonParser.h"
 #include "Util/Log.h"
 
 namespace Forge {
@@ -92,78 +91,56 @@ void SimpleTexture::updateLights(const Light lights[Light::MAX_LIGHTS])
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light) * Light::MAX_LIGHTS, lights);
 }
 
-void SimpleTexture::updateProperties(const JsonObject& properties)
+unsigned int SimpleTexture::addTexture(const std::string& textureFile)
+{
+	unsigned int loadedTexture = ImageLoader::loadAsTexture(textureFile);
+	if (loadedTexture > 0) {
+		mLoadedTextures.push_back(loadedTexture);
+	}
+	return loadedTexture;
+}
+
+void SimpleTexture::updateProperties(LuaProperties& properties)
 {
 	shaderProgram.use();
 
 	// Diffuse map
-	if (properties.hasValue("DiffuseMap")) {
-		unsigned int loadedTexture =
-			ImageLoader::loadAsTexture(properties.key_values.at("DiffuseMap").value[0].c_str());
-		if (loadedTexture > 0) {
-			mDiffuseMap = loadedTexture;
-			mLoadedTextures.push_back(loadedTexture);
-		}
+	if (properties.hasProperty("diffuseMap")) {
+		mDiffuseMap = addTexture(properties.getString("diffuseMap"));
 	}
 
 	// Specular map
-	if (properties.hasValue("SpecularMap")) {
-		unsigned int loadedTexture =
-			ImageLoader::loadAsTexture(properties.key_values.at("SpecularMap").value[0].c_str());
-		if (loadedTexture > 0) {
-			mSpecularMap = loadedTexture;
-			mLoadedTextures.push_back(loadedTexture);
-		}
+	if (properties.hasProperty("specularMap")) {
+		mSpecularMap = addTexture(properties.getString("specularMap"));
 	}
 
 	// Normal map
-	if (properties.hasValue("NormalMap")) {
-		unsigned int loadedTexture =
-			ImageLoader::loadAsTexture(properties.key_values.at("NormalMap").value[0].c_str());
-		if (loadedTexture > 0) {
-			mNormalMap = loadedTexture;
-			mLoadedTextures.push_back(loadedTexture);
-		}
+	if (properties.hasProperty("normalMap")) {
+		mNormalMap = addTexture(properties.getString("normalMap"));
 	}
 
 	// Ambient color reflectivity
-	if (properties.hasValue("AmbientColor"))
+	if (properties.hasProperty("ambient"))
 	{
-		float ambientColor[3];
-		const std::vector<std::string>& ambientValues = properties.key_values.at("AmbientColor").value;
-		ambientColor[0] = ::atof(ambientValues[0].c_str());
-		ambientColor[1] = ::atof(ambientValues[1].c_str());
-		ambientColor[2] = ::atof(ambientValues[2].c_str());
-		glUniform3fv(materialAmbientLoc, 1, ambientColor);
+		glUniform3fv(materialAmbientLoc, 1, &properties.getFloatArray("ambient")[0]);
 	}
 
 	// Diffuse color reflectivity
-	if (properties.hasValue("DiffuseColor"))
+	if (properties.hasProperty("diffuse"))
 	{
-		float diffuseColor[3];
-		const std::vector<std::string>& diffuseValues = properties.key_values.at("DiffuseColor").value;
-		diffuseColor[0] = ::atof(diffuseValues[0].c_str());
-		diffuseColor[1] = ::atof(diffuseValues[1].c_str());
-		diffuseColor[2] = ::atof(diffuseValues[2].c_str());
-		glUniform3fv(materialDiffuseLoc, 1, diffuseColor);
+		glUniform3fv(materialDiffuseLoc, 1, &properties.getFloatArray("diffuse")[0]);
 	}
 
 	// Specular color reflectivity
-	if (properties.hasValue("SpecularColor"))
+	if (properties.hasProperty("specular"))
 	{
-		float specularColor[3];
-		const std::vector<std::string>& specularValues = properties.key_values.at("SpecularColor").value;
-		specularColor[0] = ::atof(specularValues[0].c_str());
-		specularColor[1] = ::atof(specularValues[1].c_str());
-		specularColor[2] = ::atof(specularValues[2].c_str());
-		glUniform3fv(materialSpecularLoc, 1, specularColor);
+		glUniform3fv(materialSpecularLoc, 1, &properties.getFloatArray("specular")[0]);
 	}
 
 	// Shininess
-	if (properties.hasValue("Shininess"))
+	if (properties.hasProperty("shininess"))
 	{
-		float shininess = ::atof(properties.key_values.at("Shininess").value[0].c_str());
-		glUniform1f(materialShininessLoc, shininess);
+		glUniform1f(materialShininessLoc, properties.getFloat("shininess"));
 	}
 }
 

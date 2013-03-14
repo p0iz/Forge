@@ -14,39 +14,34 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Graphics/Material/Technique/Technique.h"
+#include "Technique/Technique.h"
 
-#include <string>
+class lua_State;
 
 namespace Forge {
 
+class Material;
 class TechniqueLibrary;
-class RenderTask;
 
-/* A material to be used for a mesh
- *
- * Material contains a technique and metadata about the technique.
- * Material is also responsible for parsing the material file. */
-class Material
-{
-public:
-	void loadMaterial(const std::string& materialFile, TechniqueLibrary& techLibrary);
-
-	void beginMaterial(const RenderTask& task);
-	void beginMesh(const RenderTask& task);
-
-	void setDynamicProperty(const std::string& propertyName, const Property& value);
+struct MaterialHandler {
+	MaterialHandler();
+	void setTargetMaterial(Material* material);
+	void setTechniqueLibrary(const TechniqueLibrary& techLibrary);
+protected:
+	bool handleLoadedLua(lua_State* state) const;
 private:
-	TechniquePtr mTechnique;
-	std::string mMaterialFile;
+	// Encapsulate the internal Lua state
+	TechniquePtr loadTechnique(lua_State* state) const;
+	bool loadProperties(lua_State* state, TechniquePtr technique) const;
 
-	friend class MaterialHandler;
+	Material* mTargetMaterial;
+	const TechniqueLibrary* mTechLibrary;
 };
 
-} // namespace Forge
+}

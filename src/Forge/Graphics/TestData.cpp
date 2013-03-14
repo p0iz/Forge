@@ -79,7 +79,7 @@ void TestData::draw(RenderTask& task)
 							glm::translate(glm::mat4x4(),glm::vec3(light.position)),
 							glm::vec3(0.3f,0.3f,0.3f));
 				task.setWorldTransform(transform);
-				lampMaterial.setPropertyValue("Color", Property(&light.color.r, &light.color.a));
+				lampMaterial.setDynamicProperty("Color", Property(&light.color.r, &light.color.a));
 				lampMaterial.beginMesh(task);
 				lampMesh->draw();
 			} else {
@@ -101,17 +101,20 @@ void TestData::create()
 	mTechniqueLibrary.add(new SimpleTexture);
 	mTechniqueLibrary.add(new SimpleColor);
 	mTechniqueLibrary.add(new UnshadedColor);
-	cubeMaterial.loadMaterial("data/materials/Crate.json", mTechniqueLibrary);
+
+	cubeMaterial.loadMaterial("data/materials/Crate.lua", mTechniqueLibrary);
 	cubeMesh.reset(MeshLoader::loadMesh("data/crate.obj"));
-	lampMaterial.loadMaterial("data/materials/Lamp.json", mTechniqueLibrary);
+
+	lampMaterial.loadMaterial("data/materials/Lamp.lua", mTechniqueLibrary);
 	lampMesh.reset(MeshLoader::loadMesh("data/lamp.obj"));
+
 	for (int i = 0; i < NUMBER_OF_CUBES; ++i)
 	{
 		cubeTransforms[i].translate(CIRCLE_WIDTH*glm::sin(glm::radians(360.0-i*36)),CIRCLE_WIDTH*glm::cos(glm::radians(360.0-i*36)),0.0f);
 		cubeTransforms[i].rotate(glm::radians(360.0-i*36), glm::vec3(0,1,0));
 	}
 	roomMesh.reset(MeshLoader::loadMesh("data/room.obj"));
-	roomMaterial.loadMaterial("data/materials/Room.json", mTechniqueLibrary);
+	roomMaterial.loadMaterial("data/materials/Room.lua", mTechniqueLibrary);
 	roomTransform.scale(20);
 
 	// Create the test text

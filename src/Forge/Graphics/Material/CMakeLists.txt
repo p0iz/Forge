@@ -4,7 +4,9 @@
 add_subdirectory(Technique)
 
 set(MaterialSources
-	Material.cpp)
+	Material.cpp
+	MaterialHandler.cpp
+	MaterialLoader.hpp)
 
 add_library(Material ${MaterialSources})
 target_link_libraries(Material Graphics Technique)

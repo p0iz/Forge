@@ -35,7 +35,7 @@ public:
 	virtual Technique* clone();
 	virtual void create();
 	virtual void destroy();
-	virtual void updateProperties(const JsonObject &);
+	virtual void updateProperties(LuaProperties&);
 	virtual void beginMaterial(const RenderTask& task);
 	virtual void beginMesh(const RenderTask& task);
 private:

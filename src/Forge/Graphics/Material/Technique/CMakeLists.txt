@@ -2,9 +2,11 @@
 
 set(TechniqueSources
 	DefaultTechnique.cpp
+	LuaProperties.cpp
 	Property.cpp
 	SimpleColor.cpp
 	SimpleTexture.cpp
+	Technique.h
 	TechniqueLibrary.cpp
 	UnshadedColor.cpp)
 

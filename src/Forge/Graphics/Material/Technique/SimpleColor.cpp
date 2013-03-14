@@ -24,17 +24,12 @@
 #include "Graphics/Loaders/ImageLoader.h"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/RenderTask.h"
-#include "Util/JsonParser.h"
 #include "Util/Log.h"
 
 namespace Forge {
 
 SimpleColor::SimpleColor()
-	: Technique("SimpleColor"),
-	  mAmbientColorId(HashUtils::StringHash("AmbientColor")),
-	  mDiffuseColorId(HashUtils::StringHash("DiffuseColor")),
-	  mSpecularColorId(HashUtils::StringHash("SpecularColor")),
-	  mShininessId(HashUtils::StringHash("Shininess"))
+	: Technique("SimpleColor")
 {
 }
 
@@ -90,57 +85,33 @@ void SimpleColor::updateLights(const Light lights[Light::MAX_LIGHTS])
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light) * Light::MAX_LIGHTS, lights);
 }
 
-void SimpleColor::updateProperties(const JsonObject& properties)
+void SimpleColor::updateProperties(LuaProperties &properties)
 {
-	Property property;
+	shaderProgram.use();
 
 	// Ambient color reflectivity
-	float ambientColor[3];
-	const std::vector<std::string>& ambientValues = properties.key_values.at("AmbientColor").value;
-	ambientColor[0] = ::atof(ambientValues[0].c_str());
-	ambientColor[1] = ::atof(ambientValues[1].c_str());
-	ambientColor[2] = ::atof(ambientValues[2].c_str());
-	property.assign(ambientColor, ambientColor+3);
-	setProperty(HashUtils::StringHash("AmbientColor"), property);
-
-	property.clear();
+	if (properties.hasProperty("ambient"))
+	{
+		glUniform3fv(materialAmbientLoc, 1, &properties.getFloatArray("ambient")[0]);
+	}
 
 	// Diffuse color reflectivity
-	float diffuseColor[3];
-	const std::vector<std::string>& diffuseValues = properties.key_values.at("DiffuseColor").value;
-	diffuseColor[0] = ::atof(diffuseValues[0].c_str());
-	diffuseColor[1] = ::atof(diffuseValues[1].c_str());
-	diffuseColor[2] = ::atof(diffuseValues[2].c_str());
-	property.assign(diffuseColor, diffuseColor+3);
-	setProperty(HashUtils::StringHash("DiffuseColor"), property);
+	if (properties.hasProperty("diffuse"))
+	{
+		glUniform3fv(materialDiffuseLoc, 1, &properties.getFloatArray("diffuse")[0]);
+	}
 
 	// Specular color reflectivity
-	float specularColor[3];
-	const std::vector<std::string>& specularValues = properties.key_values.at("SpecularColor").value;
-	specularColor[0] = ::atof(specularValues[0].c_str());
-	specularColor[1] = ::atof(specularValues[1].c_str());
-	specularColor[2] = ::atof(specularValues[2].c_str());
-	property.assign(specularColor, specularColor+3);
-	setProperty(HashUtils::StringHash("SpecularColor"), property);
-
-	property.clear();
+	if (properties.hasProperty("specular"))
+	{
+		glUniform3fv(materialSpecularLoc, 1, &properties.getFloatArray("specular")[0]);
+	}
 
 	// Shininess
-	property.push_back(::atof(properties.key_values.at("Shininess").value[0].c_str()));
-	setProperty(HashUtils::StringHash("Shininess"), property);
-
-	shaderProgram.use();
-	if (hasProperty(mAmbientColorId))
-		glUniform3fv(materialAmbientLoc, 1, getProperty(mAmbientColorId));
-
-	if (hasProperty(mDiffuseColorId))
-		glUniform3fv(materialDiffuseLoc, 1, getProperty(mDiffuseColorId));
-
-	if (hasProperty(mSpecularColorId))
-		glUniform3fv(materialSpecularLoc, 1, getProperty(mSpecularColorId));
-
-	if (hasProperty(mShininessId))
-		glUniform1f(materialShininessLoc, getProperty(mShininessId));
+	if (properties.hasProperty("shininess"))
+	{
+		glUniform1f(materialShininessLoc, properties.getFloat("shininess"));
+	}
 }
 
 void SimpleColor::beginMaterial(const RenderTask &task)

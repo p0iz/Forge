@@ -22,12 +22,10 @@
 
 #include "Graphics/Material/Technique/Technique.h"
 
+#include <string>
 #include <unordered_map>
-#include <memory>
 
 namespace Forge {
-
-typedef std::shared_ptr<Technique> TechniquePtr;
 
 /* TechniqueLibrary is a collection of techniques
  * that can be used to retrieve a technique copies */
@@ -36,10 +34,9 @@ class TechniqueLibrary
 public:
 	~TechniqueLibrary();
 	void add(Technique* technique);
-	TechniquePtr get(size_t techniqueName) const;
+	TechniquePtr get(const std::string& techniqueName) const;
 private:
-	typedef std::unordered_map<size_t, TechniquePtr> TechniqueMap;
-	typedef std::pair<size_t, TechniquePtr> TechniquePair;
+	typedef std::unordered_map<std::string, TechniquePtr> TechniqueMap;
 	TechniqueMap mTechniqueMap;
 };
 

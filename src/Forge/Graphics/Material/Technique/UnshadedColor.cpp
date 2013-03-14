@@ -28,19 +28,13 @@
 
 namespace Forge {
 
-UnshadedColor::UnshadedColor()
-	: Technique("UnshadedColor")
-{
-}
+UnshadedColor::UnshadedColor() : Technique("UnshadedColor") { }
 
-Technique* UnshadedColor::clone()
-{
+Technique* UnshadedColor::clone() {
 	return new UnshadedColor;
 }
 
-
-void UnshadedColor::create()
-{
+void UnshadedColor::create() {
 	vertexShader.create(GL_VERTEX_SHADER);
 	vertexShader.loadCode("data/shaders/UnshadedColor.vs");
 	vertexShader.compile();
@@ -60,27 +54,21 @@ void UnshadedColor::create()
 	colorLocation = shaderProgram.getUniformLocation("Color");
 }
 
-void UnshadedColor::destroy()
-{
-}
+void UnshadedColor::destroy() { }
 
-void UnshadedColor::updateProperties(const JsonObject &)
-{
-}
+void UnshadedColor::updateProperties(LuaProperties&) { }
 
-void UnshadedColor::beginMaterial(const RenderTask& task)
-{
+void UnshadedColor::beginMaterial(const RenderTask& task) {
 	shaderProgram.use();
 }
 
-void UnshadedColor::beginMesh(const RenderTask& task)
-{
+void UnshadedColor::beginMesh(const RenderTask& task) {
 	// Update
 	const Camera& camera = task.getCamera();
 	const glm::mat4x4& vp = camera.getViewProjectionMatrix();
 	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(vp * task.getWorldTransform())[0][0]);
-	if (hasProperty(HashUtils::StringHash("Color"))) {
-		glUniform3fv(colorLocation, 1, getProperty(HashUtils::StringHash("Color")));
+	if (hasDynamicProperty("Color")) {
+		glUniform3fv(colorLocation, 1, getDynamicProperty("Color"));
 	}
 }
 
