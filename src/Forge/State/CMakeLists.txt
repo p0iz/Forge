@@ -5,10 +5,8 @@ set(StateSources
 	GameStateMachine.cpp
 	QtGameStateMachine.cpp)
 
-# Do Qt stuff for Forge headers
-set(MOC_HEADERS
-	QtGameStateMachine.hpp)
-qt4_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
+find_package(Qt5OpenGL REQUIRED)
 
-add_library(State ${StateSources} ${MOC_SOURCES})
-target_link_libraries(State ${QT_LIBRARIES})
+add_library(State ${StateSources})
+
+qt5_use_modules(State OpenGL)

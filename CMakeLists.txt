@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 2.8.8)
 
 project(Forge)
 
@@ -24,10 +24,9 @@ endif()
 # Find OpenGL
 find_package(OpenGL REQUIRED)
 
-# Find and include Qt
-find_package(Qt4 REQUIRED COMPONENTS QtOpenGL)
-include(${QT_USE_FILE})
-include_directories(${QT_INCLUDES})
+# Setup Qt MOC'ing
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Set executable output paths
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})

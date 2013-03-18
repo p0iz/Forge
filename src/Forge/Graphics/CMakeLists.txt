@@ -1,10 +1,5 @@
 # Graphics
 
-# Do Qt stuff for Forge headers
-set(MOC_HEADERS
-	QtRendererBackend.hpp)
-qt4_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
-
 # Add Shader component to build
 add_subdirectory(Shader)
 
@@ -20,6 +15,8 @@ add_subdirectory(Loaders)
 # Add Material component to build
 add_subdirectory(Material)
 
+find_package(Qt5OpenGL REQUIRED)
+
 set(GraphicsSources
 	Camera.cpp
 	DebugAxis.cpp
@@ -31,8 +28,10 @@ set(GraphicsSources
 	RenderTask.cpp
 	SceneNode.cpp
 	TestData.cpp
-	Transformation.cpp
-	${MOC_SOURCES})
+	Transformation.cpp)
 
 add_library(Graphics ${GraphicsSources})
-target_link_libraries(Graphics Light Loaders Shader Material Text ${QT_LIBRARIES})
+
+qt5_use_modules(Graphics OpenGL)
+
+target_link_libraries(Graphics Light Loaders Shader Material Text)
