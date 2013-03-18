@@ -72,14 +72,6 @@ EditorWindow::~EditorWindow()
 	delete ui;
 }
 
-void EditorWindow::on_actionTools_activated()
-{
-	if (!ui->toolDock->isVisible())
-	{
-		ui->toolDock->show();
-	}
-}
-
 void EditorWindow::on_actionToggle_Debug_Axis_triggered()
 {
 	Forge::DebugAxis::toggleDebuggingInfo();

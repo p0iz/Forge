@@ -50,7 +50,6 @@ public:
 	~EditorWindow();
 
 private slots:
-	void on_actionTools_activated();
 
 	void on_actionToggle_Debug_Axis_triggered();
 
