@@ -12,14 +12,26 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
 
 #include "SceneNode.h"
 
-SceneNode::SceneNode()
-{
+namespace Forge {
+
+SceneNode::SceneNode() : mNodeTransform(), mParent(nullptr) {
+}
+
+glm::mat4 getNodeWorldMatrix(SceneNode& node) {
+	glm::mat4 transform = node.mNodeTransform.getWorldMatrix();
+	SceneNode* currentNode = node.mParent;
+	while (currentNode != nullptr) {
+		transform = currentNode->mNodeTransform.getWorldMatrix() * transform;
+	}
+	return transform;
+}
+
 }

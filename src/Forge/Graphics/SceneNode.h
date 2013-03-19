@@ -12,19 +12,25 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
 
-#ifndef SCENENODE_H
-#define SCENENODE_H
+#pragma once
 
-class SceneNode
+#include "Transformation.hpp"
+
+namespace Forge {
+
+struct SceneNode
 {
-public:
-    SceneNode();
+	SceneNode();
+	Transformation mNodeTransform;
+	SceneNode* mParent;
 };
 
-#endif // SCENENODE_H
+glm::mat4 getNodeWorldMatrix(SceneNode& node);
+
+}
