@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,28 +12,25 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
- * Copyright 2012 Tommi Martela
+ * <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "QtGameStateMachine.hpp"
+#pragma once
 
-void Forge::QtGameStateMachine::startMachine()
-{
-	QObject::connect(&mFrameTimer, SIGNAL(timeout()), this, SLOT(fireCurrentState()));
-	mFrameTimer.start(0);
+#include "Graphics/QtRendererBackend.hpp"
+#include "Graphics/Renderer.hpp"
+
+namespace Forge {
+
+typedef Renderer<QtRendererBackend,
+	Camera&,
+	QtInputHandler&,
+	QWidget*,
+	QGLWidget*,
+	Qt::WindowFlags>
+	QtRenderer;
+
 }
-
-void Forge::QtGameStateMachine::stopMachine()
-{
-	mFrameTimer.stop();
-	QObject::disconnect(&mFrameTimer, SIGNAL(timeout()), this, SLOT(fireCurrentState()));
-}
-
-void Forge::QtGameStateMachine::fireCurrentState()
-{
-	getCurrentState()->fire();
-}
-

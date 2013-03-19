@@ -18,9 +18,8 @@
  *
  */
 
-#include "QtRendererBackend.hpp"
-
-#include "RenderTask.h"
+#include "Graphics/QtRendererBackend.hpp"
+#include "Graphics/RenderTask.h"
 
 #include "Input/QtInputHandler.h"
 

@@ -24,10 +24,6 @@ endif()
 # Find OpenGL
 find_package(OpenGL REQUIRED)
 
-# Setup Qt MOC'ing
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 # Set executable output paths
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
@@ -39,4 +35,3 @@ add_subdirectory(src/Game)
 
 # Add Editor to build
 add_subdirectory(src/Editor)
-

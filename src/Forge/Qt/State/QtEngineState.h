@@ -18,29 +18,30 @@
  *
  */
 
-#include "QtEngineState.h"
+#pragma once
 
-#include "Input/QtInputHandler.h"
+#include "Engine.h"
+#include "State/EngineState.h"
+
 #include "Graphics/QtRenderer.hpp"
-#include "Time/HighResClock.h"
 
 namespace Forge
 {
+	class QtInputHandler;
 
-QtEngineState::QtEngineState(
-		QtRenderer& renderer,
-		QtInputHandler& input,
-		HighResClock& clock)
-	: mRenderer(renderer), mInput(input), mClock(clock)
-{
-}
+	class QtEngineState : public EngineState
+	{
+	public:
+		QtEngineState(
+				QtRenderer& renderer,
+				QtInputHandler& input,
+				HighResClock& clock);
 
-void QtEngineState::fire() const
-{
-	float delta = mClock.getGameDelta();
-	mClock.updateDeltaTime();
-	mInput.processInput(delta);
-	mRenderer.render();
-}
+		virtual void fire() const;
 
+	private:
+		QtRenderer& mRenderer;
+		QtInputHandler& mInput;
+		HighResClock& mClock;
+	};
 } // namespace Forge

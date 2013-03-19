@@ -14,23 +14,31 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2012 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "QtRendererBackend.hpp"
-#include "Renderer.hpp"
+#include "State/GameStateMachine.hpp"
+
+#include <QTimer>
 
 namespace Forge {
 
-typedef Renderer<QtRendererBackend,
-	Camera&,
-	QtInputHandler&,
-	QWidget*,
-	QGLWidget*,
-	Qt::WindowFlags>
-	QtRenderer;
+class QtGameStateMachine : public QObject, public GameStateMachine
+{
+	Q_OBJECT
+public:
+	virtual ~QtGameStateMachine() { }
+
+	// Each implementation has their own way of setting up the game machine
+	virtual void startMachine();
+	virtual void stopMachine();
+public slots:
+	void fireCurrentState();
+private:
+	QTimer mFrameTimer;
+};
 
 }

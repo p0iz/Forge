@@ -20,9 +20,9 @@
 
 #pragma once
 
-#include "OrbitalCamera.h"
-#include "Renderer.hpp"
-#include "TestData.h"
+#include "Graphics/OrbitalCamera.h"
+#include "Graphics/Renderer.hpp"
+#include "Graphics/TestData.h"
 
 #include <GL/glew.h>
 #include <QGLWidget>
