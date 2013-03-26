@@ -56,7 +56,7 @@ target_link_libraries(Forge
 	${ASSIMP_LIBRARY}
 	${OPENGL_LIBRARIES})
 
-if(DEFINED USE_QT)
+if(USE_QT)
 	message(STATUS "Creating library with Qt5 support")
 	add_subdirectory(Qt)
 	target_link_libraries(Forge ${FORGE_QT_LIBRARIES})
