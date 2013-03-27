@@ -18,29 +18,21 @@
  *
  */
 
-#include "State/QtEngineState.h"
-
-#include "Input/QtInputHandler.h"
-#include "Graphics/QtRenderer.hpp"
-#include "Time/HighResClock.h"
+#include "GameState.h"
+#include "GameStateLibrary.hpp"
 
 namespace Forge
 {
 
-QtEngineState::QtEngineState(
-		QtRenderer& renderer,
-		QtInputHandler& input,
-		HighResClock& clock)
-	: mRenderer(renderer), mInput(input), mClock(clock)
+GameState::GameState(const std::string& name) : mName(name) { }
+
+GameStatePtr GameState::update()
 {
+	return GameStatePtr(nullptr);
 }
 
-void QtEngineState::fire() const
-{
-	float delta = mClock.getGameDelta();
-	mClock.updateDeltaTime();
-	mInput.processInput(delta);
-	mRenderer.render();
+const std::string& GameState::getName() const {
+	return mName;
 }
 
 } // namespace Forge

@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,19 +12,18 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
- * Copyright 2012 Tommi Martela
+ * <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "EngineState.h"
+#pragma once
 
-namespace Forge
-{
-
-EngineState::~EngineState()
-{
-}
-
-} // namespace Forge
+template <class T>
+struct Singleton {
+	static T& getSingleton() {
+		static T inst;
+		return inst;
+	}
+};

@@ -20,25 +20,23 @@
 
 #pragma once
 
-#include "Engine.h"
-#include "State/EngineState.h"
-
 #include "Graphics/QtRenderer.hpp"
+#include "State/GameState.h"
+#include "Time/HighResClock.h"
 
 namespace Forge
 {
 	class QtInputHandler;
 
-	class QtEngineState : public EngineState
+	class QtGameState : public GameState
 	{
 	public:
-		QtEngineState(
+		QtGameState(
+				const QString& name,
 				QtRenderer& renderer,
 				QtInputHandler& input,
 				HighResClock& clock);
-
-		virtual void fire() const;
-
+		virtual GameStatePtr update();
 	private:
 		QtRenderer& mRenderer;
 		QtInputHandler& mInput;

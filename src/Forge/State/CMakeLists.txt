@@ -1,6 +1,7 @@
 
 set(StateSources
-	EngineState.cpp
+	GameState.cpp
+	GameStateLibrary.cpp
 	GameStateMachine.cpp)
 
 add_library(State ${StateSources})

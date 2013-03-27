@@ -18,34 +18,14 @@
  *
  */
 
-#pragma once
+#include "State/GameStateLibrary.hpp"
 
-#include "GameInputHandler.h"
-
-#include "Engine.h"
-#include "Graphics/OrbitalCamera.h"
-#include "Graphics/QtRenderer.hpp"
-#include "State/QtStateMachine.hpp"
-#include "Time/HighResClock.h"
-
-class ForgeGame
+void Forge::GameStateLibrary::add(const std::string& name, Forge::GameStatePtr state)
 {
-public:
-	ForgeGame();
-	void init();
-	int run();
-private:
-	void initializeData();
-	void initializeGameStates();
-	Forge::Engine mEngine;
+	mGameStates[name] = state;
+}
 
-	GameInputHandler mInput;
-
-	Forge::HighResClock mClock;
-
-	Forge::OrbitalCamera mCamera;
-
-	Forge::QtRenderer mRenderer;
-
-	Forge::QtStateMachine mStateMachine;
-};
+Forge::GameStatePtr Forge::GameStateLibrary::get(const std::string& name)
+{
+	return mGameStates[name];
+}

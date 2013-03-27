@@ -30,28 +30,36 @@
 #include "Engine.h"
 #include "Graphics/OrbitalCamera.h"
 #include "Graphics/QtRenderer.hpp"
-#include "State/QtEngineState.h"
-#include "State/QtGameStateMachine.hpp"
+#include "State/QtGameState.h"
+#include "State/QtStateMachine.hpp"
+#include "State/GameStateLibrary.hpp"
 
 #include <QTabWidget>
 
+void EditorWindow::initializeForge()
+{
+	mGameClock.init();
+	Forge::GameStateLibrary::getSingleton().add(mEditorState->getName(), mEditorState);
+	mEditorStateMachine.init(mEditorState);
+	mEditorStateMachine.start();
+}
 EditorWindow::EditorWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::EditorWindow),
-	mEditorStateMachine(new Forge::QtGameStateMachine),
 	mEngine(new Forge::Engine(*mEditorStateMachine)),
 	mCamera(new Forge::OrbitalCamera(10.0f)),
 	mInput(new EditorInputHandler(*mCamera)),
 	mRenderer(new Forge::QtRenderer(*mCamera, *mInput, 0, 0, 0)),
 	mMaterialEditor(new MaterialEditorView(*mCamera, *mInput)),
-	mEditorState(new Forge::QtEngineState(*mRenderer, *mInput, mEngine->getGameClock()))
+	mEditorState(
+		new Forge::QtGameState(QString("EditorState"), *mRenderer, *mInput, mGameClock))
 {
 	QTabWidget* tabWidget = new QTabWidget();
 	tabWidget->addTab(mRenderer.get(), tr("World renderer"));
 	tabWidget->addTab(mMaterialEditor.get(), tr("Material editor"));
 
-	mEditorStateMachine->setCurrentState(mEditorState.get());
-	mEngine->start();
+	initializeForge();
+
 	ui->setupUi(this);
 	ui->centralwidget->setParent(0);
 	QMainWindow::setCentralWidget(tabWidget);

@@ -20,25 +20,19 @@
 
 #pragma once
 
-#include "EngineState.h"
+#include "State/GameState.h"
 
 namespace Forge {
 
-// Implement different state handling for different backends (e.g. Qt, SDL, etc...)
 class GameStateMachine
 {
 public:
 	GameStateMachine();
-	virtual ~GameStateMachine() { }
-
-	// Each implementation has their own way of setting up the game machine
-	virtual void startMachine() = 0;
-	virtual void stopMachine() = 0;
-
-	void setCurrentState(EngineState* state);
-	const EngineState* getCurrentState() const;
+	void init(const GameStatePtr& initialState);
+	bool update();
+	void reset();
 private:
-	EngineState* mCurrentEngineState;
+	GameStatePtr mCurrentState;
 };
 
 }

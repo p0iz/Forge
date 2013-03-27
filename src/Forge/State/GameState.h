@@ -20,32 +20,21 @@
 
 #pragma once
 
-#include "GameInputHandler.h"
+#include <memory>
+#include <string>
 
-#include "Engine.h"
-#include "Graphics/OrbitalCamera.h"
-#include "Graphics/QtRenderer.hpp"
-#include "State/QtStateMachine.hpp"
-#include "Time/HighResClock.h"
-
-class ForgeGame
+namespace Forge
 {
-public:
-	ForgeGame();
-	void init();
-	int run();
+
+struct GameState {
+	explicit GameState(const std::string& name);
+	virtual ~GameState() { }
+	virtual std::shared_ptr<GameState> update();
+	const std::string& getName() const;
 private:
-	void initializeData();
-	void initializeGameStates();
-	Forge::Engine mEngine;
-
-	GameInputHandler mInput;
-
-	Forge::HighResClock mClock;
-
-	Forge::OrbitalCamera mCamera;
-
-	Forge::QtRenderer mRenderer;
-
-	Forge::QtStateMachine mStateMachine;
+	std::string mName;
 };
+
+typedef std::shared_ptr<GameState> GameStatePtr;
+
+} // namespace Forge

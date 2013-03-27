@@ -1,6 +1,6 @@
 set(QtStateSources
-	QtEngineState.cpp
-	QtGameStateMachine.cpp)
+	QtGameState.cpp
+	QtStateMachine.cpp)
 
 find_package(Qt5OpenGL REQUIRED)
 

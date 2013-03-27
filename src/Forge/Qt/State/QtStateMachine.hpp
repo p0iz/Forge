@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,24 +12,33 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
 
 #pragma once
 
-#include <functional>
+#include "State/GameStateMachine.hpp"
 
-namespace Forge
-{
+#include <QTimer>
 
-class EngineState
+namespace Forge {
+
+// Handles the Forge game state using QTimer
+class QtStateMachine : public QObject
 {
+	Q_OBJECT
 public:
-	virtual ~EngineState();
-	virtual void fire() const = 0;
+	void init(const GameStatePtr& initialState);
+	void start();
+	void stop();
+public slots:
+	void fireCurrentState();
+private:
+	QTimer mFrameTimer;
+	GameStateMachine mStateMachine;
 };
 
-} // namespace Forge
+}

@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,26 +12,35 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
 
 #include "GameStateMachine.hpp"
+#include "GameState.h"
 
-Forge::GameStateMachine::GameStateMachine()
-	: mCurrentEngineState(nullptr)
-{
+namespace Forge {
+
+GameStateMachine::GameStateMachine() : mCurrentState(nullptr) { }
+
+void GameStateMachine::init(const GameStatePtr& initialState) {
+	mCurrentState = initialState;
 }
 
-void Forge::GameStateMachine::setCurrentState(Forge::EngineState* state)
-{
-	mCurrentEngineState = state;
+bool GameStateMachine::update() {
+	if (mCurrentState) {
+		mCurrentState = mCurrentState->update();
+		return true;
+	} else {
+		return false;
+	}
 }
 
-const Forge::EngineState *Forge::GameStateMachine::getCurrentState() const
+void GameStateMachine::reset()
 {
-	return mCurrentEngineState;
+	mCurrentState.reset();
 }
 
+}

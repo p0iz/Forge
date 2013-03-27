@@ -22,6 +22,8 @@
 #define EDITORWINDOW_H
 
 #include "Graphics/QtRenderer.hpp"
+#include "State/QtStateMachine.hpp"
+#include "Time/HighResClock.h"
 
 #include <QMainWindow>
 #include <memory>
@@ -34,8 +36,7 @@ class EditorWindow;
 namespace Forge {
 class Engine;
 class OrbitalCamera;
-class QtEngineState;
-class QtGameStateMachine;
+class QtGameState;
 } // Forge
 
 class EditorInputHandler;
@@ -56,15 +57,17 @@ private slots:
 	void on_debugAxisCheckBox_clicked(bool checked);
 
 private:
+	void initializeForge();
 	Ui::EditorWindow *ui;
 
-	std::shared_ptr<Forge::QtGameStateMachine> mEditorStateMachine;
+	Forge::QtStateMachine mEditorStateMachine;
+	Forge::HighResClock mGameClock;
 	std::shared_ptr<Forge::Engine> mEngine;
 	std::shared_ptr<Forge::OrbitalCamera> mCamera;
 	std::shared_ptr<EditorInputHandler> mInput;
 	std::shared_ptr<Forge::QtRenderer> mRenderer;
 	std::shared_ptr<MaterialEditorView> mMaterialEditor;
-	std::shared_ptr<Forge::QtEngineState> mEditorState;
+	std::shared_ptr<Forge::QtGameState> mEditorState;
 };
 
 #endif // EDITORWINDOW_H

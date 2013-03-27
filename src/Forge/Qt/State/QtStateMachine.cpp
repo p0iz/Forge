@@ -18,34 +18,30 @@
  *
  */
 
-#pragma once
-
-#include "GameInputHandler.h"
-
-#include "Engine.h"
-#include "Graphics/OrbitalCamera.h"
-#include "Graphics/QtRenderer.hpp"
 #include "State/QtStateMachine.hpp"
-#include "Time/HighResClock.h"
+#include "State/QtGameState.h"
 
-class ForgeGame
+void Forge::QtStateMachine::start()
 {
-public:
-	ForgeGame();
-	void init();
-	int run();
-private:
-	void initializeData();
-	void initializeGameStates();
-	Forge::Engine mEngine;
+	QObject::connect(&mFrameTimer, SIGNAL(timeout()), this, SLOT(fireCurrentState()));
+	mFrameTimer.start(0);
+}
 
-	GameInputHandler mInput;
+void Forge::QtStateMachine::stop()
+{
+	mFrameTimer.stop();
+	QObject::disconnect(&mFrameTimer, SIGNAL(timeout()), this, SLOT(fireCurrentState()));
+	mStateMachine.reset();
+}
 
-	Forge::HighResClock mClock;
+void Forge::QtStateMachine::fireCurrentState()
+{
+	if (!mStateMachine.update()) {
+		stop();
+	}
+}
 
-	Forge::OrbitalCamera mCamera;
 
-	Forge::QtRenderer mRenderer;
-
-	Forge::QtStateMachine mStateMachine;
-};
+void Forge::QtStateMachine::init(const Forge::GameStatePtr& initialState) {
+	mStateMachine.init(initialState);
+}

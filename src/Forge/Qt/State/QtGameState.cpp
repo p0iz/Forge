@@ -18,22 +18,33 @@
  *
  */
 
-#include "State/QtGameStateMachine.hpp"
+#include "State/QtGameState.h"
+#include "State/GameStateLibrary.hpp"
 
-void Forge::QtGameStateMachine::startMachine()
+#include "Input/QtInputHandler.h"
+#include "Graphics/QtRenderer.hpp"
+#include "Time/HighResClock.h"
+
+namespace Forge
 {
-	QObject::connect(&mFrameTimer, SIGNAL(timeout()), this, SLOT(fireCurrentState()));
-	mFrameTimer.start(0);
+
+QtGameState::QtGameState(
+		const QString& name,
+		QtRenderer& renderer,
+		QtInputHandler& input,
+		HighResClock& clock)
+	: GameState(name.toStdString()), mRenderer(renderer), mInput(input), mClock(clock)
+{
 }
 
-void Forge::QtGameStateMachine::stopMachine()
+GameStatePtr QtGameState::update()
 {
-	mFrameTimer.stop();
-	QObject::disconnect(&mFrameTimer, SIGNAL(timeout()), this, SLOT(fireCurrentState()));
+	static GameStateLibrary& library = GameStateLibrary::getSingleton();
+	float delta = mClock.getGameDelta();
+	mClock.updateDeltaTime();
+	mInput.processInput(delta);
+	mRenderer.render();
+	return library.get(getName());
 }
 
-void Forge::QtGameStateMachine::fireCurrentState()
-{
-	getCurrentState()->fire();
-}
-
+} // namespace Forge

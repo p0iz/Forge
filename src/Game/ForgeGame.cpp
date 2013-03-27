@@ -20,6 +20,8 @@
 
 #include "ForgeGame.h"
 
+#include "State/QtGameState.h"
+#include "State/GameStateLibrary.hpp"
 #include "Util/Log.h"
 
 #include <QApplication>
@@ -35,24 +37,39 @@ ForgeGame::ForgeGame()
 	mRenderer.resize(cfg.display.width, cfg.display.height);
 }
 
-void ForgeGame::init()
+void ForgeGame::initializeGameStates()
 {
-	Forge::Log::info << "Initializing... ";
-	mStateMachine.setCurrentState(&mInitialState);
+	Forge::GameStatePtr initialState(
+		new Forge::QtGameState(
+			QString("InitialState"),
+			mRenderer,
+			mInput,
+			mClock));
+	Forge::GameStateLibrary::getSingleton().add(initialState->getName(), initialState);
+	mStateMachine.init(initialState);
+}
 
+void ForgeGame::initializeData()
+{
 	QIcon icon("data/images/icon128.png");
 	mRenderer.setWindowIcon(icon);
+}
 
-	Forge::Log::info << "done.\n";
+void ForgeGame::init()
+{
+	initializeData();
+	initializeGameStates();
 }
 
 int ForgeGame::run()
 {
 	int result = 0;
 	mRenderer.show();
-	mStateMachine.setCurrentState(&mInitialState);
+	mClock.init();
+	mStateMachine.start();
 	mEngine.start();
 	result = QApplication::exec();
+	mStateMachine.stop();
 	mEngine.stop();
 	return result;
 }

@@ -20,25 +20,22 @@
 
 #pragma once
 
-#include "State/GameStateMachine.hpp"
+#include "GameState.h"
 
-#include <QTimer>
+#include "Util/Singleton.hpp"
+
+#include <unordered_map>
+#include <string>
 
 namespace Forge {
 
-class QtGameStateMachine : public QObject, public GameStateMachine
-{
-	Q_OBJECT
+/* This class can be used to store and access a library of game states. */
+class GameStateLibrary : public Singleton<GameStateLibrary> {
 public:
-	virtual ~QtGameStateMachine() { }
-
-	// Each implementation has their own way of setting up the game machine
-	virtual void startMachine();
-	virtual void stopMachine();
-public slots:
-	void fireCurrentState();
+	void add(const std::string& name, GameStatePtr state);
+	GameStatePtr get(const std::string& name);
 private:
-	QTimer mFrameTimer;
+	std::unordered_map<std::string, GameStatePtr> mGameStates;
 };
 
 }
