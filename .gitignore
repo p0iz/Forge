@@ -20,7 +20,7 @@ doc/*
 *.cbp*
 *.layout*
 *.depend
-deps_w32/*
+windows_deps/*
 *.vcxproj*
 *.sln
 .directory

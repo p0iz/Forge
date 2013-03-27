@@ -1,10 +1,10 @@
 # Graphics - Text
 
 # FreeType deps
-find_library(FREETYPE_LIB NAMES freetype PATHS ${CMAKE_SOURCE_DIR}/deps_w32/freetype-2.4.10/objs)
+find_library(FREETYPE_LIB NAMES freetype PATHS ${CMAKE_SOURCE_DIR}/windows_deps/freetype/objs)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	include_directories(${CMAKE_SOURCE_DIR}/deps_w32/freetype-2.4.10/include)
+	include_directories(${CMAKE_SOURCE_DIR}/windows_deps/freetype/include)
 else()
 	include_directories("/usr/include/freetype2")
 endif()

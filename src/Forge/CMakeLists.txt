@@ -4,6 +4,8 @@ project(Forge)
 
 # Set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic")
+
+# Do build type specific configuration
 if(CMAKE_BUILD_TYPE MATCHES Release)
 	message(STATUS "Generating Release build.")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fomit-frame-pointer -O2")
@@ -13,50 +15,29 @@ elseif(CMAKE_BUILD_TYPE MATCHES Debug)
 	set(CMAKE_EXECUTABLE_SUFFIX "_dbg")
 endif()
 
-# Fix Windows build
+# Add Windows build include directories
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	set(QT_QMAKE_EXECUTABLE "C:/Qt/4.8.2/bin/qmake.exe")
+	message(STATUS "Adding Windows dependency includes...")
 	include_directories(
-		${CMAKE_SOURCE_DIR}/deps_w32/glew/include
-		${CMAKE_SOURCE_DIR}/deps_w32/glm)
+		${CMAKE_SOURCE_DIR}/windows_deps/glew/include
+		${CMAKE_SOURCE_DIR}/windows_deps/glm
+		${CMAKE_SOURCE_DIR}/windows_deps/freeimage
+		${CMAKE_SOURCE_DIR}/windows_deps/assimp/include
+		${CMAKE_SOURCE_DIR}/windows_deps/lua/include
+	)
 endif()
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)
 
 # GLEW dependency (Add PATHS for Windows detection)
-find_library(GLEW_LIBRARY NAMES GLEW glew glew32 PATHS ${CMAKE_SOURCE_DIR}/deps_w32/glew/lib)
+find_library(GLEW_LIBRARY NAMES GLEW glew glew32 PATHS ${CMAKE_SOURCE_DIR}/windows_deps/glew/lib)
 
 # FreeImage dependency
-find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${CMAKE_SOURCE_DIR}/deps_w32/freeimage)
+find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${CMAKE_SOURCE_DIR}/windows_deps/freeimage)
 
 # AssImp dependency
-find_library(ASSIMP_LIBRARY NAMES AssImp assimp PATHS ${CMAKE_SOURCE_DIR}/deps_w32/assimp)
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	# Copy GLEW dll
-	add_custom_command(TARGET Forge
-		COMMAND cmake
-		ARGS -E copy_if_different
-		${CMAKE_SOURCE_DIR}/deps_w32/glew/lib/glew32.dll
-		${CMAKE_BINARY_DIR})
-	# Add FreeImage include
-	include_directories(${CMAKE_SOURCE_DIR}/deps_w32/freeimage)
-	# Copy FreeImage dll
-	add_custom_command(TARGET Forge
-		COMMAND cmake
-		ARGS -E copy_if_different
-		${CMAKE_SOURCE_DIR}/deps_w32/freeimage/FreeImage.dll
-		${CMAKE_BINARY_DIR})
-	# Add AssImp include
-	include_directories(${CMAKE_SOURCE_DIR}/deps_w32/assimp/include)
-	# Copy AssImp dll
-	add_custom_command(TARGET Forge
-		COMMAND cmake
-		ARGS -E copy_if_different
-		${CMAKE_SOURCE_DIR}/deps_w32/assimp/AssImp.dll
-		${CMAKE_BINARY_DIR})
-endif()
+find_library(ASSIMP_LIBRARY NAMES AssImp assimp PATHS ${CMAKE_SOURCE_DIR}/windows_deps/assimp/lib/assimp_debug-dll_x64)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
