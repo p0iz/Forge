@@ -44,7 +44,7 @@ add_subdirectory(Input)
 add_subdirectory(Time)
 add_subdirectory(Util)
 
-add_library(Forge Engine.cpp)
+add_library(Forge ForgeConfig.cpp)
 target_link_libraries(Forge
 	Config
 	State

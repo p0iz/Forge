@@ -28,38 +28,21 @@
 
 namespace Forge {
 
-class EngineState;
+class GameState;
 
-/* This is the main class for the FORGE framework. */
-class Engine
+/* This is the main configuration class for the FORGE framework. */
+class ForgeConfig
 {
 public:
-	explicit Engine(
-			GameStateMachine& stateMachine, const std::string& configFilename = "data/forge.lua");
-
-	void start();
-	void stop();
-
-	HighResClock& getGameClock()
-	{
-		return mClock;
-	}
+	explicit ForgeConfig(const std::string& configFilename = "data/forge.lua");
 
 	const Configuration& getConfig() const {
 		return mConfig;
 	}
 
 private:
-
 	void loadConfig(const std::string& configFile);
 	Configuration mConfig;
-
-	bool mRunning;
-	GameStateMachine& mStateMachine;
-
-
-	// Timing
-	HighResClock mClock;
 };
 
 } // namespace Forge

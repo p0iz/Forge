@@ -18,9 +18,8 @@
  *
  */
 
-#include "Engine.h"
+#include "ForgeConfig.h"
 
-#include "State/EngineState.h"
 #include "Graphics/OrbitalCamera.h"
 #include "Time/HighResClock.h"
 #include "Util/Log.h"
@@ -32,38 +31,16 @@
 
 namespace Forge {
 
-Engine::Engine(GameStateMachine& stateMachine, const std::string& configFilename)
-	: mRunning(false),
-	  mStateMachine(stateMachine)
-{
+ForgeConfig::ForgeConfig(const std::string& configFilename) {
 	Log::info << "Built on " << __DATE__ << " at " << __TIME__ "\n";
 	loadConfig(configFilename);
 }
 
-void Engine::loadConfig(const std::string& configFile)
+void ForgeConfig::loadConfig(const std::string& configFile)
 {
 	ConfigLoader loader;
 	loader.setConfig(mConfig);
 	loader.loadFile(configFile);
-}
-
-void Engine::start()
-{
-	if (!mRunning)
-	{
-		mRunning = true;
-		mClock.init();
-		mStateMachine.startMachine();
-	}
-}
-
-void Engine::stop()
-{
-	if (mRunning)
-	{
-		mStateMachine.stopMachine();
-		mRunning = false;
-	}
 }
 
 } // namespace Forge

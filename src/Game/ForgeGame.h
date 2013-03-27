@@ -22,7 +22,7 @@
 
 #include "GameInputHandler.h"
 
-#include "Engine.h"
+#include "ForgeConfig.h"
 #include "Graphics/OrbitalCamera.h"
 #include "Graphics/QtRenderer.hpp"
 #include "State/QtStateMachine.hpp"
@@ -37,15 +37,16 @@ public:
 private:
 	void initializeData();
 	void initializeGameStates();
-	Forge::Engine mEngine;
 
-	GameInputHandler mInput;
+	Forge::ForgeConfig mForgeConfig;
 
 	Forge::HighResClock mClock;
 
-	Forge::OrbitalCamera mCamera;
+	GameInputHandler mInput;
 
 	Forge::QtRenderer mRenderer;
 
 	Forge::QtStateMachine mStateMachine;
+
+	Forge::OrbitalCamera mCamera;
 };

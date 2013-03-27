@@ -27,7 +27,7 @@
 #include "EditorViews/MaterialEditorView.hpp"
 
 // Forge includes
-#include "Engine.h"
+#include "ForgeConfig.h"
 #include "Graphics/OrbitalCamera.h"
 #include "Graphics/QtRenderer.hpp"
 #include "State/QtGameState.h"
@@ -43,10 +43,11 @@ void EditorWindow::initializeForge()
 	mEditorStateMachine.init(mEditorState);
 	mEditorStateMachine.start();
 }
+
 EditorWindow::EditorWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::EditorWindow),
-	mEngine(new Forge::Engine(*mEditorStateMachine)),
+	mForgeConfig(new Forge::ForgeConfig),
 	mCamera(new Forge::OrbitalCamera(10.0f)),
 	mInput(new EditorInputHandler(*mCamera)),
 	mRenderer(new Forge::QtRenderer(*mCamera, *mInput, 0, 0, 0)),
@@ -57,26 +58,23 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	QTabWidget* tabWidget = new QTabWidget();
 	tabWidget->addTab(mRenderer.get(), tr("World renderer"));
 	tabWidget->addTab(mMaterialEditor.get(), tr("Material editor"));
+	tabWidget->setCurrentIndex(0);
 
 	initializeForge();
 
 	ui->setupUi(this);
 	ui->centralwidget->setParent(0);
+	ui->toolStack->setCurrentIndex(0);
 	QMainWindow::setCentralWidget(tabWidget);
 
 	QObject::connect(
 				tabWidget, SIGNAL(currentChanged(int)), ui->toolStack, SLOT(setCurrentIndex(int)));
-
 	QObject::connect(
 				ui->reloadShaders_world, SIGNAL(clicked()), mRenderer.get(), SLOT(reloadMaterials()));
-
-	ui->toolStack->setCurrentIndex(0);
-	tabWidget->setCurrentIndex(0);
 }
 
 EditorWindow::~EditorWindow()
 {
-	mEngine->stop();
 	delete ui;
 }
 

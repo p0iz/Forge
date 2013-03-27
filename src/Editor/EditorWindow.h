@@ -34,7 +34,7 @@ class EditorWindow;
 
 // Forward declarations
 namespace Forge {
-class Engine;
+class ForgeConfig;
 class OrbitalCamera;
 class QtGameState;
 } // Forge
@@ -49,7 +49,6 @@ class EditorWindow : public QMainWindow
 public:
 	explicit EditorWindow(QWidget *parent = 0);
 	~EditorWindow();
-
 private slots:
 
 	void on_actionToggle_Debug_Axis_triggered();
@@ -58,11 +57,13 @@ private slots:
 
 private:
 	void initializeForge();
+
 	Ui::EditorWindow *ui;
 
 	Forge::QtStateMachine mEditorStateMachine;
 	Forge::HighResClock mGameClock;
-	std::shared_ptr<Forge::Engine> mEngine;
+
+	std::shared_ptr<Forge::ForgeConfig> mForgeConfig;
 	std::shared_ptr<Forge::OrbitalCamera> mCamera;
 	std::shared_ptr<EditorInputHandler> mInput;
 	std::shared_ptr<Forge::QtRenderer> mRenderer;

@@ -22,18 +22,18 @@
 
 #include "State/QtGameState.h"
 #include "State/GameStateLibrary.hpp"
+
 #include "Util/Log.h"
 
 #include <QApplication>
 #include <QIcon>
 
 ForgeGame::ForgeGame()
-	: mEngine(mStateMachine, "data/game.lua"),
-	  mInput(mCamera, mEngine.getGameClock()),
-	  mRenderer(mCamera, mInput, 0, 0, 0),
-	  mInitialState(mRenderer, mInput, mEngine.getGameClock())
+	: mForgeConfig("data/game.lua"),
+	  mInput(mCamera, mClock),
+	  mRenderer(mCamera, mInput, nullptr, nullptr, 0)
 {
-	const Forge::Configuration& cfg = mEngine.getConfig();
+	const Forge::Configuration& cfg = mForgeConfig.getConfig();
 	mRenderer.resize(cfg.display.width, cfg.display.height);
 }
 
@@ -67,9 +67,7 @@ int ForgeGame::run()
 	mRenderer.show();
 	mClock.init();
 	mStateMachine.start();
-	mEngine.start();
 	result = QApplication::exec();
 	mStateMachine.stop();
-	mEngine.stop();
 	return result;
 }
