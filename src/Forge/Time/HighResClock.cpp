@@ -20,8 +20,6 @@
 
 #include "HighResClock.h"
 
-#include "Engine.h"
-
 #include <chrono>
 
 namespace Forge {
@@ -55,12 +53,12 @@ void HighResClock::updateDeltaTime()
 	mLastUpdateTime = now;
 }
 
-const double HighResClock::getCurrentTime() const
+const double HighResClock::getCurrentTime()
 {
 	using namespace std::chrono;
 
-	auto currentClock = high_resolution_clock::now().time_since_epoch();
-	return (1.0*currentClock.count()) / high_resolution_clock::period::den;
+	high_resolution_clock::duration currentClock = high_resolution_clock::now().time_since_epoch();
+	return static_cast<double>(currentClock.count()) / high_resolution_clock::period::den;
 }
 
 const float HighResClock::getElapsedRealTime() const
@@ -68,5 +66,15 @@ const float HighResClock::getElapsedRealTime() const
 	return mLastUpdateTime - mInitTime;
 }
 
-} // Forge
+const double HighResClock::setTimeScale(double newFactor)
+{
+	double oldFactor = mScaleFactor;
+	mScaleFactor = newFactor;
+	return oldFactor;
+}
 
+const double HighResClock::getTimeScale() const {
+	return mScaleFactor;
+}
+
+} // Forge
