@@ -55,20 +55,12 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	mEditorState(
 		new Forge::QtGameState(QString("EditorState"), *mRenderer, *mInput, mGameClock))
 {
-	QTabWidget* tabWidget = new QTabWidget();
-	tabWidget->addTab(mRenderer.get(), tr("World renderer"));
-	tabWidget->addTab(mMaterialEditor.get(), tr("Material editor"));
-	tabWidget->setCurrentIndex(0);
-
 	initializeForge();
 
 	ui->setupUi(this);
 	ui->centralwidget->setParent(0);
 	ui->toolStack->setCurrentIndex(0);
-	QMainWindow::setCentralWidget(tabWidget);
-
-	QObject::connect(
-				tabWidget, SIGNAL(currentChanged(int)), ui->toolStack, SLOT(setCurrentIndex(int)));
+	QMainWindow::setCentralWidget(mRenderer.get());
 	QObject::connect(
 				ui->reloadShaders_world, SIGNAL(clicked()), mRenderer.get(), SLOT(reloadMaterials()));
 }
