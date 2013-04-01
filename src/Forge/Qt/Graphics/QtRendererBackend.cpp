@@ -35,7 +35,7 @@ QtRendererBackend::QtRendererBackend(
 		QWidget* parent,
 		const QGLWidget* shareWidget,
 		Qt::WindowFlags f)
-	: QGLWidget(widgetQGLFormat(), parent, shareWidget, f), mCamera(camera), mInput(input)
+	: QGLWidget(widgetQGLFormat(), parent, shareWidget, f), mFullScreen(false), mCamera(camera), mInput(input)
 {
 	setMouseTracking(true);
 }
@@ -49,7 +49,6 @@ void QtRendererBackend::prepareDraw()
 void QtRendererBackend::performDraw()
 {
 	RenderTask task(mCamera);
-	mTestData.draw(task);
 }
 
 void QtRendererBackend::finishDraw()
@@ -66,43 +65,21 @@ const QGLFormat QtRendererBackend::widgetQGLFormat()
 	return format;
 }
 
-QtRendererBackend::~QtRendererBackend()
-{
-	tearDownScene();
-}
+QtRendererBackend::~QtRendererBackend() { }
 
 void QtRendererBackend::toggleFullscreen()
 {
-	if (mFullScreen)
-	{
+	if (mFullScreen) {
 		showNormal();
-		mFullScreen = false;
-	}
-	else
-	{
+	} else {
 		showFullScreen();
-		mFullScreen = true;
 	}
+	mFullScreen = !mFullScreen;
 }
 
 void QtRendererBackend::resize(int w, int h)
 {
 	setGeometry(x(), y(), w, h);
-}
-
-void QtRendererBackend::reloadMaterials()
-{
-	mTestData.reloadTestMaterial();
-}
-
-void QtRendererBackend::setupScene()
-{
-	mTestData.create();
-}
-
-void QtRendererBackend::tearDownScene()
-{
-	mTestData.destroy();
 }
 
 void QtRendererBackend::initializeGL()
@@ -115,15 +92,12 @@ void QtRendererBackend::initializeGL()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
-
-	setupScene();
 }
 
 void QtRendererBackend::resizeGL(int w, int h)
 {
 	glViewport(0, 0, w, h);
 	mCamera.setPerspectiveProjection(45.0f, w, h, 0.1f, 100.0f);
-	mTestData.updateText(w, h);
 }
 
 void QtRendererBackend::paintGL()

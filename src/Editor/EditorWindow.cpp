@@ -28,6 +28,7 @@
 
 // Forge includes
 #include "ForgeConfig.h"
+#include "Graphics/DebugAxis.h"
 #include "Graphics/OrbitalCamera.h"
 #include "Graphics/QtRenderer.hpp"
 #include "State/QtGameState.h"
@@ -61,8 +62,6 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	ui->centralwidget->setParent(0);
 	ui->toolStack->setCurrentIndex(0);
 	QMainWindow::setCentralWidget(mRenderer.get());
-	QObject::connect(
-				ui->reloadShaders_world, SIGNAL(clicked()), mRenderer.get(), SLOT(reloadMaterials()));
 }
 
 EditorWindow::~EditorWindow()

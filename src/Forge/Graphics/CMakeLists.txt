@@ -23,7 +23,6 @@ set(GraphicsSources
 	Renderer.hpp
 	RenderTask.cpp
 	SceneNode.cpp
-	TestData.cpp
 	Transformation.cpp)
 
 add_library(Graphics ${GraphicsSources})

@@ -22,7 +22,6 @@
 
 #include "Graphics/OrbitalCamera.h"
 #include "Graphics/Renderer.hpp"
-#include "Graphics/TestData.h"
 
 #include <GL/glew.h>
 #include <QGLWidget>
@@ -54,9 +53,6 @@ public:
 
 	void resize(int w, int h);
 
-public slots:
-	void reloadMaterials();
-
 protected:
 	virtual void initializeGL();
 	virtual void resizeGL(int w, int h);
@@ -72,11 +68,6 @@ private:
 	Camera& mCamera;
 
 	glm::mat4x4 mViewProjection;
-
-	TestData mTestData;
-
-	void setupScene();
-	void tearDownScene();
 
 	QtInputHandler& mInput;
 
