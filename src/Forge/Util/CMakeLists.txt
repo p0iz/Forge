@@ -1,5 +1,6 @@
 
 set(UtilSources
+	Exceptions.cpp
 	HashUtils.cpp
 	JsonParser.cpp
 	Log.cpp
