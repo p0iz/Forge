@@ -18,39 +18,33 @@
  *
  */
 
-#ifndef VERTEXLISTDRAWABLE_H
-#define VERTEXLISTDRAWABLE_H
+#pragma once
 
-#include "Vertex.h"
+#include "Graphics/Mesh.h"
+#include "Graphics/Scene/Transformation.hpp"
 
-#include "Shader/ShaderProgram.h"
-#include "Scene/Attachable.hpp"
-
-#include <GL/glew.h>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <iostream>
-#include <memory>
-#include <unordered_set>
-#include <vector>
+#include <string>
+#include <set>
 
 namespace Forge {
 
-class Mesh : public Attachable
-{
-public:
-	Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);
-	~Mesh();
-	void draw();
-private:
-	unsigned int mNumberOfVertices;
-	GLuint mVertexArrayId;
-	GLuint mVertexBufferId;
-	GLuint mElementBufferId;
+class SceneConfig;
+
+/* Scene node implementation
+ *
+ *	How to setup:
+ *
+ *	1. Create a scene config
+ *	2. Create scene nodes from scene config
+ *	3. Arrange nodes into parents/children
+ *
+ */
+
+struct SceneNode {
+	SceneNode(const std::string& name, size_t parent = 0);
+	std::string mName;
+	size_t mParent;
+	Transformation mWorldTransform;
 };
 
-typedef std::shared_ptr<Mesh> MeshPtr;
-
-} // namespace Forge
-
-#endif // VERTEXLISTDRAWABLE_H
+}

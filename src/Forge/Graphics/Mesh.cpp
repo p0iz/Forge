@@ -95,11 +95,12 @@ Mesh::~Mesh()
 
 void Mesh::draw()
 {
-	glBindVertexArray(mVertexArrayId);
-
+	int currentVertexArray;
+	glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentVertexArray);
+	if (static_cast<unsigned int>(currentVertexArray) != mVertexArrayId) {
+		glBindVertexArray(mVertexArrayId);
+	}
 	glDrawElements(GL_TRIANGLES, mNumberOfVertices, GL_UNSIGNED_INT, 0);
-
-	glBindVertexArray(0);
 }
 
 } // namespace Forge

@@ -24,30 +24,34 @@
 
 namespace Forge {
 
-const glm::mat4x4 Transformation::getWorldMatrix() const
-{
-	return modelMatrix * rotationMatrix;
-}
-
 void Transformation::translate(float x, float y, float z)
 {
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z));
+	mMatrix = glm::translate(mMatrix, glm::vec3(x, y, z));
 }
 
 void Transformation::scale(float size)
 {
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(size, size, size));
+	mMatrix = glm::scale(mMatrix, glm::vec3(size, size, size));
 }
 
 void Transformation::rotate(float angle, const glm::vec3 &axis)
 {
-	rotationMatrix = glm::rotate(rotationMatrix, angle, axis);
+	mMatrix = glm::rotate(mMatrix, angle, axis);
 }
 
 void Transformation::reset()
 {
-	modelMatrix = glm::mat4x4();
-	rotationMatrix = glm::mat4x4();
+	mMatrix = glm::mat4();
+}
+
+void Transformation::applyMatrix(const glm::mat4& matrix)
+{
+	mMatrix = matrix * mMatrix;
+}
+
+const glm::mat4&Transformation::getMatrix() const
+{
+	return mMatrix;
 }
 
 }

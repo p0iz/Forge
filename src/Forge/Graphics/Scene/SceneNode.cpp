@@ -14,43 +14,17 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#ifndef VERTEXLISTDRAWABLE_H
-#define VERTEXLISTDRAWABLE_H
-
-#include "Vertex.h"
-
-#include "Shader/ShaderProgram.h"
-#include "Scene/Attachable.hpp"
-
-#include <GL/glew.h>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <iostream>
-#include <memory>
-#include <unordered_set>
-#include <vector>
+#include "SceneNode.hpp"
 
 namespace Forge {
 
-class Mesh : public Attachable
+SceneNode::SceneNode(const std::string& name, size_t parent)
+	: mName(name), mParent(parent), mWorldTransform()
 {
-public:
-	Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);
-	~Mesh();
-	void draw();
-private:
-	unsigned int mNumberOfVertices;
-	GLuint mVertexArrayId;
-	GLuint mVertexBufferId;
-	GLuint mElementBufferId;
-};
+}
 
-typedef std::shared_ptr<Mesh> MeshPtr;
-
-} // namespace Forge
-
-#endif // VERTEXLISTDRAWABLE_H
+}

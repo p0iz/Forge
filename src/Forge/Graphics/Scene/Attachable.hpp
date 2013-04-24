@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -14,24 +14,26 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "SceneNode.h"
+#pragma once
+
+#include <unordered_set>
 
 namespace Forge {
 
-SceneNode::SceneNode() : mNodeTransform(), mParent(nullptr) {
-}
-
-glm::mat4 getNodeWorldMatrix(SceneNode& node) {
-	glm::mat4 transform = node.mNodeTransform.getWorldMatrix();
-	SceneNode* currentNode = node.mParent;
-	while (currentNode != nullptr) {
-		transform = currentNode->mNodeTransform.getWorldMatrix() * transform;
-	}
-	return transform;
-}
+class Attachable {
+public:
+	/* Allow limiting the max number of attached nodes */
+	explicit Attachable(size_t maxAttachments = 0);
+	void attachToNode(size_t node);
+	void detachFromNode(size_t node);
+	const std::unordered_set<size_t>& getAttachedNodes() const;
+private:
+	const size_t mMaxAttachments;
+	std::unordered_set<size_t> mAttachedNodes;
+};
 
 }

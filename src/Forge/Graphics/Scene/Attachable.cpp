@@ -18,25 +18,27 @@
  *
  */
 
-#pragma once
-
-#include <glm/glm.hpp>
+#include "Attachable.hpp"
 
 namespace Forge {
 
-// A class that contains a single transformation (translation, scaling and rotation)
-// from one space to another.
-struct Transformation {
-	const glm::mat4x4 getWorldMatrix() const;
+Attachable::Attachable(size_t maxAttachments) : mMaxAttachments(maxAttachments) { }
 
-	void translate(float x, float y, float z);
-	void scale(float size); // Only allow uniform scaling
-	void rotate(float angle, const glm::vec3& axis);
+void Attachable::attachToNode(size_t node)
+{
+	if (mAttachedNodes.size() < mMaxAttachments || mMaxAttachments == 0) {
+		mAttachedNodes.insert(node);
+	}
+}
 
-	void reset();
+void Attachable::detachFromNode(size_t node)
+{
+	mAttachedNodes.erase(node);
+}
 
-	glm::mat4x4 rotationMatrix;
-	glm::mat4x4 modelMatrix;
-};
+const std::unordered_set<size_t>& Attachable::getAttachedNodes() const
+{
+	return mAttachedNodes;
+}
 
 }

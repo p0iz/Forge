@@ -15,6 +15,9 @@ add_subdirectory(Loaders)
 # Add Material component to build
 add_subdirectory(Material)
 
+# Add Scene component to build
+add_subdirectory(Scene)
+
 set(GraphicsSources
 	Camera.cpp
 	DebugAxis.cpp
@@ -22,9 +25,7 @@ set(GraphicsSources
 	OrbitalCamera.cpp
 	Renderer.hpp
 	RenderTask.cpp
-	SceneNode.cpp
-	Transformation.cpp)
 
 add_library(Graphics ${GraphicsSources})
 
-target_link_libraries(Graphics Light Loaders Shader Material Text)
+target_link_libraries(Graphics Light Loaders Shader Scene Material Text)
