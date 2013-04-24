@@ -32,7 +32,7 @@ class QtStateMachine : public QObject
 	Q_OBJECT
 public:
 	void init(const GameStatePtr& initialState);
-	void start();
+	void start(int frameDelay = 0);
 	void stop();
 public slots:
 	void fireCurrentState();

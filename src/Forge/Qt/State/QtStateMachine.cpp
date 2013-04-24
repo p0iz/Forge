@@ -21,10 +21,10 @@
 #include "State/QtStateMachine.hpp"
 #include "State/QtGameState.h"
 
-void Forge::QtStateMachine::start()
+void Forge::QtStateMachine::start(int frameDelay)
 {
 	QObject::connect(&mFrameTimer, SIGNAL(timeout()), this, SLOT(fireCurrentState()));
-	mFrameTimer.start(0);
+	mFrameTimer.start(frameDelay);
 }
 
 void Forge::QtStateMachine::stop()
