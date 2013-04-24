@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -27,7 +27,10 @@
 namespace Forge {
 
 Camera::Camera()
-	: mDirtyViewProjection(true),
+	: mFovY(45.0f),
+	  mNearClip(1.0f),
+	  mFarClip(100.0f),
+	  mDirtyViewProjection(true),
 	  mProjectionMatrix(1.0f),
 	  mViewProjectionMatrix(1.0f)
 {
@@ -37,22 +40,28 @@ Camera::~Camera()
 {
 }
 
-void Camera::setPerspectiveProjection(float fovy, int width, int height, float near, float far)
+void Camera::setPerspectiveProjection(int width, int height)
 {
-	mProjectionMatrix = glm::perspective(fovy, 1.0f*width / height, near, far);
-
-	mDirtyViewProjection = true;
+	mProjectionMatrix = glm::perspective(mFovY, 1.0f*width / height, mNearClip, mFarClip);
 }
 
-void Camera::setOrthogonalProjection(int width, int height, float near, float far)
+void Camera::setOrthogonalProjection(int width, int height)
 {
 	mProjectionMatrix = glm::mat4x4(1.0f);
 	mProjectionMatrix[0][0] = 2.0f / width;
 	mProjectionMatrix[1][1] = 2.0f / height;
-	mProjectionMatrix[2][2] = 1.0f / (far - near);
-	mProjectionMatrix[3][2] = -near / (far -near);
+	mProjectionMatrix[2][2] = 1.0f / (mFarClip - mNearClip);
+	mProjectionMatrix[3][2] = -mNearClip / (mFarClip - mNearClip);
+}
 
-	mDirtyViewProjection = true;
+void Camera::setClipDistances(float near, float far) {
+	mNearClip = near;
+	mFarClip = far;
+}
+
+void Camera::setFovY(float fov)
+{
+	mFovY = fov;
 }
 
 void Camera::updateRotation(float yaw, float pitch, float roll)
@@ -60,22 +69,11 @@ void Camera::updateRotation(float yaw, float pitch, float roll)
 	mRotation.x += glm::radians(yaw);
 	mRotation.y -= glm::radians(pitch);
 	mRotation.z += glm::radians(roll);
-	mDirtyViewProjection = true;
 }
 
 void Camera::updatePosition(glm::vec3 translation)
 {
 	mPosition += translation;
-	mDirtyViewProjection = true;
-}
-
-void Camera::updateViewProjectionMatrix()
-{
-	if (mDirtyViewProjection)
-	{
-		mViewProjectionMatrix = mProjectionMatrix * getViewMatrix();
-		mDirtyViewProjection = false;
-	}
 }
 
 } // namespace Forge

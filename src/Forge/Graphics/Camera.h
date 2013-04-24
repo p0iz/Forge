@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -30,24 +30,17 @@ public:
 	Camera();
 	virtual ~Camera();
 
-	void setPerspectiveProjection(float fovy, int width, int height, float near, float far);
-	void setOrthogonalProjection(int width, int height, float near, float far);
+	void setPerspectiveProjection(int width, int height);
+	void setOrthogonalProjection(int width, int height);
 
 	virtual const glm::mat4x4 getViewMatrix() const = 0;
+
+	void setFovY(float fov);
+	void setClipDistances(float near, float far);
 
 	const glm::mat4x4& getProjectionMatrix() const
 	{
 		return mProjectionMatrix;
-	}
-
-	const glm::mat4x4& getViewProjectionMatrix() const
-	{
-		return mViewProjectionMatrix;
-	}
-
-	void requestUpdateViewProjection()
-	{
-		mDirtyViewProjection = true;
 	}
 
 	// Call this whenever you need a fresh VP (e.g. each frame)
@@ -67,6 +60,10 @@ public:
 	}
 
 private:
+
+	float mFovY;
+	float mNearClip;
+	float mFarClip;
 
 	glm::vec3 mRotation;
 	glm::vec3 mPosition;
