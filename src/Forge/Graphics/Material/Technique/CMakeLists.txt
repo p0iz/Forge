@@ -1,6 +1,7 @@
 # Graphics - Material - Technique
 
 set(TechniqueSources
+	InternalTechniques.hpp
 	DefaultTechnique.cpp
 	LuaProperties.cpp
 	Property.cpp
