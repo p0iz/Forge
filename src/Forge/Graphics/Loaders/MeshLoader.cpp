@@ -20,7 +20,6 @@
 
 #include "MeshLoader.h"
 
-#include "Graphics/Mesh.h"
 #include "Graphics/Vertex.h"
 
 #include "Util/Log.h"
@@ -32,8 +31,8 @@
 
 namespace Forge { namespace MeshLoader {
 
-Mesh* loadMesh(const std::string& file) {
-	Mesh* loadedMesh = nullptr;
+MeshPtr loadMesh(const std::string& file) {
+	MeshPtr loadedMesh(nullptr);
 	Assimp::Importer importer;
 
 	const aiScene* importedModel = importer.ReadFile(
@@ -75,7 +74,7 @@ Mesh* loadMesh(const std::string& file) {
 				}
 			}
 		}
-		loadedMesh = new Mesh(vertices, elements);
+		loadedMesh.reset(new Mesh(vertices, elements));
 	}
 	return loadedMesh;
 }

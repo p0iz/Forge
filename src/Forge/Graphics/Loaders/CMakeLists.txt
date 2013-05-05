@@ -1,7 +1,5 @@
 # Graphics - Loaders
 
-
-
 set(LoadersSources
 	ImageLoader.cpp
 	MeshLoader.cpp)

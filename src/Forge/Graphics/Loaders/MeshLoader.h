@@ -20,15 +20,15 @@
 
 #pragma once
 
+#include "Graphics/Mesh.h"
+
 #include <string>
 
 namespace Forge {
 
-class Mesh;
-
 /* Namespace for mesh loading functions */
 namespace MeshLoader {
-	Mesh* loadMesh(const std::string& file);
+	MeshPtr loadMesh(const std::string& file);
 }
 
 } // namespace Forge
