@@ -46,7 +46,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	mRenderer(new Forge::QtRenderer(*mInput, *mCamera)),
 	mMaterialEditor(new MaterialEditorView(*mInput, *mCamera)),
 	mEditorState(
-		new Forge::QtGameState(QString("EditorState"), *mRenderer, *mInput, mGameClock))
+		new Forge::QtGameState(QString("EditorState"), *mCamera, *mRenderer, *mInput, mGameClock))
 {
 	initializeForge();
 	initializeUi();

@@ -28,8 +28,14 @@ namespace Forge
 
 struct GameState {
 	explicit GameState(const std::string& name);
-	virtual ~GameState() { }
-	virtual std::shared_ptr<GameState> update();
+	virtual ~GameState();
+	virtual void enter();
+	virtual std::shared_ptr<GameState> frameUpdate();
+
+	/* Calling these two functions is left to the users' discretion */
+	virtual void createStateData();
+	virtual void destroyState();
+
 	const std::string& getName() const;
 private:
 	std::string mName;

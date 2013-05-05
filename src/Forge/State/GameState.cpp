@@ -26,7 +26,18 @@ namespace Forge
 
 GameState::GameState(const std::string& name) : mName(name) { }
 
-GameStatePtr GameState::update()
+GameState::~GameState() {
+	destroyState();
+}
+
+void GameState::enter()
+{
+}
+
+void GameState::createStateData() { }
+void GameState::destroyState() { }
+
+GameStatePtr GameState::frameUpdate()
 {
 	return GameStatePtr(nullptr);
 }

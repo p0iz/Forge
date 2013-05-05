@@ -20,26 +20,59 @@
 
 #pragma once
 
+#include "Graphics/Light/Light.hpp"
 #include "Graphics/QtRenderer.hpp"
+#include "Graphics/Scene/SceneConfig.hpp"
+#include "Graphics/Material/Material.h"
+#include "Graphics/Material/Technique/TechniqueLibrary.h"
 #include "State/GameState.h"
 #include "Time/HighResClock.h"
+
+#include <memory>
 
 namespace Forge
 {
 	class QtInputHandler;
 
-	class QtGameState : public GameState
+	class QtGameState : public QObject, public GameState
 	{
+		Q_OBJECT
 	public:
 		QtGameState(
 				const QString& name,
+				Camera& camera,
 				QtRenderer& renderer,
 				QtInputHandler& input,
 				HighResClock& clock);
-		virtual GameStatePtr update();
+		virtual GameStatePtr frameUpdate();
+
+		virtual void createStateData();
+		virtual void destroyState();
+
 	private:
+		void createTestScene();
+		void createSceneGraph();
+
+		Camera& mCamera;
 		QtRenderer& mRenderer;
 		QtInputHandler& mInput;
 		HighResClock& mClock;
+
+		SceneConfig mSceneConfig;
+
+		// Technique library
+		TechniqueLibrary mTechniqueLibrary;
+
+		// Materials
+		Material mCubeMaterial;
+		Material mLampMaterial;
+		Material mRoomMaterial;
+
+		// Scene nodes
+		size_t mRoomNodeId;
+		enum { CUBE_NODES = 10 };
+		size_t mCubeNodes[CUBE_NODES];
+
+		size_t mPlayerNode;
 	};
 } // namespace Forge

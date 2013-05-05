@@ -31,7 +31,7 @@ void GameStateMachine::init(const GameStatePtr& initialState) {
 
 bool GameStateMachine::update() {
 	if (mCurrentState) {
-		mCurrentState = mCurrentState->update();
+		mCurrentState = mCurrentState->frameUpdate();
 		return true;
 	} else {
 		return false;

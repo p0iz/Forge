@@ -43,9 +43,12 @@ void ForgeGame::initializeGameStates()
 	Forge::GameStatePtr initialState(
 		new Forge::QtGameState(
 			QString("InitialState"),
+			mCamera,
 			mRenderer,
 			mInput,
 			mClock));
+	initialState->createStateData();
+
 	Forge::GameStateLibrary::getSingleton().add(initialState->getName(), initialState);
 	mStateMachine.init(initialState);
 }

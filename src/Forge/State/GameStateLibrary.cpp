@@ -22,7 +22,7 @@
 
 void Forge::GameStateLibrary::add(const std::string& name, Forge::GameStatePtr state)
 {
-	mGameStates[name] = state;
+	mGameStates.insert(std::pair<std::string, Forge::GameStatePtr>(name, state));
 }
 
 Forge::GameStatePtr Forge::GameStateLibrary::get(const std::string& name)
