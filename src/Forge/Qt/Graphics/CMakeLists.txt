@@ -1,6 +1,5 @@
 set(QtStateSources
-	QtRenderer.hpp
-	QtRendererBackend.cpp)
+	QtRenderer.cpp)
 
 find_package(Qt5OpenGL REQUIRED)
 

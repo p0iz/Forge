@@ -32,8 +32,6 @@
 
 namespace Forge {
 
-class RenderTask;
-
 /* Technique is comprised of one or several shader passes and accompanying properties */
 class Technique
 {
@@ -48,10 +46,12 @@ public:
 	virtual void destroy() = 0;
 
 	// Called when starting to draw with the technique
-	virtual void beginMaterial(const RenderTask&) = 0;
+	virtual void beginMaterial() = 0;
 
 	// Called when starting to draw a mesh
-	virtual void beginMesh(const RenderTask&) = 0;
+	virtual void setTransforms(const glm::mat4& world,
+						  const glm::mat4& view,
+						  const glm::mat4& projection) = 0;
 
 	// Use integers to speed up comparisons
 	const std::string& getName() const {

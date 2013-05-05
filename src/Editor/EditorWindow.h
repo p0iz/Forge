@@ -49,6 +49,7 @@ class EditorWindow : public QMainWindow
 public:
 	explicit EditorWindow(QWidget *parent = 0);
 	~EditorWindow();
+	void initializeUi();
 private slots:
 
 	void on_actionToggle_Debug_Axis_triggered();

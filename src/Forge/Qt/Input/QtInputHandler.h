@@ -26,17 +26,17 @@ class QMouseEvent;
 namespace Forge
 {
 
-class QtRendererBackend;
+class QtRenderer;
 
 class QtInputHandler
 {
 public:
 	virtual ~QtInputHandler();
-	virtual void keyPress(QKeyEvent* event, QtRendererBackend* renderer) = 0;
-	virtual void keyRelease(QKeyEvent* event, QtRendererBackend* renderer) = 0;
-	virtual void mousePress(QMouseEvent *event, QtRendererBackend* renderer) = 0;
-	virtual void mouseRelease(QMouseEvent *event, QtRendererBackend* renderer) = 0;
-	virtual void mouseMove(QMouseEvent *event, QtRendererBackend* renderer) = 0;
+	virtual void keyPress(QKeyEvent* event, QtRenderer* renderer) = 0;
+	virtual void keyRelease(QKeyEvent* event, QtRenderer* renderer) = 0;
+	virtual void mousePress(QMouseEvent *event, QtRenderer* renderer) = 0;
+	virtual void mouseRelease(QMouseEvent *event, QtRenderer* renderer) = 0;
+	virtual void mouseMove(QMouseEvent *event, QtRenderer* renderer) = 0;
 	virtual void processInput(float delta);
 };
 } // namespace Forge

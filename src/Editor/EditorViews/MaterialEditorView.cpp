@@ -1,7 +1,7 @@
 #include "MaterialEditorView.hpp"
 
-MaterialEditorView::MaterialEditorView(Forge::Camera &camera, Forge::QtInputHandler &input)
-	: QtRendererBackend(camera, input)
+MaterialEditorView::MaterialEditorView(Forge::QtInputHandler &input, Forge::Camera& camera)
+	: QtRenderer(input, camera)
 {
 }
 

@@ -37,6 +37,23 @@
 
 #include <QTabWidget>
 
+EditorWindow::EditorWindow(QWidget *parent) :
+	QMainWindow(parent),
+	ui(new Ui::EditorWindow),
+	mForgeConfig(new Forge::ForgeConfig),
+	mCamera(new Forge::OrbitalCamera(10.0f)),
+	mInput(new EditorInputHandler(*mCamera)),
+	mRenderer(new Forge::QtRenderer(*mInput, *mCamera)),
+	mMaterialEditor(new MaterialEditorView(*mInput, *mCamera)),
+	mEditorState(
+		new Forge::QtGameState(QString("EditorState"), *mRenderer, *mInput, mGameClock))
+{
+	initializeForge();
+	initializeUi();
+	QObject::connect(mRenderer.get(), &Forge::QtRenderer::glewInitialized,
+					 mEditorState.get(), &Forge::QtGameState::createStateData);
+}
+
 void EditorWindow::initializeForge()
 {
 	mGameClock.init();
@@ -45,19 +62,8 @@ void EditorWindow::initializeForge()
 	mEditorStateMachine.start();
 }
 
-EditorWindow::EditorWindow(QWidget *parent) :
-	QMainWindow(parent),
-	ui(new Ui::EditorWindow),
-	mForgeConfig(new Forge::ForgeConfig),
-	mCamera(new Forge::OrbitalCamera(10.0f)),
-	mInput(new EditorInputHandler(*mCamera)),
-	mRenderer(new Forge::QtRenderer(*mCamera, *mInput, 0, 0, 0)),
-	mMaterialEditor(new MaterialEditorView(*mCamera, *mInput)),
-	mEditorState(
-		new Forge::QtGameState(QString("EditorState"), *mRenderer, *mInput, mGameClock))
+void EditorWindow::initializeUi()
 {
-	initializeForge();
-
 	ui->setupUi(this);
 	ui->centralwidget->setParent(0);
 	ui->toolStack->setCurrentIndex(0);

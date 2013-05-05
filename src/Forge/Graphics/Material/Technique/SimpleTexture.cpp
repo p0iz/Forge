@@ -20,10 +20,8 @@
 
 #include "SimpleTexture.h"
 
-#include "Graphics/Camera.h"
 #include "Graphics/Loaders/ImageLoader.h"
 #include "Graphics/Light/Light.hpp"
-#include "Graphics/RenderTask.h"
 #include "Util/Log.h"
 
 namespace Forge {
@@ -55,13 +53,9 @@ void SimpleTexture::create()
 	{
 		Log::info << shaderProgram.getProgramInfoLog();
 	}
-	// Lighting
+	// Setup light uniform buffer binding
 	lightsUniformIndex = glGetUniformBlockIndex(shaderProgram.getId(), "Lights");
-	glUniformBlockBinding(shaderProgram.getId(), lightsUniformIndex, 1);
-	glGenBuffers(1, &lightBuffer);
-	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(Light) * Light::MAX_LIGHTS, nullptr, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glUniformBlockBinding(shaderProgram.getId(), lightsUniformIndex, Light::UNIFORM_BINDING_POINT);
 
 	// Get uniform locations
 	wvpLocation = shaderProgram.getUniformLocation("WorldViewProjectionMatrix");
@@ -72,6 +66,10 @@ void SimpleTexture::create()
 	materialDiffuseLoc = shaderProgram.getUniformLocation("materialDiffuse");
 	materialSpecularLoc = shaderProgram.getUniformLocation("materialSpecular");
 	materialShininessLoc = shaderProgram.getUniformLocation("materialShininess");
+
+	mDiffuseMapLoc = shaderProgram.getUniformLocation("DiffuseMap");
+	mSpecularMapLoc = shaderProgram.getUniformLocation("SpecularMap");
+	mNormalMapLoc = shaderProgram.getUniformLocation("NormalMap");
 }
 
 void SimpleTexture::destroy()
@@ -82,13 +80,6 @@ void SimpleTexture::destroy()
 void SimpleTexture::freeTextures()
 {
 	glDeleteTextures(mLoadedTextures.size(), &mLoadedTextures[0]);
-}
-
-void SimpleTexture::updateLights(const Light lights[Light::MAX_LIGHTS])
-{
-	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
-	glBindBufferBase(GL_UNIFORM_BUFFER, 1, lightBuffer);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light) * Light::MAX_LIGHTS, lights);
 }
 
 unsigned int SimpleTexture::addTexture(const std::string& textureFile)
@@ -107,16 +98,20 @@ void SimpleTexture::updateProperties(LuaProperties& properties)
 	// Diffuse map
 	if (properties.hasProperty("diffuseMap")) {
 		mDiffuseMap = addTexture(properties.getString("diffuseMap"));
+		glUniform1i(mDiffuseMapLoc, 0);
+
 	}
 
 	// Specular map
 	if (properties.hasProperty("specularMap")) {
 		mSpecularMap = addTexture(properties.getString("specularMap"));
+		glUniform1i(mSpecularMapLoc, 1);
 	}
 
 	// Normal map
 	if (properties.hasProperty("normalMap")) {
 		mNormalMap = addTexture(properties.getString("normalMap"));
+		glUniform1i(mNormalMapLoc, 2);
 	}
 
 	// Ambient color reflectivity
@@ -144,7 +139,7 @@ void SimpleTexture::updateProperties(LuaProperties& properties)
 	}
 }
 
-void SimpleTexture::beginMaterial(const RenderTask& task)
+void SimpleTexture::beginMaterial()
 {
 	shaderProgram.use();
 	glActiveTexture(GL_TEXTURE0);
@@ -153,17 +148,17 @@ void SimpleTexture::beginMaterial(const RenderTask& task)
 	glBindTexture(GL_TEXTURE_2D, mSpecularMap);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, mNormalMap);
-	updateLights(task.lights);
 }
 
-void SimpleTexture::beginMesh(const RenderTask& task)
+void SimpleTexture::setTransforms(const glm::mat4& world,
+								  const glm::mat4& view,
+								  const glm::mat4& projection)
 {
 	// Update
-	const Camera& camera = task.getCamera();
-	const glm::mat4x4& worldViewTransform = camera.getViewMatrix() * task.getWorldTransform();
-	const glm::mat3x3 normalMatrix(worldViewTransform);
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(camera.getProjectionMatrix() * worldViewTransform)[0][0]);
-	glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &worldViewTransform[0][0]);
+	const glm::mat4x4 wv = view * world;
+	const glm::mat3x3 normalMatrix(wv);
+	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(projection * wv)[0][0]);
+	glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &wv[0][0]);
 	glUniformMatrix3fv(nLocation, 1, GL_FALSE, &normalMatrix[0][0]);
 }
 

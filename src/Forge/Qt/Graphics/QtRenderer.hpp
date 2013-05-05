@@ -14,23 +14,61 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2012 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Graphics/QtRendererBackend.hpp"
-#include "Graphics/Renderer.hpp"
+#include "Graphics/OrbitalCamera.h"
+#include "Graphics/Renderer.h"
+#include "Graphics/Scene/SceneConfig.hpp"
 
-namespace Forge {
+#include <GL/glew.h>
+#include <QGLWidget>
 
-typedef Renderer<QtRendererBackend,
-	Camera&,
-	QtInputHandler&,
-	QWidget*,
-	QGLWidget*,
-	Qt::WindowFlags>
-	QtRenderer;
+namespace Forge
+{
+
+class QtInputHandler;
+class Shader;
+class ShaderProgram;
+
+class QtRenderer : public QGLWidget
+{
+	Q_OBJECT
+public:
+	explicit QtRenderer(
+			QtInputHandler& input,
+			Camera& camera,
+			QWidget* parent = 0,
+			const QGLWidget* shareWidget = 0,
+			Qt::WindowFlags f=0);
+	virtual ~QtRenderer();
+
+	void render(const SceneConfig& scene);
+
+	void toggleFullscreen();
+signals:
+	void glewInitialized();
+protected:
+	virtual void initializeGL();
+	virtual void resizeGL(int w, int h);
+	virtual void paintGL();
+	virtual void keyPressEvent(QKeyEvent* event);
+	virtual void keyReleaseEvent(QKeyEvent* event);
+	virtual void mousePressEvent(QMouseEvent *event);
+	virtual void mouseMoveEvent(QMouseEvent *event);
+private:
+	bool mFullScreen;
+
+	QtInputHandler& mInput;
+
+	Renderer mRenderer;
+	Camera& mCamera;
+
+	// Returns the GL format used by the widget
+	static const QGLFormat widgetQGLFormat();
+};
 
 }

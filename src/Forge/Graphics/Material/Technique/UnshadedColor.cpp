@@ -20,8 +20,6 @@
 
 #include "UnshadedColor.hpp"
 
-#include "Graphics/Camera.h"
-#include "Graphics/RenderTask.h"
 #include "Util/Log.h"
 
 #include <glm/glm.hpp>
@@ -58,15 +56,15 @@ void UnshadedColor::destroy() { }
 
 void UnshadedColor::updateProperties(LuaProperties&) { }
 
-void UnshadedColor::beginMaterial(const RenderTask& task) {
+void UnshadedColor::beginMaterial() {
 	shaderProgram.use();
 }
 
-void UnshadedColor::beginMesh(const RenderTask& task) {
-	// Update
-	const Camera& camera = task.getCamera();
-	const glm::mat4x4& vp = camera.getViewProjectionMatrix();
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(vp * task.getWorldTransform())[0][0]);
+void UnshadedColor::setTransforms(const glm::mat4& world,
+							 const glm::mat4& view,
+							 const glm::mat4& projection) {
+	const glm::mat4x4 wvp = projection * view * world;
+	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(wvp)[0][0]);
 	if (hasDynamicProperty("Color")) {
 		glUniform3fv(colorLocation, 1, getDynamicProperty("Color"));
 	}

@@ -24,25 +24,28 @@
 #include "Shader/Shader.h"
 #include "Shader/ShaderProgram.h"
 
+#include "Util/Singleton.hpp"
+
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
 namespace Forge {
 
-class DebugAxis
+class SceneConfig;
+
+class DebugAxis : public Singleton<DebugAxis>
 {
 public:
-	static DebugAxis& getInstance();
+	DebugAxis();
+	~DebugAxis();
+
 	static void toggleDebuggingInfo();
 	static void setDebuggingInfo(bool state);
 	static bool isDebugVisible();
 
-	void draw(const glm::mat4x4& mvpMatrix) const;
+	void render(const SceneConfig& scene) const;
 
 private:
-	DebugAxis();
-	~DebugAxis();
-
 	void initialize();
 
 	GLuint debugVertexArrayId;

@@ -23,8 +23,7 @@ set(GraphicsSources
 	DebugAxis.cpp
 	Mesh.cpp
 	OrbitalCamera.cpp
-	Renderer.hpp
-	RenderTask.cpp
+	Renderer.cpp)
 
 add_library(Graphics ${GraphicsSources})
 

@@ -21,7 +21,7 @@
 #include "DefaultTechnique.h"
 
 #include "Graphics/Camera.h"
-#include "Graphics/RenderTask.h"
+#include "Graphics/Scene/SceneConfig.hpp"
 #include "LuaProperties.hpp"
 #include "Util/Log.h"
 
@@ -68,17 +68,18 @@ void DefaultTechnique::updateProperties(LuaProperties&)
 {
 }
 
-void DefaultTechnique::beginMaterial(const RenderTask& task)
+void DefaultTechnique::beginMaterial()
 {
 	shaderProgram.use();
 }
 
-void DefaultTechnique::beginMesh(const RenderTask& task)
+void DefaultTechnique::setTransforms(const glm::mat4& world,
+								const glm::mat4& view,
+								const glm::mat4& projection)
 {
 	// Update
-	const Camera& camera = task.getCamera();
-	const glm::mat4x4& vp = camera.getViewProjectionMatrix();
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(vp * task.getWorldTransform())[0][0]);
+	const glm::mat4x4 wvp = projection * view * world;
+	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(wvp)[0][0]);
 }
 
 }

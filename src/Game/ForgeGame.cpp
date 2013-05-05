@@ -31,10 +31,11 @@
 ForgeGame::ForgeGame()
 	: mForgeConfig("data/game.lua"),
 	  mInput(mCamera, mClock),
-	  mRenderer(mCamera, mInput, nullptr, nullptr, 0)
+	  mRenderer(mInput, mCamera)
 {
 	const Forge::Configuration& cfg = mForgeConfig.getConfig();
 	mRenderer.resize(cfg.display.width, cfg.display.height);
+	mRenderer.show();
 }
 
 void ForgeGame::initializeGameStates()
@@ -64,7 +65,6 @@ void ForgeGame::init()
 int ForgeGame::run()
 {
 	int result = 0;
-	mRenderer.show();
 	mClock.init();
 	mStateMachine.start();
 	result = QApplication::exec();

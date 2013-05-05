@@ -36,8 +36,10 @@ public:
 	virtual void create();
 	virtual void destroy();
 	virtual void updateProperties(LuaProperties&);
-	virtual void beginMaterial(const RenderTask& task);
-	virtual void beginMesh(const RenderTask& task);
+	virtual void beginMaterial();
+	virtual void setTransforms(const glm::mat4& world,
+						  const glm::mat4& view,
+						  const glm::mat4& projection);
 private:
 	Shader vertexShader;
 	Shader fragmentShader;

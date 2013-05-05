@@ -43,7 +43,8 @@ GameStatePtr QtGameState::update()
 	float delta = mClock.getGameDelta();
 	mClock.updateDeltaTime();
 	mInput.processInput(delta);
-	mRenderer.render();
+	// Render
+	mRenderer.render(mSceneConfig);
 	return library.get(getName());
 }
 

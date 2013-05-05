@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -22,7 +22,8 @@
 
 #include "Graphics/DebugAxis.h"
 #include "Graphics/OrbitalCamera.h"
-#include "Graphics/QtRendererBackend.hpp"
+#include "Graphics/QtRenderer.hpp"
+#include "Graphics/Scene/Transformation.hpp"
 
 #include "Time/HighResClock.h"
 
@@ -33,16 +34,21 @@
 
 #include <iostream>
 
+namespace {
+	const int MOVE_SPEED = 1.0f;
+}
+
 GameInputHandler::GameInputHandler(Forge::OrbitalCamera& camera, Forge::HighResClock& clock)
-	: mCamera(camera), mClock(clock)
+	: mCamera(camera), mClock(clock), mCurrentSceneConfig(nullptr)
 {
+	mapDefaultKeys();
 }
 
 GameInputHandler::~GameInputHandler()
 {
 }
 
-void GameInputHandler::keyPress(QKeyEvent* event, Forge::QtRendererBackend* renderer)
+void GameInputHandler::keyPress(QKeyEvent* event, Forge::QtRenderer* renderer)
 {
 	switch (event->key())
 	{
@@ -58,61 +64,31 @@ void GameInputHandler::keyPress(QKeyEvent* event, Forge::QtRendererBackend* rend
 	case Qt::Key_3:
 		mClock.setTimeScale(0.5);
 		break;
-	case Qt::Key_W:
-		currentActions.insert(CameraForward);
-		break;
-	case Qt::Key_S:
-		currentActions.insert(CameraBack);
-		break;
-	case Qt::Key_A:
-		currentActions.insert(CameraLeft);
-		break;
-	case Qt::Key_D:
-		currentActions.insert(CameraRight);
-		break;
-	case Qt::Key_Space:
-		Forge::DebugAxis::toggleDebuggingInfo();
+	case Qt::Key_Escape:
+		renderer->close();
 		break;
 	case Qt::Key_F:
 		renderer->toggleFullscreen();
 		break;
-	case Qt::Key_Q:
-	case Qt::Key_Escape:
-		renderer->close();
-		break;
+	default:
+		mCurrentKeys.insert(static_cast<Qt::Key>(event->key()));
 	}
 }
 
-void GameInputHandler::keyRelease(QKeyEvent* event, Forge::QtRendererBackend* renderer)
+void GameInputHandler::keyRelease(QKeyEvent* event, Forge::QtRenderer* renderer)
 {
-	switch (event->key())
-	{
-	case Qt::Key_1:
-
-	case Qt::Key_W:
-		currentActions.erase(CameraForward);
-		break;
-	case Qt::Key_S:
-		currentActions.erase(CameraBack);
-		break;
-	case Qt::Key_A:
-		currentActions.erase(CameraLeft);
-		break;
-	case Qt::Key_D:
-		currentActions.erase(CameraRight);
-		break;
-	}
+	mCurrentKeys.erase(static_cast<Qt::Key>(event->key()));
 }
 
-void GameInputHandler::mousePress(QMouseEvent *event, Forge::QtRendererBackend* renderer)
+void GameInputHandler::mousePress(QMouseEvent *event, Forge::QtRenderer* renderer)
 {
 }
 
-void GameInputHandler::mouseRelease(QMouseEvent *event, Forge::QtRendererBackend* renderer)
+void GameInputHandler::mouseRelease(QMouseEvent *event, Forge::QtRenderer* renderer)
 {
 }
 
-void GameInputHandler::mouseMove(QMouseEvent *event, Forge::QtRendererBackend* renderer)
+void GameInputHandler::mouseMove(QMouseEvent *event, Forge::QtRenderer* renderer)
 {
 	QPoint relativeMovement = event->pos() - mPreviousMouseLocation;
 	if (event->buttons() & Qt::LeftButton)
@@ -147,32 +123,73 @@ void GameInputHandler::mouseMove(QMouseEvent *event, Forge::QtRendererBackend* r
 
 void GameInputHandler::processInput(float delta)
 {
-	for (GameAction action : currentActions)
+	for (Qt::Key key : mCurrentKeys)
 	{
-		glm::vec2 translation;
+		if (mKeyActionMap.count(key) < 1) {
+			// Nothing mapped to this key
+			continue;
+		}
+		glm::vec2 cameraTranslation;
+		Forge::Transformation playerTransformation;
 		const double timeScale = mClock.getTimeScale();
-		switch (action)
+		switch (mKeyActionMap[key])
 		{
 		case CameraLeft:
-			translation.x -= 2.0f * delta * timeScale;
+			cameraTranslation.x -= MOVE_SPEED * delta * timeScale;
 			break;
 		case CameraRight:
-			translation.x += 2.0f * delta * timeScale;
+			cameraTranslation.x += MOVE_SPEED * delta * timeScale;
 			break;
 		case CameraForward:
-			translation.y -= 2.0f * delta * timeScale;
+			cameraTranslation.y -= MOVE_SPEED * delta * timeScale;
 			break;
 		case CameraBack:
-			translation.y += 2.0f * delta * timeScale;
+			cameraTranslation.y += MOVE_SPEED * delta * timeScale;
+			break;
+		case PlayerLeft:
+			playerTransformation.rotate(-MOVE_SPEED * delta * timeScale, glm::vec3(0,1,0));
+			break;
+		case PlayerRight:
+			playerTransformation.rotate(MOVE_SPEED * delta * timeScale, glm::vec3(0,1,0));
+			break;
+		case PlayerForward:
+			playerTransformation.translate(0.0f, 0.0f, -MOVE_SPEED * delta * timeScale);
+			break;
+		case PlayerBack:
+			playerTransformation.translate(0.0f, 0.0f, MOVE_SPEED * delta * timeScale);
+			break;
+		case ToggleDebug:
+			Forge::DebugAxis::toggleDebuggingInfo();
+			// One-shot action
+			mCurrentKeys.erase(key);
 			break;
 		default:
 			break;
 		}
 		glm::vec3 rotation(mCamera.getRotation());
 		glm::vec3 targetTranslation(
-					translation.x * sin(rotation.x) + translation.y * cos(rotation.x),
+					cameraTranslation.x * sin(rotation.x) + cameraTranslation.y * cos(rotation.x),
 					0.0f,
-					translation.y * sin(rotation.x) - translation.x * cos(rotation.x));
+					cameraTranslation.y * sin(rotation.x) - cameraTranslation.x * cos(rotation.x));
 		mCamera.updatePosition(targetTranslation);
 	}
+}
+
+void GameInputHandler::setCurrentSceneConfig(Forge::SceneConfig* scene)
+{
+	mCurrentSceneConfig = scene;
+}
+
+void GameInputHandler::mapDefaultKeys()
+{
+	mKeyActionMap[Qt::Key_W] = CameraForward;
+	mKeyActionMap[Qt::Key_S] = CameraBack;
+	mKeyActionMap[Qt::Key_A] = CameraLeft;
+	mKeyActionMap[Qt::Key_D] = CameraRight;
+	mKeyActionMap[Qt::Key_Up] = PlayerForward;
+	mKeyActionMap[Qt::Key_Down] = PlayerBack;
+	mKeyActionMap[Qt::Key_Left] = PlayerLeft;
+	mKeyActionMap[Qt::Key_Right] = PlayerRight;
+	mKeyActionMap[Qt::Key_Space] = ToggleDebug;
+	mKeyActionMap[Qt::Key_F] = ToggleFullscreen;
 }

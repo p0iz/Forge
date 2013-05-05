@@ -68,12 +68,12 @@ public:
 	virtual void create();
 	virtual void destroy();
 
-	void updateLights(const Light lights[]);
-
 	virtual void updateProperties(LuaProperties& properties);
 
-	virtual void beginMaterial(const RenderTask& task);
-	virtual void beginMesh(const RenderTask& task);
+	virtual void beginMaterial();
+	virtual void setTransforms(const glm::mat4& world,
+						  const glm::mat4& view,
+						  const glm::mat4& projection);
 private:
 	Shader vertexShader;
 	Shader fragmentShader;
@@ -89,9 +89,7 @@ private:
 	void freeTextures();
 
 	// Lighting
-	const int lightBindingPoint = 1;
 	unsigned int lightsUniformIndex;
-	unsigned int lightBuffer;
 
 	// Uniform locations
 	int wvpLocation; // World->View->Projection
@@ -102,6 +100,10 @@ private:
 	int materialDiffuseLoc;
 	int materialSpecularLoc;
 	int materialShininessLoc;
+
+	int mDiffuseMapLoc;
+	int mSpecularMapLoc;
+	int mNormalMapLoc;
 
 };
 

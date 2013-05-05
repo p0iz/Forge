@@ -20,10 +20,8 @@
 
 #include "SimpleColor.hpp"
 
-#include "Graphics/Camera.h"
 #include "Graphics/Loaders/ImageLoader.h"
 #include "Graphics/Light/Light.hpp"
-#include "Graphics/RenderTask.h"
 #include "Util/Log.h"
 
 namespace Forge {
@@ -55,13 +53,9 @@ void SimpleColor::create()
 	{
 		Log::info << shaderProgram.getProgramInfoLog();
 	}
-	// Lighting
+	// Setup light uniform buffer binding
 	lightsUniformIndex = glGetUniformBlockIndex(shaderProgram.getId(), "Lights");
-	glUniformBlockBinding(shaderProgram.getId(), lightsUniformIndex, 1);
-	glGenBuffers(1, &lightBuffer);
-	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(Light) * Light::MAX_LIGHTS, nullptr, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glUniformBlockBinding(shaderProgram.getId(), lightsUniformIndex, Light::UNIFORM_BINDING_POINT);
 
 	// Get uniform locations
 	wvpLocation = shaderProgram.getUniformLocation("WorldViewProjectionMatrix");
@@ -76,13 +70,6 @@ void SimpleColor::create()
 
 void SimpleColor::destroy()
 {
-}
-
-void SimpleColor::updateLights(const Light lights[Light::MAX_LIGHTS])
-{
-	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
-	glBindBufferBase(GL_UNIFORM_BUFFER, 1, lightBuffer);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light) * Light::MAX_LIGHTS, lights);
 }
 
 void SimpleColor::updateProperties(LuaProperties &properties)
@@ -114,19 +101,19 @@ void SimpleColor::updateProperties(LuaProperties &properties)
 	}
 }
 
-void SimpleColor::beginMaterial(const RenderTask &task)
+void SimpleColor::beginMaterial()
 {
 	shaderProgram.use();
-	updateLights(task.lights);
 }
 
-void SimpleColor::beginMesh(const RenderTask& task)
+void SimpleColor::setTransforms(const glm::mat4& world,
+						   const glm::mat4& view,
+						   const glm::mat4& projection)
 {
 	// Update
-	const Camera& camera = task.getCamera();
-	const glm::mat4x4& worldViewTransform = camera.getViewMatrix() * task.getWorldTransform();
+	const glm::mat4x4 worldViewTransform = view * world;
 	const glm::mat3x3 normalMatrix(worldViewTransform);
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(camera.getProjectionMatrix() * worldViewTransform)[0][0]);
+	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(projection * worldViewTransform)[0][0]);
 	glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &worldViewTransform[0][0]);
 	glUniformMatrix3fv(nLocation, 1, GL_FALSE, &normalMatrix[0][0]);
 }

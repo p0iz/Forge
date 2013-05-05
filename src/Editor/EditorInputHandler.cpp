@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -22,7 +22,7 @@
 
 #include "Graphics/DebugAxis.h"
 #include "Graphics/OrbitalCamera.h"
-#include "Graphics/QtRendererBackend.hpp"
+#include "Graphics/QtRenderer.hpp"
 
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -32,23 +32,23 @@ EditorInputHandler::EditorInputHandler(Forge::OrbitalCamera &camera)
 {
 }
 
-void EditorInputHandler::keyPress(QKeyEvent* event, Forge::QtRendererBackend* renderer)
+void EditorInputHandler::keyPress(QKeyEvent* event, Forge::QtRenderer* renderer)
 {
 }
 
-void EditorInputHandler::keyRelease(QKeyEvent* event, Forge::QtRendererBackend* renderer)
+void EditorInputHandler::keyRelease(QKeyEvent* event, Forge::QtRenderer* renderer)
 {
 }
 
-void EditorInputHandler::mousePress(QMouseEvent *event, Forge::QtRendererBackend* renderer)
+void EditorInputHandler::mousePress(QMouseEvent *event, Forge::QtRenderer* renderer)
 {
 }
 
-void EditorInputHandler::mouseRelease(QMouseEvent *event, Forge::QtRendererBackend* renderer)
+void EditorInputHandler::mouseRelease(QMouseEvent *event, Forge::QtRenderer* renderer)
 {
 }
 
-void EditorInputHandler::mouseMove(QMouseEvent *event, Forge::QtRendererBackend* renderer)
+void EditorInputHandler::mouseMove(QMouseEvent *event, Forge::QtRenderer* renderer)
 {
 	QPoint relativeMovement = event->pos() - mPreviousMouseLocation;
 	if (event->buttons() & Qt::LeftButton)
@@ -80,4 +80,5 @@ void EditorInputHandler::mouseMove(QMouseEvent *event, Forge::QtRendererBackend*
 		mCamera.updateRotation();
 	}
 	mPreviousMouseLocation = event->pos();
+
 }

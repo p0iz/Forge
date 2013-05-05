@@ -18,13 +18,13 @@
  *
  */
 
-#include "Graphics/QtRendererBackend.hpp"
+#include "Graphics/QtRenderer.hpp"
 
-class MaterialEditorView : public Forge::QtRendererBackend
+class MaterialEditorView : public Forge::QtRenderer
 {
 	Q_OBJECT
 public:
-	MaterialEditorView(Forge::Camera& camera,	Forge::QtInputHandler& input);
+	MaterialEditorView(Forge::QtInputHandler& input, Forge::Camera& camera);
 	virtual ~MaterialEditorView();
 private:
 	virtual void setupScene();

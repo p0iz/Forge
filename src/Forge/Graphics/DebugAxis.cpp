@@ -20,6 +20,10 @@
 
 #include "DebugAxis.h"
 
+#include "Light/Light.hpp"
+
+#include "Scene/SceneConfig.hpp"
+
 #include "Shader/Shader.h"
 #include "Shader/ShaderProgram.h"
 
@@ -28,41 +32,12 @@
 
 namespace Forge {
 
-DebugAxis* DebugAxis::singleton = 0;
-
 bool DebugAxis::showDebug = false;
-
-DebugAxis& DebugAxis::getInstance()
-{
-	if (!singleton)
-		singleton = new DebugAxis;
-	if (!singleton->initialized)
-		singleton->initialize();
-	return *singleton;
-}
-
-void DebugAxis::draw(const glm::mat4x4& mvpMatrix) const
-{
-	if (!showDebug)
-		return;
-	glBindVertexArray(debugVertexArrayId);
-
-	int previous = 0;
-	glGetIntegerv(GL_CURRENT_PROGRAM, &previous);
-	debugShaderProgram.use();
-
-	glUniformMatrix4fv(debugUniformMVP, 1, GL_FALSE, &mvpMatrix[0][0]);
-
-	glDrawArrays(GL_LINES, 0, 6);
-
-	glUseProgram(previous);
-
-	glBindVertexArray(0);
-}
 
 DebugAxis::DebugAxis()
 	: initialized(GL_FALSE)
 {
+	initialize();
 }
 
 
@@ -155,6 +130,22 @@ void DebugAxis::setDebuggingInfo(bool state)
 bool DebugAxis::isDebugVisible()
 {
 	return showDebug;
+}
+
+void DebugAxis::render(const SceneConfig& scene) const
+{
+	for (const Light& light : scene.lights) {
+		if (light.id >= 0) {
+			if (light.type == Light::POINT) {
+				// Draw point lights
+				//lampMaterial.setDynamicProperty("Color", Property(&light.color.r, &light.color.a));
+				//lampMaterial.beginMesh(task);
+				//lampMesh->draw();
+			} else {
+				// draw directional lights in some other way
+			}
+		}
+	}
 }
 
 DebugAxis::~DebugAxis()

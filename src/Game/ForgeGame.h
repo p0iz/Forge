@@ -39,14 +39,12 @@ private:
 	void initializeGameStates();
 
 	Forge::ForgeConfig mForgeConfig;
-
 	Forge::HighResClock mClock;
-
 	GameInputHandler mInput;
 
 	Forge::QtRenderer mRenderer;
-
+	Forge::OrbitalCamera mCamera;
 	Forge::QtStateMachine mStateMachine;
 
-	Forge::OrbitalCamera mCamera;
+
 };

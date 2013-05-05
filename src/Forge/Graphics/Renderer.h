@@ -18,30 +18,25 @@
  *
  */
 
-#include "RenderTask.h"
+#pragma once
 
-#include "Camera.h"
+#include <glm/glm.hpp>
 
 namespace Forge {
 
-RenderTask::RenderTask(const Camera& camera)
-	: mCamera(camera)
-{
-}
+class SceneConfig;
 
-const Camera& RenderTask::getCamera() const
+/* A class that is used to render scenes from scene configurations */
+class Renderer
 {
-	return mCamera;
-}
-
-const glm::mat4x4& RenderTask::getWorldTransform() const
-{
-	return mWorldTransform;
-}
-
-void RenderTask::setWorldTransform(const glm::mat4x4& worldTransform)
-{
-	mWorldTransform = worldTransform;
-}
+public:
+	~Renderer();
+	void initialize();
+	void updateViewport(int width, int height);
+	void render(const SceneConfig& scene);
+private:
+	void renderDebugOverlay(const SceneConfig& scene);
+	void updateLightData(const SceneConfig& scene, const glm::mat4& view);
+};
 
 }

@@ -30,6 +30,7 @@ namespace Forge {
 
 void Material::loadMaterial(const std::string& materialFile, TechniqueLibrary& techLibrary)
 {
+	mMaterialFile = materialFile;
 	// First destroy old technique to make room for new
 	if (mTechnique) {
 		mTechnique->destroy();
@@ -41,19 +42,26 @@ void Material::loadMaterial(const std::string& materialFile, TechniqueLibrary& t
 	loader.loadFile(materialFile);
 }
 
-void Material::beginMaterial(const RenderTask& task)
+void Material::beginMaterial() const
 {
-	mTechnique->beginMaterial(task);
+	mTechnique->beginMaterial();
 }
 
-void Material::beginMesh(const RenderTask& task)
+void Material::setTransforms(const glm::mat4& world,
+							 const glm::mat4& view,
+							 const glm::mat4& projection) const
 {
-	mTechnique->beginMesh(task);
+	mTechnique->setTransforms(world, view, projection);
 }
 
 void Material::setDynamicProperty(const std::string& propertyName, const Property& value)
 {
 	mTechnique->setDynamicProperty(propertyName.c_str(), value);
+}
+
+bool operator==(const Material& lhs, const Material& rhs)
+{
+	return lhs.mMaterialFile == rhs.mMaterialFile;
 }
 
 } // namespace Forge

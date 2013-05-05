@@ -27,7 +27,7 @@
 namespace Forge {
 
 class OrbitalCamera;
-class QtRendererBackend;
+class QtRenderer;
 
 } // Forge
 
@@ -35,11 +35,11 @@ class EditorInputHandler : public Forge::QtInputHandler
 {
 public:
 	explicit EditorInputHandler(Forge::OrbitalCamera& camera);
-	virtual void keyPress(QKeyEvent* event, Forge::QtRendererBackend* renderer);
-	virtual void keyRelease(QKeyEvent* event, Forge::QtRendererBackend* renderer);
-	virtual void mousePress(QMouseEvent *event, Forge::QtRendererBackend* renderer);
-	virtual void mouseRelease(QMouseEvent *event, Forge::QtRendererBackend* renderer);
-	virtual void mouseMove(QMouseEvent *event, Forge::QtRendererBackend* renderer);
+	virtual void keyPress(QKeyEvent* event, Forge::QtRenderer* renderer);
+	virtual void keyRelease(QKeyEvent* event, Forge::QtRenderer* renderer);
+	virtual void mousePress(QMouseEvent *event, Forge::QtRenderer* renderer);
+	virtual void mouseRelease(QMouseEvent *event, Forge::QtRenderer* renderer);
+	virtual void mouseMove(QMouseEvent *event, Forge::QtRenderer* renderer);
 private:
 	Forge::OrbitalCamera& mCamera;
 	QPoint mPreviousMouseLocation;
