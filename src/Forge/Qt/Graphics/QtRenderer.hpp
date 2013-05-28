@@ -54,7 +54,6 @@ signals:
 protected:
 	virtual void initializeGL();
 	virtual void resizeGL(int w, int h);
-	virtual void paintGL();
 	virtual void keyPressEvent(QKeyEvent* event);
 	virtual void keyReleaseEvent(QKeyEvent* event);
 	virtual void mousePressEvent(QMouseEvent *event);

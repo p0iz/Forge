@@ -76,11 +76,6 @@ void QtRenderer::resizeGL(int w, int h)
 	mRenderer.updateViewport(w, h);
 }
 
-void QtRenderer::paintGL()
-{
-	swapBuffers();
-}
-
 void QtRenderer::keyPressEvent(QKeyEvent *event)
 {
 	mInput.keyPress(event, this);
@@ -103,8 +98,8 @@ void QtRenderer::mouseMoveEvent(QMouseEvent *event)
 
 void QtRenderer::render(const Forge::SceneConfig& sceneConfig)
 {
-	updateGL();
 	mRenderer.render(sceneConfig);
+	swapBuffers();
 }
 
 }
