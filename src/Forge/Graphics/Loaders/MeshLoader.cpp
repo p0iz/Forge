@@ -35,8 +35,9 @@ MeshPtr loadMesh(const std::string& file) {
 	MeshPtr loadedMesh(nullptr);
 	Assimp::Importer importer;
 
-	const aiScene* importedModel = importer.ReadFile(
-				file, aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+	const aiScene* importedModel = importer.ReadFile(file,
+													 aiProcess_GenSmoothNormals |
+													 aiProcess_CalcTangentSpace);
 
 	if (importedModel == nullptr) {
 		Log::error << "Error occurred while importing '" <<
@@ -49,21 +50,25 @@ MeshPtr loadMesh(const std::string& file) {
 			// Load vertex data
 			Vertex vertex;
 			for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-				// Read position
 				memcpy(vertex.position, &mesh->mVertices[i], sizeof(float) * 3);
 				if (mesh->HasNormals()) {
-					// Read normal
 					memcpy(vertex.normal, &mesh->mNormals[i], sizeof(float) * 3);
+				} else {
+					memset (vertex.normal, 0, sizeof(vertex.normal));
 				}
+
 				if (mesh->HasTangentsAndBitangents()) {
-					// Read tangent
 					memcpy(vertex.tangent, &mesh->mTangents[i], sizeof(float) * 3);
-					// Read bitangent
 					memcpy(vertex.bitangent, &mesh->mBitangents[i], sizeof(float) * 3);
+				} else {
+					memset (vertex.tangent, 0, sizeof(vertex.tangent));
+					memset (vertex.bitangent, 0, sizeof(vertex.bitangent));
 				}
 				if (mesh->HasTextureCoords(0)) {
 					// Read texture coordinates (currently just one texture supported)
 					memcpy(vertex.texcoord, &mesh->mTextureCoords[0][i], sizeof(float) * 3);
+				} else {
+					memset (vertex.texcoord, 0, sizeof(vertex.texcoord));
 				}
 				vertices.push_back(vertex);
 			}
