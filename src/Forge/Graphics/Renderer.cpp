@@ -24,6 +24,7 @@
 
 #include "DebugAxis.h"
 #include "Scene/SceneConfig.hpp"
+#include "Util/Log.h"
 
 namespace Forge {
 
@@ -38,10 +39,11 @@ void Renderer::initialize()
 	glewExperimental = GL_TRUE;
 	assert(glewInit() == GLEW_OK);
 
-	glClearColor(0.6f,0.5f,0.7f,1.0f);
+	glClearColor(0.0f,0.0f,0.0f,1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
+	glBlendFunc(GL_ONE, GL_ONE);
 
 	DebugAxis::getSingleton();
 	Light::createBuffer();
@@ -58,21 +60,15 @@ void Renderer::updateLightData(const SceneConfig& scene, const glm::mat4& view)
 		if (light.id >= 0) {
 			Light::Data& lightData = Light::data[light.id];
 			lightData.viewSpacePosition = view * light.position;
+			lightData.direction = glm::mat3(view) * light.direction;
 		}
 	}
-	Light::updateBuffer();
 }
 
-void Renderer::render(const SceneConfig& scene)
+void Renderer::drawScene(const glm::mat4& view,
+							 const glm::mat4& projection,
+							 const SceneConfig& scene)
 {
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	const glm::mat4 view = scene.getCamera().getViewMatrix();
-	const glm::mat4 projection = scene.getCamera().getProjectionMatrix();
-
-	// Update view space light positions
-	updateLightData(scene, view);
-
-	// Render attached meshes
 	for (auto materialMeshPair : scene.mMaterialMeshMap) {
 		const Material& material = materialMeshPair.first;
 		bool materialSelected = false;
@@ -85,11 +81,41 @@ void Renderer::render(const SceneConfig& scene)
 					materialSelected = true;
 				}
 				const glm::mat4& world = scene.getSceneNode(nodeId).mWorldTransform.getMatrix();
+
 				material.setTransforms(world, view, projection);
-				mesh->draw();
+				for (int i = 0; i < Light::MAX_LIGHTS; ++i) {
+					if (scene.lights[i].type != Light::DISABLED) {
+						Light::updateBuffer(scene.lights[i].id);
+						mesh->draw();
+					}
+				}
 			}
 		}
 	}
+}
+
+void Renderer::render(const SceneConfig& scene)
+{
+	glDepthMask(GL_TRUE);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	const glm::mat4 view = scene.getCamera().getViewMatrix();
+	const glm::mat4 projection = scene.getCamera().getProjectionMatrix();
+
+	// Update view space light positions
+	updateLightData(scene, view);
+
+	// Z-only prepass
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	drawScene(view, projection, scene);
+
+	// Actual rendering
+	glDepthFunc(GL_LEQUAL);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glDepthMask(GL_FALSE);
+
+	glEnable(GL_BLEND);
+	drawScene(view, projection, scene);
+	glDisable(GL_BLEND);
 
 	// Render debug overlay
 	if (DebugAxis::isDebugVisible()) {

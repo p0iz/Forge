@@ -34,12 +34,14 @@ struct Light {
 	enum LightType {
 		DIRECTIONAL,
 		POINT,
-		SPOT
+		SPOT,
+		DISABLED
 	};
 
 	LightType type;
 	int id;
 	glm::vec4 position;
+	glm::vec3 direction;
 
 	/* Light data structure */
 	struct Data {
@@ -73,7 +75,8 @@ struct Light {
 	static void createBuffer() {
 		glGenBuffers(1, &mLightUniformBuffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, mLightUniformBuffer);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(Light::data), nullptr, GL_DYNAMIC_DRAW);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(Light::Data), nullptr, GL_DYNAMIC_DRAW);
+		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BINDING_POINT, mLightUniformBuffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
@@ -82,11 +85,9 @@ struct Light {
 		glDeleteBuffers(1, &mLightUniformBuffer);
 	}
 
-	static void updateBuffer()
-	{
+	static void updateBuffer(size_t lightIndex) {
 		glBindBuffer(GL_UNIFORM_BUFFER, mLightUniformBuffer);
-		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BINDING_POINT, mLightUniformBuffer);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light::data), Light::data);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light::Data), &Light::data[lightIndex]);
 	}
 
 	static const int UNIFORM_BINDING_POINT = 1;

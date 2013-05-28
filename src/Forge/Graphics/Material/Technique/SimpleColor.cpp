@@ -62,10 +62,10 @@ void SimpleColor::create()
 	wvLocation = shaderProgram.getUniformLocation("WorldViewMatrix");
 	nLocation = shaderProgram.getUniformLocation("NormalMatrix");
 
-	materialAmbientLoc = shaderProgram.getUniformLocation("materialAmbient");
-	materialDiffuseLoc = shaderProgram.getUniformLocation("materialDiffuse");
-	materialSpecularLoc = shaderProgram.getUniformLocation("materialSpecular");
-	materialShininessLoc = shaderProgram.getUniformLocation("materialShininess");
+	materialAmbientLoc = shaderProgram.getUniformLocation("MaterialAmbient");
+	materialDiffuseLoc = shaderProgram.getUniformLocation("MaterialDiffuse");
+	materialSpecularLoc = shaderProgram.getUniformLocation("MaterialSpecular");
+	materialShininessLoc = shaderProgram.getUniformLocation("MaterialShininess");
 }
 
 void SimpleColor::destroy()

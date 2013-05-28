@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,37 +12,36 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2013 Tommi Martela
  *
  */
 
 #version 330
 
+ // Inputs
 in vec2 texture_coordinate;
-in vec3 eye_space_normal;
-in vec3 eye_space_vertex;
+in vec3 view_space_normal;
+in vec3 view_space_vertex;
+in float attenuation;
 
-out vec3 color;
-
-uniform vec3 materialAmbient;
-uniform vec3 materialDiffuse;
-uniform vec3 materialSpecular;
-uniform float materialShininess;
-
-uniform sampler2D albedo;
+// Uniforms
+uniform vec3 MaterialAmbient;
+uniform vec3 MaterialDiffuse;
+uniform vec3 MaterialSpecular;
+uniform float MaterialShininess;
 
 struct Light
 {
 	vec4 position;
 	vec4 color;
-	
+
 	// Attenuation
 	float constant;
 	float linear;
 	float quadratic;
-	
+
 	// For spot lights
 	float exponent;
 	vec3 direction;
@@ -52,42 +51,43 @@ struct Light
 
 layout (std140) uniform Lights
 {
-  Light lights[8]; // max 8 lights per mesh
+  Light light;
 };
-in float attenuation[8];
+
+// Outputs
+out vec3 color;
 
 vec3 ads_lighting() {
 	// Need to re-normalize interpolated values
-	vec3 normal = normalize(eye_space_normal);
-	vec3 eye = normalize(-eye_space_vertex);
-	
+	vec3 normal = normalize(view_space_normal);
+	vec3 eye = normalize(-view_space_vertex);
+
 	// Calculate ADS lighting per light
 	vec3 lighting = vec3(0.0f);
-	for (int i = 0; i < lights.length(); ++i) {
-		vec3 eye_space_light = normalize(vec3(lights[i].position) - eye_space_vertex);
-		vec3 halfway = normalize(eye_space_light + eye);
-		float diffuse = max(dot(eye_space_light, normal), 0.0f);
-		float specular = 0.0f;
-		float spotlight = 1.0f;
-		if (diffuse > 0.0f) {
-			// Spotlight
-			if (lights[i].exponent > 0.0f) {
-				// Calculate fragment illumination
-				spotlight = max(-dot(eye_space_light, normalize(lights[i].direction)), 0.0f);
-				// Fade 
-				float fade = 
-					clamp((lights[i].cutoff - spotlight) / lights[i].cutoff - lights[i].falloff, 0.0f, 1.0f); 
-				spotlight = pow(spotlight * fade, lights[i].exponent);
-			}
-			// Specular
-			specular = pow(max(dot(halfway, normal), 0.0f), materialShininess);
+	vec3 view_space_light = normalize(vec3(light.position) - view_space_vertex);
+	vec3 halfway = normalize(view_space_light + eye);
+	float diffuse = max(dot(view_space_light, normal), 0.0f);
+	float specular = 0.0f;
+	float spotlight = 1.0f;
+	if (diffuse > 0.0f) {
+		// Spotlight
+		if (light.exponent > 0.0f) {
+			// Calculate fragment illumination
+			spotlight = max(-dot(view_space_light, normalize(light.direction)), 0.0f);
+			// Fade
+			float fade =
+				clamp((light.cutoff - spotlight) / light.cutoff - light.falloff, 0.0f, 1.0f);
+			spotlight = pow(spotlight * fade, light.exponent);
 		}
-		vec3 lightContribution = lights[i].color.rgb * lights[i].color.a * spotlight *
-			(materialAmbient + 
-			materialDiffuse * diffuse + 
-			materialSpecular * specular);
-		lighting += lightContribution * attenuation[i];
+		// Specular
+		specular = pow(max(dot(halfway, normal), 0.0f), MaterialShininess);
 	}
+	vec3 lightContribution = light.color.rgb * light.color.a * spotlight *
+		(MaterialAmbient +
+		MaterialDiffuse * diffuse +
+		MaterialSpecular * specular);
+	lighting += lightContribution * attenuation;
+
 	return lighting;
 }
 

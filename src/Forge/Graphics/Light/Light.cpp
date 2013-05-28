@@ -25,6 +25,6 @@ namespace Forge {
 Light::Data Light::data[MAX_LIGHTS];
 unsigned int Light::mLightUniformBuffer = 0;
 
-Light::Light() : type(Light::DIRECTIONAL), id(-1), position(0.0f) { }
+Light::Light() : type(DISABLED), id(-1), position(0.0f) { }
 
 }
