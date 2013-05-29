@@ -75,7 +75,7 @@ void Renderer::drawScene(const glm::mat4& view,
 		const std::vector<MeshPtr>& meshes = materialMeshPair.second;
 		for (MeshPtr mesh : meshes) {
 			// For each mesh, get the world transform
-			for (size_t nodeId : mesh->getAttachedNodes()) {
+			for (SceneNodeId nodeId : mesh->getAttachedNodes()) {
 				if (!materialSelected) {
 					material.beginMaterial();
 					materialSelected = true;

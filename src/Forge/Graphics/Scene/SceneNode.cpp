@@ -22,7 +22,7 @@
 
 namespace Forge {
 
-SceneNode::SceneNode(const std::string& name, size_t parent)
+SceneNode::SceneNode(const std::string& name, SceneNodeId parent)
 	: mName(name), mParent(parent), mWorldTransform()
 {
 }

@@ -92,7 +92,7 @@ void QtGameState::createTestScene()
 	// Test cubes
 	mCubeMaterial.loadMaterial("data/materials/Crate.lua", mTechniqueLibrary);
 	m = MeshLoader::loadMesh("data/crate.obj");
-	for (size_t node : mCubeNodes) {
+	for (SceneNodeId node : mCubeNodes) {
 		m->attachToNode(node);
 	}
 	m->attachToNode(mPlayerNode);

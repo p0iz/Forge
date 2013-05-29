@@ -69,10 +69,11 @@ namespace Forge
 		Material mRoomMaterial;
 
 		// Scene nodes
-		size_t mRoomNodeId;
+		SceneNodeId mRoomNodeId;
 		enum { CUBE_NODES = 10 };
-		size_t mCubeNodes[CUBE_NODES];
+		SceneNodeId mCubeNodes[CUBE_NODES];
 
-		size_t mPlayerNode;
+		SceneNodeId mPlayerNode;
+		SceneNodeId mPaddleNode;
 	};
 } // namespace Forge

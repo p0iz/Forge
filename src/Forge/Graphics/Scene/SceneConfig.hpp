@@ -40,15 +40,15 @@ public:
 
 	const SceneNode& getRootSceneNode() const;
 
-	size_t createSceneNode(const std::string& = "");
-	void removeSceneNode(size_t id);
+	SceneNodeId createSceneNode(const std::string& = "");
+	void removeSceneNode(SceneNodeId id);
 	SceneNode& getRootSceneNode();
 
 	// Prefer ID-based searches!
 	SceneNode& getSceneNode(const std::string& name);
-	SceneNode& getSceneNode(size_t id);
+	SceneNode& getSceneNode(SceneNodeId id);
 	const SceneNode& getSceneNode(const std::string& name) const;
-	const SceneNode& getSceneNode(size_t id) const;
+	const SceneNode& getSceneNode(SceneNodeId id) const;
 
 	// Mapping material -> mesh pointer vector
 	std::unordered_map<Material, std::vector<MeshPtr>> mMaterialMeshMap;
@@ -68,10 +68,10 @@ public:
 	/* This function calculates all world matrices in the current scene graph */
 	void calculateWorldTransforms();
 private:
-	void updateNodeParents(size_t newParent, size_t oldParent);
-	std::unordered_set<size_t> collectParents();
-	std::vector<size_t> collectChildNodes(size_t parent);
-	void swapNodes(size_t node, size_t otherNode);
+	void updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent);
+	std::unordered_set<SceneNodeId> collectParents();
+	std::vector<SceneNodeId> collectChildNodes(SceneNodeId parent);
+	void swapNodes(SceneNodeId node, SceneNodeId otherNode);
 
 	std::vector<SceneNode> mNodes;
 	SceneNode& mRootNode;

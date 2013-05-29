@@ -31,11 +31,11 @@ namespace Forge {
 SceneConfig::SceneConfig()
 	: mNodes(1, SceneNode("Root Node")), mRootNode(mNodes[0]) { }
 
-void SceneConfig::removeSceneNode(size_t id)
+void SceneConfig::removeSceneNode(SceneNodeId id)
 {
 	auto iterator = mNodes.begin()+id;
 	mNodes.erase(iterator);
-	for (size_t current = id; current < mNodes.size(); ++current) {
+	for (SceneNodeId current = id; current < mNodes.size(); ++current) {
 		if (mNodes[current].mParent >= id) {
 			--mNodes[current].mParent;
 		}
@@ -58,7 +58,7 @@ SceneNode& SceneConfig::getSceneNode(const std::string& name) {
 	}
 }
 
-SceneNode& SceneConfig::getSceneNode(size_t id) {
+SceneNode& SceneConfig::getSceneNode(SceneNodeId id) {
 	return mNodes[id];
 }
 
@@ -73,7 +73,7 @@ const SceneNode& SceneConfig::getSceneNode(const std::string& name) const {
 	}
 }
 
-const SceneNode& SceneConfig::getSceneNode(size_t id) const {
+const SceneNode& SceneConfig::getSceneNode(SceneNodeId id) const {
 	return mNodes[id];
 }
 
@@ -85,14 +85,14 @@ const Camera& SceneConfig::getCamera() const
 void SceneConfig::validateSceneGraph()
 {
 	// Collect all parent nodes
-	std::unordered_set<size_t> parents = collectParents();
+	std::unordered_set<SceneNodeId> parents = collectParents();
 
 	// For each parent node, verify that all children are after it in the vector
-	for (size_t parent : parents) {
-		std::vector<size_t> childNodes = collectChildNodes(parent);
-		size_t newParentPosition = parent;
+	for (SceneNodeId parent : parents) {
+		std::vector<SceneNodeId> childNodes = collectChildNodes(parent);
+		SceneNodeId newParentPosition = parent;
 
-		for (size_t node : childNodes) {
+		for (SceneNodeId node : childNodes) {
 			if (node < parent) {
 				// Move node after parent and update the nodes in open range ]node, parent[
 				swapNodes(node, parent);
@@ -110,7 +110,7 @@ void SceneConfig::calculateWorldTransforms()
 	}
 }
 
-void SceneConfig::updateNodeParents(size_t newParent, size_t oldParent) {
+void SceneConfig::updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent) {
 	for (SceneNode& node : mNodes) {
 		if (node.mParent == oldParent) {
 			node.mParent = newParent;
@@ -118,19 +118,19 @@ void SceneConfig::updateNodeParents(size_t newParent, size_t oldParent) {
 	}
 }
 
-std::unordered_set<size_t> SceneConfig::collectParents()
+std::unordered_set<SceneNodeId> SceneConfig::collectParents()
 {
-	std::unordered_set<size_t> parents;
+	std::unordered_set<SceneNodeId> parents;
 	for (SceneNode node : mNodes) {
 		parents.insert(node.mParent);
 	}
 	return parents;
 }
 
-std::vector<size_t> SceneConfig::collectChildNodes(size_t parent)
+std::vector<SceneNodeId> SceneConfig::collectChildNodes(SceneNodeId parent)
 {
-	std::vector<size_t> childNodes;
-	for (size_t current = 0; current < mNodes.size(); ++current) {
+	std::vector<SceneNodeId> childNodes;
+	for (SceneNodeId current = 0; current < mNodes.size(); ++current) {
 		if (mNodes[current].mParent == parent) {
 			childNodes.push_back(current);
 		}
@@ -138,12 +138,12 @@ std::vector<size_t> SceneConfig::collectChildNodes(size_t parent)
 	return childNodes;
 }
 
-void SceneConfig::swapNodes(size_t node, size_t otherNode)
+void SceneConfig::swapNodes(SceneNodeId node, SceneNodeId otherNode)
 {
 
 }
 
-size_t SceneConfig::createSceneNode(const std::string& name)
+SceneNodeId SceneConfig::createSceneNode(const std::string& name)
 {
 	mNodes.push_back(SceneNode(name));
 	return mNodes.size() - 1;
