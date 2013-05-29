@@ -33,6 +33,7 @@ ForgeGame::ForgeGame()
 	  mInput(mCamera, mClock),
 	  mRenderer(mInput, mCamera)
 {
+	mInput.setCurrentSceneConfig(&mSceneConfig);
 	const Forge::Configuration& cfg = mForgeConfig.getConfig();
 	mRenderer.resize(cfg.display.width, cfg.display.height);
 	mRenderer.show();
@@ -40,15 +41,14 @@ ForgeGame::ForgeGame()
 
 void ForgeGame::initializeGameStates()
 {
-	Forge::GameStatePtr initialState(
-		new Forge::QtGameState(
-			QString("InitialState"),
-			mCamera,
-			mRenderer,
-			mInput,
-			mClock));
-	initialState->createStateData();
+	Forge::GameStatePtr initialState(new Forge::QtGameState(QString("InitialState"),
+															mCamera,
+															mRenderer,
+															mInput,
+															mClock,
+															mSceneConfig));
 
+	initialState->createStateData();
 	Forge::GameStateLibrary::getSingleton().add(initialState->getName(), initialState);
 	mStateMachine.init(initialState);
 }

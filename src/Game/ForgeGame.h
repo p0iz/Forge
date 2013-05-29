@@ -46,5 +46,5 @@ private:
 	Forge::OrbitalCamera mCamera;
 	Forge::QtStateMachine mStateMachine;
 
-
+	Forge::SceneConfig mSceneConfig;
 };

@@ -33,13 +33,18 @@
 namespace Forge
 {
 
-QtGameState::QtGameState(
-		const QString& name,
-		Camera& camera,
-		QtRenderer& renderer,
-		QtInputHandler& input,
-		HighResClock& clock)
-	: GameState(name.toStdString()), mCamera(camera), mRenderer(renderer), mInput(input), mClock(clock) { }
+QtGameState::QtGameState(const QString& name,
+						 Camera& camera,
+						 QtRenderer& renderer,
+						 QtInputHandler& input,
+						 HighResClock& clock,
+						 SceneConfig& config)
+	: GameState(name.toStdString()),
+	  mCamera(camera),
+	  mRenderer(renderer),
+	  mInput(input),
+	  mClock(clock),
+	  mSceneConfig(config) { }
 
 GameStatePtr QtGameState::frameUpdate() {
 	static GameStateLibrary& library = GameStateLibrary::getSingleton();

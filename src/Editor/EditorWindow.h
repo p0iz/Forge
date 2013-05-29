@@ -61,6 +61,7 @@ private:
 
 	Ui::EditorWindow *ui;
 
+	Forge::SceneConfig mSceneConfig;
 	Forge::QtStateMachine mEditorStateMachine;
 	Forge::HighResClock mGameClock;
 

@@ -43,7 +43,8 @@ namespace Forge
 				Camera& camera,
 				QtRenderer& renderer,
 				QtInputHandler& input,
-				HighResClock& clock);
+				HighResClock& clock,
+				SceneConfig& config);
 		virtual GameStatePtr frameUpdate();
 
 		virtual void createStateData();
@@ -58,10 +59,10 @@ namespace Forge
 		QtInputHandler& mInput;
 		HighResClock& mClock;
 
-		SceneConfig mSceneConfig;
-
 		// Technique library
 		TechniqueLibrary mTechniqueLibrary;
+
+		SceneConfig& mSceneConfig;
 
 		// Materials
 		Material mCubeMaterial;
