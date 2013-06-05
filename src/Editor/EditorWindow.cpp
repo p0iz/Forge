@@ -43,7 +43,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	mForgeConfig(new Forge::ForgeConfig),
 	mCamera(new Forge::OrbitalCamera(10.0f)),
 	mInput(new EditorInputHandler(*mCamera)),
-	mRenderer(new Forge::QtRenderer(*mInput, *mCamera)),
+	mRenderer(new Forge::QtRenderer(*mCamera)),
 	mMaterialEditor(new MaterialEditorView(*mInput, *mCamera)),
 	mEditorState(new Forge::QtGameState(QString("EditorState"),
 										  *mCamera,
@@ -55,7 +55,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	initializeForge();
 	initializeUi();
 	QObject::connect(mRenderer.get(), &Forge::QtRenderer::glewInitialized,
-					 mEditorState.get(), &Forge::QtGameState::createStateData);
+					 mEditorState.get(), &Forge::QtGameState::createState);
 }
 
 void EditorWindow::initializeForge()
@@ -68,6 +68,7 @@ void EditorWindow::initializeForge()
 
 void EditorWindow::initializeUi()
 {
+	mRenderer->installEventFilter(mInput.get());
 	ui->setupUi(this);
 	ui->centralwidget->setParent(0);
 	ui->toolStack->setCurrentIndex(0);

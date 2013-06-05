@@ -38,12 +38,10 @@ class QtRenderer : public QGLWidget
 {
 	Q_OBJECT
 public:
-	explicit QtRenderer(
-			QtInputHandler& input,
-			Camera& camera,
-			QWidget* parent = 0,
-			const QGLWidget* shareWidget = 0,
-			Qt::WindowFlags f=0);
+	explicit QtRenderer(Camera& camera,
+						QWidget* parent = 0,
+						const QGLWidget* shareWidget = 0,
+						Qt::WindowFlags f=0);
 	virtual ~QtRenderer();
 
 	void render(const SceneConfig& scene);
@@ -57,14 +55,8 @@ signals:
 protected:
 	virtual void initializeGL();
 	virtual void resizeGL(int w, int h);
-	virtual void keyPressEvent(QKeyEvent* event);
-	virtual void keyReleaseEvent(QKeyEvent* event);
-	virtual void mousePressEvent(QMouseEvent *event);
-	virtual void mouseMoveEvent(QMouseEvent *event);
 private:
 	bool mFullScreen;
-
-	QtInputHandler& mInput;
 
 	Renderer mRenderer;
 	Camera& mCamera;

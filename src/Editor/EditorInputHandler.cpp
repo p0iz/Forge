@@ -32,23 +32,34 @@ EditorInputHandler::EditorInputHandler(Forge::OrbitalCamera &camera)
 {
 }
 
-void EditorInputHandler::keyPress(QKeyEvent* event, Forge::QtRenderer* renderer)
+bool EditorInputHandler::eventFilter(QObject* widget, QEvent* event)
+{
+	if (event->type() == QEvent::MouseMove)
+		mouseMove(static_cast<QMouseEvent*>(event));
+	return true;
+}
+
+void EditorInputHandler::processInput(float delta)
 {
 }
 
-void EditorInputHandler::keyRelease(QKeyEvent* event, Forge::QtRenderer* renderer)
+void EditorInputHandler::keyPress(QKeyEvent* event)
 {
 }
 
-void EditorInputHandler::mousePress(QMouseEvent *event, Forge::QtRenderer* renderer)
+void EditorInputHandler::keyRelease(QKeyEvent* event)
 {
 }
 
-void EditorInputHandler::mouseRelease(QMouseEvent *event, Forge::QtRenderer* renderer)
+void EditorInputHandler::mousePress(QMouseEvent *event)
 {
 }
 
-void EditorInputHandler::mouseMove(QMouseEvent *event, Forge::QtRenderer* renderer)
+void EditorInputHandler::mouseRelease(QMouseEvent *event)
+{
+}
+
+void EditorInputHandler::mouseMove(QMouseEvent *event)
 {
 	QPoint relativeMovement = event->pos() - mPreviousMouseLocation;
 	if (event->buttons() & Qt::LeftButton)

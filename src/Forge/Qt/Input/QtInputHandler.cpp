@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,8 +12,8 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
@@ -24,7 +24,25 @@ Forge::QtInputHandler::~QtInputHandler()
 {
 }
 
-void Forge::QtInputHandler::processInput(float delta)
+bool Forge::QtInputHandler::eventFilter(QObject*, QEvent* event)
 {
-	// Default is to skip any processing
+	switch (event->type())
+	{
+	case QEvent::KeyPress:
+		if (!static_cast<QKeyEvent*>(event)->isAutoRepeat())
+			keyPress(static_cast<QKeyEvent*>(event));
+		break;
+	case QEvent::KeyRelease:
+		keyRelease(static_cast<QKeyEvent*>(event));
+		break;
+	case QEvent::MouseButtonPress:
+		mousePress(static_cast<QMouseEvent*>(event));
+		break;
+	case QEvent::MouseButtonRelease:
+		mouseRelease(static_cast<QMouseEvent*>(event));
+		break;
+	default:
+		return false;
+	}
+	return true;
 }

@@ -31,19 +31,17 @@
 namespace Forge
 {
 
-QtRenderer::QtRenderer(
-		QtInputHandler& input,
-		Camera& camera,
-		QWidget* parent,
-		const QGLWidget* shareWidget,
-		Qt::WindowFlags f)
-		: QGLWidget(widgetQGLFormat(), parent, shareWidget, f),
-		mFullScreen(false), mInput(input), mCamera(camera) {
+QtRenderer::QtRenderer(Camera& camera,
+					   QWidget* parent,
+					   const QGLWidget* shareWidget,
+					   Qt::WindowFlags f)
+	: QGLWidget(widgetQGLFormat(), parent, shareWidget, f),
+	  mFullScreen(false),
+	  mCamera(camera) {
 	setMouseTracking(true);
 }
 
-const QGLFormat QtRenderer::widgetQGLFormat()
-{
+const QGLFormat QtRenderer::widgetQGLFormat() {
 	QGLFormat format = QGLFormat::defaultFormat();
 	format.setVersion(3, 3);
 	format.setProfile(QGLFormat::CoreProfile);
@@ -79,26 +77,6 @@ void QtRenderer::resizeGL(int w, int h)
 {
 	mCamera.setPerspectiveProjection(w, h);
 	mRenderer.updateViewport(w, h);
-}
-
-void QtRenderer::keyPressEvent(QKeyEvent *event)
-{
-	mInput.keyPress(event, this);
-}
-
-void QtRenderer::keyReleaseEvent(QKeyEvent* event)
-{
-	mInput.keyRelease(event, this);
-}
-
-void QtRenderer::mousePressEvent(QMouseEvent *event)
-{
-	mInput.mousePress(event, this);
-}
-
-void QtRenderer::mouseMoveEvent(QMouseEvent *event)
-{
-	mInput.mouseMove(event, this);
 }
 
 void QtRenderer::render(const Forge::SceneConfig& sceneConfig)
