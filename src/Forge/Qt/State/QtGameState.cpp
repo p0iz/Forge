@@ -125,7 +125,7 @@ void QtGameState::createTestScene()
 	mSceneConfig.lights[2].position = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	Light::data[2].color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
-	mSceneConfig.mCamera = &mCamera;
+	mSceneConfig.setCamera(mCamera);
 
 	mSceneConfig.validateSceneGraph();
 	mSceneConfig.calculateWorldTransforms();

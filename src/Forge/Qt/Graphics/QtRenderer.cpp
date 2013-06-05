@@ -63,6 +63,11 @@ void QtRenderer::toggleFullscreen()
 	mFullScreen = !mFullScreen;
 }
 
+void QtRenderer::setCamera(Camera& camera)
+{
+	mCamera = camera;
+}
+
 void QtRenderer::initializeGL()
 {
 	mRenderer.initialize();

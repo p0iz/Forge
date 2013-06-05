@@ -49,6 +49,9 @@ public:
 	void render(const SceneConfig& scene);
 
 	void toggleFullscreen();
+
+	void setCamera(Camera& camera);
+
 signals:
 	void glewInitialized();
 protected:

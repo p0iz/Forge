@@ -57,9 +57,7 @@ public:
 	Light lights[Light::MAX_LIGHTS];
 
 	const Camera& getCamera() const;
-
-	// Scene camera
-	Camera* mCamera;
+	void setCamera(Camera& camera);
 
 	/* This function reorders nodes to create a sorted graph for fast access.
 	 * Should only be called when loading a scene. */
@@ -67,11 +65,15 @@ public:
 
 	/* This function calculates all world matrices in the current scene graph */
 	void calculateWorldTransforms();
+
+
 private:
 	void updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent);
 	std::unordered_set<SceneNodeId> collectParents();
 	std::vector<SceneNodeId> collectChildNodes(SceneNodeId parent);
 	void swapNodes(SceneNodeId node, SceneNodeId otherNode);
+
+	Camera* mCurrentCamera;
 
 	std::vector<SceneNode> mNodes;
 	SceneNode& mRootNode;

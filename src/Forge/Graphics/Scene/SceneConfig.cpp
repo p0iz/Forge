@@ -79,7 +79,12 @@ const SceneNode& SceneConfig::getSceneNode(SceneNodeId id) const {
 
 const Camera& SceneConfig::getCamera() const
 {
-	return *mCamera;
+	return *mCurrentCamera;
+}
+
+void SceneConfig::setCamera(Camera& camera)
+{
+	mCurrentCamera = &camera;
 }
 
 void SceneConfig::validateSceneGraph()
