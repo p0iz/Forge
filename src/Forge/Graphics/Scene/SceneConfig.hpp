@@ -75,6 +75,8 @@ private:
 
 	std::vector<SceneNode> mNodes;
 	SceneNode& mRootNode;
+
+	friend class DebugAxis;
 };
 
 } // namespace Forge

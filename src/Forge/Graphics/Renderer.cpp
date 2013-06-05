@@ -119,7 +119,7 @@ void Renderer::render(const SceneConfig& scene)
 
 	// Render debug overlay
 	if (DebugAxis::isDebugVisible()) {
-		//DebugAxis::getSingleton().render(scene);
+		DebugAxis::getSingleton().render(scene);
 	}
 	// Post process
 }

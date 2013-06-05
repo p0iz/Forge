@@ -43,7 +43,8 @@ DebugAxis::DebugAxis()
 
 void DebugAxis::initialize()
 {
-	initialized = GL_TRUE;
+	if (initialized)
+		return;
 
 	GLfloat debugVertexData[] =
 	{
@@ -115,6 +116,8 @@ void DebugAxis::initialize()
 
 	// Finished, now unbind
 	glBindVertexArray(0);
+
+	initialized = GL_TRUE;
 }
 
 void DebugAxis::toggleDebuggingInfo()
@@ -134,17 +137,15 @@ bool DebugAxis::isDebugVisible()
 
 void DebugAxis::render(const SceneConfig& scene) const
 {
-	for (const Light& light : scene.lights) {
-		if (light.id >= 0) {
-			if (light.type == Light::POINT) {
-				// Draw point lights
-				//lampMaterial.setDynamicProperty("Color", Property(&light.color.r, &light.color.a));
-				//lampMaterial.beginMesh(task);
-				//lampMesh->draw();
-			} else {
-				// draw directional lights in some other way
-			}
-		}
+	debugShaderProgram.use();
+	for (auto node : scene.mNodes) {
+		glm::mat4 mvp =
+				scene.getCamera().getProjectionMatrix() *
+				scene.getCamera().getViewMatrix() *
+				node.mWorldTransform.getMatrix();
+		glUniformMatrix4fv(debugUniformMVP, 1, GL_FALSE, &mvp[0][0]);
+		glBindVertexArray(debugVertexArrayId);
+		glDrawArrays(GL_LINES, 0, 3);
 	}
 }
 
