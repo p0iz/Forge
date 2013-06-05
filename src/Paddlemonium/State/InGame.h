@@ -20,6 +20,9 @@
 
 #pragma once
 
+#include "Input/InputHandler.h"
+
+// Forge includes
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/QtRenderer.hpp"
 #include "Graphics/Scene/SceneConfig.hpp"
@@ -30,51 +33,40 @@
 
 #include <memory>
 
-namespace Forge
+namespace Paddlemonium { namespace State {
+
+class InGame : public QObject, public Forge::GameState
 {
-	class QtInputHandler;
+	Q_OBJECT
+public:
+	InGame(const QString& name,
+				Forge::Camera& camera,
+				Forge::QtRenderer& renderer,
+				InputHandler& input,
+				Forge::HighResClock& clock);
 
-	class QtGameState : public QObject, public GameState
-	{
-		Q_OBJECT
-	public:
-		QtGameState(
-				const QString& name,
-				Camera& camera,
-				QtRenderer& renderer,
-				QtInputHandler& input,
-				HighResClock& clock,
-				SceneConfig& config);
-		virtual GameStatePtr frameUpdate();
+	virtual Forge::GameStatePtr frameUpdate();
+	virtual void createState();
+	virtual void destroyState();
 
-		virtual void createState();
-		virtual void destroyState();
+private:
+	Paddlemonium::InputHandler& mInput;
 
-	private:
-		void createTestScene();
-		void createSceneGraph();
+	Forge::Camera& mCamera;
+	Forge::QtRenderer& mRenderer;
+	Forge::HighResClock& mClock;
 
-		Camera& mCamera;
-		QtRenderer& mRenderer;
-		QtInputHandler& mInput;
-		HighResClock& mClock;
+	Forge::SceneConfig mSceneConfig;
+	Forge::TechniqueLibrary mTechniqueLibrary;
 
-		// Technique library
-		TechniqueLibrary mTechniqueLibrary;
+	// Game object meshes
+	Forge::MeshPtr mPaddleMesh;
+	Forge::MeshPtr mTileMesh;
 
-		SceneConfig& mSceneConfig;
+	// Game object nodes
+	Forge::SceneNodeId mPaddleNode;
+	Forge::SceneNodeId mTileNode;
 
-		// Materials
-		Material mCubeMaterial;
-		Material mLampMaterial;
-		Material mRoomMaterial;
+};
 
-		// Scene nodes
-		SceneNodeId mRoomNodeId;
-		enum { CUBE_NODES = 10 };
-		SceneNodeId mCubeNodes[CUBE_NODES];
-
-		SceneNodeId mPlayerNode;
-		SceneNodeId mPaddleNode;
-	};
-} // namespace Forge
+}}

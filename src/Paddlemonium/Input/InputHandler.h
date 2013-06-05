@@ -22,6 +22,7 @@
 
 #include "Input/QtInputHandler.h"
 
+#include <QInputEvent>
 #include <QPoint>
 
 #include <map>
@@ -36,54 +37,50 @@ class SceneConfig;
 
 } // Forge
 
+namespace Paddlemonium {
+
 enum GameAction
 {
-	// Camera
-	CameraLeft,
-	CameraRight,
-	CameraForward,
-	CameraBack,
-	CameraUp,
-	CameraDown,
-
-	// Player
-	PlayerLeft,
-	PlayerRight,
-	PlayerForward,
-	PlayerBack,
-	PlayerUp,
-	PlayerDown,
+	// Paddle
+	PaddleLeft,
+	PaddleRight,
 
 	// Misc.
 	ToggleFullscreen,
 	ToggleDebug
 };
 
-class GameInputHandler : public Forge::QtInputHandler
+template <class ActionType>
+using KeyMap = std::map<Qt::Key, ActionType>;
+
+class InputHandler : public Forge::QtInputHandler
 {
 public:
-	explicit GameInputHandler(Forge::OrbitalCamera& camera, Forge::HighResClock& clock);
-	virtual ~GameInputHandler();
-	virtual void keyPress(QKeyEvent* event, Forge::QtRenderer* renderer);
-	virtual void keyRelease(QKeyEvent* event, Forge::QtRenderer* renderer);
-	virtual void mousePress(QMouseEvent *event, Forge::QtRenderer* renderer);
-	virtual void mouseRelease(QMouseEvent *event, Forge::QtRenderer* renderer);
-	virtual void mouseMove(QMouseEvent *event, Forge::QtRenderer* renderer);
+	InputHandler(Forge::HighResClock& clock, Forge::QtRenderer& renderer);
+	virtual ~InputHandler();
 
 	virtual void processInput(float delta);
 
-	void setCurrentSceneConfig(Forge::SceneConfig* scene);
+	bool isKeyDown(Qt::Key key);
+
+	void setSceneConfig(Forge::SceneConfig* scene);
 private:
+	virtual void keyPress(QKeyEvent* event);
+	virtual void keyRelease(QKeyEvent* event);
+	virtual void mousePress(QMouseEvent* event);
+	virtual void mouseRelease(QMouseEvent* event);
+	virtual void mouseMove(QMouseEvent* event);
 
 	void mapDefaultKeys();
 
-	Forge::OrbitalCamera& mCamera;
 	Forge::HighResClock& mClock;
-
-	Forge::SceneConfig* mCurrentSceneConfig;
+	Forge::SceneConfig* mSceneConfig;
+	Forge::QtRenderer& mRenderer;
 
 	QPoint mPreviousMouseLocation;
 
 	std::set<Qt::Key> mCurrentKeys;
-	std::map<Qt::Key, GameAction> mKeyActionMap;
+	KeyMap<GameAction> mKeyActionMap;
 };
+
+}

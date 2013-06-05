@@ -18,32 +18,16 @@
  *
  */
 
-#include "GameState.h"
-#include "GameStateLibrary.hpp"
+#include "PaddleGame.h"
 
-namespace Forge
+#include <QApplication>
+#include <QIcon>
+
+int main(int argc, char** argv)
 {
+	QApplication app(argc, argv);
 
-GameState::GameState(const std::string& name) : mName(name) { }
-
-GameState::~GameState() {
-	destroyState();
+	Paddlemonium::PaddleGame game;
+	game.init();
+	return game.run();
 }
-
-void GameState::enter()
-{
-}
-
-void GameState::createState() { }
-void GameState::destroyState() { }
-
-GameStatePtr GameState::frameUpdate()
-{
-	return GameStatePtr(nullptr);
-}
-
-const std::string& GameState::getName() const {
-	return mName;
-}
-
-} // namespace Forge

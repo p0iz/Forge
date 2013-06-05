@@ -63,7 +63,7 @@ GameStatePtr QtGameState::frameUpdate() {
 	return library.get(getName());
 }
 
-void QtGameState::createStateData() {
+void QtGameState::createState() {
 	createTestScene();
 }
 

@@ -18,18 +18,36 @@
  *
  */
 
-#include "ForgeGame.h"
+#pragma once
 
-#include <QApplication>
-#include <QIcon>
+#include "Input/InputHandler.h"
 
-int main(int argc, char** argv)
+#include "ForgeConfig.h"
+#include "Graphics/OrbitalCamera.h"
+#include "Graphics/QtRenderer.hpp"
+#include "State/QtStateMachine.hpp"
+#include "Time/HighResClock.h"
+
+namespace Paddlemonium {
+
+class PaddleGame
 {
-	QApplication app(argc, argv);
+public:
+	PaddleGame();
+	void init();
+	int run();
+private:
+	void initializeData();
+	void initializeGameStates();
 
-	ForgeGame game;
+	Forge::ForgeConfig mForgeConfig;
+	Forge::HighResClock mClock;
+	Forge::OrbitalCamera mCamera;
+	Forge::QtRenderer mRenderer;
+	Forge::QtStateMachine mStateMachine;
+	Forge::SceneConfig mSceneConfig;
 
-	game.init();
+	InputHandler mInput;
+};
 
-	return game.run();
 }

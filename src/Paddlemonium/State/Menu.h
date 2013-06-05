@@ -20,31 +20,36 @@
 
 #pragma once
 
-#include "GameInputHandler.h"
+#include "Input/InputHandler.h"
 
-#include "ForgeConfig.h"
-#include "Graphics/OrbitalCamera.h"
+// Forge includes
+#include "Graphics/Light/Light.hpp"
 #include "Graphics/QtRenderer.hpp"
-#include "State/QtStateMachine.hpp"
+#include "Graphics/Scene/SceneConfig.hpp"
+#include "Graphics/Material/Material.h"
+#include "Graphics/Material/Technique/TechniqueLibrary.h"
+#include "State/GameState.h"
 #include "Time/HighResClock.h"
 
-class ForgeGame
+#include <memory>
+
+namespace Paddlemonium { namespace State {
+
+class Menu : public QObject, public Forge::GameState
 {
+	Q_OBJECT
 public:
-	ForgeGame();
-	void init();
-	int run();
+	Menu(const QString& name,
+				InputHandler& input,
+				Forge::HighResClock& clock);
+
+	virtual Forge::GameStatePtr frameUpdate();
+	virtual void createState();
+	virtual void destroyState();
+
 private:
-	void initializeData();
-	void initializeGameStates();
-
-	Forge::ForgeConfig mForgeConfig;
-	Forge::HighResClock mClock;
-	GameInputHandler mInput;
-
-	Forge::QtRenderer mRenderer;
-	Forge::OrbitalCamera mCamera;
-	Forge::QtStateMachine mStateMachine;
-
-	Forge::SceneConfig mSceneConfig;
+	Paddlemonium::InputHandler& mInput;
+	Forge::HighResClock& mClock;
 };
+
+}}

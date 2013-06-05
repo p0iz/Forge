@@ -18,59 +18,76 @@
  *
  */
 
-#include "ForgeGame.h"
+#include "PaddleGame.h"
 
-#include "State/QtGameState.h"
+#include "State/InGame.h"
+#include "State/Menu.h"
+
+// Forge includes
 #include "State/GameStateLibrary.hpp"
-
 #include "Util/Log.h"
 
 #include <QApplication>
 #include <QIcon>
 
-ForgeGame::ForgeGame()
+namespace Paddlemonium {
+
+PaddleGame::PaddleGame()
 	: mForgeConfig("data/game.lua"),
-	  mInput(mCamera, mClock),
-	  mRenderer(mInput, mCamera)
+	  mRenderer(mCamera),
+	  mInput(mClock, mRenderer)
 {
-	mInput.setCurrentSceneConfig(&mSceneConfig);
 	const Forge::Configuration& cfg = mForgeConfig.getConfig();
 	mRenderer.resize(cfg.display.width, cfg.display.height);
+	mRenderer.installEventFilter(&mInput);
 	mRenderer.show();
 }
 
-void ForgeGame::initializeGameStates()
+void PaddleGame::initializeGameStates()
 {
-	Forge::GameStatePtr initialState(new Forge::QtGameState(QString("InitialState"),
-															mCamera,
-															mRenderer,
-															mInput,
-															mClock,
-															mSceneConfig));
+	Forge::GameStatePtr menuState(new State::Menu(QString("Menu"),
+												  mInput,
+												  mClock));
+	menuState->createState();
 
-	initialState->createStateData();
-	Forge::GameStateLibrary::getSingleton().add(initialState->getName(), initialState);
-	mStateMachine.init(initialState);
+	Forge::GameStatePtr inGameState(new State::InGame(QString("InGame"),
+													  mCamera,
+													  mRenderer,
+													  mInput,
+													  mClock));
+
+	inGameState->createState();
+
+	Forge::GameStateLibrary::getSingleton().add(menuState->getName(), menuState);
+	Forge::GameStateLibrary::getSingleton().add(inGameState->getName(), inGameState);
+	mStateMachine.init(menuState);
 }
 
-void ForgeGame::initializeData()
+void PaddleGame::initializeData()
 {
 	QIcon icon("data/images/icon128.png");
 	mRenderer.setWindowIcon(icon);
+	mSceneConfig.setCamera(mCamera);
 }
 
-void ForgeGame::init()
+void PaddleGame::init()
 {
 	initializeData();
 	initializeGameStates();
 }
 
-int ForgeGame::run()
+int PaddleGame::run()
 {
 	int result = 0;
 	mClock.init();
+
 	mStateMachine.start();
+
 	result = QApplication::exec();
+
 	mStateMachine.stop();
+
 	return result;
+}
+
 }

@@ -33,7 +33,7 @@ struct GameState {
 	virtual std::shared_ptr<GameState> frameUpdate();
 
 	/* Calling these two functions is left to the users' discretion */
-	virtual void createStateData();
+	virtual void createState();
 	virtual void destroyState();
 
 	const std::string& getName() const;
