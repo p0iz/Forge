@@ -24,34 +24,49 @@
 
 namespace Forge {
 
-void Transformation::translate(float x, float y, float z)
+Transformation& Transformation::translate(float x, float y, float z)
 {
 	mMatrix = glm::translate(mMatrix, glm::vec3(x, y, z));
+	return *this;
 }
 
-void Transformation::scale(float size)
+Transformation& Transformation::setPosition(float x, float y, float z)
 {
-	mMatrix = glm::scale(mMatrix, glm::vec3(size, size, size));
+	mMatrix[3] = glm::vec4(x, y, z, mMatrix[3][3]);
+	return *this;
 }
 
-void Transformation::rotate(float angle, const glm::vec3 &axis)
+Transformation& Transformation::scale(float size)
+{
+	mScale *= size;
+	return *this;
+}
+
+Transformation& Transformation::rotate(float angle, const glm::vec3 &axis)
 {
 	mMatrix = glm::rotate(mMatrix, angle, axis);
+	return *this;
 }
 
 void Transformation::reset()
 {
 	mMatrix = glm::mat4();
+	mScale = 1.0f;
 }
 
-void Transformation::applyMatrix(const glm::mat4& matrix)
+Transformation& Transformation::applyMatrix(const glm::mat4& matrix)
 {
 	mMatrix = matrix * mMatrix;
+	return *this;
 }
 
-const glm::mat4&Transformation::getMatrix() const
+glm::mat4 Transformation::getMatrix() const
 {
-	return mMatrix;
+	glm::mat4x4 result(mMatrix);
+	result[0] *= mScale;
+	result[1] *= mScale;
+	result[2] *= mScale;
+	return result;
 }
 
 }
