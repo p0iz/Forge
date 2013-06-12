@@ -34,8 +34,7 @@
 namespace Paddlemonium {
 
 PaddleGame::PaddleGame()
-	: mRenderer(mCamera),
-	  mInput(mClock, mRenderer)
+	: mInput(mClock, mRenderer)
 {
 	const Forge::Configuration& cfg = Forge::Configuration::getSingleton();
 	cfg.loadConfig("data/PaddleGame.configuration");
