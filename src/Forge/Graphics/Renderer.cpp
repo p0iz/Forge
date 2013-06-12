@@ -39,7 +39,7 @@ void Renderer::initialize()
 	glewExperimental = GL_TRUE;
 	assert(glewInit() == GLEW_OK);
 
-	glClearColor(0.0f,0.0f,0.0f,1.0f);
+	glClearColor(0.1f,0.1f,0.1f,1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
@@ -98,6 +98,7 @@ void Renderer::render(const SceneConfig& scene)
 {
 	glDepthMask(GL_TRUE);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
 	const glm::mat4 view = scene.getCamera().getViewMatrix();
 	const glm::mat4 projection = scene.getCamera().getProjectionMatrix();
 
@@ -108,6 +109,11 @@ void Renderer::render(const SceneConfig& scene)
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 	drawScene(view, projection, scene);
 
+	// Render debug overlay
+	if (DebugAxis::isDebugVisible()) {
+		DebugAxis::getSingleton().render(scene);
+	}
+
 	// Actual rendering
 	glDepthFunc(GL_LEQUAL);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -115,12 +121,14 @@ void Renderer::render(const SceneConfig& scene)
 
 	glEnable(GL_BLEND);
 	drawScene(view, projection, scene);
-	glDisable(GL_BLEND);
 
 	// Render debug overlay
 	if (DebugAxis::isDebugVisible()) {
 		DebugAxis::getSingleton().render(scene);
 	}
+
+	glDisable(GL_BLEND);
+
 	// Post process
 }
 
