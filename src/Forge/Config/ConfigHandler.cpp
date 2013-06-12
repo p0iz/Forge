@@ -27,24 +27,17 @@
 
 namespace Forge {
 
-void ConfigHandler::setConfig(Configuration& config)
-{
-	mConfig = &config;
-}
-
 bool ConfigHandler::handleLoadedLua(lua_State* state) const
 {
 	bool loaded = false;
 
-	if (mConfig == nullptr) {
-		Log::error << "Configuration not set before load!\n";
-		return loaded;
-	}
+	Configuration& config = Configuration::getSingleton();
+
 	lua_getglobal(state, "width");
 	lua_getglobal(state, "height");
 	if (lua_isnumber(state, -2) && lua_isnumber(state, -1)) {
-		mConfig->display.width = lua_tonumber(state, -2);
-		mConfig->display.height = lua_tonumber(state, -1);
+		config.display.width = lua_tonumber(state, -2);
+		config.display.height = lua_tonumber(state, -1);
 		loaded = true;
 	} else {
 		Log::error << "Config error: display parameters should be numbers!\n";

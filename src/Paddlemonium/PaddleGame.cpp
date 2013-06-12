@@ -24,6 +24,7 @@
 #include "State/Menu.h"
 
 // Forge includes
+#include "Config/Configuration.hpp"
 #include "State/GameStateLibrary.hpp"
 #include "Util/Log.h"
 
@@ -33,11 +34,11 @@
 namespace Paddlemonium {
 
 PaddleGame::PaddleGame()
-	: mForgeConfig("data/game.lua"),
-	  mRenderer(mCamera),
+	: mRenderer(mCamera),
 	  mInput(mClock, mRenderer)
 {
-	const Forge::Configuration& cfg = mForgeConfig.getConfig();
+	const Forge::Configuration& cfg = Forge::Configuration::getSingleton();
+	cfg.loadConfig("data/PaddleGame.configuration");
 	mRenderer.resize(cfg.display.width, cfg.display.height);
 	mRenderer.installEventFilter(&mInput);
 	mRenderer.show();
@@ -78,6 +79,8 @@ void PaddleGame::init()
 
 int PaddleGame::run()
 {
+	Forge::Log::info << "Built on " << __DATE__ << " at " << __TIME__ "\n";
+
 	int result = 0;
 	mClock.init();
 

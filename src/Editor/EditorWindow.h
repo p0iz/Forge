@@ -34,7 +34,6 @@ class EditorWindow;
 
 // Forward declarations
 namespace Forge {
-class ForgeConfig;
 class OrbitalCamera;
 class QtGameState;
 } // Forge
@@ -65,7 +64,6 @@ private:
 	Forge::QtStateMachine mEditorStateMachine;
 	Forge::HighResClock mGameClock;
 
-	std::shared_ptr<Forge::ForgeConfig> mForgeConfig;
 	std::shared_ptr<Forge::OrbitalCamera> mCamera;
 	std::shared_ptr<EditorInputHandler> mInput;
 	std::shared_ptr<Forge::QtRenderer> mRenderer;

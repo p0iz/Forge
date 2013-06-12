@@ -20,9 +20,15 @@
 
 #pragma once
 
+#include "Util/Singleton.hpp"
+
+#include <iosfwd>
+
 namespace Forge {
 
-struct Configuration {
+/* This is the main configuration class for the FORGE framework. */
+struct Configuration : public Singleton<Configuration> {
+	static void loadConfig(const std::string& configFile);
 	struct {
 		int width;
 		int height;

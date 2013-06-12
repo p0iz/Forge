@@ -27,7 +27,6 @@
 #include "EditorViews/MaterialEditorView.hpp"
 
 // Forge includes
-#include "ForgeConfig.h"
 #include "Graphics/DebugAxis.h"
 #include "Graphics/OrbitalCamera.h"
 #include "Graphics/QtRenderer.hpp"
@@ -40,7 +39,6 @@
 EditorWindow::EditorWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::EditorWindow),
-	mForgeConfig(new Forge::ForgeConfig),
 	mCamera(new Forge::OrbitalCamera(10.0f)),
 	mInput(new EditorInputHandler(*mCamera)),
 	mRenderer(new Forge::QtRenderer(*mCamera)),

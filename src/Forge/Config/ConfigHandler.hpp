@@ -27,11 +27,8 @@ namespace Forge {
 class Configuration;
 
 struct ConfigHandler {
-	void setConfig(Configuration& config);
 protected:
 	bool handleLoadedLua(lua_State* state) const;
-private:
-	Configuration* mConfig;
 };
 
 }

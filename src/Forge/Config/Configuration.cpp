@@ -14,33 +14,20 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "ForgeConfig.h"
+#include "Configuration.hpp"
 
-#include "Graphics/OrbitalCamera.h"
-#include "Time/HighResClock.h"
-#include "Util/Log.h"
-#include "Config/ConfigLoader.hpp"
-
-#include <fstream>
-#include <sstream>
-#include <string>
+#include "ConfigLoader.hpp"
 
 namespace Forge {
 
-ForgeConfig::ForgeConfig(const std::string& configFilename) {
-	Log::info << "Built on " << __DATE__ << " at " << __TIME__ "\n";
-	loadConfig(configFilename);
-}
-
-void ForgeConfig::loadConfig(const std::string& configFile)
+void Configuration::loadConfig(const std::string& configFile)
 {
 	ConfigLoader loader;
-	loader.setConfig(mConfig);
 	loader.loadFile(configFile);
 }
 
-} // namespace Forge
+}
