@@ -64,7 +64,6 @@ bool LuaLoader<Handler>::loadFile(const std::string& file) const
 	if (error) {
 		Log::error << lua_tostring(state.get(), -1) << "\n";
 	} else if (Handler::handleLoadedLua(L)) {
-		Log::info << "Loaded Lua code from '" << file << "'\n";
 		loaded = true;
 	} else {
 		Log::error << "Failed to load Lua code from file '" << file << "'\n";
