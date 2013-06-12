@@ -28,6 +28,7 @@
 #include "Graphics/Scene/SceneConfig.hpp"
 #include "Graphics/Material/Material.h"
 #include "Graphics/Material/Technique/TechniqueLibrary.h"
+#include "Graphics/TargetCamera.h"
 #include "State/GameState.h"
 #include "Time/HighResClock.h"
 
@@ -40,7 +41,6 @@ class InGame : public QObject, public Forge::GameState
 	Q_OBJECT
 public:
 	InGame(const QString& name,
-				Forge::Camera& camera,
 				Forge::QtRenderer& renderer,
 				InputHandler& input,
 				Forge::HighResClock& clock);
@@ -52,7 +52,7 @@ public:
 private:
 	Paddlemonium::InputHandler& mInput;
 
-	Forge::Camera& mCamera;
+	Forge::TargetCamera mCamera;
 	Forge::QtRenderer& mRenderer;
 	Forge::HighResClock& mClock;
 

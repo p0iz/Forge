@@ -31,13 +31,9 @@
 namespace Forge
 {
 
-QtRenderer::QtRenderer(Camera& camera,
-					   QWidget* parent,
-					   const QGLWidget* shareWidget,
-					   Qt::WindowFlags f)
-	: QGLWidget(widgetQGLFormat(), parent, shareWidget, f),
-	  mFullScreen(false),
-	  mCamera(camera) {
+QtRenderer::QtRenderer(QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags f)
+	: QGLWidget(widgetQGLFormat(), parent, shareWidget, f), mFullScreen(false)
+{
 	setMouseTracking(true);
 }
 
@@ -61,11 +57,6 @@ void QtRenderer::toggleFullscreen()
 	mFullScreen = !mFullScreen;
 }
 
-void QtRenderer::setCamera(Camera& camera)
-{
-	mCamera = camera;
-}
-
 void QtRenderer::initializeGL()
 {
 	mRenderer.initialize();
@@ -75,8 +66,8 @@ void QtRenderer::initializeGL()
 
 void QtRenderer::resizeGL(int w, int h)
 {
-	mCamera.setPerspectiveProjection(w, h);
 	mRenderer.updateViewport(w, h);
+	publish(ResizeEvent(w, h));
 }
 
 void QtRenderer::render(const Forge::SceneConfig& sceneConfig)

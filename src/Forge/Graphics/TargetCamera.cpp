@@ -14,18 +14,36 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "Graphics/QtRenderer.hpp"
+#include "TargetCamera.h"
 
-class MaterialEditorView : public Forge::QtRenderer
+#include <glm/gtx/vector_angle.hpp>
+
+namespace Forge {
+
+void Forge::TargetCamera::setPosition(float x, float y, float z)
 {
-	Q_OBJECT
-private:
-	virtual void setupScene();
-	virtual void drawScene();
-	virtual void tearDownScene();
+	mPosition[0] = x;
+	mPosition[1] = y;
+	mPosition[2] = z;
+}
 
-};
+
+void Forge::TargetCamera::setTarget(float x, float y, float z)
+{
+	mTarget[0] = x;
+	mTarget[1] = y;
+	mTarget[2] = z;
+}
+
+const glm::mat4x4 TargetCamera::getViewMatrix() const
+{
+	return glm::lookAt(glm::vec3(mPosition[0], mPosition[1], mPosition[2]),
+			glm::vec3(mTarget[0], mTarget[1], mTarget[2]),
+			glm::vec3(0, 1, 0));
+}
+
+}

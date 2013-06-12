@@ -20,8 +20,10 @@
 
 #pragma once
 
-#include "Graphics/OrbitalCamera.h"
+#include "Event/Publisher.hpp"
+
 #include "Graphics/Renderer.h"
+#include "Graphics/ResizeEvent.h"
 #include "Graphics/Scene/SceneConfig.hpp"
 
 #include <GL/glew.h>
@@ -34,22 +36,15 @@ class QtInputHandler;
 class Shader;
 class ShaderProgram;
 
-class QtRenderer : public QGLWidget
+class QtRenderer : public QGLWidget, public Publisher<ResizeEvent>
 {
 	Q_OBJECT
 public:
-	explicit QtRenderer(Camera& camera,
-						QWidget* parent = 0,
-						const QGLWidget* shareWidget = 0,
-						Qt::WindowFlags f=0);
+	QtRenderer(QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f=0);
 	virtual ~QtRenderer();
 
 	void render(const SceneConfig& scene);
-
 	void toggleFullscreen();
-
-	void setCamera(Camera& camera);
-
 signals:
 	void glewInitialized();
 protected:
@@ -59,7 +54,6 @@ private:
 	bool mFullScreen;
 
 	Renderer mRenderer;
-	Camera& mCamera;
 
 	// Returns the GL format used by the widget
 	static const QGLFormat widgetQGLFormat();

@@ -23,8 +23,10 @@ set(GraphicsSources
 	DebugAxis.cpp
 	Mesh.cpp
 	OrbitalCamera.cpp
-	Renderer.cpp)
+	Renderer.cpp
+	ResizeEvent.cpp
+	TargetCamera.cpp)
 
 add_library(Graphics ${GraphicsSources})
 
-target_link_libraries(Graphics Light Loaders Shader Scene Material Text)
+target_link_libraries(Graphics Event Light Loaders Shader Scene Material Text)

@@ -14,18 +14,14 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "Graphics/QtRenderer.hpp"
+#include "ResizeEvent.h"
 
-class MaterialEditorView : public Forge::QtRenderer
-{
-	Q_OBJECT
-private:
-	virtual void setupScene();
-	virtual void drawScene();
-	virtual void tearDownScene();
+namespace Forge {
 
-};
+ResizeEvent::ResizeEvent(int w, int h) : width(w), height(h) { }
+
+} // Forge

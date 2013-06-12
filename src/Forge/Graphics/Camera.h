@@ -20,11 +20,15 @@
 
 #pragma once
 
+#include "ResizeEvent.h"
+
+#include "Event/Subscriber.hpp"
+
 #include <glm/glm.hpp>
 
 namespace Forge {
 
-class Camera
+class Camera : public Subscriber<ResizeEvent>
 {
 public:
 	Camera();
@@ -61,6 +65,8 @@ public:
 	{
 		return mPosition;
 	}
+
+	void notify(const ResizeEvent& event);
 
 private:
 

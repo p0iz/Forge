@@ -52,7 +52,6 @@ void PaddleGame::initializeGameStates()
 	menuState->createState();
 
 	Forge::GameStatePtr inGameState(new State::InGame(QString("InGame"),
-													  mCamera,
 													  mRenderer,
 													  mInput,
 													  mClock));
@@ -68,7 +67,6 @@ void PaddleGame::initializeData()
 {
 	QIcon icon("data/images/icon128.png");
 	mRenderer.setWindowIcon(icon);
-	mSceneConfig.setCamera(mCamera);
 }
 
 void PaddleGame::init()

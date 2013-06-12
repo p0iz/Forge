@@ -14,37 +14,53 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Input/InputHandler.h"
+#include "Util/UniqueId.hpp"
 
-#include "Graphics/OrbitalCamera.h"
-#include "Graphics/QtRenderer.hpp"
-#include "State/QtStateMachine.hpp"
-#include "Time/HighResClock.h"
+#include <unordered_set>
 
-namespace Paddlemonium {
+namespace Forge {
 
-class PaddleGame
+template <class EventType>
+class Subscriber;
+
+template <class EventType>
+class Publisher
 {
 public:
-	PaddleGame();
-	void init();
-	int run();
+	void publish(const EventType& event) const
+	{
+		for (Subscriber<EventType>* subscriber : mSubscribers)
+		{
+			subscriber->notify(event);
+		}
+	}
+
+	bool subscribe(Subscriber<EventType>& subscriber)
+	{
+		if (mSubscribers.count(&subscriber) == 0)
+		{
+			mSubscribers.insert(&subscriber);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool unsubscribe(Subscriber<EventType>& subscriber)
+	{
+		return mSubscribers.erase(&subscriber);
+	}
+
 private:
-	void initializeData();
-	void initializeGameStates();
-
-	Forge::HighResClock mClock;
-	Forge::QtRenderer mRenderer;
-	Forge::QtStateMachine mStateMachine;
-	Forge::SceneConfig mSceneConfig;
-
-	InputHandler mInput;
+	std::unordered_set<Subscriber<EventType>*> mSubscribers;
 };
 
 }

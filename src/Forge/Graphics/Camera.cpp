@@ -87,6 +87,11 @@ void Camera::updateRotation(float yaw, float pitch, float roll)
 	mRotation.z += glm::radians(roll);
 }
 
+void Camera::notify(const ResizeEvent& event)
+{
+	setPerspectiveProjection(event.width, event.height);
+}
+
 void Camera::updatePosition(glm::vec3 translation)
 {
 	mPosition += translation;

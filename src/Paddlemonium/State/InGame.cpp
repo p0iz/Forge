@@ -33,13 +33,11 @@
 namespace Paddlemonium { namespace State {
 
 InGame::InGame(const QString& name,
-						 Forge::Camera& camera,
 						 Forge::QtRenderer& renderer,
 						 InputHandler& input,
 						 Forge::HighResClock& clock)
 	: GameState(name.toStdString()),
 	  mInput(input),
-	  mCamera(camera),
 	  mRenderer(renderer),
 	  mClock(clock) { }
 
@@ -80,6 +78,7 @@ void InGame::createState() {
 
 void InGame::destroyState() {
 	// Destroy game view
+	mRenderer.unsubscribe(mCamera);
 }
 
 }}

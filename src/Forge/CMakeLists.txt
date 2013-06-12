@@ -47,6 +47,7 @@ add_subdirectory(State)
 add_subdirectory(Graphics)
 add_subdirectory(Time)
 add_subdirectory(Util)
+add_subdirectory(Event)
 
 add_library(Forge ForgeVersion.cpp)
 target_link_libraries(Forge

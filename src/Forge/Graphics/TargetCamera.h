@@ -14,18 +14,28 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "Graphics/QtRenderer.hpp"
+#pragma once
 
-class MaterialEditorView : public Forge::QtRenderer
+#include "Camera.h"
+
+namespace Forge {
+
+class TargetCamera : public Camera
 {
-	Q_OBJECT
-private:
-	virtual void setupScene();
-	virtual void drawScene();
-	virtual void tearDownScene();
+public:
+	void setPosition(float x, float y, float z);
+	void setTarget(float x, float y, float z);
 
+	virtual const glm::mat4x4 getViewMatrix() const;
+
+private:
+	float mPosition[3];
+	float mTarget[3];
 };
+
+} // namespace Forge
+

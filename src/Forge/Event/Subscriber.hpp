@@ -14,18 +14,19 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "Graphics/QtRenderer.hpp"
+#pragma once
 
-class MaterialEditorView : public Forge::QtRenderer
+namespace Forge {
+
+template<class EventType>
+class Subscriber
 {
-	Q_OBJECT
-private:
-	virtual void setupScene();
-	virtual void drawScene();
-	virtual void tearDownScene();
-
+public:
+	virtual void notify(const EventType& event) = 0;
 };
+
+}
