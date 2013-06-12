@@ -36,7 +36,10 @@ public:
 	virtual const glm::mat4x4 getViewMatrix() const = 0;
 
 	void setFovY(float fov);
+	float getFovY() const;
 	void setClipDistances(float near, float far);
+
+	float getAspectRatio() const;
 
 	const glm::mat4x4& getProjectionMatrix() const
 	{
@@ -64,6 +67,9 @@ private:
 	float mFovY;
 	float mNearClip;
 	float mFarClip;
+
+	float mWidth;
+	float mHeight;
 
 	glm::vec3 mRotation;
 	glm::vec3 mPosition;

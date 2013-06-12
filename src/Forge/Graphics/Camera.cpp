@@ -20,6 +20,8 @@
 
 #include "Camera.h"
 
+#include "Util/Log.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
@@ -42,11 +44,15 @@ Camera::~Camera()
 
 void Camera::setPerspectiveProjection(int width, int height)
 {
-	mProjectionMatrix = glm::perspective(mFovY, 1.0f*width / height, mNearClip, mFarClip);
+	mWidth = width;
+	mHeight = height;
+	mProjectionMatrix = glm::perspective(mFovY, static_cast<float>(width) / height, mNearClip, mFarClip);
 }
 
 void Camera::setOrthogonalProjection(int width, int height)
 {
+	mWidth = width;
+	mHeight = height;
 	mProjectionMatrix = glm::mat4x4(1.0f);
 	mProjectionMatrix[0][0] = 2.0f / width;
 	mProjectionMatrix[1][1] = 2.0f / height;
@@ -59,9 +65,19 @@ void Camera::setClipDistances(float near, float far) {
 	mFarClip = far;
 }
 
+float Camera::getAspectRatio() const
+{
+	return static_cast<float>(mWidth) / mHeight;
+}
+
 void Camera::setFovY(float fov)
 {
 	mFovY = fov;
+}
+
+float Camera::getFovY() const
+{
+	return mFovY;
 }
 
 void Camera::updateRotation(float yaw, float pitch, float roll)
