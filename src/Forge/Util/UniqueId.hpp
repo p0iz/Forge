@@ -24,23 +24,23 @@
 
 namespace Forge {
 
-typedef unsigned long long f_uid_t;
+typedef unsigned long long Id;
 
 template <class T>
 class UniqueId {
 public:
 	UniqueId() : mId(UniqueId::nextId++) { }
-	f_uid_t getID() const;
+	inline Id getID() const;
 private:
-	f_uid_t mId;
-	static f_uid_t nextId;
+	Id mId;
+	static Id nextId;
 };
 
 template <class T>
-f_uid_t UniqueId<T>::nextId = 0;
+Id UniqueId<T>::nextId = 0;
 
 template <class T>
-f_uid_t UniqueId<T>::getID() const
+Id UniqueId<T>::getID() const
 {
 	return mId;
 }
