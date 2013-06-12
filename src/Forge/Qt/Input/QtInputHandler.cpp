@@ -29,8 +29,7 @@ bool Forge::QtInputHandler::eventFilter(QObject*, QEvent* event)
 	switch (event->type())
 	{
 	case QEvent::KeyPress:
-		if (!static_cast<QKeyEvent*>(event)->isAutoRepeat())
-			keyPress(static_cast<QKeyEvent*>(event));
+		keyPress(static_cast<QKeyEvent*>(event));
 		break;
 	case QEvent::KeyRelease:
 		keyRelease(static_cast<QKeyEvent*>(event));
@@ -40,6 +39,9 @@ bool Forge::QtInputHandler::eventFilter(QObject*, QEvent* event)
 		break;
 	case QEvent::MouseButtonRelease:
 		mouseRelease(static_cast<QMouseEvent*>(event));
+		break;
+	case QEvent::MouseMove:
+		mouseMove(static_cast<QMouseEvent*>(event));
 		break;
 	default:
 		return false;
