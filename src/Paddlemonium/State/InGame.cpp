@@ -62,18 +62,62 @@ Forge::GameStatePtr InGame::frameUpdate() {
 }
 
 void InGame::createState() {
+	mTechniqueLibrary.add(new Forge::SimpleTexture);
+	mTechniqueLibrary.add(new Forge::SimpleColor);
+
 	// Create game view
 	mPaddleMesh = Forge::MeshLoader::loadMesh("data/paddle.obj");
 	mPaddleNode = mSceneConfig.createSceneNode("PaddleNode");
+	mSceneConfig.getSceneNode(mPaddleNode).mWorldTransform.scale(0.2f);
+	Forge::Material material;
+	material.loadMaterial("data/materials/Paddle.material", mTechniqueLibrary);
+	mSceneConfig.mMaterialMeshMap[material].push_back(mPaddleMesh);
 	mPaddleMesh->attachToNode(mPaddleNode);
 
 	mTileMesh = Forge::MeshLoader::loadMesh("data/tile.obj");
+	material.loadMaterial("data/materials/Tile.material", mTechniqueLibrary);
+	mSceneConfig.mMaterialMeshMap[material].push_back(mTileMesh);
+
 	mTileNode = mSceneConfig.createSceneNode("TileNode");
 	mTileMesh->attachToNode(mTileNode);
+	mSceneConfig.getSceneNode(mTileNode).mWorldTransform.translate(5.0f, 10.0f, 0.0f).scale(0.2f);
+
+	mTileNode = mSceneConfig.createSceneNode("TileNode2");
+	mTileMesh->attachToNode(mTileNode);
+	mSceneConfig.getSceneNode(mTileNode).mWorldTransform.translate(6.0f, 10.0f, 0.0f).scale(0.2f);
+
+	mBallMesh = Forge::MeshLoader::loadMesh("data/ball.obj");
+	mSceneConfig.mMaterialMeshMap[material].push_back(mBallMesh); // Use same material for ball
+
+	mBallNode = mSceneConfig.createSceneNode("BallNode");
+	mBallMesh->attachToNode(mBallNode);
+	mSceneConfig.getSceneNode(mBallNode).mWorldTransform.translate(0.0f, 5.0f, 0.0f).scale(0.2f);
+
+	mBorderMesh = Forge::MeshLoader::loadMesh("data/border.obj");
+	mSceneConfig.mMaterialMeshMap[material].push_back(mBorderMesh); // Use same material for ball
+
+	mBorderNode = mSceneConfig.createSceneNode("BorderNode");
+	mBorderMesh->attachToNode(mBorderNode);
+	mSceneConfig.getSceneNode(mBorderNode).mWorldTransform.translate(0.0f, 6.1f, 0.0f).rotate(90.0f, glm::vec3(1, 0, 0)).scale(0.4f);
+
+	Forge::Light& light = mSceneConfig.lights[0];
+
+	light.id = 0;
+	light.position = glm::vec4(10.0f, 10.0f, 1.0f, 1.0f);
+	light.type = Forge::Light::POINT;
+	light.data[0].color = glm::vec4(1.0f,1.0f, 1.0f, 1.0f);
+
+	mCamera.setPosition(0.0f, 5.0f, -20.0f);
+	mCamera.setTarget(0.0f, 5.0f, 0.0f);
+
+	mRenderer.subscribe(mCamera);
 
 	// Done. Allow the scene config to manipulate the scene
 	mSceneConfig.setCamera(mCamera);
 	mInput.setSceneConfig(&mSceneConfig);
+
+	mSceneConfig.validateSceneGraph();
+	mSceneConfig.calculateWorldTransforms();
 }
 
 void InGame::destroyState() {

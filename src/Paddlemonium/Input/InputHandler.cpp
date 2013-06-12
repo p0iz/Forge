@@ -36,7 +36,7 @@
 #include <iostream>
 
 namespace {
-	const int MOVE_SPEED = 1.0f;
+	const int MOVE_SPEED = 10.0f;
 }
 
 namespace Paddlemonium {
@@ -93,18 +93,20 @@ void InputHandler::mouseRelease(QMouseEvent *event)
 
 void InputHandler::mouseMove(QMouseEvent *event)
 {
+	if (!mSceneConfig)
+		return;
+
+	const Forge::Camera& camera = mSceneConfig->getCamera();
+
 	Forge::SceneNode& paddleNode = mSceneConfig->getSceneNode("PaddleNode");
-	QPoint relativeMovement = event->pos() - mPreviousMouseLocation;
-	if (mSceneConfig) {
-		// Move paddle
-		try {
-			paddleNode.mWorldTransform.translate(relativeMovement.x() * 0.1f,
-										   0.0f,
-										   0.0f);
-		} catch (Forge::NotFoundException exception) {
-			Forge::Log::error << "Could not find scene node '" << exception.missing << "'\n";
-		}
-	}
+	float distance = (camera.getViewMatrix() * paddleNode.mWorldTransform.getMatrix())[3][2];
+	float frustumHeight = glm::tan(glm::radians(camera.getFovY() * 0.5f)) * distance;
+	float frustumWidth = camera.getAspectRatio() * frustumHeight;
+
+	float percentageX = (event->windowPos().x() / mRenderer.width());
+
+	float screenPos = frustumWidth * (2 * percentageX - 1);
+	paddleNode.mWorldTransform.setPosition(screenPos, 0.0f, 0.0f);
 	mPreviousMouseLocation = event->pos();
 }
 

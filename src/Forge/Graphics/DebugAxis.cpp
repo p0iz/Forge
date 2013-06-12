@@ -145,7 +145,7 @@ void DebugAxis::render(const SceneConfig& scene) const
 				node.mWorldTransform.getMatrix();
 		glUniformMatrix4fv(debugUniformMVP, 1, GL_FALSE, &mvp[0][0]);
 		glBindVertexArray(debugVertexArrayId);
-		glDrawArrays(GL_LINES, 0, 3);
+		glDrawArrays(GL_LINES, 0, 6);
 	}
 }
 

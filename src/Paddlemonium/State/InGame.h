@@ -62,10 +62,14 @@ private:
 	// Game object meshes
 	Forge::MeshPtr mPaddleMesh;
 	Forge::MeshPtr mTileMesh;
+	Forge::MeshPtr mBallMesh;
+	Forge::MeshPtr mBorderMesh;
 
 	// Game object nodes
 	Forge::SceneNodeId mPaddleNode;
+	Forge::SceneNodeId mBallNode;
 	Forge::SceneNodeId mTileNode;
+	Forge::SceneNodeId mBorderNode;
 
 };
 
