@@ -47,6 +47,20 @@ private:
 	GLuint mVertexArrayId;
 	GLuint mVertexBufferId;
 	GLuint mElementBufferId;
+
+	void calculateBounds(const std::vector<Vertex>& vertices);
+
+	struct Bounds
+	{
+		float minX;
+		float maxX;
+		float minY;
+		float maxY;
+		float minZ;
+		float maxZ;
+	};
+
+	Bounds mBounds;
 };
 
 typedef std::shared_ptr<Mesh> MeshPtr;

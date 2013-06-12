@@ -21,6 +21,8 @@
 #include "Mesh.h"
 #include "Vertex.h"
 
+#include "Util/Log.h"
+
 #include <cassert>
 #include <vector>
 #include <iostream>
@@ -78,6 +80,8 @@ Mesh::Mesh(
 				GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
+
+	calculateBounds(vertices);
 }
 
 Mesh::~Mesh()
@@ -101,6 +105,20 @@ void Mesh::draw()
 		glBindVertexArray(mVertexArrayId);
 	}
 	glDrawElements(GL_TRIANGLES, mNumberOfVertices, GL_UNSIGNED_INT, 0);
+}
+
+void Mesh::calculateBounds(const std::vector<Vertex>& vertices)
+{
+	mBounds = { 0, 0, 0, 0, 0, 0 };
+	for (const Vertex& vertex : vertices)
+	{
+		mBounds.minX = vertex.position[0] < mBounds.minX ? vertex.position[0] : mBounds.minX;
+		mBounds.maxX = vertex.position[0] > mBounds.maxX ? vertex.position[0] : mBounds.maxX;
+		mBounds.minY = vertex.position[1] < mBounds.minY ? vertex.position[1] : mBounds.minY;
+		mBounds.maxY = vertex.position[1] > mBounds.maxY ? vertex.position[1] : mBounds.maxY;
+		mBounds.minZ = vertex.position[2] < mBounds.minZ ? vertex.position[2] : mBounds.minZ;
+		mBounds.maxZ = vertex.position[2] > mBounds.maxZ ? vertex.position[2] : mBounds.maxZ;
+	}
 }
 
 } // namespace Forge
