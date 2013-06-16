@@ -42,8 +42,15 @@
     </property>
     <addaction name="actionTools"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionView_OpenGL_properties"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
+   <addaction name="menuTools"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="toolDock">
@@ -115,7 +122,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Tools</string>
+    <string>&amp;Tools dock</string>
    </property>
    <property name="toolTip">
     <string>Tools</string>
@@ -135,6 +142,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionView_OpenGL_properties">
+   <property name="text">
+    <string>View OpenGL properties</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>

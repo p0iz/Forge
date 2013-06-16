@@ -21,16 +21,14 @@
 #ifndef EDITORWINDOW_H
 #define EDITORWINDOW_H
 
+#include "ui_EditorWindow.h"
+
 #include "Graphics/QtRenderer.hpp"
 #include "State/QtStateMachine.hpp"
 #include "Time/HighResClock.h"
 
 #include <QMainWindow>
 #include <memory>
-
-namespace Ui {
-class EditorWindow;
-}
 
 // Forward declarations
 namespace Forge {
@@ -55,10 +53,12 @@ private slots:
 
 	void on_debugAxisCheckBox_clicked(bool checked);
 
+	void on_actionView_OpenGL_properties_triggered();
+
 private:
 	void initializeForge();
 
-	Ui::EditorWindow *ui;
+	Ui::EditorWindow* ui;
 
 	Forge::SceneConfig mSceneConfig;
 	Forge::QtStateMachine mEditorStateMachine;

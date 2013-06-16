@@ -5,12 +5,18 @@ project(Editor)
 # Set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic")
 
-set(EditorSources
+set(EditorUI
 	EditorWindow.ui
+	OpenGLPropertiesDialog.ui)
+
+set(EditorSources
 	EditorInputHandler.cpp
 	EditorWindow.cpp
+	OpenGLPropertiesDialog.cpp
+	OpenGLPropertyTableModel.cpp
 	main.cpp
-	EditorResources.qrc)
+	EditorResources.qrc
+	${EditorUI})
 
 # Setup Qt
 set(CMAKE_AUTOMOC ON)
@@ -28,4 +34,4 @@ add_executable(Editor
 target_link_libraries(Editor Forge EditorViews)
 
 qt5_use_modules(Editor Gui OpenGL)
-qt5_wrap_ui(Editor EditorWindow.ui)
+qt5_wrap_ui(Editor EditorWindow.ui OpenGLPropertiesDialog.ui)

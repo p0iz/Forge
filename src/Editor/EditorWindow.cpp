@@ -19,12 +19,11 @@
  */
 
 #include "EditorWindow.h"
-#include "ui_EditorWindow.h"
-
 #include "EditorInputHandler.h"
 
 // Editor includes
 #include "EditorViews/MaterialEditorView.hpp"
+#include "OpenGLPropertiesDialog.h"
 
 // Forge includes
 #include "Graphics/DebugAxis.h"
@@ -43,25 +42,21 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	mInput(new EditorInputHandler(*mCamera)),
 	mRenderer(new Forge::QtRenderer),
 	mMaterialEditor(new MaterialEditorView),
-	mEditorState(new Forge::QtGameState(QString("EditorState"),
-										  *mCamera,
-										  *mRenderer,
-										  *mInput,
-										  mGameClock,
-										  mSceneConfig))
+	mEditorState(nullptr)
 {
 	initializeForge();
 	initializeUi();
-	QObject::connect(mRenderer.get(), &Forge::QtRenderer::glewInitialized,
-					 mEditorState.get(), &Forge::QtGameState::createState);
+	//QObject::connect(mRenderer.get(), &Forge::QtRenderer::glewInitialized,
+					 //mEditorState.get(), &Forge::QtGameState::createState);
+	mRenderer->activateWindow();
 }
 
 void EditorWindow::initializeForge()
 {
-	mGameClock.init();
-	Forge::GameStateLibrary::getSingleton().add(mEditorState->getName(), mEditorState);
-	mEditorStateMachine.init(mEditorState);
-	mEditorStateMachine.start();
+	//mGameClock.init();
+	//Forge::GameStateLibrary::getSingleton().add(mEditorState->getName(), mEditorState);
+	//mEditorStateMachine.init(mEditorState);
+	//mEditorStateMachine.start();
 }
 
 void EditorWindow::initializeUi()
@@ -86,4 +81,10 @@ void EditorWindow::on_actionToggle_Debug_Axis_triggered()
 void EditorWindow::on_debugAxisCheckBox_clicked(bool checked)
 {
 	Forge::DebugAxis::setDebuggingInfo(checked);
+}
+
+void EditorWindow::on_actionView_OpenGL_properties_triggered()
+{
+	OpenGLPropertiesDialog* dialog = new OpenGLPropertiesDialog(mRenderer->context());
+	dialog->show();
 }
