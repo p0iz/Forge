@@ -17,27 +17,49 @@ endif()
 
 # Add Windows build include directories
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	if(NOT DEFINED GLEW_DIR)
+		message(FATAL_ERROR "You need to define GLEW_DIR as the directory where GLEW is located")
+	endif()
+	if(NOT DEFINED GLM_DIR)
+		message(FATAL_ERROR "You need to define GLM_DIR as the directory where GLM is located")
+	endif()
+	if(NOT DEFINED FREEIMAGE_DIR)
+		message(FATAL_ERROR "You need to define FREEIMAGE_DIR as the directory where FreeImage is located")
+	endif()
+	if(NOT DEFINED FREETYPE_DIR)
+		message(FATAL_ERROR "You need to define FREETYPE_DIR as the directory where FreeType is located")
+	endif()
+	if(NOT DEFINED ASSIMP_DIR)
+		message(FATAL_ERROR "You need to define ASSIMP_DIR as the directory where AssImp is located")
+	endif()
+	if(NOT DEFINED LUA_DIR)
+		message(FATAL_ERROR "You need to define LUA_DIR as the directory where Lua is located (e.g. C:\Lua\5.1)")
+	endif()
 	message(STATUS "Adding Windows dependency includes...")
 	include_directories(
-		${CMAKE_SOURCE_DIR}/windows_deps/glew/include
-		${CMAKE_SOURCE_DIR}/windows_deps/glm
-		${CMAKE_SOURCE_DIR}/windows_deps/freeimage
-		${CMAKE_SOURCE_DIR}/windows_deps/assimp/include
-		${CMAKE_SOURCE_DIR}/windows_deps/lua/include
+		${GLEW_DIR}/include
+                ${GLM_DIR}
+		${FREEIMAGE_DIR}/Dist
+		${ASSIMP_DIR}/include
+		${LUA_DIR}/include
 	)
+	
+	set (GLEW_PATH  "${GLEW_DIR}/lib")
+	set (FREEIMAGE_PATH "${FREEIMAGE_DIR}/Dist")
+	set (ASSIMP_PATH "${ASSIMP_DIR}/lib/x64")
 endif()
+
+# GLEW dependency (Add PATHS for Windows detection)
+find_library(GLEW_LIBRARY NAMES GLEW glew glew32 PATHS ${GLEW_PATH})
+
+# FreeImage dependency
+find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${FREEIMAGE_PATH})
+
+# AssImp dependency
+find_library(ASSIMP_LIBRARY NAMES AssImp assimp PATHS ${ASSIMP_PATH})
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)
-
-# GLEW dependency (Add PATHS for Windows detection)
-find_library(GLEW_LIBRARY NAMES GLEW glew glew32 PATHS ${CMAKE_SOURCE_DIR}/windows_deps/glew/lib)
-
-# FreeImage dependency
-find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${CMAKE_SOURCE_DIR}/windows_deps/freeimage)
-
-# AssImp dependency
-find_library(ASSIMP_LIBRARY NAMES AssImp assimp PATHS ${CMAKE_SOURCE_DIR}/windows_deps/assimp/lib/assimp_debug-dll_x64)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

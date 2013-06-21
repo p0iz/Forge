@@ -18,7 +18,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5OpenGL REQUIRED)
 find_package(Qt5Gui REQUIRED)
 
-include_directories(${CMAKE_SOURCE_DIR}/src/Forge ${CMAKE_SOURCE_DIR}/src/Forge/Qt)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/src/Forge
+    ${CMAKE_SOURCE_DIR}/src/Forge/Qt
+    ${GLM_DIR}
+    ${GLEW_DIR}/include
+    ${LUA_DIR}/include
+)
 
 add_subdirectory(EditorViews)
 
