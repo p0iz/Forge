@@ -22,7 +22,7 @@
 
 #include "Graphics/DebugAxis.h"
 #include "Graphics/OrbitalCamera.h"
-#include "Graphics/QtRenderer.hpp"
+#include "Qt/Graphics/QtRenderer.hpp"
 
 #include <QKeyEvent>
 #include <QMouseEvent>

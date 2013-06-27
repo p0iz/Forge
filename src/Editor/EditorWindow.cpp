@@ -29,10 +29,11 @@
 // Forge includes
 #include "Graphics/DebugAxis.h"
 #include "Graphics/OrbitalCamera.h"
-#include "Graphics/QtRenderer.hpp"
-#include "State/QtGameState.h"
-#include "State/QtStateMachine.hpp"
 #include "State/GameStateLibrary.hpp"
+
+#include "Qt/Graphics/QtRenderer.hpp"
+#include "Qt/State/QtGameState.h"
+#include "Qt/State/QtStateMachine.hpp"
 
 #include <QTabWidget>
 

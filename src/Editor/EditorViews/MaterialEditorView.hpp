@@ -18,7 +18,7 @@
  *
  */
 
-#include "Graphics/QtRenderer.hpp"
+#include "Qt/Graphics/QtRenderer.hpp"
 
 class MaterialEditorView : public Forge::QtRenderer
 {

@@ -21,9 +21,10 @@
 #ifndef EDITORWINDOW_H
 #define EDITORWINDOW_H
 
-#include "Graphics/QtRenderer.hpp"
-#include "State/QtStateMachine.hpp"
 #include "Time/HighResClock.h"
+
+#include "Qt/State/QtStateMachine.hpp"
+#include "Qt/Graphics/QtRenderer.hpp"
 
 #include <QMainWindow>
 #include <memory>
