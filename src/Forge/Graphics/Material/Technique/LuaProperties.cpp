@@ -34,7 +34,7 @@ LuaProperties::LuaProperties(lua_State* state) : mState(state) {
 
 bool LuaProperties::hasProperty(const std::string& name) {
 	lua_getfield(mState, -1, name.c_str());
-	bool exists = not lua_isnoneornil(mState, -1);
+	bool exists = !lua_isnoneornil(mState, -1);
 	lua_pop(mState, 1);
 	return exists;
 }
@@ -108,7 +108,7 @@ int LuaProperties::getInteger(const std::string& name) {
 	int property = -1;
 	lua_getfield(mState, -1, name.c_str());
 	if (lua_isnumber(mState, -1)) {
-		property = lua_tointeger(mState, -1);
+		property = static_cast<int>(lua_tointeger(mState, -1));
 	}
 	lua_pop(mState, 1);
 	return property;
@@ -120,7 +120,7 @@ std::vector<int> LuaProperties::getIntegerArray(const std::string& name) {
 		lua_pushnil(mState);
 		while (lua_next(mState, -2)) {
 			if (lua_isnumber(mState, -1)) {
-				property.push_back(lua_tointeger(mState, -1));
+				property.push_back(static_cast<int>(lua_tointeger(mState, -1)));
 				lua_pop(mState, 1);
 			} else {
 				Log::error << "Encountered a non-number while parsing numeric array '"
@@ -166,7 +166,7 @@ float LuaProperties::getFloat(const std::string& name) {
 	float property = 0.0f;
 	lua_getfield(mState, -1, name.c_str());
 	if (lua_isnumber(mState, -1)) {
-		property = lua_tonumber(mState, -1);
+		property = static_cast<float>(lua_tonumber(mState, -1));
 	}
 	lua_pop(mState, 1);
 	return property;
@@ -178,7 +178,7 @@ std::vector<float> LuaProperties::getFloatArray(const std::string& name) {
 		lua_pushnil(mState);
 		while (lua_next(mState, -2)) {
 			if (lua_isnumber(mState, -1)) {
-				property.push_back(lua_tonumber(mState, -1));
+				property.push_back(static_cast<float>(lua_tonumber(mState, -1)));
 			} else {
 				Log::error << "Encountered a non-number while parsing numeric array '"
 						   << name << "'!\n";

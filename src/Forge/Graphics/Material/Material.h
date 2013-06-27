@@ -46,8 +46,8 @@ private:
 	TechniquePtr mTechnique;
 	std::string mMaterialFile;
 
-	friend class MaterialHandler;
-	friend class std::hash<Material>;
+	friend struct MaterialHandler;
+	friend struct std::hash<Material>;
 	friend bool operator ==(const Material&, const Material&);
 };
 

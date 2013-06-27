@@ -20,11 +20,11 @@
 
 #pragma once
 
-class lua_State;
+struct lua_State;
 
 namespace Forge {
 
-class Configuration;
+struct Configuration;
 
 struct ConfigHandler {
 protected:

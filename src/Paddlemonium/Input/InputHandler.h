@@ -50,8 +50,13 @@ enum GameAction
 	ToggleDebug
 };
 
+#ifdef _MSC_VER
+template <class ActionType>
+class KeyMap : public std::map<Qt::Key, ActionType> { };
+#else
 template <class ActionType>
 using KeyMap = std::map<Qt::Key, ActionType>;
+#endif
 
 class InputHandler : public Forge::QtInputHandler
 {

@@ -27,6 +27,7 @@ namespace Forge {
 // A struct that contains a single transformation (translation, scaling and rotation)
 // from one space to another.
 struct Transformation {
+    Transformation();
 	Transformation& translate(float x, float y, float z);
 	Transformation& setPosition(float x, float y, float z);
 	Transformation& scale(float size); // Only allow uniform scaling
@@ -36,7 +37,7 @@ struct Transformation {
 	glm::mat4 getMatrix() const;
 private:
 	glm::mat4 mMatrix;
-	float mScale = 1.0f;
+    float mScale;
 };
 
 }

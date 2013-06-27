@@ -22,7 +22,7 @@
 
 #include "Util/Singleton.hpp"
 
-#include <iosfwd>
+#include <string>
 
 namespace Forge {
 

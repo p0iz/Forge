@@ -31,7 +31,9 @@ std::string LogStreamHandler::timestamp()
 {
 	const time_t currentTime = time(nullptr);
 	char timeStampData[23];
-	strftime(timeStampData, 23, "[%d.%m.%Y %H:%M:%S] ", localtime(&currentTime));
+	struct tm time;
+	localtime_s(&time, &currentTime);
+	strftime(timeStampData, 23, "[%d.%m.%Y %H:%M:%S] ", &time);
 	std::string timeStampString;
 	timeStampString.assign(timeStampData);
 	return timeStampString;

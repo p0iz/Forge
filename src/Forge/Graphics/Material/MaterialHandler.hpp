@@ -22,7 +22,7 @@
 
 #include "Technique/Technique.h"
 
-class lua_State;
+struct lua_State;
 
 namespace Forge {
 

@@ -36,8 +36,8 @@ bool ConfigHandler::handleLoadedLua(lua_State* state) const
 	lua_getglobal(state, "width");
 	lua_getglobal(state, "height");
 	if (lua_isnumber(state, -2) && lua_isnumber(state, -1)) {
-		config.display.width = lua_tonumber(state, -2);
-		config.display.height = lua_tonumber(state, -1);
+		config.display.width = static_cast<int>(lua_tonumber(state, -2));
+		config.display.height = static_cast<int>(lua_tonumber(state, -1));
 		loaded = true;
 	} else {
 		Log::error << "Config error: display parameters should be numbers!\n";

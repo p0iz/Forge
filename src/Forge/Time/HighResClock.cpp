@@ -31,7 +31,7 @@ HighResClock::HighResClock(double scale)
 
 const float HighResClock::getGameDelta() const
 {
-	const float delta = mScaleFactor * mRealTimeDelta;
+	const float delta = static_cast<float>(mScaleFactor * mRealTimeDelta);
 	return delta;
 }
 
@@ -49,7 +49,7 @@ void HighResClock::init()
 void HighResClock::updateDeltaTime()
 {
 	double now = getCurrentTime();
-	mRealTimeDelta = now - mLastUpdateTime;
+	mRealTimeDelta = static_cast<float>(now - mLastUpdateTime);
 	mLastUpdateTime = now;
 }
 
@@ -63,7 +63,7 @@ const double HighResClock::getCurrentTime()
 
 const float HighResClock::getElapsedRealTime() const
 {
-	return mLastUpdateTime - mInitTime;
+	return static_cast<float>(mLastUpdateTime - mInitTime);
 }
 
 const double HighResClock::setTimeScale(double newFactor)

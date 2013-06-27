@@ -44,15 +44,15 @@ Camera::~Camera()
 
 void Camera::setPerspectiveProjection(int width, int height)
 {
-	mWidth = width;
-	mHeight = height;
-	mProjectionMatrix = glm::perspective(mFovY, static_cast<float>(width) / height, mNearClip, mFarClip);
+	mWidth = static_cast<float>(width);
+	mHeight = static_cast<float>(height);
+	mProjectionMatrix = glm::perspective(mFovY, mWidth / mHeight, mNearClip, mFarClip);
 }
 
 void Camera::setOrthogonalProjection(int width, int height)
 {
-	mWidth = width;
-	mHeight = height;
+	mWidth = static_cast<float>(width);
+	mHeight = static_cast<float>(height);
 	mProjectionMatrix = glm::mat4x4(1.0f);
 	mProjectionMatrix[0][0] = 2.0f / width;
 	mProjectionMatrix[1][1] = 2.0f / height;

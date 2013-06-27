@@ -23,7 +23,7 @@
 namespace Forge {
 
 PropertyValue::PropertyValue(float value) { mValue.fval = value; }
-PropertyValue::PropertyValue(double value) { mValue.fval = value; } // Loss of precision
+PropertyValue::PropertyValue(double value) { mValue.fval = static_cast<float>(value); } // Loss of precision
 PropertyValue::PropertyValue(int value) { mValue.ival = value; }
 PropertyValue::PropertyValue(unsigned int value) { mValue.uval = value; }
 
