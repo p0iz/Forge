@@ -24,12 +24,13 @@
 
 // Forge includes
 #include "Graphics/Light/Light.hpp"
-#include "Graphics/QtRenderer.hpp"
 #include "Graphics/Scene/SceneConfig.hpp"
 #include "Graphics/Material/Material.h"
 #include "Graphics/Material/Technique/TechniqueLibrary.h"
 #include "State/GameState.h"
 #include "Time/HighResClock.h"
+
+#include "Qt/Graphics/QtRenderer.hpp"
 
 #include <memory>
 

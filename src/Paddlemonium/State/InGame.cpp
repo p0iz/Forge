@@ -21,12 +21,13 @@
 #include "State/InGame.h"
 #include "State/GameStateLibrary.hpp"
 
-#include "Input/QtInputHandler.h"
 #include "Graphics/Loaders/MeshLoader.h"
 #include "Graphics/Material/Technique/InternalTechniques.hpp"
-#include "Graphics/QtRenderer.hpp"
 #include "Time/HighResClock.h"
 #include "Util/Log.h"
+
+#include "Qt/Graphics/QtRenderer.hpp"
+#include "Qt/Input/QtInputHandler.h"
 
 #include <sstream>
 

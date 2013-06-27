@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Input/QtInputHandler.h"
+#include "Qt/Input/QtInputHandler.h"
 
 #include <QInputEvent>
 #include <QPoint>

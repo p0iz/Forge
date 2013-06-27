@@ -22,13 +22,14 @@
 
 #include "Graphics/DebugAxis.h"
 #include "Graphics/OrbitalCamera.h"
-#include "Graphics/QtRenderer.hpp"
 #include "Graphics/Scene/Transformation.hpp"
 
 #include "Time/HighResClock.h"
 
 #include "Util/Log.h"
 #include "Util/Exceptions.hpp"
+
+#include "Qt/Graphics/QtRenderer.hpp"
 
 #include <QKeyEvent>
 #include <QMouseEvent>
