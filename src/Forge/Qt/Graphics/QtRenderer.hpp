@@ -26,7 +26,6 @@
 #include "Graphics/ResizeEvent.h"
 #include "Graphics/Scene/SceneConfig.hpp"
 
-#include <GL/glew.h>
 #include <QGLWidget>
 
 namespace Forge
@@ -46,7 +45,7 @@ public:
 	void render(const SceneConfig& scene);
 	void toggleFullscreen();
 signals:
-	void glewInitialized();
+	void glInitialized();
 protected:
 	virtual void initializeGL();
 	virtual void resizeGL(int w, int h);

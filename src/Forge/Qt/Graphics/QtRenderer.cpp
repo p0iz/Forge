@@ -61,7 +61,7 @@ void QtRenderer::initializeGL()
 {
 	mRenderer.initialize();
 	// Inform OpenGL users that the functions are available
-	glewInitialized();
+	glInitialized();
 }
 
 void QtRenderer::resizeGL(int w, int h)

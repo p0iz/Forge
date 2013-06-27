@@ -52,7 +52,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
 {
 	initializeForge();
 	initializeUi();
-	QObject::connect(mRenderer.get(), &Forge::QtRenderer::glewInitialized,
+	QObject::connect(mRenderer.get(), &Forge::QtRenderer::glInitialized,
 					 mEditorState.get(), &Forge::QtGameState::createState);
 }
 
