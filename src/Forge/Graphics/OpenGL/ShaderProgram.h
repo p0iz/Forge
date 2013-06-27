@@ -33,11 +33,38 @@ public:
 	~ShaderProgram();
 
 	void create();
-	const int link();
+    bool link();
 
 	const unsigned int getAttribLocation(const char* attribName) const;
 	const unsigned int getUniformLocation(const char* uniformName) const;
 	const unsigned int getId();
+
+	void setUniform(const unsigned int location,
+					const unsigned int count,
+					const unsigned int elements,
+					const float* data);
+
+	void setUniform(const unsigned int location,
+					const unsigned int count,
+					const unsigned int elements,
+					const int* data);
+
+	void setUniform(const unsigned int location,
+					const unsigned int count,
+					const unsigned int elements,
+					const unsigned int* data);
+
+	void setUniformMatrix3fv(const unsigned int location,
+							 const unsigned int count,
+							 const bool normalized,
+							 const float* data);
+
+	void setUniformMatrix4fv(const unsigned int location,
+							 const unsigned int count,
+							 const bool normalized,
+							 const float* data);
+
+	void bindUniform(const char* uniformName, unsigned int bindingPoint);
 
 	const std::string getProgramInfoLog() const;
 

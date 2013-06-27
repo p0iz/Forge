@@ -14,40 +14,52 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2012 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Technique.h"
-
-#include "../../OpenGL/Shader.h"
-#include "../../OpenGL/ShaderProgram.h"
-
 namespace Forge {
 
-/* This renders anything thrown at it with a single color */
-class UnshadedColor : public Technique
+class Blending
 {
 public:
-	UnshadedColor();
-	virtual Technique* clone();
-	virtual void create();
-	virtual void destroy();
-	virtual void updateProperties(LuaProperties&);
-	virtual void beginMaterial();
-	virtual void setTransforms(const glm::mat4& world,
-						  const glm::mat4& view,
-						  const glm::mat4& projection);
-private:
-	Shader vertexShader;
-	Shader fragmentShader;
-	ShaderProgram shaderProgram;
+	enum class Factor {
+		ZERO,
+		ONE,
+		SRC_COLOR,
+		ONE_MINUS_SRC_COLOR,
+		DST_COLOR,
+		ONE_MINUS_DST_COLOR,
+		SRC_ALPHA,
+		ONE_MINUS_SRC_ALPHA,
+		DST_ALPHA,
+		ONE_MINUS_DST_ALPHA,
+		CONSTANT_COLOR,
+		ONE_MINUS_CONSTANT_COLOR,
+		CONSTANT_ALPHA,
+		ONE_MINUS_CONSTANT_ALPHA
+	};
 
-	// Uniform location
-	unsigned int wvpLocation;
-	unsigned int colorLocation;
+	enum class Equation {
+		ADD,
+		SUBTRACT,
+		REVERSE_SUBTRACT,
+		MIN,
+		MAX
+	};
+
+	static void enable();
+	static void disable();
+
+	static void setEquation(Equation equation);
+	static void setFunction(Factor source, Factor destination);
+	static void setColor(float r, float g, float b, float a);
+private:
+	static int getGLFactor(Factor factor);
+	static int getGLEquation(Equation equation);
 };
 
 }
+

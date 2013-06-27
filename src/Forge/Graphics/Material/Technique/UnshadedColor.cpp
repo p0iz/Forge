@@ -33,16 +33,16 @@ Technique* UnshadedColor::clone() {
 }
 
 void UnshadedColor::create() {
-	vertexShader.create(GL_VERTEX_SHADER);
+	vertexShader.create(Shader::Type::VERTEX_SHADER);
 	vertexShader.loadCode("data/shaders/UnshadedColor.vs");
 	vertexShader.compile();
-	fragmentShader.create(GL_FRAGMENT_SHADER);
+	fragmentShader.create(Shader::Type::FRAGMENT_SHADER);
 	fragmentShader.loadCode("data/shaders/UnshadedColor.fs");
 	fragmentShader.compile();
 	shaderProgram.create();
 	shaderProgram.setVertexShader(vertexShader.getId());
 	shaderProgram.setFragmentShader(fragmentShader.getId());
-	if (shaderProgram.link() != GL_TRUE)
+	if (!shaderProgram.link())
 	{
 		Log::error << shaderProgram.getProgramInfoLog();
 	}
@@ -64,9 +64,10 @@ void UnshadedColor::setTransforms(const glm::mat4& world,
 							 const glm::mat4& view,
 							 const glm::mat4& projection) {
 	const glm::mat4x4 wvp = projection * view * world;
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(wvp)[0][0]);
+	shaderProgram.setUniformMatrix4fv(wvpLocation, 1, false, &(wvp)[0][0]);
 	if (hasDynamicProperty("Color")) {
-		glUniform3fv(colorLocation, 1, getDynamicProperty("Color"));
+		const float* data = getDynamicProperty("Color");
+		shaderProgram.setUniform(colorLocation, 1, 3, data);
 	}
 }
 

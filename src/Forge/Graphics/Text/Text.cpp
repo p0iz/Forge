@@ -20,25 +20,30 @@
 
 #include "Text.hpp"
 
+#include "Graphics/OpenGL/PixelStore.hpp"
+#include "Graphics/OpenGL/DepthTest.hpp"
+#include "Graphics/OpenGL/Blending.hpp"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <cassert>
 #include <iostream>
 
+#include <GL/glew.h>
+
 void Forge::Text::createShaders()
 {
-	vertexShader.create(GL_VERTEX_SHADER);
+	vertexShader.create(Shader::Type::VERTEX_SHADER);
 	vertexShader.loadCode("data/shaders/TextShader.vert");
-	fragmentShader.create(GL_FRAGMENT_SHADER);
+	fragmentShader.create(Shader::Type::FRAGMENT_SHADER);
 	fragmentShader.loadCode("data/shaders/TextShader.frag");
 	assert(vertexShader.compile() && fragmentShader.compile());
 	textProgram.create();
 	textProgram.setVertexShader(vertexShader.getId());
 	textProgram.setFragmentShader(fragmentShader.getId());
-	if (textProgram.link() != GL_TRUE)
+	if (textProgram.link() == false)
 	{
 		std::cout << textProgram.getProgramInfoLog();
 	}
@@ -50,24 +55,43 @@ void Forge::Text::createShaders()
 
 void Forge::Text::createTexture()
 {
-	glGenTextures(1, &glyphTextureId);
-	glBindTexture(GL_TEXTURE_2D, glyphTextureId);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glyphTexture.create(Texture::Target::TEXTURE_2D);
+
+	glyphTexture.bind();
+	glyphTexture.setWrapping(Texture::Wrap::CLAMP_EDGE, Texture::Wrap::CLAMP_EDGE);
+	glyphTexture.setFiltering(Texture::Filter::LINEAR, Texture::Filter::LINEAR);
+	glyphTexture.release();
+
 	textProgram.use();
-	glUniform1i(glyphTextureUniform, 0);
+	int glyphTextureSampler = 0;
+	textProgram.setUniform(glyphTextureUniform, 1, 1, &glyphTextureSampler);
 	textProgram.release();
 }
 
 void Forge::Text::createBuffer()
 {
-	glGenVertexArrays(1, &glyphVertexArray);
-	glBindVertexArray(glyphVertexArray);
-	glGenBuffers(1, &glyphVertexBuffer);
-	glBindVertexArray(0);
+	glyphVertexArray.create();
+	glyphVertexBuffer.create(Buffer::Target::VERTEX_BUFFER);
+	glyphVertexArray.bind();
+	glyphVertexBuffer.bind();
+
+	glyphVertexArray.setAttribute(0,
+								  2,
+								  VertexArray::ElementType::FLOAT,
+								  false,
+								  sizeof(glm::vec2)*2,
+								  0);
+	glyphVertexArray.enableAttribute(0);
+
+	glyphVertexArray.setAttribute(1,
+								  2,
+								  VertexArray::ElementType::FLOAT,
+								  false,
+								  sizeof(glm::vec2)*2,
+								  (void*)sizeof(glm::vec2));
+	glyphVertexArray.enableAttribute(1);
+
+	glyphVertexArray.release();
 }
 
 Forge::Text::~Text()
@@ -109,22 +133,22 @@ void Forge::Text::setPosition(float x, float y)
 
 void Forge::Text::draw()
 {
-	glBindVertexArray(glyphVertexArray);
-	glBindBuffer(GL_ARRAY_BUFFER, glyphVertexBuffer);
+	glyphVertexArray.bind();
 
 	textProgram.use();
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, glyphTextureId);
+	Texture::setActiveUnit(Texture::Unit::TEXTURE0);
+	glyphTexture.bind();
 
 	float posX = mPosition.x;
 	float posY = mPosition.y;
 
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	DepthTest::disable();
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	Blending::enable();
+	Blending::setFunction(Blending::Factor::SRC_ALPHA, Blending::Factor::ONE_MINUS_SRC_ALPHA);
+
+	PixelStore::setUnpackAlignment(1);
 
 	for (char c : mText)
 	{
@@ -160,12 +184,7 @@ void Forge::Text::draw()
 			glm::vec2(1, 0)
 		};
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertCoords), vertCoords, GL_DYNAMIC_DRAW);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2)*2, 0);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2)*2, (void*)sizeof(glm::vec2));
+		glyphVertexBuffer.setData(sizeof(vertCoords), vertCoords, Buffer::Usage::DYNAMIC_DRAW);
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -173,13 +192,15 @@ void Forge::Text::draw()
 		posY += (glyph->advance.y >> 6) * mScale.y;
 	}
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	PixelStore::setUnpackAlignment(4);
 
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	Blending::disable();
+
+	DepthTest::enable();
+
+	glyphTexture.release();
 	textProgram.release();
-	glBindVertexArray(0);
+	glyphVertexArray.release();
 }
 
 unsigned int Forge::Text::pow2(unsigned int n)
@@ -211,6 +232,7 @@ void Forge::Text::setText(const char* text)
 void Forge::Text::setColor(float r, float g, float b, float a)
 {
 	textProgram.use();
-	glUniform4f(colorUniform, r, g, b, a);
+	float color[] = { r, g, b, a };
+	textProgram.setUniform(colorUniform, 1, 4, color);
 	textProgram.release();
 }

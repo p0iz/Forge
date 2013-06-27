@@ -14,40 +14,49 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2012 Tommi Martela
  *
  */
 
-#pragma once
+#ifndef SHADER_H
+#define SHADER_H
 
-#include "Technique.h"
-
-#include "../../OpenGL/Shader.h"
-#include "../../OpenGL/ShaderProgram.h"
+#include <string>
 
 namespace Forge {
 
-/* This renders anything thrown at it with a single color */
-class UnshadedColor : public Technique
+class Shader
 {
 public:
-	UnshadedColor();
-	virtual Technique* clone();
-	virtual void create();
-	virtual void destroy();
-	virtual void updateProperties(LuaProperties&);
-	virtual void beginMaterial();
-	virtual void setTransforms(const glm::mat4& world,
-						  const glm::mat4& view,
-						  const glm::mat4& projection);
-private:
-	Shader vertexShader;
-	Shader fragmentShader;
-	ShaderProgram shaderProgram;
+	enum class Type {
+        VERTEX_SHADER,
+        FRAGMENT_SHADER,
+        GEOMETRY_SHADER,
+        TESSELLATION_CONTROL,
+        TESSELLATION_EVALUATION
+    };
 
-	// Uniform location
-	unsigned int wvpLocation;
-	unsigned int colorLocation;
+	Shader();
+	~Shader();
+
+	void create(Shader::Type type);
+	void loadCode(const std::string& file);
+    const int compile();
+
+    unsigned int getId()
+	{
+		return mId;
+	}
+
+	std::string getInfoLog() const;
+
+private:
+	void printInfoLog() const;
+
+    unsigned int mId;
+    int mType;
 };
 
-}
+} // namespace Forge
+
+#endif // SHADER_H

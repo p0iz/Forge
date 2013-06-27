@@ -23,11 +23,10 @@
 
 #include "Vertex.h"
 
-#include "Shader/ShaderProgram.h"
-#include "Scene/Attachable.hpp"
+#include "OpenGL/Buffer.hpp"
+#include "OpenGL/VertexArray.hpp"
 
-#include <GL/glew.h>
-#include <glm/gtc/matrix_transform.hpp>
+#include "Scene/Attachable.hpp"
 
 #include <iostream>
 #include <memory>
@@ -39,14 +38,14 @@ namespace Forge {
 class Mesh : public Attachable
 {
 public:
-	Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);
+	Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& elements);
 	~Mesh();
 	void draw();
 private:
-	unsigned int mNumberOfVertices;
-	GLuint mVertexArrayId;
-	GLuint mVertexBufferId;
-	GLuint mElementBufferId;
+	const int mNumberOfVertices;
+	VertexArray mVertexArray;
+	Buffer mVertexBuffer;
+	Buffer mElementBuffer;
 
 	void calculateBounds(const std::vector<Vertex>& vertices);
 

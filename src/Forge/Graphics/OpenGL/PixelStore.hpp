@@ -14,40 +14,20 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2012 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Technique.h"
-
-#include "../../OpenGL/Shader.h"
-#include "../../OpenGL/ShaderProgram.h"
-
 namespace Forge {
 
-/* This renders anything thrown at it with a single color */
-class UnshadedColor : public Technique
+class PixelStore
 {
 public:
-	UnshadedColor();
-	virtual Technique* clone();
-	virtual void create();
-	virtual void destroy();
-	virtual void updateProperties(LuaProperties&);
-	virtual void beginMaterial();
-	virtual void setTransforms(const glm::mat4& world,
-						  const glm::mat4& view,
-						  const glm::mat4& projection);
-private:
-	Shader vertexShader;
-	Shader fragmentShader;
-	ShaderProgram shaderProgram;
+	static void setUnpackAlignment(int bytes);
+	static void setPackAlignment(int bytes);
 
-	// Uniform location
-	unsigned int wvpLocation;
-	unsigned int colorLocation;
 };
 
 }

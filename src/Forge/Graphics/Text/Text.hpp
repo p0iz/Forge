@@ -20,8 +20,11 @@
 
 #pragma once
 
-#include "Graphics/Shader/Shader.h"
-#include "Graphics/Shader/ShaderProgram.h"
+#include "Graphics/OpenGL/Shader.h"
+#include "Graphics/OpenGL/ShaderProgram.h"
+#include "Graphics/OpenGL/Buffer.hpp"
+#include "Graphics/OpenGL/VertexArray.hpp"
+#include "Graphics/OpenGL/Texture.hpp"
 
 #include <glm/glm.hpp>
 #include <string>
@@ -66,12 +69,12 @@ private:
 
 	std::string mText;
 
-	unsigned int glyphTextureId;
+	Texture glyphTexture;
 	unsigned int glyphTextureUniform;
 	unsigned int colorUniform;
 
-	unsigned int glyphVertexArray;
-	unsigned int glyphVertexBuffer;
+	VertexArray glyphVertexArray;
+	Buffer glyphVertexBuffer;
 
 	FT_LibraryRec_* mFontLibrary;
 	FT_FaceRec_* face;

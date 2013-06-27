@@ -14,40 +14,50 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2012 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Technique.h"
-
-#include "../../OpenGL/Shader.h"
-#include "../../OpenGL/ShaderProgram.h"
+#include <unordered_map>
 
 namespace Forge {
 
-/* This renders anything thrown at it with a single color */
-class UnshadedColor : public Technique
-{
+class VertexArray {
 public:
-	UnshadedColor();
-	virtual Technique* clone();
-	virtual void create();
-	virtual void destroy();
-	virtual void updateProperties(LuaProperties&);
-	virtual void beginMaterial();
-	virtual void setTransforms(const glm::mat4& world,
-						  const glm::mat4& view,
-						  const glm::mat4& projection);
-private:
-	Shader vertexShader;
-	Shader fragmentShader;
-	ShaderProgram shaderProgram;
+	enum class ElementType {
+		BYTE,
+		SHORT,
+		INT,
+		FLOAT,
+		DOUBLE,
+		UNSIGNED_BYTE,
+		UNSIGNED_SHORT,
+		UNSIGNED_INT
+	};
 
-	// Uniform location
-	unsigned int wvpLocation;
-	unsigned int colorLocation;
+	VertexArray();
+
+	void create();
+	void destroy();
+	void bind();
+
+	void setAttribute(const unsigned int location,
+					  const unsigned int elements,
+					  const ElementType type,
+					  const bool normalized,
+					  const unsigned int stride,
+					  const void* offset);
+
+	void enableAttribute(unsigned int location);
+	void disableAttribute(unsigned int location);
+
+	static void release();
+private:
+	unsigned int mName;
+
+	static int getGLType(ElementType);
 };
 
 }

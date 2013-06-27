@@ -20,9 +20,10 @@
 
 #pragma once
 
+#include "Graphics/OpenGL/Buffer.hpp"
+
 #include "Graphics/Scene/Attachable.hpp"
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
 
 namespace Forge {
@@ -48,11 +49,15 @@ struct Light {
 		Data() :
 			viewSpacePosition(0.0f),
 			color(0.0f),
-			attenuation({ 0.1f, 0.1f, 0.00025f }),
 			exponent(0.0f),
 			direction(0.0f),
 			cutoff(0.0f),
-			falloff(0.0f) { }
+			falloff(0.0f)
+		{
+			attenuation.constant = 0.1f;
+			attenuation.linear = 0.1f;
+			attenuation.quadratic = 0.00025f;
+		}
 
 		glm::vec4 viewSpacePosition;
 		glm::vec4 color; // alpha component describes light intensity
@@ -73,28 +78,25 @@ struct Light {
 	};
 
 	static void createBuffer() {
-		glGenBuffers(1, &mLightUniformBuffer);
-		glBindBuffer(GL_UNIFORM_BUFFER, mLightUniformBuffer);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(Light::Data), nullptr, GL_DYNAMIC_DRAW);
-		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BINDING_POINT, mLightUniformBuffer);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		mLightUniformBuffer.create(Buffer::Target::UNIFORM_BUFFER);
+		mLightUniformBuffer.setData(sizeof(Light::Data), nullptr, Buffer::Usage::DYNAMIC_DRAW);
+		mLightUniformBuffer.setBindingPoint(UNIFORM_BINDING_POINT);
+		mLightUniformBuffer.release();
 	}
 
 	static void destroyBuffer() {
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		glDeleteBuffers(1, &mLightUniformBuffer);
+		mLightUniformBuffer.destroy();
 	}
 
 	static void updateBuffer(size_t lightIndex) {
-		glBindBuffer(GL_UNIFORM_BUFFER, mLightUniformBuffer);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light::Data), &Light::data[lightIndex]);
+		mLightUniformBuffer.setSubData(0, sizeof(Light::Data), &Light::data[lightIndex]);
 	}
 
 	static const int UNIFORM_BINDING_POINT = 1;
 	static const int MAX_LIGHTS = 8;
 	static Data data[MAX_LIGHTS];
 private:
-	static unsigned int mLightUniformBuffer;
+	static Buffer mLightUniformBuffer;
 };
 
 }

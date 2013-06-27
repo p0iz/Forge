@@ -22,9 +22,9 @@
 
 #include "Technique.h"
 
-#include "../../Light/Light.hpp"
-#include "../../Shader/Shader.h"
-#include "../../Shader/ShaderProgram.h"
+#include "Graphics/OpenGL/Shader.h"
+#include "Graphics/OpenGL/ShaderProgram.h"
+#include "Graphics/OpenGL/Texture.hpp"
 
 #include <glm/glm.hpp>
 
@@ -87,9 +87,6 @@ private:
 
 	unsigned int addTexture(const std::string& textureFile);
 	void freeTextures();
-
-	// Lighting
-	unsigned int lightsUniformIndex;
 
 	// Uniform locations
 	int wvpLocation; // World->View->Projection

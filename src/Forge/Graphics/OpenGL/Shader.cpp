@@ -20,6 +20,8 @@
 
 #include "Shader.h"
 
+#include <GL/glew.h>
+
 #include <cassert>
 #include <fstream>
 #include <sstream>
@@ -39,14 +41,28 @@ Shader::~Shader()
 	}
 }
 
-void Shader::create(GLint type)
+void Shader::create(Type type)
 {
 	if (mId)
 	{
 		glDeleteShader(mId);
 	}
-	mType = type;
-	mId = glCreateShader(type);
+
+    switch (type)
+    {
+	case Type::VERTEX_SHADER:
+		mType = GL_VERTEX_SHADER;
+        mId = glCreateShader(GL_VERTEX_SHADER);
+        break;
+	case Type::FRAGMENT_SHADER:
+		mType = GL_FRAGMENT_SHADER;
+        mId = glCreateShader(GL_FRAGMENT_SHADER);
+        break;
+	case Type::GEOMETRY_SHADER:
+		mType = GL_GEOMETRY_SHADER;
+        mId = glCreateShader(GL_GEOMETRY_SHADER);
+        break;
+    }
 }
 
 const GLint Shader::compile()
@@ -80,15 +96,18 @@ void Shader::printInfoLog() const
 	const char* shaderType = nullptr;
 	switch (mType)
 	{
-	case GL_FRAGMENT_SHADER:
+	case Type::FRAGMENT_SHADER:
 		shaderType = "fragment";
 		break;
-	case GL_VERTEX_SHADER:
+	case Type::VERTEX_SHADER:
 		shaderType = "vertex";
 		break;
-	case GL_GEOMETRY_SHADER:
+	case Type::GEOMETRY_SHADER:
 		shaderType = "geometry";
 		break;
+    default:
+        shaderType = "unsupported";
+        break;
 	}
 
 	printf("Error while compiling %s shader: %s\n",
@@ -105,7 +124,7 @@ void Shader::loadCode(const std::string& file)
 		shaderBuffer << shaderFile.rdbuf();
 		std::string shaderCode(shaderBuffer.str());
 		const char* code = shaderCode.c_str();
-		int codeLength = shaderCode.length();
+		int codeLength = static_cast<int>(shaderCode.length());
 		glShaderSource(mId, 1, &code, &codeLength);
 	}
 }

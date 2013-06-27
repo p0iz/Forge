@@ -14,40 +14,49 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2012 Tommi Martela
  *
  */
 
-#pragma once
+#include "DepthTest.hpp"
 
-#include "Technique.h"
-
-#include "../../OpenGL/Shader.h"
-#include "../../OpenGL/ShaderProgram.h"
+#include <GL/glew.h>
 
 namespace Forge {
 
-/* This renders anything thrown at it with a single color */
-class UnshadedColor : public Technique
+void DepthTest::enable()
 {
-public:
-	UnshadedColor();
-	virtual Technique* clone();
-	virtual void create();
-	virtual void destroy();
-	virtual void updateProperties(LuaProperties&);
-	virtual void beginMaterial();
-	virtual void setTransforms(const glm::mat4& world,
-						  const glm::mat4& view,
-						  const glm::mat4& projection);
-private:
-	Shader vertexShader;
-	Shader fragmentShader;
-	ShaderProgram shaderProgram;
+	glEnable(GL_DEPTH_TEST);
+}
 
-	// Uniform location
-	unsigned int wvpLocation;
-	unsigned int colorLocation;
-};
+void DepthTest::disable()
+{
+	glDisable(GL_DEPTH_TEST);
+}
+
+int DepthTest::getGLFunc(Function func)
+{
+	switch(func)
+	{
+	case Function::NEVER:
+		return GL_NEVER;
+	case Function::LESS:
+		return GL_LESS;
+	case Function::LEQUAL:
+		return GL_LEQUAL;
+	case Function::EQUAL:
+		return GL_EQUAL;
+	case Function::GEQUAL:
+		return GL_GEQUAL;
+	case Function::GREATER:
+		return GL_GREATER;
+	case Function::NOT_EQUAL:
+		return GL_NOTEQUAL;
+	case Function::ALWAYS:
+		return GL_ALWAYS;
+	default:
+		return -1;
+	}
+}
 
 }

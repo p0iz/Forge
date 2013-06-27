@@ -23,6 +23,9 @@
 
 #include "Util/Log.h"
 
+#include <GL/glew.h>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <cassert>
 #include <vector>
 #include <iostream>
@@ -34,82 +37,93 @@ namespace Forge {
 
 Mesh::Mesh(
 		const std::vector<Vertex>& vertices,
-		const std::vector<GLuint>& elements)
-	: mNumberOfVertices(elements.size()),
-	  mVertexArrayId(0),
-	  mVertexBufferId(0)
+		const std::vector<unsigned int>& elements)
+	: mNumberOfVertices(static_cast<int>(elements.size()))
 {
 	const size_t vertexSize = sizeof(Vertex);
 
 	// Generate vertex array and buffers
-	glGenVertexArrays(1, &mVertexArrayId);
-	glGenBuffers(1, &mVertexBufferId);
+	mVertexArray.create();
+	mVertexBuffer.create(Buffer::Target::VERTEX_BUFFER);
 
-	glBindVertexArray(mVertexArrayId);
+	mVertexArray.bind();
 
-	glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
-	glBufferData(GL_ARRAY_BUFFER, vertexSize*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+	mVertexBuffer.bind();
+	mVertexBuffer.setData(vertexSize*vertices.size(), &vertices[0], Buffer::Usage::STATIC_DRAW);
 
 	// Positional attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexSize, 0);
-	glEnableVertexAttribArray(0);
+	mVertexArray.setAttribute(0, 3, VertexArray::ElementType::FLOAT, false, vertexSize, 0);
+	mVertexArray.enableAttribute(0);
 
 	// Texture coordinate attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->texcoord));
-	glEnableVertexAttribArray(1);
+	mVertexArray.setAttribute(1,
+							  3,
+							  VertexArray::ElementType::FLOAT,
+							  false,
+							  vertexSize,
+							  (void*)offsetof(Vertex, texcoord));
+	mVertexArray.enableAttribute(1);
 
 	// Normal attribute
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->normal));
-	glEnableVertexAttribArray(2);
+	mVertexArray.setAttribute(2,
+							  3,
+							  VertexArray::ElementType::FLOAT,
+							  false,
+							  vertexSize,
+							  (void*)offsetof(Vertex, normal));
+	mVertexArray.enableAttribute(2);
 
 	// Tangent attribute
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->tangent));
-	glEnableVertexAttribArray(3);
+	mVertexArray.setAttribute(3,
+							  3,
+							  VertexArray::ElementType::FLOAT,
+							  false,
+							  vertexSize,
+							  (void*)offsetof(Vertex, tangent));
+	mVertexArray.enableAttribute(3);
 
 	// Bitangent attribute
-	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->bitangent));
-	glEnableVertexAttribArray(4);
+	mVertexArray.setAttribute(4,
+							  3,
+							  VertexArray::ElementType::FLOAT,
+							  false,
+							  vertexSize,
+							  (void*)offsetof(Vertex, bitangent));
+	mVertexArray.enableAttribute(4);
 
-	glGenBuffers(1, &mElementBufferId);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBufferId);
+	mElementBuffer.create(Buffer::Target::ELEMENT_BUFFER);
+	mElementBuffer.bind();
+	mElementBuffer.setData(sizeof(elements[0])*elements.size(),
+			&elements[0],
+			Buffer::Usage::STATIC_DRAW);
 
-	glBufferData(
-				GL_ELEMENT_ARRAY_BUFFER,
-				sizeof(elements[0])*elements.size(),
-				&elements[0],
-				GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
+	mVertexArray.release();
 
 	calculateBounds(vertices);
 }
 
 Mesh::~Mesh()
 {
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glDeleteBuffers(1, & mVertexBufferId);
-
-	// Delete index buffer object
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glDeleteBuffers(1, &mElementBufferId);
-
-	// Delete vertex array
-	glDeleteVertexArrays(1, &mVertexArrayId);
+	mVertexArray.destroy();
+	mVertexBuffer.destroy();
+	mElementBuffer.destroy();
 }
 
 void Mesh::draw()
 {
-	int currentVertexArray;
-	glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentVertexArray);
-	if (static_cast<unsigned int>(currentVertexArray) != mVertexArrayId) {
-		glBindVertexArray(mVertexArrayId);
-	}
+	mVertexArray.bind();
 	glDrawElements(GL_TRIANGLES, mNumberOfVertices, GL_UNSIGNED_INT, 0);
 }
 
 void Mesh::calculateBounds(const std::vector<Vertex>& vertices)
 {
-	mBounds = { 0, 0, 0, 0, 0, 0 };
+	mBounds.minX = 0;
+	mBounds.maxX = 0;
+	mBounds.minY = 0;
+	mBounds.maxY = 0;
+	mBounds.minZ = 0;
+	mBounds.maxZ = 0;
+
 	for (const Vertex& vertex : vertices)
 	{
 		mBounds.minX = vertex.position[0] < mBounds.minX ? vertex.position[0] : mBounds.minX;

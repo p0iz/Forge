@@ -12,4 +12,4 @@ set(TechniqueSources
 	UnshadedColor.cpp)
 
 add_library(Technique ${TechniqueSources})
-target_link_libraries(Technique Loaders)
+target_link_libraries(Technique Util Loaders ForgeOpenGL)

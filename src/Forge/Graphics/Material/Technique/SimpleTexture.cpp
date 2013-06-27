@@ -19,10 +19,13 @@
  */
 
 #include "SimpleTexture.h"
+#include "LuaProperties.hpp"
 
 #include "Graphics/Loaders/ImageLoader.h"
 #include "Graphics/Light/Light.hpp"
 #include "Util/Log.h"
+
+#include <GL/glew.h>
 
 namespace Forge {
 
@@ -40,22 +43,21 @@ Technique* SimpleTexture::clone()
 void SimpleTexture::create()
 {
 	// Craft the test cube shaders
-	vertexShader.create(GL_VERTEX_SHADER);
+	vertexShader.create(Shader::Type::VERTEX_SHADER);
 	vertexShader.loadCode("data/shaders/SimpleTexture.vs");
 	vertexShader.compile();
-	fragmentShader.create(GL_FRAGMENT_SHADER);
+	fragmentShader.create(Shader::Type::FRAGMENT_SHADER);
 	fragmentShader.loadCode("data/shaders/SimpleTexture.fs");
 	fragmentShader.compile();
 	shaderProgram.create();
 	shaderProgram.setVertexShader(vertexShader.getId());
 	shaderProgram.setFragmentShader(fragmentShader.getId());
-	if (shaderProgram.link() != GL_TRUE)
+	if (!shaderProgram.link())
 	{
 		Log::info << shaderProgram.getProgramInfoLog();
 	}
 	// Setup light uniform buffer binding
-	lightsUniformIndex = glGetUniformBlockIndex(shaderProgram.getId(), "Lights");
-	glUniformBlockBinding(shaderProgram.getId(), lightsUniformIndex, Light::UNIFORM_BINDING_POINT);
+	shaderProgram.bindUniform("Lights", Light::UNIFORM_BINDING_POINT);
 
 	// Get uniform locations
 	wvpLocation = shaderProgram.getUniformLocation("WorldViewProjectionMatrix");
@@ -79,7 +81,7 @@ void SimpleTexture::destroy()
 
 void SimpleTexture::freeTextures()
 {
-	glDeleteTextures(mLoadedTextures.size(), &mLoadedTextures[0]);
+	glDeleteTextures(static_cast<GLsizei>(mLoadedTextures.size()), &mLoadedTextures[0]);
 }
 
 unsigned int SimpleTexture::addTexture(const std::string& textureFile)
@@ -95,58 +97,65 @@ void SimpleTexture::updateProperties(LuaProperties& properties)
 {
 	shaderProgram.use();
 
+	static const int textureUnits[] =
+	{
+		0, // Diffuse
+		1, // Specular
+		2  // Normal
+	};
+
 	// Diffuse map
 	if (properties.hasProperty("diffuseMap")) {
 		mDiffuseMap = addTexture(properties.getString("diffuseMap"));
-		glUniform1i(mDiffuseMapLoc, 0);
-
+		shaderProgram.setUniform(mDiffuseMapLoc, 1, 1, &textureUnits[0]);
 	}
 
 	// Specular map
 	if (properties.hasProperty("specularMap")) {
 		mSpecularMap = addTexture(properties.getString("specularMap"));
-		glUniform1i(mSpecularMapLoc, 1);
+		shaderProgram.setUniform(mDiffuseMapLoc, 1, 1, &textureUnits[1]);
 	}
 
 	// Normal map
 	if (properties.hasProperty("normalMap")) {
 		mNormalMap = addTexture(properties.getString("normalMap"));
-		glUniform1i(mNormalMapLoc, 2);
+		shaderProgram.setUniform(mDiffuseMapLoc, 1, 1, &textureUnits[2]);
 	}
 
 	// Ambient color reflectivity
 	if (properties.hasProperty("ambient"))
 	{
-		glUniform3fv(materialAmbientLoc, 1, &properties.getFloatArray("ambient")[0]);
+		shaderProgram.setUniform(materialAmbientLoc, 1, 3, &properties.getFloatArray("ambient")[0]);
 	}
 
 	// Diffuse color reflectivity
 	if (properties.hasProperty("diffuse"))
 	{
-		glUniform3fv(materialDiffuseLoc, 1, &properties.getFloatArray("diffuse")[0]);
+		shaderProgram.setUniform(materialDiffuseLoc, 1, 3, &properties.getFloatArray("diffuse")[0]);
 	}
 
 	// Specular color reflectivity
 	if (properties.hasProperty("specular"))
 	{
-		glUniform3fv(materialSpecularLoc, 1, &properties.getFloatArray("specular")[0]);
+		shaderProgram.setUniform(materialSpecularLoc, 1, 3, &properties.getFloatArray("specular")[0]);
 	}
 
 	// Shininess
 	if (properties.hasProperty("shininess"))
 	{
-		glUniform1f(materialShininessLoc, properties.getFloat("shininess"));
+		float shininess = properties.getFloat("shininess");
+		shaderProgram.setUniform(materialShininessLoc, 1, 1, &shininess);
 	}
 }
 
 void SimpleTexture::beginMaterial()
 {
 	shaderProgram.use();
-	glActiveTexture(GL_TEXTURE0);
+	Texture::setActiveUnit(Texture::Unit::TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mDiffuseMap);
-	glActiveTexture(GL_TEXTURE1);
+	Texture::setActiveUnit(Texture::Unit::TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, mSpecularMap);
-	glActiveTexture(GL_TEXTURE2);
+	Texture::setActiveUnit(Texture::Unit::TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, mNormalMap);
 }
 

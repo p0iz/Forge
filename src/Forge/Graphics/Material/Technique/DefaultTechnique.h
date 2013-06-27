@@ -22,8 +22,8 @@
 
 #include "Technique.h"
 
-#include "../../Shader/Shader.h"
-#include "../../Shader/ShaderProgram.h"
+#include "../../OpenGL/Shader.h"
+#include "../../OpenGL/ShaderProgram.h"
 
 namespace Forge {
 

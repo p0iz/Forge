@@ -14,40 +14,52 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2012 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Technique.h"
-
-#include "../../OpenGL/Shader.h"
-#include "../../OpenGL/ShaderProgram.h"
-
 namespace Forge {
 
-/* This renders anything thrown at it with a single color */
-class UnshadedColor : public Technique
-{
+class Buffer {
 public:
-	UnshadedColor();
-	virtual Technique* clone();
-	virtual void create();
-	virtual void destroy();
-	virtual void updateProperties(LuaProperties&);
-	virtual void beginMaterial();
-	virtual void setTransforms(const glm::mat4& world,
-						  const glm::mat4& view,
-						  const glm::mat4& projection);
-private:
-	Shader vertexShader;
-	Shader fragmentShader;
-	ShaderProgram shaderProgram;
+	enum class Target {
+		UNIFORM_BUFFER,
+		ELEMENT_BUFFER,
+		VERTEX_BUFFER
+	};
 
-	// Uniform location
-	unsigned int wvpLocation;
-	unsigned int colorLocation;
+	enum class Usage {
+		DYNAMIC_COPY,
+		DYNAMIC_DRAW,
+		DYNAMIC_READ,
+		STATIC_COPY,
+		STATIC_DRAW,
+		STATIC_READ,
+		STREAM_COPY,
+		STREAM_DRAW,
+		STREAM_READ
+	};
+
+	Buffer();
+
+	void create(Target target);
+	void destroy();
+	void bind();
+
+	void setData(size_t size, const void* data, Usage usage);
+	void setSubData(unsigned int begin, unsigned int size, void* data);
+
+	void setBindingPoint(unsigned int point);
+
+	void release();
+private:
+	unsigned int mName;
+	int mTarget;
+
+	int getGLTarget(Target target);
+	int getGLUsage(Usage usage);
 };
 
 }

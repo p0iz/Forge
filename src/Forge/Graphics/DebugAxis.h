@@ -21,12 +21,11 @@
 #ifndef DEBUGDRAWABLE_H
 #define DEBUGDRAWABLE_H
 
-#include "Shader/Shader.h"
-#include "Shader/ShaderProgram.h"
+#include "OpenGL/Shader.h"
+#include "OpenGL/ShaderProgram.h"
 
 #include "Util/Singleton.hpp"
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
 
 namespace Forge {
@@ -48,15 +47,15 @@ public:
 private:
 	void initialize();
 
-	GLuint debugVertexArrayId;
-	GLuint debugBuffers[2];
-	GLuint debugUniformMVP;
+	unsigned int debugVertexArrayId;
+	unsigned int debugBuffers[2];
+	unsigned int debugUniformMVP;
 
 	Shader debugVertexShader;
 	Shader debugFragmentShader;
 	ShaderProgram debugShaderProgram;
 
-	GLint initialized;
+	int initialized;
 
 	static DebugAxis* singleton;
 	static bool showDebug;

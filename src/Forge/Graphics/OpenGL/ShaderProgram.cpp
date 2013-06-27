@@ -20,6 +20,8 @@
 
 #include "ShaderProgram.h"
 
+#include "Util/Log.h"
+
 #include <GL/glew.h>
 
 #include <vector>
@@ -50,7 +52,7 @@ void ShaderProgram::create()
 	mId = glCreateProgram();
 }
 
-const int ShaderProgram::link()
+bool ShaderProgram::link()
 {
 	if (!mId)
 		mId = glCreateProgram();
@@ -58,10 +60,73 @@ const int ShaderProgram::link()
 	glLinkProgram(mId);
 	GLint linkStatus;
 	glGetProgramiv(mId, GL_LINK_STATUS, &linkStatus);
-	return linkStatus;
+    return linkStatus == GL_TRUE;
 }
 
 
+void ShaderProgram::setUniform(const unsigned int location,
+							   const unsigned int count,
+							   const unsigned int elements,
+							   const float* data)
+{
+	switch(elements)
+	{
+	case 1:
+		glUniform1fv(location, count, data);
+	case 2:
+		glUniform2fv(location, count, data);
+	case 3:
+		glUniform3fv(location, count, data);
+	case 4:
+		glUniform4fv(location, count, data);
+	default:
+		Log::error << __FILE__" " << __LINE__ << ": Unsupported amount of elements in uniform data!\n";
+	}
+}
+
+void ShaderProgram::setUniform(const unsigned int location,
+							   const unsigned int count,
+							   const unsigned int elements,
+							   const int* data)
+{
+	switch(elements)
+	{
+	case 1:
+		glUniform1iv(location, count, data);
+	case 2:
+		glUniform2iv(location, count, data);
+	case 3:
+		glUniform3iv(location, count, data);
+	case 4:
+		glUniform4iv(location, count, data);
+	default:
+		Log::error << __FILE__" " << __LINE__ << ": Unsupported amount of elements in uniform data!\n";
+	}
+}
+
+void ShaderProgram::setUniform(const unsigned int location,
+							   const unsigned int count,
+							   const unsigned int elements,
+							   const unsigned int* data)
+{
+	switch(elements)
+	{
+	case 1:
+		glUniform1uiv(location, count, data);
+		break;
+	case 2:
+		glUniform2uiv(location, count, data);
+		break;
+	case 3:
+		glUniform3uiv(location, count, data);
+		break;
+	case 4:
+		glUniform4uiv(location, count, data);
+		break;
+	default:
+		Log::error << __FILE__" " << __LINE__ << ": Unsupported amount of elements in uniform data!\n";
+	}
+}
 
 const GLuint ShaderProgram::getAttribLocation(const char *attribName) const
 {
@@ -116,6 +181,28 @@ void ShaderProgram::use() const
 void ShaderProgram::release()
 {
 	glUseProgram(0);
+}
+
+void ShaderProgram::setUniformMatrix3fv(const unsigned int location,
+										const unsigned int count,
+										const bool transposed,
+										const float *data)
+{
+	glUniformMatrix3fv(location, count, transposed ? GL_TRUE : GL_FALSE, data);
+}
+
+void ShaderProgram::setUniformMatrix4fv(const unsigned int location,
+										const unsigned int count,
+										const bool transposed,
+										const float *data)
+{
+	glUniformMatrix4fv(location, count, transposed ? GL_TRUE : GL_FALSE, data);
+}
+
+void ShaderProgram::bindUniform(const char* uniformName, unsigned int bindingPoint)
+{
+	unsigned int uniformBlockIndex = glGetUniformBlockIndex(mId, uniformName);
+	glUniformBlockBinding(mId, uniformBlockIndex, bindingPoint);
 }
 
 } // namespace Forge

@@ -23,7 +23,7 @@
 namespace Forge {
 
 Light::Data Light::data[MAX_LIGHTS];
-unsigned int Light::mLightUniformBuffer = 0;
+Buffer Light::mLightUniformBuffer;
 
 Light::Light() : type(DISABLED), id(-1), position(0.0f) { }
 

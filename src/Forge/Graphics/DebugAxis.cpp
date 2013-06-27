@@ -18,14 +18,16 @@
  *
  */
 
+#include <GL/glew.h>
+
 #include "DebugAxis.h"
 
 #include "Light/Light.hpp"
 
 #include "Scene/SceneConfig.hpp"
 
-#include "Shader/Shader.h"
-#include "Shader/ShaderProgram.h"
+#include "OpenGL/Shader.h"
+#include "OpenGL/ShaderProgram.h"
 
 #include <glm/glm.hpp>
 #include <iostream>
@@ -67,11 +69,11 @@ void DebugAxis::initialize()
 	};
 
 	// create the debug shader program
-	debugVertexShader.create(GL_VERTEX_SHADER);
+	debugVertexShader.create(Shader::Type::VERTEX_SHADER);
 	debugVertexShader.loadCode("data/shaders/DebugShader.vert");
 	debugVertexShader.compile();
 
-	debugFragmentShader.create(GL_FRAGMENT_SHADER);
+	debugFragmentShader.create(Shader::Type::FRAGMENT_SHADER);
 	debugFragmentShader.loadCode("data/shaders/DebugShader.frag");
 	debugFragmentShader.compile();
 

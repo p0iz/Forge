@@ -42,16 +42,16 @@ Technique* DefaultTechnique::clone()
 
 void DefaultTechnique::create()
 {
-	vertexShader.create(GL_VERTEX_SHADER);
+	vertexShader.create(Shader::Type::VERTEX_SHADER);
 	vertexShader.loadCode("data/shaders/DefaultTechnique.vs");
 	vertexShader.compile();
-	fragmentShader.create(GL_FRAGMENT_SHADER);
+	fragmentShader.create(Shader::Type::FRAGMENT_SHADER);
 	fragmentShader.loadCode("data/shaders/DefaultTechnique.fs");
 	fragmentShader.compile();
 	shaderProgram.create();
 	shaderProgram.setVertexShader(vertexShader.getId());
 	shaderProgram.setFragmentShader(fragmentShader.getId());
-	if (shaderProgram.link() != GL_TRUE)
+	if (!shaderProgram.link())
 	{
 		Log::error << shaderProgram.getProgramInfoLog();
 	}
@@ -79,7 +79,7 @@ void DefaultTechnique::setTransforms(const glm::mat4& world,
 {
 	// Update
 	const glm::mat4x4 wvp = projection * view * world;
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(wvp)[0][0]);
+	shaderProgram.setUniformMatrix4fv(wvpLocation, 1, false, &(wvp)[0][0]);
 }
 
 }

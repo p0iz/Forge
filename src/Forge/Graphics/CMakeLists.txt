@@ -1,7 +1,7 @@
 # Graphics
 
-# Add Shader component to build
-add_subdirectory(Shader)
+# Add OpenGL component to build
+add_subdirectory(OpenGL)
 
 # Add Text component to build
 add_subdirectory(Text)
@@ -29,4 +29,4 @@ set(GraphicsSources
 
 add_library(Graphics ${GraphicsSources})
 
-target_link_libraries(Graphics Event Light Loaders Shader Scene Material Text)
+target_link_libraries(Graphics ForgeOpenGL Event Light Loaders Scene Material Text)

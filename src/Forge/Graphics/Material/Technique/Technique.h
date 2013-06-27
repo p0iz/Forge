@@ -22,8 +22,6 @@
 
 #include "Property.h"
 
-#include "LuaProperties.hpp"
-
 #include <glm/glm.hpp>
 #include <memory>
 #include <string>
@@ -32,11 +30,14 @@
 
 namespace Forge {
 
+struct LuaProperties;
+
 /* Technique is comprised of one or several shader passes and accompanying properties */
 class Technique
 {
 public:
 	explicit Technique(const std::string& name) : mName(name) { }
+	virtual ~Technique() { }
 
 	// Needed for technique library
 	virtual Technique* clone() = 0;

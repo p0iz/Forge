@@ -18,39 +18,19 @@
  *
  */
 
-#ifndef SHADER_H
-#define SHADER_H
+#include "PixelStore.hpp"
 
 #include <GL/glew.h>
 
-#include <string>
-
 namespace Forge {
 
-class Shader
+void PixelStore::setUnpackAlignment(int bytes)
 {
-public:
-	Shader();
-	~Shader();
+	glPixelStorei(GL_UNPACK_ALIGNMENT, bytes);
+}
 
-	void create(GLint type);
-	void loadCode(const std::string& file);
-	const GLint compile();
-
-	GLuint getId()
-	{
-		return mId;
-	}
-
-	std::string getInfoLog() const;
-
-private:
-	void printInfoLog() const;
-
-	GLuint mId;
-	GLint mType;
-};
-
-} // namespace Forge
-
-#endif // SHADER_H
+void PixelStore::setPackAlignment(int bytes)
+{
+	glPixelStorei(GL_PACK_ALIGNMENT, bytes);
+}
+}
