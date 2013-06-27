@@ -23,20 +23,24 @@
 #include "Input/InputHandler.h"
 
 #include "Graphics/OrbitalCamera.h"
-#include "Graphics/QtRenderer.hpp"
-#include "State/QtStateMachine.hpp"
 #include "Time/HighResClock.h"
+
+#include "Qt/Graphics/QtRenderer.hpp"
+#include "Qt/State/QtStateMachine.hpp"
+
+#include <QApplication>
 
 namespace Paddlemonium {
 
-class PaddleGame
+class PaddleGame : public QApplication
 {
+	Q_OBJECT
 public:
-	PaddleGame();
-	void init();
+	PaddleGame(int argc, char **argv);
 	int run();
 private:
-	void initializeData();
+	void initialize();
+	void setIcon();
 	void initializeGameStates();
 
 	Forge::HighResClock mClock;

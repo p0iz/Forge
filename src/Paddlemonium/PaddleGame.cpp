@@ -33,14 +33,13 @@
 
 namespace Paddlemonium {
 
-PaddleGame::PaddleGame()
-	: mInput(mClock, mRenderer)
+PaddleGame::PaddleGame(int argc, char** argv)
+	: QApplication(argc, argv), mInput(mClock, mRenderer)
 {
 	const Forge::Configuration& cfg = Forge::Configuration::getSingleton();
 	cfg.loadConfig("data/PaddleGame.configuration");
 	mRenderer.resize(cfg.display.width, cfg.display.height);
 	mRenderer.installEventFilter(&mInput);
-	mRenderer.show();
 }
 
 void PaddleGame::initializeGameStates()
@@ -62,28 +61,32 @@ void PaddleGame::initializeGameStates()
 	mStateMachine.init(menuState);
 }
 
-void PaddleGame::initializeData()
+void PaddleGame::setIcon()
 {
 	QIcon icon("data/images/icon128.png");
 	mRenderer.setWindowIcon(icon);
 }
 
-void PaddleGame::init()
+void PaddleGame::initialize()
 {
-	initializeData();
+	setIcon();
 	initializeGameStates();
+	mClock.init();
 }
 
 int PaddleGame::run()
 {
 	Forge::Log::info << "Built on " << __DATE__ << " at " << __TIME__ "\n";
 
+	mRenderer.show();
+
+	initialize();
+
 	int result = 0;
-	mClock.init();
 
 	mStateMachine.start();
 
-	result = QApplication::exec();
+	result = exec();
 
 	mStateMachine.stop();
 
