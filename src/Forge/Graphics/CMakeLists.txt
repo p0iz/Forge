@@ -19,14 +19,34 @@ add_subdirectory(Material)
 add_subdirectory(Scene)
 
 set(GraphicsSources
-	Camera.cpp
-	DebugAxis.cpp
-	Mesh.cpp
-	OrbitalCamera.cpp
-	Renderer.cpp
-	ResizeEvent.cpp
-	TargetCamera.cpp)
+  Camera.cpp
+  DebugAxis.cpp
+  Mesh.cpp
+  OrbitalCamera.cpp
+  Renderer.cpp
+  ResizeEvent.cpp
+  TargetCamera.cpp
+)
+
+# Find OpenGL
+find_package(OpenGL REQUIRED)
+
+# GLEW dependency
+find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_DIRECTORIES})
+
+set(GraphicsLibs
+  Event
+  Light
+  Loaders
+  Shader
+  Scene
+  Material
+  Text
+  ${GLEW_LIBRARIES}
+  ${OPENGL_LIBRARIES}
+)
 
 add_library(Graphics ${GraphicsSources})
 
-target_link_libraries(Graphics Event Light Loaders Shader Scene Material Text)
+target_link_libraries(Graphics ${GraphicsLibs})
