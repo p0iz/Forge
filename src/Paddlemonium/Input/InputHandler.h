@@ -22,11 +22,13 @@
 
 #include "Input/QtInputHandler.h"
 
+#include "Graphics/RenderWindow.hpp"
+
 #include <QInputEvent>
 #include <QPoint>
-
 #include <map>
 #include <set>
+
 
 namespace Forge {
 
@@ -41,13 +43,13 @@ namespace Paddlemonium {
 
 enum GameAction
 {
-	// Paddle
-	PaddleLeft,
-	PaddleRight,
+  // Paddle
+  PaddleLeft,
+  PaddleRight,
 
-	// Misc.
-	ToggleFullscreen,
-	ToggleDebug
+  // Misc.
+  ToggleFullscreen,
+  ToggleDebug
 };
 
 template <class ActionType>
@@ -56,31 +58,34 @@ using KeyMap = std::map<Qt::Key, ActionType>;
 class InputHandler : public Forge::QtInputHandler
 {
 public:
-	InputHandler(Forge::HighResClock& clock, Forge::QtRenderer& renderer);
-	virtual ~InputHandler();
+  InputHandler(Forge::HighResClock& clock,
+               Forge::QtRenderer& renderer,
+               Forge::Graphics::RenderWindowPtr);
+  virtual ~InputHandler();
 
-	virtual void processInput(float delta);
+  virtual void processInput(float delta);
 
-	bool isKeyDown(Qt::Key key);
+  bool isKeyDown(Qt::Key key);
 
-	void setSceneConfig(Forge::SceneConfig* scene);
+  void setSceneConfig(Forge::SceneConfig* scene);
 private:
-	virtual void keyPress(QKeyEvent* event);
-	virtual void keyRelease(QKeyEvent* event);
-	virtual void mousePress(QMouseEvent* event);
-	virtual void mouseRelease(QMouseEvent* event);
-	virtual void mouseMove(QMouseEvent* event);
+  virtual void keyPress(QKeyEvent* event);
+  virtual void keyRelease(QKeyEvent* event);
+  virtual void mousePress(QMouseEvent* event);
+  virtual void mouseRelease(QMouseEvent* event);
+  virtual void mouseMove(QMouseEvent* event);
 
-	void mapDefaultKeys();
+  void mapDefaultKeys();
 
-	Forge::HighResClock& mClock;
-	Forge::SceneConfig* mSceneConfig;
-	Forge::QtRenderer& mRenderer;
+  Forge::HighResClock& mClock;
+  Forge::SceneConfig* mSceneConfig;
+  Forge::QtRenderer& mRenderer;
+  Forge::Graphics::RenderWindowPtr mRenderWindow;
 
-	QPoint mPreviousMouseLocation;
+  QPoint mPreviousMouseLocation;
 
-	std::set<Qt::Key> mCurrentKeys;
-	KeyMap<GameAction> mKeyActionMap;
+  std::set<Qt::Key> mCurrentKeys;
+  KeyMap<GameAction> mKeyActionMap;
 };
 
 }

@@ -24,6 +24,7 @@
 #include "X11RenderContext.hpp"
 
 #include <memory>
+#include <X11/extensions/xf86vmode.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
@@ -40,19 +41,38 @@ class X11RenderWindow : public RenderWindow
     virtual void show();
     virtual void hide();
     virtual void setFullscreen(bool const enabled);
+    virtual bool const isFullscreen() const;
     virtual void resize(int width, int height);
+
+    virtual void setTitle(char const* title);
 
     RenderContext& getContext();
 
+    XVisualInfo* openWindow(GLXFBConfig preferredConfig);
   private:
+    void create();
+    void handleFullscreenOnCreate(XSetWindowAttributes& windowAttributes);
+    void grabFullscreenInput();
     bool const checkGLXVersion() const;
+    GLXFBConfig getPreferredFrameBufferConfig();
+    void createWindow(GLXFBConfig preferredConfig);
 
-    bool mFullscreen;
+    void destroy();
+    void handleFullscreenOnDestroy();
+
     bool mValid;
+
+    XF86VidModeModeInfo mDesktopModeInfo;
+    int mWidth;
+    int mHeight;
+    bool mFullscreen;
+
     X11RenderContext mContext;
     Colormap mColormap;
     Display* mDisplay;
     Window mWindow;
+
+    char const* mTitle;
 };
 
 }}

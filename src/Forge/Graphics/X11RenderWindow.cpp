@@ -24,41 +24,42 @@
 
 #include <GL/gl.h>
 #include <GL/glx.h>
+#include <X11/extensions/xf86vmode.h>
 
 
 namespace Forge { namespace Graphics {
 
 X11RenderWindow::X11RenderWindow():
   RenderWindow(),
-  mFullscreen(false),
   mValid(false),
+  mDesktopModeInfo(),
+  mWidth(0),
+  mHeight(0),
+  mFullscreen(false),
+  mContext(),
   mColormap(),
-  mDisplay(XOpenDisplay(nullptr)),
-  mWindow()
+  mDisplay(nullptr),
+  mWindow(),
+  mTitle("Forge OpenGL window")
 {
+  create();
+}
+
+X11RenderWindow::~X11RenderWindow()
+{
+  destroy();
+}
+
+void X11RenderWindow::create()
+{
+  if (mValid)
+    return;
+
+  mDisplay = XOpenDisplay(nullptr);
   if (!mDisplay)
   {
     Log::error << "Could not open XDisplay!\n";
   }
-
-  // Get a matching FB config
-  static int visualAttributes[] =
-  {
-    GLX_X_RENDERABLE    , True,
-    GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
-    GLX_RENDER_TYPE     , GLX_RGBA_BIT,
-    GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
-    GLX_RED_SIZE        , 8,
-    GLX_GREEN_SIZE      , 8,
-    GLX_BLUE_SIZE       , 8,
-    GLX_ALPHA_SIZE      , 8,
-    GLX_DEPTH_SIZE      , 24,
-    GLX_STENCIL_SIZE    , 8,
-    GLX_DOUBLEBUFFER    , True,
-    //GLX_SAMPLE_BUFFERS  , 1,
-    //GLX_SAMPLES         , 4,
-    None
-  };
 
   if (!checkGLXVersion())
   {
@@ -66,94 +67,32 @@ X11RenderWindow::X11RenderWindow():
     return;
   }
 
-  int configCount;
-  GLXFBConfig* fbConfig =
-      glXChooseFBConfig(
-        mDisplay,
-        DefaultScreen(mDisplay),
-        visualAttributes,
-        &configCount
-      );
-  if (!fbConfig)
+  GLXFBConfig preferredConfig = getPreferredFrameBufferConfig();
+
+  if (preferredConfig == nullptr)
   {
-    Log::error << "Failed to get FB configuration\n";
+    Log::error << "Could not get a framebuffer config!\n";
     return;
   }
-  Log::info << "Found " << configCount << " matching configurations.\n";
 
-  int preferredConfigIndex = -1;
-  int bestSamples = -1;
+  createWindow(preferredConfig);
 
-  for (int i = 0; i < configCount; ++i)
-  {
-    XVisualInfo* visualInfo = glXGetVisualFromFBConfig(mDisplay, fbConfig[i]);
-    if (visualInfo)
-    {
-      int samples, buffers;
-      glXGetFBConfigAttrib(mDisplay, fbConfig[i], GLX_SAMPLES, &samples);
-      glXGetFBConfigAttrib(mDisplay, fbConfig[i], GLX_SAMPLE_BUFFERS, &buffers);
-
-      Log::info << "Visual info -- ID: " << visualInfo->visualid <<
-                   " Samples: " << samples <<
-                   " Sample buffers: " << buffers << "\n";
-
-      if ((preferredConfigIndex < 0) || (buffers && (samples > bestSamples)))
-      {
-        bestSamples = samples;
-        preferredConfigIndex = i;
-      }
-    }
-    XFree(visualInfo);
-  }
-
-  GLXFBConfig preferredConfig = fbConfig[preferredConfigIndex];
-  XFree(fbConfig);
-
-  XVisualInfo* visualInfo = glXGetVisualFromFBConfig(mDisplay, preferredConfig);
-  Log::info << "Chosen visual ID: " << visualInfo->visualid << "\n";
-
-  XSetWindowAttributes setWindowAttributes;
-  mColormap =
-      XCreateColormap(
-        mDisplay,
-        RootWindow(mDisplay, visualInfo->screen),
-        visualInfo->visual,
-        AllocNone
-      );
-  setWindowAttributes.colormap = mColormap;
-  setWindowAttributes.background_pixmap = None;
-  setWindowAttributes.border_pixel = 0;
-  setWindowAttributes.event_mask = StructureNotifyMask;
-
-  mWindow =
-      XCreateWindow(
-        mDisplay,
-        RootWindow(mDisplay, visualInfo->screen),
-        0,
-        0,
-        100,
-        100,
-        0,
-        visualInfo->depth,
-        InputOutput,
-        visualInfo->visual,
-        CWBorderPixel|CWColormap|CWEventMask,
-        &setWindowAttributes
-      );
-
-  if (mWindow == 0)
+  if (!mWindow)
   {
     Log::error << "Unable to create a window with the selected visuals!\n";
+    return;
   }
-  XFree(visualInfo);
 
-  XStoreName(mDisplay, mWindow, "OpenGL window");
+  if (mFullscreen)
+  {
+    grabFullscreenInput();
+  }
+  else
+  {
+    XStoreName(mDisplay, mWindow, mTitle);
+  }
 
-  XMapWindow(mDisplay, mWindow);
-
-  bool createdContext = mContext.create(mDisplay, mWindow, preferredConfig);
-
-  if (!createdContext)
+  if (!mContext.create(mDisplay, mWindow, preferredConfig))
   {
     Log::error << "Failed to create an X11 OpenGL context!\n";
     return;
@@ -169,18 +108,174 @@ X11RenderWindow::X11RenderWindow():
   mValid = true;
 }
 
-X11RenderWindow::~X11RenderWindow()
-{
-  XDestroyWindow( mDisplay, mWindow );
-  XFreeColormap( mDisplay, mColormap );
-  XCloseDisplay( mDisplay );
-}
-
 bool const X11RenderWindow::checkGLXVersion() const
 {
   int glxMajor, glxMinor;
   Bool accepted = glXQueryVersion(mDisplay, &glxMajor, &glxMinor);
   return (accepted && (glxMajor > 1 || (glxMajor == 1 && glxMinor >= 3)));
+}
+
+GLXFBConfig X11RenderWindow::getPreferredFrameBufferConfig()
+{
+  GLXFBConfig preferredConfig = nullptr;
+
+  // Get a matching FB config
+  static int visualAttributes[] =
+  {
+    GLX_X_RENDERABLE    , True,
+    GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
+    GLX_RENDER_TYPE     , GLX_RGBA_BIT,
+    GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
+    GLX_RED_SIZE        , 8,
+    GLX_GREEN_SIZE      , 8,
+    GLX_BLUE_SIZE       , 8,
+    GLX_ALPHA_SIZE      , 8,
+    GLX_DEPTH_SIZE      , 24,
+    GLX_STENCIL_SIZE    , 8,
+    GLX_DOUBLEBUFFER    , True,
+    None
+  };
+
+  int configCount;
+  GLXFBConfig* fbConfig =
+      glXChooseFBConfig(
+        mDisplay,
+        DefaultScreen(mDisplay),
+        visualAttributes,
+        &configCount
+      );
+  if (!fbConfig)
+  {
+    Log::error << "Failed to get framebuffer configuration list\n";
+    return nullptr;
+  }
+
+  int preferredConfigIndex = -1;
+  int bestSamples = -1;
+
+  for (int i = 0; i < configCount; ++i)
+  {
+    XVisualInfo* visualInfo = glXGetVisualFromFBConfig(mDisplay, fbConfig[i]);
+    if (visualInfo)
+    {
+      int samples, buffers;
+      glXGetFBConfigAttrib(mDisplay, fbConfig[i], GLX_SAMPLES, &samples);
+      glXGetFBConfigAttrib(mDisplay, fbConfig[i], GLX_SAMPLE_BUFFERS, &buffers);
+
+      if ((preferredConfigIndex < 0) || (buffers && (samples > bestSamples)))
+      {
+        bestSamples = samples;
+        preferredConfigIndex = i;
+      }
+    }
+    XFree(visualInfo);
+  }
+
+  preferredConfig = fbConfig[preferredConfigIndex];
+
+  XFree(fbConfig);
+
+  return preferredConfig;
+}
+
+void X11RenderWindow::createWindow(GLXFBConfig preferredConfig)
+{
+  XVisualInfo* visualInfo = glXGetVisualFromFBConfig(mDisplay, preferredConfig);
+  Log::info << "Chosen visual ID: " << visualInfo->visualid << "\n";
+
+  XSetWindowAttributes setWindowAttributes;
+  mColormap =
+      XCreateColormap(
+        mDisplay,
+        RootWindow(mDisplay, visualInfo->screen),
+        visualInfo->visual,
+        AllocNone
+      );
+  setWindowAttributes.colormap = mColormap;
+  setWindowAttributes.background_pixmap = None;
+  setWindowAttributes.border_pixel = 0;
+  setWindowAttributes.event_mask = ExposureMask|KeyPressMask|ButtonPressMask|StructureNotifyMask;
+
+  if (mFullscreen)
+  {
+    handleFullscreenOnCreate(setWindowAttributes);
+  }
+
+  mWindow =
+      XCreateWindow(
+        mDisplay,
+        RootWindow(mDisplay, visualInfo->screen),
+        0,
+        0,
+        mWidth,
+        mHeight,
+        0,
+        visualInfo->depth,
+        InputOutput,
+        visualInfo->visual,
+        CWBorderPixel|CWColormap|CWEventMask,
+        &setWindowAttributes
+      );
+
+  XFree(visualInfo);
+
+  if (mWindow == 0)
+  {
+    return;
+  }
+
+  XMapWindow(mDisplay, mWindow);
+}
+
+void X11RenderWindow::handleFullscreenOnCreate(XSetWindowAttributes& windowAttributes)
+{
+  int numModes;
+  XF86VidModeModeInfo** modes;
+  XF86VidModeGetAllModeLines(mDisplay, DefaultScreen(mDisplay), &numModes, &modes);
+  mDesktopModeInfo = *modes[0];
+  // Find mode suitable for fullscreen
+  // Modify window attributes
+  windowAttributes.override_redirect = True;
+}
+
+void X11RenderWindow::grabFullscreenInput()
+{
+  XWarpPointer(mDisplay, None, mWindow, 0, 0, 0, 0, 0, 0);
+  XMapRaised(mDisplay, mWindow);
+  XGrabKeyboard(mDisplay, mWindow, True, GrabModeAsync, GrabModeAsync, CurrentTime);
+  XGrabPointer(
+        mDisplay,
+        mWindow,
+        True,
+        ButtonPressMask,
+        GrabModeAsync,
+        GrabModeAsync,
+        mWindow,
+        None,
+        CurrentTime
+  );
+}
+
+void X11RenderWindow::destroy()
+{
+  if (mValid)
+  {
+    mContext.destroy();
+    XDestroyWindow(mDisplay, mWindow);
+    XFreeColormap(mDisplay, mColormap);
+    XCloseDisplay(mDisplay);
+    if (mFullscreen)
+    {
+      handleFullscreenOnDestroy();
+    }
+  }
+  mValid = false;
+}
+
+void X11RenderWindow::handleFullscreenOnDestroy()
+{
+  XF86VidModeSwitchToMode(mDisplay, DefaultScreen(mDisplay), &mDesktopModeInfo);
+  XF86VidModeSetViewPort(mDisplay, DefaultScreen(mDisplay), 0, 0);
 }
 
 bool const X11RenderWindow::isValid() const
@@ -201,18 +296,40 @@ void X11RenderWindow::setFullscreen(const bool enabled)
   if (enabled != mFullscreen)
   {
     mFullscreen = enabled;
+    destroy();
+    create();
   }
+}
+
+const bool X11RenderWindow::isFullscreen() const
+{
+  return mFullscreen;
 }
 
 void X11RenderWindow::resize(int width, int height)
 {
+  mWidth = width;
+  mHeight = height;
+  if (mValid)
+  {
+    destroy();
+    create();
+  }
+}
 
+void X11RenderWindow::setTitle(char const* title)
+{
+  mTitle = title;
+  if (mValid)
+  {
+    XStoreName(mDisplay, mWindow, title);
+    XSync(mDisplay, False);
+  }
 }
 
 RenderContext& X11RenderWindow::getContext()
 {
   return mContext;
 }
-
 
 }}

@@ -45,16 +45,20 @@ class RenderWindow
     virtual ~RenderWindow();
 
     virtual bool const isValid() const = 0;
+
     virtual void show() = 0;
     virtual void hide() = 0;
     virtual void setFullscreen(bool const enabled) = 0;
+    virtual bool const isFullscreen() const = 0;
     virtual void resize(int width, int height) = 0;
+
+    virtual void setTitle(char const* title) = 0;
 
     virtual RenderContext& getContext() = 0;
 
     /* Use this to get a shared pointer to the render window.
      * Implement this for each supported platform separately. */
-    static RenderWindowPtr createWindow();
+    static RenderWindowPtr getWindow();
 
 };
 

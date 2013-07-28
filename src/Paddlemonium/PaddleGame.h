@@ -23,6 +23,7 @@
 #include "Input/InputHandler.h"
 
 #include "Graphics/OrbitalCamera.h"
+#include "Graphics/RenderWindow.hpp"
 #include "Graphics/QtRenderer.hpp"
 #include "State/QtStateMachine.hpp"
 #include "Time/HighResClock.h"
@@ -32,19 +33,20 @@ namespace Paddlemonium {
 class PaddleGame
 {
 public:
-	PaddleGame();
-	void init();
-	int run();
+  PaddleGame();
+  void init();
+  int run();
 private:
-	void initializeData();
-	void initializeGameStates();
+  void initializeData();
+  void initializeGameStates();
 
-	Forge::HighResClock mClock;
-	Forge::QtRenderer mRenderer;
-	Forge::QtStateMachine mStateMachine;
-	Forge::SceneConfig mSceneConfig;
+  Forge::HighResClock mClock;
+  Forge::QtRenderer mRenderer;
+  Forge::Graphics::RenderWindowPtr mRenderWindow;
+  Forge::QtStateMachine mStateMachine;
+  Forge::SceneConfig mSceneConfig;
 
-	InputHandler mInput;
+  InputHandler mInput;
 };
 
 }

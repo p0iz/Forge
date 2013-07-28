@@ -57,7 +57,7 @@ elseif(APPLE)
 elseif(UNIX)
   find_package(X11 REQUIRED)
   include_directories(${X11_INCLUDE_DIRECTORIES})
-  list(APPEND GraphicsLibs X11 Xi Xmu)
+  list(APPEND GraphicsLibs X11 Xxf86vm)
   list(APPEND GraphicsSources
     RenderWindow_X11.cpp
     X11RenderWindow.cpp

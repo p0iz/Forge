@@ -33,61 +33,68 @@
 
 namespace Paddlemonium {
 
-PaddleGame::PaddleGame()
-	: mInput(mClock, mRenderer)
+PaddleGame::PaddleGame():
+  mClock(),
+  mRenderer(),
+  mRenderWindow(Forge::Graphics::RenderWindow::getWindow()),
+  mStateMachine(),
+  mInput(mClock, mRenderer, mRenderWindow)
 {
-	const Forge::Configuration& cfg = Forge::Configuration::getSingleton();
-	cfg.loadConfig("data/PaddleGame.configuration");
-	mRenderer.resize(cfg.display.width, cfg.display.height);
-	mRenderer.installEventFilter(&mInput);
-	mRenderer.show();
+  const Forge::Configuration& cfg = Forge::Configuration::getSingleton();
+  cfg.loadConfig("data/PaddleGame.configuration");
+  mRenderer.resize(cfg.display.width, cfg.display.height);
+  mRenderWindow->resize(cfg.display.width, cfg.display.height);
+  mRenderer.installEventFilter(&mInput);
+  mRenderer.show();
+  mRenderWindow->setTitle("SUPER AWESOME PADDLE DEATH!");
+  mRenderWindow->setFullscreen(true);
 }
 
 void PaddleGame::initializeGameStates()
 {
-	Forge::GameStatePtr menuState(new State::Menu(QString("Menu"),
-												  mInput,
-												  mClock));
-	menuState->createState();
+  Forge::GameStatePtr menuState(new State::Menu(QString("Menu"),
+                          mInput,
+                          mClock));
+  menuState->createState();
 
-	Forge::GameStatePtr inGameState(new State::InGame(QString("InGame"),
-													  mRenderer,
-													  mInput,
-													  mClock));
+  Forge::GameStatePtr inGameState(new State::InGame(QString("InGame"),
+                            mRenderer,
+                            mInput,
+                            mClock));
 
-	inGameState->createState();
+  inGameState->createState();
 
-	Forge::GameStateLibrary::getSingleton().add(menuState->getName(), menuState);
-	Forge::GameStateLibrary::getSingleton().add(inGameState->getName(), inGameState);
-	mStateMachine.init(menuState);
+  Forge::GameStateLibrary::getSingleton().add(menuState->getName(), menuState);
+  Forge::GameStateLibrary::getSingleton().add(inGameState->getName(), inGameState);
+  mStateMachine.init(menuState);
 }
 
 void PaddleGame::initializeData()
 {
-	QIcon icon("data/images/icon128.png");
-	mRenderer.setWindowIcon(icon);
+  QIcon icon("data/images/icon128.png");
+  mRenderer.setWindowIcon(icon);
 }
 
 void PaddleGame::init()
 {
-	initializeData();
-	initializeGameStates();
+  initializeData();
+  initializeGameStates();
 }
 
 int PaddleGame::run()
 {
-	Forge::Log::info << "Built on " << __DATE__ << " at " << __TIME__ "\n";
+  Forge::Log::info << "Built on " << __DATE__ << " at " << __TIME__ "\n";
 
-	int result = 0;
-	mClock.init();
+  int result = 0;
+  mClock.init();
 
-	mStateMachine.start();
+  mStateMachine.start();
 
-	result = QApplication::exec();
+  result = QApplication::exec();
 
-	mStateMachine.stop();
+  mStateMachine.stop();
 
-	return result;
+  return result;
 }
 
 }
