@@ -38,29 +38,34 @@ namespace Forge {
 
 class Mesh : public Attachable
 {
-public:
-	Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);
-	~Mesh();
-	void draw();
-private:
-	unsigned int mNumberOfVertices;
-	GLuint mVertexArrayId;
-	GLuint mVertexBufferId;
-	GLuint mElementBufferId;
+  public:
+    Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);
+    ~Mesh();
+    void draw();
 
-	void calculateBounds(const std::vector<Vertex>& vertices);
+    void setName(std::string const& name);
+    std::string const& getName() const;
 
-	struct Bounds
-	{
-		float minX;
-		float maxX;
-		float minY;
-		float maxY;
-		float minZ;
-		float maxZ;
-	};
+  private:
+    std::string mName;
+    unsigned int mNumberOfVertices;
+    GLuint mVertexArrayId;
+    GLuint mVertexBufferId;
+    GLuint mElementBufferId;
 
-	Bounds mBounds;
+    void calculateBounds(const std::vector<Vertex>& vertices);
+
+    struct Bounds
+    {
+        float minX;
+        float maxX;
+        float minY;
+        float maxY;
+        float minZ;
+        float maxZ;
+    };
+
+    Bounds mBounds;
 };
 
 typedef std::shared_ptr<Mesh> MeshPtr;
