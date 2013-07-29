@@ -23,7 +23,6 @@ set(GraphicsSources
   DebugAxis.cpp
   Mesh.cpp
   OrbitalCamera.cpp
-  RenderContext.cpp
   Renderer.cpp
   RenderWindow.cpp
   ResizeEvent.cpp
