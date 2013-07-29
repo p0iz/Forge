@@ -22,7 +22,6 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     ${CMAKE_SOURCE_DIR}/windows_deps/glew/include
     ${CMAKE_SOURCE_DIR}/windows_deps/glm
     ${CMAKE_SOURCE_DIR}/windows_deps/freeimage
-    ${CMAKE_SOURCE_DIR}/windows_deps/assimp/include
     ${CMAKE_SOURCE_DIR}/windows_deps/lua/include
   )
 endif()

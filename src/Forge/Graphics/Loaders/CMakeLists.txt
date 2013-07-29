@@ -5,16 +5,10 @@ set(LoadersSources
   MeshLoader.cpp
 )
 
-# AssImp dependency
-find_package(AssImp REQUIRED)
-include_directories(${ASSIMP_INCLUDE_DIRECTORIES})
-
 # FreeImage dependency
 find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${CMAKE_SOURCE_DIR}/windows_deps/freeimage)
 
 add_library(Loaders ${LoadersSources})
-
-set(LoadersLibs ${ASSIMP_LIBRARIES})
 
 # Link to the shared FreeImage library
 if(WIN32)

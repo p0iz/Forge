@@ -19,69 +19,172 @@
  */
 
 #include "MeshLoader.h"
-
 #include "Graphics/Vertex.h"
-
 #include "Util/Log.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/mesh.h>
-#include <assimp/postprocess.h>
+#include <algorithm>
+#include <fstream>
+#include <sstream>
+
 
 namespace Forge { namespace MeshLoader {
 
-MeshPtr loadMesh(const std::string& file) {
-	MeshPtr loadedMesh(nullptr);
-	Assimp::Importer importer;
+// Helper class to identify unique vertices
+struct VertexIdentifier
+{
+    VertexIdentifier(int p, int t, int n, unsigned int element):
+      mElement(element),
+      mP(p),
+      mT(t),
+      mN(n)
+    {
+    }
 
-	const aiScene* importedModel = importer.ReadFile(file,
-													 aiProcess_GenSmoothNormals |
-													 aiProcess_CalcTangentSpace);
+    bool operator==(VertexIdentifier const& rhs) const
+    {
+      return mP == rhs.mP && mT == rhs.mT && mN == rhs.mN;
+    }
 
-	if (importedModel == nullptr) {
-		Log::error << "Error occurred while importing '" <<
-					  file << "'' : " << importer.GetErrorString() << "\n";
-	} else {
-		std::vector<Vertex> vertices;
-		std::vector<unsigned int> elements;
-		for (unsigned int cur_mesh = 0 ; cur_mesh < importedModel->mNumMeshes; ++ cur_mesh) {
-			const aiMesh* mesh = importedModel->mMeshes[cur_mesh];
-			// Load vertex data
-			Vertex vertex;
-			for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-				memcpy(vertex.position, &mesh->mVertices[i], sizeof(float) * 3);
-				if (mesh->HasNormals()) {
-					memcpy(vertex.normal, &mesh->mNormals[i], sizeof(float) * 3);
-				} else {
-					memset (vertex.normal, 0, sizeof(vertex.normal));
-				}
+    unsigned int mElement;
 
-				if (mesh->HasTangentsAndBitangents()) {
-					memcpy(vertex.tangent, &mesh->mTangents[i], sizeof(float) * 3);
-					memcpy(vertex.bitangent, &mesh->mBitangents[i], sizeof(float) * 3);
-				} else {
-					memset (vertex.tangent, 0, sizeof(vertex.tangent));
-					memset (vertex.bitangent, 0, sizeof(vertex.bitangent));
-				}
-				if (mesh->HasTextureCoords(0)) {
-					// Read texture coordinates (currently just one texture supported)
-					memcpy(vertex.texcoord, &mesh->mTextureCoords[0][i], sizeof(float) * 3);
-				} else {
-					memset (vertex.texcoord, 0, sizeof(vertex.texcoord));
-				}
-				vertices.push_back(vertex);
-			}
-			for (unsigned int face_index = 0 ; face_index < mesh->mNumFaces; ++face_index) {
-				const aiFace& cur_face = mesh->mFaces[face_index];
-				for (unsigned int elem_index = 0 ; elem_index < cur_face.mNumIndices; ++elem_index) {
-					elements.push_back(mesh->mFaces[face_index].mIndices[elem_index]);
-				}
-			}
-		}
-		loadedMesh.reset(new Mesh(vertices, elements));
-	}
-	return loadedMesh;
+  private:
+    int mP;
+    int mT;
+    int mN;
+};
+
+/* Parse a string of type "<pos>/<tex>/<nor>" and return true if at least <pos> was found */
+void parseVertex(std::string const& vertex, int& posIndex, int& texIndex, int&norIndex)
+{
+  std::istringstream vertexStream(vertex);
+  vertexStream >> posIndex;
+  vertexStream.get();
+  if (vertexStream.peek() == '/')
+  {
+    vertexStream.get();
+    vertexStream >> norIndex;
+  }
+  else
+  {
+    vertexStream >> texIndex;
+    vertexStream >> norIndex;
+  }
+}
+
+MeshPtr loadMesh(const std::string& file)
+{
+  MeshPtr loadedMesh(nullptr);
+
+  std::ifstream inputFile(file);
+  if (!inputFile.is_open())
+  {
+    Log::error << "Could not open file '" << file << "'. Mesh loading failed.\n";
+    return loadedMesh;
+  }
+
+  std::string meshName;
+
+  std::vector<glm::vec3> positions;
+  std::vector<glm::vec3> normals;
+  std::vector<glm::vec2> texCoords;
+
+  std::vector<VertexIdentifier> vertexIds;
+  std::vector<unsigned int> elements;
+  unsigned int nextIndex = 0;
+
+  std::vector<Vertex> vertices;
+
+  while (!inputFile.eof())
+  {
+    std::string identifier;
+    inputFile >> identifier;
+
+    if (identifier == "o")
+    {
+      inputFile >> meshName;
+    }
+    else if (identifier == "v")
+    {
+      glm::vec3 position;
+      inputFile >> position.x >> position.y >> position.z;
+      positions.push_back(position);
+    }
+    else if (identifier == "vn")
+    {
+      glm::vec3 normal;
+      inputFile >> normal.x >> normal.y >> normal.z;
+      normals.push_back(normal);
+    }
+    else if (identifier == "vt")
+    {
+      glm::vec2 texCoord;
+      inputFile >> texCoord.s >> texCoord.t;
+      texCoords.push_back(texCoord);
+    }
+    else if (identifier == "f")
+    {
+      // V1: <position>/<texCoord>/<normal> V2: <position>/<texCoord>/<normal> V3: <position>/<texCoord>/<normal>
+      for (int i = 0; i < 3; ++i)
+      {
+        int pos = -1;
+        int tex = -1;
+        int nor = -1;
+        std::string vertex;
+        inputFile >> vertex;
+        parseVertex(vertex, pos, tex, nor);
+
+        if (pos == -1)
+        {
+          Log::error << "Vertex definition must at least contain vertex position."
+                        "Mesh loading failed.\n";
+          return loadedMesh;
+        }
+
+        VertexIdentifier id(pos, tex, nor, nextIndex);
+        auto idIter = std::find_if(
+          vertexIds.begin(),
+          vertexIds.end(),
+          [&id](VertexIdentifier const& rhs){ return id == rhs; }
+        );
+
+        if (idIter == vertexIds.end())
+        {
+          // Not found in existing vertices, add new index
+          glm::vec3 position = positions[pos];
+          glm::vec2 texCoord;
+          glm::vec3 normal;
+          if (tex != -1)
+          {
+            texCoord = texCoords[tex];
+          }
+          if (nor != -1)
+          {
+            normal = normals[nor];
+          }
+          Vertex v(position, texCoord, normal);
+          vertices.push_back(v);
+          elements.push_back(id.mElement);
+
+          vertexIds.push_back(id);
+          ++nextIndex;
+        }
+        else
+        {
+          elements.push_back(idIter->mElement);
+        }
+      }
+    }
+    else
+    {
+      // Skip comments and unsupported identifiers
+      while (!inputFile.eof() && inputFile.get() != '\n');
+    }
+  }
+
+  loadedMesh.reset(new Mesh(vertices, elements));
+  loadedMesh->setName(meshName);
+
+  return loadedMesh;
 }
 
 }}
