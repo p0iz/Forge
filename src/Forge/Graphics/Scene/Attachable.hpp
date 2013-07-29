@@ -27,13 +27,13 @@ namespace Forge {
 class Attachable {
 public:
 	/* Allow limiting the max number of attached nodes */
-	explicit Attachable(size_t maxAttachments = 0);
-	void attachToNode(size_t node);
-	void detachFromNode(size_t node);
-	const std::unordered_set<size_t>& getAttachedNodes() const;
+  explicit Attachable(std::size_t maxAttachments = 0);
+  void attachToNode(std::size_t node);
+  void detachFromNode(std::size_t node);
+  const std::unordered_set<std::size_t>& getAttachedNodes() const;
 private:
-	const size_t mMaxAttachments;
-	std::unordered_set<size_t> mAttachedNodes;
+  const std::size_t mMaxAttachments;
+  std::unordered_set<std::size_t> mAttachedNodes;
 };
 
 }

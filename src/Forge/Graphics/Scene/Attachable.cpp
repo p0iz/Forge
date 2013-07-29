@@ -22,21 +22,21 @@
 
 namespace Forge {
 
-Attachable::Attachable(size_t maxAttachments) : mMaxAttachments(maxAttachments) { }
+Attachable::Attachable(std::size_t maxAttachments) : mMaxAttachments(maxAttachments) { }
 
-void Attachable::attachToNode(size_t node)
+void Attachable::attachToNode(std::size_t node)
 {
 	if (mAttachedNodes.size() < mMaxAttachments || mMaxAttachments == 0) {
 		mAttachedNodes.insert(node);
 	}
 }
 
-void Attachable::detachFromNode(size_t node)
+void Attachable::detachFromNode(std::size_t node)
 {
 	mAttachedNodes.erase(node);
 }
 
-const std::unordered_set<size_t>& Attachable::getAttachedNodes() const
+const std::unordered_set<std::size_t>& Attachable::getAttachedNodes() const
 {
 	return mAttachedNodes;
 }
