@@ -43,7 +43,6 @@ X11RenderWindow::X11RenderWindow():
   mWindow(),
   mTitle("Forge OpenGL window")
 {
-  create();
 }
 
 X11RenderWindow::~X11RenderWindow()
@@ -288,10 +287,12 @@ bool const X11RenderWindow::isValid() const
 
 void X11RenderWindow::show()
 {
+  create();
 }
 
 void X11RenderWindow::hide()
 {
+  destroy();
 }
 
 void X11RenderWindow::setFullscreen(const bool enabled)
