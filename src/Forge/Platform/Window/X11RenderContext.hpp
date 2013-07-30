@@ -39,6 +39,7 @@ class X11RenderContext : public RenderContext
 
     virtual bool const isValid() const;
     virtual void makeCurrent();
+    virtual void swapBuffers();
 
   private:
     GLXContext mContext;

@@ -29,6 +29,7 @@ class RenderContext
     virtual ~RenderContext() { }
     virtual bool const isValid() const = 0;
     virtual void makeCurrent() = 0;
+    virtual void swapBuffers() = 0;
 };
 
 }}

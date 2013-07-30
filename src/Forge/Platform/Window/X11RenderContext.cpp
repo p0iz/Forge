@@ -96,4 +96,9 @@ void X11RenderContext::makeCurrent()
   glXMakeCurrent(mDisplay, mWindow, mContext);
 }
 
+void X11RenderContext::swapBuffers()
+{
+  glXSwapBuffers(mDisplay, mWindow);
+}
+
 }}
