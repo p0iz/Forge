@@ -24,7 +24,7 @@
 
 namespace Forge { namespace Graphics {
 
-RenderWindowPtr RenderWindow::getWindow()
+RenderWindowPtr RenderWindow::createInstance()
 {
   return RenderWindowPtr(new X11RenderWindow());
 }

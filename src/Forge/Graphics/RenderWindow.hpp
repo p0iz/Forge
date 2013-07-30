@@ -58,7 +58,7 @@ class RenderWindow
 
     /* Use this to get a shared pointer to the render window.
      * Implement this for each supported platform separately. */
-    static RenderWindowPtr getWindow();
+    static RenderWindowPtr createInstance();
 
 };
 
