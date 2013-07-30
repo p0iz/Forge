@@ -12,4 +12,4 @@ add_subdirectory(src/Forge)
 add_subdirectory(src/Paddlemonium)
 
 # Add Editor to build
-add_subdirectory(src/Editor)
+#add_subdirectory(src/Editor)
