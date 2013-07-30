@@ -14,25 +14,27 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "State/GameState.h"
+#include <memory>
 
-namespace Forge {
 
-class GameStateMachine
+namespace Forge { namespace Input {
+
+class InputHandler;
+
+class InputProcessor
 {
-public:
-	GameStateMachine();
-  void init(GameStatePtr const& initialState);
-  bool update(float const delta);
-	void reset();
-private:
-	GameStatePtr mCurrentState;
+  public:
+    virtual ~InputProcessor() { }
+    virtual void process(float const delta, InputHandler const& handler) = 0;
 };
 
-}
+typedef std::shared_ptr<InputProcessor> InputProcessorPtr;
+
+}}
+

@@ -20,7 +20,8 @@
 
 #include "X11RenderWindow.hpp"
 
-#include "../Util/Log.h"
+#include "../Event/X11EventHandler.hpp"
+#include "../../Util/Log.h"
 
 #include <GL/gl.h>
 #include <GL/glx.h>
@@ -55,10 +56,11 @@ void X11RenderWindow::create()
   if (mValid)
     return;
 
-  mDisplay = XOpenDisplay(nullptr);
+  mDisplay = Event::X11EventHandler::display;
   if (!mDisplay)
   {
-    Log::error << "Could not open XDisplay!\n";
+    Log::error << "X11 event handling not yet started! Failed to open window.\n";
+    return;
   }
 
   if (!checkGLXVersion())
@@ -104,6 +106,8 @@ void X11RenderWindow::create()
   }
 
   mContext.makeCurrent();
+
+  publish(ResizeEvent(mWidth, mHeight));
 
   mValid = true;
 }
@@ -263,7 +267,6 @@ void X11RenderWindow::destroy()
     mContext.destroy();
     XDestroyWindow(mDisplay, mWindow);
     XFreeColormap(mDisplay, mColormap);
-    XCloseDisplay(mDisplay);
     if (mFullscreen)
     {
       handleFullscreenOnDestroy();

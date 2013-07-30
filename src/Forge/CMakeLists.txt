@@ -16,7 +16,7 @@ elseif(CMAKE_BUILD_TYPE MATCHES Debug)
 endif()
 
 # Add Windows build include directories
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+if(WIN32)
   message(STATUS "Adding Windows dependency includes...")
   include_directories(
     ${CMAKE_SOURCE_DIR}/windows_deps/glew/include
@@ -24,6 +24,10 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     ${CMAKE_SOURCE_DIR}/windows_deps/freeimage
     ${CMAKE_SOURCE_DIR}/windows_deps/lua/include
   )
+elseif(EXISTS "/usr/include/lua5.2")
+  include_directories("/usr/include/lua5.2")
+else()
+  message(FATAL_ERROR "Forge requires Lua 5.2 development libraries.")
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -32,10 +36,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(Config)
 add_subdirectory(State)
 add_subdirectory(Graphics)
-add_subdirectory(Input)
 add_subdirectory(Time)
 add_subdirectory(Util)
 add_subdirectory(Event)
+add_subdirectory(Platform)
 
 add_library(Forge ForgeVersion.cpp)
 target_link_libraries(Forge
@@ -44,6 +48,9 @@ target_link_libraries(Forge
   Graphics
   Time
   Util
+  PlatformEvent
+  PlatformInput
+  PlatformWindow
 )
 
 if(USE_QT)

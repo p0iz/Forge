@@ -37,7 +37,7 @@ void GameState::enter()
 void GameState::createState() { }
 void GameState::destroyState() { }
 
-GameStatePtr GameState::frameUpdate()
+GameStatePtr GameState::frameUpdate(const float delta)
 {
 	return GameStatePtr(nullptr);
 }

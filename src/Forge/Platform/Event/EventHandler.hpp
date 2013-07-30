@@ -14,25 +14,29 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "State/GameState.h"
+#include "Platform/Window/RenderWindow.hpp"
 
-namespace Forge {
 
-class GameStateMachine
+namespace Forge { namespace Event {
+
+class EventHandler
 {
-public:
-	GameStateMachine();
-  void init(GameStatePtr const& initialState);
-  bool update(float const delta);
-	void reset();
-private:
-	GameStatePtr mCurrentState;
+  public:
+    EventHandler();
+    virtual ~EventHandler() { }
+
+    virtual void registerWindow(Graphics::RenderWindowPtr window) = 0;
+    virtual void deregisterWindow(Graphics::RenderWindowPtr window) = 0;
+
+    virtual bool pumpMessages() = 0;
+
+    static EventHandler& getInstance();
 };
 
-}
+}}

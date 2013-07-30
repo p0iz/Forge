@@ -20,7 +20,7 @@
 
 #include "X11RenderContext.hpp"
 
-#include "../Util/Log.h"
+#include "../../Util/Log.h"
 
 
 namespace {

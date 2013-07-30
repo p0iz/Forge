@@ -14,25 +14,37 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "State/GameState.h"
+#include "EventHandler.hpp"
+#include <unordered_set>
 
-namespace Forge {
+#include <X11/Xlib.h>
 
-class GameStateMachine
+
+namespace Forge { namespace Event {
+
+class X11EventHandler : public EventHandler
 {
-public:
-	GameStateMachine();
-  void init(GameStatePtr const& initialState);
-  bool update(float const delta);
-	void reset();
-private:
-	GameStatePtr mCurrentState;
+  public:
+    X11EventHandler();
+    virtual ~X11EventHandler();
+
+    virtual void registerWindow(Graphics::RenderWindowPtr window);
+    virtual void deregisterWindow(Graphics::RenderWindowPtr window);
+
+    virtual bool pumpMessages();
+
+    static Display* display;
+  private:
+    std::unordered_set<unsigned long> mWindowHandles;
+
+    // Used to catch the WM closing the window
+    Atom mWmDeleteMessageAtom;
 };
 
-}
+}}

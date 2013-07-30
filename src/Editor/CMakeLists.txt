@@ -18,6 +18,17 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5OpenGL REQUIRED)
 find_package(Qt5Gui REQUIRED)
 
+# Add Windows build include directories
+if(WIN32)
+  message(STATUS "Adding Windows dependency includes...")
+  include_directories(
+    ${CMAKE_SOURCE_DIR}/windows_deps/lua/include
+  )
+else()
+  message(STATUS "Including /usr/include/lua5.2")
+  include_directories("/usr/include/lua5.2")
+endif()
+
 include_directories(${CMAKE_SOURCE_DIR}/src/Forge ${CMAKE_SOURCE_DIR}/src/Forge/Qt)
 
 add_subdirectory(EditorViews)

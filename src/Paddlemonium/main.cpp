@@ -20,13 +20,9 @@
 
 #include "PaddleGame.h"
 
-#include <QApplication>
-#include <QIcon>
 
 int main(int argc, char** argv)
 {
-	QApplication app(argc, argv);
-
 	Paddlemonium::PaddleGame game;
 	game.init();
 	return game.run();

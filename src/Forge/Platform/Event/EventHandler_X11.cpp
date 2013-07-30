@@ -14,25 +14,20 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#pragma once
+#include "EventHandler.hpp"
+#include "X11EventHandler.hpp"
 
-#include "State/GameState.h"
 
-namespace Forge {
+namespace Forge { namespace Event {
 
-class GameStateMachine
+EventHandler& EventHandler::getInstance()
 {
-public:
-	GameStateMachine();
-  void init(GameStatePtr const& initialState);
-  bool update(float const delta);
-	void reset();
-private:
-	GameStatePtr mCurrentState;
-};
-
+  static X11EventHandler eventHandler;
+  return eventHandler;
 }
+
+}}

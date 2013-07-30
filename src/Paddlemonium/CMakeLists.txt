@@ -6,24 +6,30 @@ project(Paddlemonium)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic")
 
 set(Game_SOURCES
-	PaddleGame.cpp
-	Input/InputHandler.cpp
+  PaddleGame.cpp
+  Input/InGameProcessor.cpp
 	State/InGame.cpp
 	State/Menu.cpp
-	main.cpp)
-set(Game_HEADERS
-	ForgeGame.h
-	GameInputHandler.h)
+  main.cpp)
 
-include_directories(${CMAKE_SOURCE_DIR}/src/Forge ${CMAKE_SOURCE_DIR}/src/Forge/Qt)
-
-# Setup Qt MOC'ing
-set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-find_package(Qt5OpenGL REQUIRED)
+include_directories(${CMAKE_SOURCE_DIR}/src/Forge)
+
+# Add Windows build include directories
+if(WIN32)
+  message(STATUS "Adding Windows dependency includes...")
+  include_directories(
+    ${CMAKE_SOURCE_DIR}/windows_deps/glew/include
+    ${CMAKE_SOURCE_DIR}/windows_deps/glm
+    ${CMAKE_SOURCE_DIR}/windows_deps/freeimage
+    ${CMAKE_SOURCE_DIR}/windows_deps/lua/include
+  )
+elseif(EXISTS "/usr/include/lua5.2")
+  include_directories("/usr/include/lua5.2")
+else()
+  message(FATAL_ERROR "Could not locate Lua 5.2 include directory.")
+endif()
 
 add_executable(Paddlemonium ${Game_SOURCES})
 
-target_link_libraries(Paddlemonium Forge)
-
-qt5_use_modules(Paddlemonium OpenGL)
+target_link_libraries(Paddlemonium Forge )

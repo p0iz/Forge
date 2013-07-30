@@ -33,12 +33,15 @@
  * RenderContext contract and make it current at the end of the constructor.
  */
 
+#include "Event/Publisher.hpp"
+#include "../../Graphics/ResizeEvent.h"
+
 namespace Forge { namespace Graphics {
 
 class RenderWindow;
 typedef std::shared_ptr<RenderWindow> RenderWindowPtr;
 
-class RenderWindow
+class RenderWindow : public Publisher<ResizeEvent>
 {
   public:
     RenderWindow();

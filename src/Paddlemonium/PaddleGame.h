@@ -20,12 +20,14 @@
 
 #pragma once
 
-#include "Input/InputHandler.h"
-
+#include "Input/InGameProcessor.hpp"
 #include "Graphics/OrbitalCamera.h"
-#include "Graphics/RenderWindow.hpp"
-#include "Graphics/QtRenderer.hpp"
-#include "State/QtStateMachine.hpp"
+#include "Graphics/Renderer.h"
+#include "Graphics/Scene/SceneConfig.hpp"
+#include "Platform/Event/EventHandler.hpp"
+#include "Platform/Input/InputHandler.hpp"
+#include "Platform/Window/RenderWindow.hpp"
+#include "State/GameStateMachine.hpp"
 #include "Time/HighResClock.h"
 
 namespace Paddlemonium {
@@ -34,19 +36,22 @@ class PaddleGame
 {
 public:
   PaddleGame();
-  void init();
+  void init(
+      const std::string& windowTitle = "SUPER AWESOME PADDLE DEATH!",
+      std::string const& cfgFile = "data/PaddleGame.configuration");
   int run();
 private:
-  void initializeData();
   void initializeGameStates();
 
   Forge::HighResClock mClock;
-  Forge::QtRenderer mRenderer;
+  Forge::Event::EventHandler& mEventHandler;
   Forge::Graphics::RenderWindowPtr mRenderWindow;
-  Forge::QtStateMachine mStateMachine;
+  Forge::Graphics::Renderer mRenderer;
+  Forge::GameStateMachine mStateMachine;
   Forge::SceneConfig mSceneConfig;
 
-  InputHandler mInput;
+  InGameProcessor mInGameProcessor;
+  Forge::Input::InputHandlerPtr mInput;
 };
 
 }

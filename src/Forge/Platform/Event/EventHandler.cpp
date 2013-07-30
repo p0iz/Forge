@@ -18,21 +18,13 @@
  *
  */
 
-#include "InputHandler.hpp"
+#include "EventHandler.hpp"
 
-namespace Forge { namespace Input {
 
-InputHandler::captureAll()
+namespace Forge { namespace Event {
+
+EventHandler::EventHandler()
 {
-  captureKeyboard();
-  captureMouse();
-}
-
-RenderWindowPtr const InputHandler::getCurrentWindow() const
-{
-  return mCurrentWindow;
 }
 
 }}
-
-

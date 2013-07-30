@@ -24,7 +24,6 @@ set(GraphicsSources
   Mesh.cpp
   OrbitalCamera.cpp
   Renderer.cpp
-  RenderWindow.cpp
   ResizeEvent.cpp
   TargetCamera.cpp
 )
@@ -47,21 +46,6 @@ set(GraphicsLibs
   ${GLEW_LIBRARIES}
   ${OPENGL_LIBRARIES}
 )
-
-# Platform specifics
-if(WIN32)
-  message(FATAL_ERROR "Windows is not a supported platform... yet.")
-elseif(APPLE)
-  message(FATAL_ERROR "OSX is not a supported platform... yet.")
-elseif(UNIX)
-  find_package(X11 REQUIRED)
-  include_directories(${X11_INCLUDE_DIRECTORIES})
-  list(APPEND GraphicsLibs X11 Xxf86vm)
-  list(APPEND GraphicsSources
-    RenderWindow_X11.cpp
-    X11RenderWindow.cpp
-    X11RenderContext.cpp)
-endif()
 
 add_library(Graphics ${GraphicsSources})
 target_link_libraries(Graphics ${GraphicsLibs})

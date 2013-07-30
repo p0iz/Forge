@@ -30,7 +30,7 @@ struct GameState {
 	explicit GameState(const std::string& name);
 	virtual ~GameState();
 	virtual void enter();
-	virtual std::shared_ptr<GameState> frameUpdate();
+  virtual std::shared_ptr<GameState> frameUpdate(float const delta);
 
 	/* Calling these two functions is left to the users' discretion */
 	virtual void createState();

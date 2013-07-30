@@ -28,56 +28,53 @@
 #include "State/GameStateLibrary.hpp"
 #include "Util/Log.h"
 
-#include <QApplication>
-#include <QIcon>
+#include <thread>
+
+
+namespace {
+  float const FRAME_SECONDS = 1.0/60;
+}
 
 namespace Paddlemonium {
 
 PaddleGame::PaddleGame():
   mClock(),
-  mRenderer(),
-  mRenderWindow(Forge::Graphics::RenderWindow::getWindow()),
+  mEventHandler(Forge::Event::EventHandler::getInstance()),
+  mRenderWindow(Forge::Graphics::RenderWindow::createInstance()),
   mStateMachine(),
-  mInput(mClock, mRenderer, mRenderWindow)
+  mInGameProcessor(),
+  mInput(Forge::Input::InputHandler::createInstance())
 {
-  const Forge::Configuration& cfg = Forge::Configuration::getSingleton();
-  cfg.loadConfig("data/PaddleGame.configuration");
-  mRenderer.resize(cfg.display.width, cfg.display.height);
-  mRenderWindow->resize(cfg.display.width, cfg.display.height);
-  mRenderer.installEventFilter(&mInput);
-  mRenderer.show();
-  mRenderWindow->setTitle("SUPER AWESOME PADDLE DEATH!");
-  mRenderWindow->setFullscreen(true);
 }
 
 void PaddleGame::initializeGameStates()
 {
-  Forge::GameStatePtr menuState(new State::Menu(QString("Menu"),
-                          mInput,
-                          mClock));
+  Forge::GameStatePtr menuState(new State::Menu());
   menuState->createState();
 
-  Forge::GameStatePtr inGameState(new State::InGame(QString("InGame"),
-                            mRenderer,
-                            mInput,
-                            mClock));
+  mInput->setProcessor(&mInGameProcessor);
+  Forge::GameStatePtr inGameState(new State::InGame(mRenderer, mInGameProcessor));
 
   inGameState->createState();
 
-  Forge::GameStateLibrary::getSingleton().add(menuState->getName(), menuState);
-  Forge::GameStateLibrary::getSingleton().add(inGameState->getName(), inGameState);
+  Forge::GameStateLibrary::getSingleton().add(menuState);
+  Forge::GameStateLibrary::getSingleton().add(inGameState);
   mStateMachine.init(menuState);
 }
 
-void PaddleGame::initializeData()
+void PaddleGame::init(std::string const& windowTitle, std::string const& cfgFile)
 {
-  QIcon icon("data/images/icon128.png");
-  mRenderer.setWindowIcon(icon);
-}
+  const Forge::Configuration& cfg = Forge::Configuration::getSingleton();
+  cfg.loadConfig(cfgFile);
+  mRenderWindow->setTitle(windowTitle.c_str());
+  mRenderWindow->setFullscreen(false);
+  mRenderWindow->resize(cfg.display.width, cfg.display.height);
+  mRenderWindow->show();
+  mEventHandler.registerWindow(mRenderWindow);
+  mInput->setCurrentWindow(mRenderWindow);
 
-void PaddleGame::init()
-{
-  initializeData();
+  mRenderer.initialize();
+  mRenderer.updateViewport(cfg.display.width, cfg.display.height);
   initializeGameStates();
 }
 
@@ -88,11 +85,23 @@ int PaddleGame::run()
   int result = 0;
   mClock.init();
 
-  mStateMachine.start();
+  bool running = true;
+  mInput->capture();
+  while(running)
+  {
+    mClock.updateDeltaTime();
+    float const delta = mClock.getGameDelta();
+    mInput->process(delta);
+    running = mStateMachine.update(delta);
+    mRenderWindow->getContext().swapBuffers();
+    running = mEventHandler.pumpMessages();
 
-  result = QApplication::exec();
-
-  mStateMachine.stop();
+    // Sleep for rest of frame seconds
+    mClock.updateDeltaTime();
+    int sleepMillis = 1000 * (FRAME_SECONDS - mClock.getRealDelta());
+    std::this_thread::sleep_for(std::chrono::milliseconds(sleepMillis));
+  }
+  mInput->release();
 
   return result;
 }

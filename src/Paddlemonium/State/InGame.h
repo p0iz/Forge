@@ -20,57 +20,56 @@
 
 #pragma once
 
-#include "Input/InputHandler.h"
+#include "Input/InGameProcessor.hpp"
 
 // Forge includes
 #include "Graphics/Light/Light.hpp"
-#include "Graphics/QtRenderer.hpp"
 #include "Graphics/Scene/SceneConfig.hpp"
 #include "Graphics/Material/Material.h"
 #include "Graphics/Material/Technique/TechniqueLibrary.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/TargetCamera.h"
 #include "State/GameState.h"
 #include "Time/HighResClock.h"
 
 #include <memory>
+#include <string>
+
 
 namespace Paddlemonium { namespace State {
 
-class InGame : public QObject, public Forge::GameState
+class InGame : public Forge::GameState
 {
-	Q_OBJECT
 public:
-	InGame(const QString& name,
-				Forge::QtRenderer& renderer,
-				InputHandler& input,
-				Forge::HighResClock& clock);
+  InGame(
+    Forge::Graphics::Renderer& renderer,
+    InGameProcessor& input
+  );
 
-	virtual Forge::GameStatePtr frameUpdate();
-	virtual void createState();
-	virtual void destroyState();
+  virtual Forge::GameStatePtr frameUpdate(float const delta);
+  virtual void createState();
+  virtual void destroyState();
 
 private:
-	Paddlemonium::InputHandler& mInput;
+  InGameProcessor& mInput;
 
-	Forge::TargetCamera mCamera;
-	Forge::QtRenderer& mRenderer;
-	Forge::HighResClock& mClock;
+  Forge::TargetCamera mCamera;
+  Forge::Graphics::Renderer& mRenderer;
 
-	Forge::SceneConfig mSceneConfig;
-	Forge::TechniqueLibrary mTechniqueLibrary;
+  Forge::SceneConfig mSceneConfig;
+  Forge::TechniqueLibrary mTechniqueLibrary;
 
-	// Game object meshes
-	Forge::MeshPtr mPaddleMesh;
-	Forge::MeshPtr mTileMesh;
-	Forge::MeshPtr mBallMesh;
-	Forge::MeshPtr mBorderMesh;
+  // Game object meshes
+  Forge::MeshPtr mPaddleMesh;
+  Forge::MeshPtr mTileMesh;
+  Forge::MeshPtr mBallMesh;
+  Forge::MeshPtr mBorderMesh;
 
-	// Game object nodes
-	Forge::SceneNodeId mPaddleNode;
-	Forge::SceneNodeId mBallNode;
-	Forge::SceneNodeId mTileNode;
-	Forge::SceneNodeId mBorderNode;
-
+  // Game object nodes
+  Forge::SceneNodeId mPaddleNode;
+  Forge::SceneNodeId mBallNode;
+  Forge::SceneNodeId mTileNode;
+  Forge::SceneNodeId mBorderNode;
 };
 
 }}

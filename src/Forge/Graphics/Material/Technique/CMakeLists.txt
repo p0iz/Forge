@@ -11,5 +11,7 @@ set(TechniqueSources
 	TechniqueLibrary.cpp
 	UnshadedColor.cpp)
 
+find_package(GLEW REQUIRED)
+
 add_library(Technique ${TechniqueSources})
-target_link_libraries(Technique Loaders)
+target_link_libraries(Technique Loaders Shader ${GLEW_LIBRARIES})

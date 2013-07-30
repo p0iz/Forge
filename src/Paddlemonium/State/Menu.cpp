@@ -18,13 +18,11 @@
  *
  */
 
-#include "State/Menu.h"
-#include "State/GameStateLibrary.hpp"
+#include "Menu.h"
 
-#include "Input/QtInputHandler.h"
+#include "State/GameStateLibrary.hpp"
 #include "Graphics/Loaders/MeshLoader.h"
 #include "Graphics/Material/Technique/InternalTechniques.hpp"
-#include "Graphics/QtRenderer.hpp"
 #include "Time/HighResClock.h"
 #include "Util/Log.h"
 
@@ -32,22 +30,13 @@
 
 namespace Paddlemonium { namespace State {
 
-Menu::Menu(const QString& name,
-		   InputHandler& input,
-		   Forge::HighResClock& clock)
-	: GameState(name.toStdString()),
-	  mInput(input),
-	  mClock(clock) { }
+Menu::Menu():
+  GameState("Menu")
+{
+}
 
-Forge::GameStatePtr Menu::frameUpdate() {
+Forge::GameStatePtr Menu::frameUpdate(float const /*delta*/) {
 	static Forge::GameStateLibrary& library = Forge::GameStateLibrary::getSingleton();
-
-	// Update clock
-	mClock.updateDeltaTime();
-	float delta = mClock.getGameDelta();
-
-	// Process input
-	mInput.processInput(delta);
 
 	// Return next (this) state
 	Forge::Log::info << "Starting game.\n";

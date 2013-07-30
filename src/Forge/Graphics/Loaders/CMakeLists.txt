@@ -20,4 +20,4 @@ else()
   list(APPEND LoadersLibs ${FREEIMAGE_LIBRARY})
 endif()
 
-target_link_libraries(Loaders ${LoadersLibs})
+target_link_libraries(Loaders Graphics ${LoadersLibs})

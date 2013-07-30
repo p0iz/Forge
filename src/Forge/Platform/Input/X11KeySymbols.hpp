@@ -14,25 +14,17 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#pragma once
+#include <X11/keysym.h>
 
-#include "State/GameState.h"
+namespace Forge { namespace Input {
 
-namespace Forge {
-
-class GameStateMachine
+enum Key
 {
-public:
-	GameStateMachine();
-  void init(GameStatePtr const& initialState);
-  bool update(float const delta);
-	void reset();
-private:
-	GameStatePtr mCurrentState;
+
 };
 
-}
+}}

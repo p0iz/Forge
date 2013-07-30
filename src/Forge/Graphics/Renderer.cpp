@@ -26,114 +26,114 @@
 #include "Scene/SceneConfig.hpp"
 #include "Util/Log.h"
 
-namespace Forge {
+namespace Forge { namespace Graphics {
 
 Renderer::~Renderer()
 {
-	Light::destroyBuffer();
+  Light::destroyBuffer();
 }
 
 void Renderer::initialize()
 {
-	// Flag to load all extensions, needed by OpenGL 3.3
-	glewExperimental = GL_TRUE;
-	assert(glewInit() == GLEW_OK);
+  // Flag to load all extensions, needed by OpenGL 3.3
+  glewExperimental = GL_TRUE;
+  assert(glewInit() == GLEW_OK);
 
-	glClearColor(0.1f,0.1f,0.1f,1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_CULL_FACE);
-	glBlendFunc(GL_ONE, GL_ONE);
+  glClearColor(0.1f,0.1f,0.1f,1.0f);
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);
+  glEnable(GL_CULL_FACE);
+  glBlendFunc(GL_ONE, GL_ONE);
 
-	DebugAxis::getSingleton();
-	Light::createBuffer();
+  DebugAxis::getSingleton();
+  Light::createBuffer();
 }
 
 void Renderer::updateViewport(int width, int height)
 {
-	glViewport(0, 0, width, height);
+  glViewport(0, 0, width, height);
 }
 
 void Renderer::updateLightData(const SceneConfig& scene, const glm::mat4& view)
 {
-	for (const Light& light : scene.lights) {
-		if (light.id >= 0) {
-			Light::Data& lightData = Light::data[light.id];
-			lightData.viewSpacePosition = view * light.position;
-			lightData.direction = glm::mat3(view) * light.direction;
-		}
-	}
+  for (const Light& light : scene.lights) {
+    if (light.id >= 0) {
+      Light::Data& lightData = Light::data[light.id];
+      lightData.viewSpacePosition = view * light.position;
+      lightData.direction = glm::mat3(view) * light.direction;
+    }
+  }
 }
 
 void Renderer::drawScene(const glm::mat4& view,
-							 const glm::mat4& projection,
-							 const SceneConfig& scene)
+               const glm::mat4& projection,
+               const SceneConfig& scene)
 {
-	for (auto materialMeshPair : scene.mMaterialMeshMap) {
-		const Material& material = materialMeshPair.first;
-		bool materialSelected = false;
-		const std::vector<MeshPtr>& meshes = materialMeshPair.second;
-		for (MeshPtr mesh : meshes) {
-			// For each mesh, get the world transform
-			for (SceneNodeId nodeId : mesh->getAttachedNodes()) {
-				if (!materialSelected) {
-					material.beginMaterial();
-					materialSelected = true;
-				}
-				const glm::mat4& world = scene.getSceneNode(nodeId).mWorldTransform.getMatrix();
+  for (auto materialMeshPair : scene.mMaterialMeshMap) {
+    const Material& material = materialMeshPair.first;
+    bool materialSelected = false;
+    const std::vector<MeshPtr>& meshes = materialMeshPair.second;
+    for (MeshPtr mesh : meshes) {
+      // For each mesh, get the world transform
+      for (SceneNodeId nodeId : mesh->getAttachedNodes()) {
+        if (!materialSelected) {
+          material.beginMaterial();
+          materialSelected = true;
+        }
+        const glm::mat4& world = scene.getSceneNode(nodeId).mWorldTransform.getMatrix();
 
-				material.setTransforms(world, view, projection);
-				for (int i = 0; i < Light::MAX_LIGHTS; ++i) {
-					if (scene.lights[i].type != Light::DISABLED) {
-						Light::updateBuffer(scene.lights[i].id);
-						mesh->draw();
-					}
-				}
-			}
-		}
-	}
+        material.setTransforms(world, view, projection);
+        for (int i = 0; i < Light::MAX_LIGHTS; ++i) {
+          if (scene.lights[i].type != Light::DISABLED) {
+            Light::updateBuffer(scene.lights[i].id);
+            mesh->draw();
+          }
+        }
+      }
+    }
+  }
 }
 
 void Renderer::render(const SceneConfig& scene)
 {
-	glDepthMask(GL_TRUE);
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+  glDepthMask(GL_TRUE);
+  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-	const glm::mat4 view = scene.getCamera().getViewMatrix();
-	const glm::mat4 projection = scene.getCamera().getProjectionMatrix();
+  const glm::mat4 view = scene.getCamera().getViewMatrix();
+  const glm::mat4 projection = scene.getCamera().getProjectionMatrix();
 
-	// Update view space light positions
-	updateLightData(scene, view);
+  // Update view space light positions
+  updateLightData(scene, view);
 
-	// Z-only prepass
-	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-	drawScene(view, projection, scene);
+  // Z-only prepass
+  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+  drawScene(view, projection, scene);
 
-	// Render debug overlay
-	if (DebugAxis::isDebugVisible()) {
-		DebugAxis::getSingleton().render(scene);
-	}
+  // Render debug overlay
+  if (DebugAxis::isDebugVisible()) {
+    DebugAxis::getSingleton().render(scene);
+  }
 
-	// Actual rendering
-	glDepthFunc(GL_LEQUAL);
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glDepthMask(GL_FALSE);
+  // Actual rendering
+  glDepthFunc(GL_LEQUAL);
+  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+  glDepthMask(GL_FALSE);
 
-	glEnable(GL_BLEND);
-	drawScene(view, projection, scene);
+  glEnable(GL_BLEND);
+  drawScene(view, projection, scene);
 
-	// Render debug overlay
-	if (DebugAxis::isDebugVisible()) {
-		DebugAxis::getSingleton().render(scene);
-	}
+  // Render debug overlay
+  if (DebugAxis::isDebugVisible()) {
+    DebugAxis::getSingleton().render(scene);
+  }
 
-	glDisable(GL_BLEND);
+  glDisable(GL_BLEND);
 
-	// Post process
+  // Post process
 }
 
 void Renderer::renderDebugOverlay(const SceneConfig& scene) {
 
 }
 
-}
+}}

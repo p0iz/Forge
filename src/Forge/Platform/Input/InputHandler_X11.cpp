@@ -14,25 +14,20 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#pragma once
+#include "InputHandler.hpp"
+#include "X11InputHandler.hpp"
 
-#include "State/GameState.h"
+namespace Forge { namespace Input {
 
-namespace Forge {
-
-class GameStateMachine
+InputHandlerPtr InputHandler::createInstance()
 {
-public:
-	GameStateMachine();
-  void init(GameStatePtr const& initialState);
-  bool update(float const delta);
-	void reset();
-private:
-	GameStatePtr mCurrentState;
-};
-
+  InputHandlerPtr instance(new X11InputHandler());
+  return instance;
 }
+
+}}
+

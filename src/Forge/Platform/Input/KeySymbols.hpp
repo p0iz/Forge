@@ -14,25 +14,14 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "State/GameState.h"
-
-namespace Forge {
-
-class GameStateMachine
-{
-public:
-	GameStateMachine();
-  void init(GameStatePtr const& initialState);
-  bool update(float const delta);
-	void reset();
-private:
-	GameStatePtr mCurrentState;
-};
-
-}
+#ifdef __linux__
+#include "X11KeySymbols.hpp"
+#else
+#error "Unsupported OS"
+#endif

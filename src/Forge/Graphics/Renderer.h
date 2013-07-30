@@ -23,23 +23,25 @@
 #include <glm/glm.hpp>
 
 namespace Forge {
-
 class SceneConfig;
+}
+
+namespace Forge { namespace Graphics {
 
 /* A class that is used to render scenes from scene configurations */
 class Renderer
 {
 public:
-	~Renderer();
-	void initialize();
-	void updateViewport(int width, int height);
-	void render(const SceneConfig& scene);
+  ~Renderer();
+  void initialize();
+  void updateViewport(int width, int height);
+  void render(const SceneConfig& scene);
 private:
-	void renderDebugOverlay(const SceneConfig& scene);
-	void updateLightData(const SceneConfig& scene, const glm::mat4& view);
-	void drawScene(const glm::mat4& view,
-					   const glm::mat4& projection,
-					   const SceneConfig& scene);
+  void renderDebugOverlay(const SceneConfig& scene);
+  void updateLightData(const SceneConfig& scene, const glm::mat4& view);
+  void drawScene(const glm::mat4& view,
+             const glm::mat4& projection,
+             const SceneConfig& scene);
 };
 
-}
+}}

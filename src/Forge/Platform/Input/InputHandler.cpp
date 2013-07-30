@@ -18,38 +18,33 @@
  *
  */
 
+#include "InputHandler.hpp"
+
+
 namespace Forge { namespace Input {
 
-/* Base class for platform-specific implementations */
-
-/* TODO: Split into input capture (platform) and input processing (application) */
-
-class InputHandler
+InputHandler::InputHandler():
+  mProcessor(nullptr)
 {
-  public:
-    InputHandler(RenderWindowPtr window = nullptr);
-    virtual ~InputHandler();
+}
 
-    virtual void setCurrentWindow(RenderWindowPtr) = 0;
-    RenderWindowPtr const getCurrentWindow() const;
+InputHandler::~InputHandler()
+{
+}
 
-    /* Capture must be done before input can be processed */
-    void captureAll();
-    virtual void captureMouse() = 0;
-    virtual void captureKeyboard() = 0;
+void InputHandler::setProcessor(InputProcessor* processor)
+{
+  mProcessor = processor;
+}
 
-    /* Implement input handling here */
-    virtual void processInput() = 0;
-
-    /*
-     * isKeyDown
-     * isKeyUp
-     * isMouseDown
-     * isMouseUp
-     * getMouseLoc
-     */
-  private:
-    RenderWindowPtr mCurrentWindow;
-};
+void InputHandler::process(float const delta) const
+{
+  if (mProcessor)
+  {
+    mProcessor->process(delta, *this);
+  }
+}
 
 }}
+
+

@@ -20,19 +20,46 @@
 
 #pragma once
 
-#include "State/GameState.h"
+#include "Platform/Input/InputProcessor.hpp"
 
-namespace Forge {
+#include "Graphics/Scene/SceneConfig.hpp"
 
-class GameStateMachine
+#include <map>
+
+
+enum GameAction
 {
-public:
-	GameStateMachine();
-  void init(GameStatePtr const& initialState);
-  bool update(float const delta);
-	void reset();
-private:
-	GameStatePtr mCurrentState;
+  // Paddle
+  PaddleLeft,
+  PaddleRight,
+
+  // Misc.
+  ToggleFullscreen,
+  ToggleDebug
+};
+
+template <class ActionType>
+using KeyMap = std::map<int, ActionType>;
+
+namespace Paddlemonium {
+
+class InGameProcessor : public Forge::Input::InputProcessor
+{
+  public:
+    InGameProcessor();
+    virtual ~InGameProcessor();
+
+    void setSceneConfig(Forge::SceneConfig* sceneConfig);
+
+    void process(float const delta, Forge::Input::InputHandler const& handler);
+  private:
+    void processMouseMove();
+    void processKeyPress();
+
+    Forge::SceneConfig* mSceneConfig;
+
+    void mapDefaultKeys();
+    KeyMap<GameAction> mKeyMap;
 };
 
 }

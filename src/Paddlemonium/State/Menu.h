@@ -20,14 +20,12 @@
 
 #pragma once
 
-#include "Input/InputHandler.h"
-
 // Forge includes
 #include "Graphics/Light/Light.hpp"
-#include "Graphics/QtRenderer.hpp"
 #include "Graphics/Scene/SceneConfig.hpp"
 #include "Graphics/Material/Material.h"
 #include "Graphics/Material/Technique/TechniqueLibrary.h"
+#include "Platform/Input/InputHandler.hpp"
 #include "State/GameState.h"
 #include "Time/HighResClock.h"
 
@@ -35,21 +33,15 @@
 
 namespace Paddlemonium { namespace State {
 
-class Menu : public QObject, public Forge::GameState
+class Menu : public Forge::GameState
 {
-	Q_OBJECT
 public:
-	Menu(const QString& name,
-				InputHandler& input,
-				Forge::HighResClock& clock);
+  Menu();
 
-	virtual Forge::GameStatePtr frameUpdate();
-	virtual void createState();
-	virtual void destroyState();
+  virtual Forge::GameStatePtr frameUpdate(float const delta);
+  virtual void createState();
+  virtual void destroyState();
 
-private:
-	Paddlemonium::InputHandler& mInput;
-	Forge::HighResClock& mClock;
 };
 
 }}

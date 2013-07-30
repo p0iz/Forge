@@ -29,9 +29,9 @@ void GameStateMachine::init(const GameStatePtr& initialState) {
 	mCurrentState = initialState;
 }
 
-bool GameStateMachine::update() {
+bool GameStateMachine::update(float const delta) {
 	if (mCurrentState) {
-		mCurrentState = mCurrentState->frameUpdate();
+    mCurrentState = mCurrentState->frameUpdate(delta);
 		return true;
 	} else {
 		return false;
