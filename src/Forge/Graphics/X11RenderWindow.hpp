@@ -46,6 +46,7 @@ class X11RenderWindow : public RenderWindow
 
     virtual void setTitle(char const* title);
 
+    unsigned long getHandle();
     RenderContext& getContext();
 
     XVisualInfo* openWindow(GLXFBConfig preferredConfig);

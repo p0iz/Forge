@@ -327,6 +327,11 @@ void X11RenderWindow::setTitle(char const* title)
   }
 }
 
+unsigned long X11RenderWindow::getHandle()
+{
+  return mWindow;
+}
+
 RenderContext& X11RenderWindow::getContext()
 {
   return mContext;
