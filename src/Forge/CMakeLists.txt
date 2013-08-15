@@ -24,11 +24,10 @@ if(WIN32)
     ${CMAKE_SOURCE_DIR}/windows_deps/freeimage
     ${CMAKE_SOURCE_DIR}/windows_deps/lua/include
   )
-elseif(EXISTS "/usr/include/lua5.2")
-  include_directories("/usr/include/lua5.2")
-else()
-  message(FATAL_ERROR "Forge requires Lua 5.2 development libraries.")
 endif()
+
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}")
+find_package(Lua52 REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

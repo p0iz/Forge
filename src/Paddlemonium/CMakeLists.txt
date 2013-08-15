@@ -15,6 +15,8 @@ set(Game_SOURCES
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${CMAKE_SOURCE_DIR}/src/Forge)
 
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};../Forge")
+
 # Add Windows build include directories
 if(WIN32)
   message(STATUS "Adding Windows dependency includes...")
@@ -22,12 +24,8 @@ if(WIN32)
     ${CMAKE_SOURCE_DIR}/windows_deps/glew/include
     ${CMAKE_SOURCE_DIR}/windows_deps/glm
     ${CMAKE_SOURCE_DIR}/windows_deps/freeimage
-    ${CMAKE_SOURCE_DIR}/windows_deps/lua/include
+		${LUA_INCLUDE_DIRECTORIES}
   )
-elseif(EXISTS "/usr/include/lua5.2")
-  include_directories("/usr/include/lua5.2")
-else()
-  message(FATAL_ERROR "Could not locate Lua 5.2 include directory.")
 endif()
 
 add_executable(Paddlemonium ${Game_SOURCES})
