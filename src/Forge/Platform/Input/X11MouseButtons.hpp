@@ -18,13 +18,25 @@
  *
  */
 
-namespace Forge { namespace Input {
+#include <X11/Xlib.h>
 
+
+namespace Forge {
+
+/* These should be enough to cover a wide variety of mice */
 enum MouseButton
 {
-  MB_LEFT,
-  MB_MIDDLE,
-  MB_RIGHT
+  Left = Button1,
+  Middle = Button2,
+  Right = Button3,
+  WheelUp = Button4,
+  WheelDown = Button5,
+  WheelLeft,
+  WheelRight,
+  ExtraButton1,
+  ExtraButton2
 };
 
-}}
+
+
+}

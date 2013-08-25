@@ -28,7 +28,8 @@ namespace Forge { namespace Event {
 Display* X11EventHandler::display = nullptr;
 
 X11EventHandler::X11EventHandler():
-  EventHandler()
+  EventHandler(),
+  mInputHandler(Input::InputHandler::getInstance())
 {
   if (!X11EventHandler::display)
   {
@@ -65,11 +66,11 @@ bool X11EventHandler::pumpMessages()
 {
   for (unsigned long handle : mWindowHandles)
   {
-    XSetWMProtocols(X11EventHandler::display, handle, &mWmDeleteMessageAtom, 1);
+    XSetWMProtocols(display, handle, &mWmDeleteMessageAtom, 1);
     XEvent event;
-    while (XPending(X11EventHandler::display) > 0)
+    while (XPending(display) > 0)
     {
-      if (XCheckTypedWindowEvent(X11EventHandler::display, handle, ClientMessage, &event) == True)
+      if (XCheckTypedWindowEvent(display, handle, ClientMessage, &event) == True)
       {
         if (event.xclient.data.l[0] == (long)mWmDeleteMessageAtom)
         {
@@ -78,7 +79,29 @@ bool X11EventHandler::pumpMessages()
       }
       else
       {
-        XNextEvent(X11EventHandler::display, &event);
+        XNextEvent(display, &event);
+        switch (event.type)
+        {
+          case ConfigureNotify:
+            break;
+          case KeyPress:
+            mInputHandler.injectKeyDown(static_cast<Key>(event.xkey.keycode));
+            break;
+          case KeyRelease:
+            mInputHandler.injectKeyUp(static_cast<Key>(event.xkey.keycode));
+            break;
+          case MotionNotify:
+            mInputHandler.injectMouseMove(event.xmotion.x, event.xmotion.y);
+            break;
+          case ButtonPress:
+            mInputHandler.injectMouseDown(static_cast<MouseButton>(event.xbutton.button));
+            break;
+          case ButtonRelease:
+            mInputHandler.injectMouseUp(static_cast<MouseButton>(event.xbutton.button));
+            break;
+          default:
+            break;
+        }
       }
     }
     // Check for closed window

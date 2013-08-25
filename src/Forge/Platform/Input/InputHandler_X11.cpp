@@ -23,9 +23,9 @@
 
 namespace Forge { namespace Input {
 
-InputHandlerPtr InputHandler::createInstance()
+InputHandler& InputHandler::getInstance()
 {
-  InputHandlerPtr instance(new X11InputHandler());
+  static X11InputHandler instance;
   return instance;
 }
 

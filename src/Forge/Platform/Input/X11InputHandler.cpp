@@ -19,6 +19,9 @@
  */
 
 #include "X11InputHandler.hpp"
+#include "../Event/X11EventHandler.hpp"
+#include "../../Util/Log.h"
+#include <X11/Xlib.h>
 
 
 namespace Forge { namespace Input {
@@ -36,7 +39,6 @@ X11InputHandler::~X11InputHandler()
 void X11InputHandler::setCurrentWindow(Graphics::RenderWindowPtr window)
 {
   mCurrentWindow = window;
-  // Get window handle and setup X11 events
 }
 
 Graphics::RenderWindowPtr const X11InputHandler::getCurrentWindow() const
@@ -46,42 +48,20 @@ Graphics::RenderWindowPtr const X11InputHandler::getCurrentWindow() const
 
 void X11InputHandler::capture()
 {
-  // Subscribe to X11 input events
+  XSelectInput(
+    Event::X11EventHandler::display,
+    mCurrentWindow->getHandle(),
+    KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask
+  );
 }
 
 void X11InputHandler::release()
 {
-  // Unsubscribe from X11 input events
-}
-
-bool X11InputHandler::isKeyDown(Key key)
-{
-  return false;
-}
-
-bool X11InputHandler::isKeyUp(Key key)
-{
-  return false;
-}
-
-bool X11InputHandler::isMouseDown(MouseButton mask)
-{
-  return false;
-}
-
-bool X11InputHandler::isMouseUp(MouseButton mask)
-{
-  return false;
-}
-
-int X11InputHandler::getMouseLocX()
-{
-  return 0;
-}
-
-int X11InputHandler::getMouseLocY()
-{
-  return 0;
+  XSelectInput(
+    Event::X11EventHandler::display,
+    mCurrentWindow->getHandle(),
+    NoEventMask
+  );
 }
 
 }}

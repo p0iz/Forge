@@ -37,14 +37,6 @@ class X11InputHandler : public InputHandler
     virtual void capture();
     virtual void release();
 
-    virtual bool isKeyDown(Key key);
-    virtual bool isKeyUp(Key key);
-    virtual bool isMouseDown(MouseButton mask);
-    virtual bool isMouseUp(MouseButton mask);
-
-    virtual int getMouseLocX();
-    virtual int getMouseLocY();
-
   private:
     Graphics::RenderWindowPtr mCurrentWindow;
 };

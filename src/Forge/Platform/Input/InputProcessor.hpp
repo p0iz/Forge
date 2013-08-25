@@ -25,13 +25,11 @@
 
 namespace Forge { namespace Input {
 
-class InputHandler;
-
 class InputProcessor
 {
   public:
     virtual ~InputProcessor() { }
-    virtual void process(float const delta, InputHandler const& handler) = 0;
+    virtual bool process(float const delta) = 0;
 };
 
 typedef std::shared_ptr<InputProcessor> InputProcessorPtr;

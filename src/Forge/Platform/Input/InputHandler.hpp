@@ -31,16 +31,13 @@
 namespace Forge { namespace Input {
 
 /* Base class for platform-specific implementations */
-
-class InputHandler;
-typedef std::shared_ptr<InputHandler> InputHandlerPtr;
-
 class InputHandler
 {
   public:
     InputHandler();
     virtual ~InputHandler();
 
+    /* Set the window to read events from */
     virtual void setCurrentWindow(Graphics::RenderWindowPtr) = 0;
     virtual Graphics::RenderWindowPtr const getCurrentWindow() const = 0;
 
@@ -48,20 +45,37 @@ class InputHandler
     virtual void capture() = 0;
     virtual void release() = 0;
 
+    /* Used by e.g. event handler to inject input events */
+    void injectKeyDown(Key key);
+    void injectKeyUp(Key key);
+    void injectMouseMove(int x, int y);
+    void injectMouseDown(MouseButton button);
+    void injectMouseUp(MouseButton button);
+
+    /* Set the input processor to use for processing captured events */
     void setProcessor(InputProcessor* processor);
-    void process(float const delta) const;
+    bool process(float const delta) const;
 
-    virtual bool isKeyDown(Key key) = 0;
-    virtual bool isKeyUp(Key key) = 0;
-    virtual bool isMouseDown(MouseButton mask) = 0;
-    virtual bool isMouseUp(MouseButton mask) = 0;
+    bool isKeyDown(Key key) const;
+    bool isKeyUp(Key key) const;
+    std::unordered_set<Key> const& getActiveKeys() const;
+    bool isMouseDown(MouseButton mask) const;
+    bool isMouseUp(MouseButton mask) const;
 
-    virtual int getMouseLocX() = 0;
-    virtual int getMouseLocY() = 0;
+    int getMouseX() const;
+    int getMouseY() const;
 
-    static InputHandlerPtr createInstance();
+    static InputHandler& getInstance();
+
   private:
     InputProcessor* mProcessor;
+
+    int mMouseX;
+    int mMouseY;
+
+    std::unordered_set<Key> mActiveKeys;
+    MouseButton mActiveButtons;
+    Modifier mActiveModifiers;
 };
 
 }}

@@ -21,6 +21,7 @@
 #pragma once
 
 #include "EventHandler.hpp"
+#include "../Input/InputHandler.hpp"
 #include <unordered_set>
 
 #include <X11/Xlib.h>
@@ -41,6 +42,8 @@ class X11EventHandler : public EventHandler
 
     static Display* display;
   private:
+    Input::InputHandler& mInputHandler;
+
     std::unordered_set<unsigned long> mWindowHandles;
 
     // Used to catch the WM closing the window

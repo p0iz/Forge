@@ -32,17 +32,79 @@ InputHandler::~InputHandler()
 {
 }
 
+void InputHandler::injectKeyDown(Key key)
+{
+  mActiveKeys.insert(key);
+}
+
+void InputHandler::injectKeyUp(Key key)
+{
+  mActiveKeys.erase(key);
+}
+
+void InputHandler::injectMouseMove(int x, int y)
+{
+  mMouseX = x;
+  mMouseY = y;
+}
+
+void InputHandler::injectMouseDown(MouseButton button)
+{
+  mActiveButtons = static_cast<MouseButton>(mActiveButtons | button);
+}
+
+void InputHandler::injectMouseUp(MouseButton button)
+{
+  mActiveButtons = static_cast<MouseButton>(mActiveButtons & ~button);
+}
+
 void InputHandler::setProcessor(InputProcessor* processor)
 {
   mProcessor = processor;
 }
 
-void InputHandler::process(float const delta) const
+bool InputHandler::process(float const delta) const
 {
   if (mProcessor)
   {
-    mProcessor->process(delta, *this);
+    return mProcessor->process(delta);
   }
+  return true;
+}
+
+bool InputHandler::isKeyDown(Key key) const
+{
+  return mActiveKeys.count(key);
+}
+
+bool InputHandler::isKeyUp(Key key) const
+{
+  return !mActiveKeys.count(key);
+}
+
+const std::unordered_set<Key>&InputHandler::getActiveKeys() const
+{
+  return mActiveKeys;
+}
+
+bool InputHandler::isMouseDown(MouseButton mask) const
+{
+  return mActiveButtons & mask;
+}
+
+bool InputHandler::isMouseUp(MouseButton mask) const
+{
+  return (mActiveButtons & mask) == 0;
+}
+
+int InputHandler::getMouseX() const
+{
+  return mMouseX;
+}
+
+int InputHandler::getMouseY() const
+{
+  return mMouseY;
 }
 
 }}
