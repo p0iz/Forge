@@ -20,12 +20,12 @@
 
 #include "State/GameStateLibrary.hpp"
 
-void Forge::GameStateLibrary::add(const std::string& name, Forge::GameStatePtr state)
+void Forge::GameStateLibrary::add(Forge::GameStatePtr state)
 {
-	mGameStates.insert(std::pair<std::string, Forge::GameStatePtr>(name, state));
+  mGameStates.insert(std::pair<std::string, Forge::GameStatePtr>(state->getName(), state));
 }
 
 Forge::GameStatePtr Forge::GameStateLibrary::get(const std::string& name)
 {
-	return mGameStates[name];
+  return mGameStates[name];
 }

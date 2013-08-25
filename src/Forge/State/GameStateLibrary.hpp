@@ -32,10 +32,10 @@ namespace Forge {
 /* This class can be used to store and access a library of game states. */
 class GameStateLibrary : public Singleton<GameStateLibrary> {
 public:
-	void add(const std::string& name, GameStatePtr state);
-	GameStatePtr get(const std::string& name);
+  void add(GameStatePtr state);
+  GameStatePtr get(const std::string& name);
 private:
-	std::unordered_map<std::string, GameStatePtr> mGameStates;
+  std::unordered_map<std::string, GameStatePtr> mGameStates;
 };
 
 }
