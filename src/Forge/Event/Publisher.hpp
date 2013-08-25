@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Event/Subscriber.hpp"
 #include "Util/UniqueId.hpp"
 
 #include <unordered_set>
@@ -27,40 +28,37 @@
 namespace Forge {
 
 template <class EventType>
-class Subscriber;
-
-template <class EventType>
 class Publisher
 {
 public:
-	void publish(const EventType& event) const
-	{
-		for (Subscriber<EventType>* subscriber : mSubscribers)
-		{
-			subscriber->notify(event);
-		}
-	}
+  void publish(const EventType& event) const
+  {
+    for (Subscriber<EventType>* subscriber : mSubscribers)
+    {
+      subscriber->notify(event);
+    }
+  }
 
-	bool subscribe(Subscriber<EventType>& subscriber)
-	{
-		if (mSubscribers.count(&subscriber) == 0)
-		{
-			mSubscribers.insert(&subscriber);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+  bool subscribe(Subscriber<EventType>& subscriber)
+  {
+    if (mSubscribers.count(&subscriber) == 0)
+    {
+      mSubscribers.insert(&subscriber);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
 
-	bool unsubscribe(Subscriber<EventType>& subscriber)
-	{
-		return mSubscribers.erase(&subscriber);
-	}
+  bool unsubscribe(Subscriber<EventType>& subscriber)
+  {
+    return mSubscribers.erase(&subscriber);
+  }
 
 private:
-	std::unordered_set<Subscriber<EventType>*> mSubscribers;
+  std::unordered_set<Subscriber<EventType>*> mSubscribers;
 };
 
 }
