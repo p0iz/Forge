@@ -20,71 +20,66 @@
 
 #pragma once
 
-#include "ResizeEvent.h"
-
-#include "Event/Subscriber.hpp"
-
 #include <glm/glm.hpp>
+
 
 namespace Forge {
 
-class Camera : public Subscriber<ResizeEvent>
+class Camera
 {
 public:
-	Camera();
-	virtual ~Camera();
+  Camera();
+  virtual ~Camera();
 
-	void setPerspectiveProjection(int width, int height);
-	void setOrthogonalProjection(int width, int height);
+  void setPerspectiveProjection(int width, int height);
+  void setOrthogonalProjection(int width, int height);
 
-	virtual const glm::mat4x4 getViewMatrix() const = 0;
+  virtual const glm::mat4x4 getViewMatrix() const = 0;
 
-	void setFovY(float fov);
-	float getFovY() const;
-	void setClipDistances(float near, float far);
+  void setFovY(float fov);
+  float getFovY() const;
+  void setClipDistances(float near, float far);
 
-	float getAspectRatio() const;
+  float getAspectRatio() const;
 
-	const glm::mat4x4& getProjectionMatrix() const
-	{
-		return mProjectionMatrix;
-	}
+  const glm::mat4x4& getProjectionMatrix() const
+  {
+    return mProjectionMatrix;
+  }
 
-	// Call this whenever you need a fresh VP (e.g. each frame)
-	void updateViewProjectionMatrix();
+  // Call this whenever you need a fresh VP (e.g. each frame)
+  void updateViewProjectionMatrix();
 
-	void updatePosition(glm::vec3 translation);
-	void updateRotation(float yaw = 0, float pitch = 0, float roll = 0);
+  void updatePosition(glm::vec3 translation);
+  void updateRotation(float yaw = 0, float pitch = 0, float roll = 0);
 
-	const glm::vec3 getRotation() const
-	{
-		return mRotation;
-	}
+  const glm::vec3 getRotation() const
+  {
+    return mRotation;
+  }
 
-	const glm::vec3 getPosition() const
-	{
-		return mPosition;
-	}
-
-	void notify(const ResizeEvent& event);
+  const glm::vec3 getPosition() const
+  {
+    return mPosition;
+  }
 
 private:
 
-	float mFovY;
-	float mNearClip;
-	float mFarClip;
+  float mFovY;
+  float mNearClip;
+  float mFarClip;
 
-	float mWidth;
-	float mHeight;
+  float mWidth;
+  float mHeight;
 
-	glm::vec3 mRotation;
-	glm::vec3 mPosition;
+  glm::vec3 mRotation;
+  glm::vec3 mPosition;
 
-	bool mDirtyViewProjection;
+  bool mDirtyViewProjection;
 
-	glm::mat4x4 mViewMatrix;
-	glm::mat4x4 mProjectionMatrix;
-	glm::mat4x4 mViewProjectionMatrix;
+  glm::mat4x4 mViewMatrix;
+  glm::mat4x4 mProjectionMatrix;
+  glm::mat4x4 mViewProjectionMatrix;
 };
 
 } // namespace Forge

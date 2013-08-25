@@ -51,6 +51,8 @@ void Renderer::initialize()
 
 void Renderer::updateViewport(int width, int height)
 {
+  mWidth = width;
+  mHeight = height;
   glViewport(0, 0, width, height);
 }
 
@@ -97,7 +99,7 @@ void Renderer::drawScene(const glm::mat4& view,
 void Renderer::render(const SceneConfig& scene)
 {
   glDepthMask(GL_TRUE);
-  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   const glm::mat4 view = scene.getCamera().getViewMatrix();
   const glm::mat4 projection = scene.getCamera().getProjectionMatrix();
@@ -130,6 +132,16 @@ void Renderer::render(const SceneConfig& scene)
   glDisable(GL_BLEND);
 
   // Post process
+}
+
+const int Renderer::getWidth() const
+{
+  return mWidth;
+}
+
+const int Renderer::getHeight() const
+{
+  return mHeight;
 }
 
 void Renderer::renderDebugOverlay(const SceneConfig& scene) {

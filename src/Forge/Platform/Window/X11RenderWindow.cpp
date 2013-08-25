@@ -106,8 +106,6 @@ void X11RenderWindow::create()
 
   mContext.makeCurrent();
 
-  publish(ResizeEvent(mWidth, mHeight));
-
   mValid = true;
 }
 

@@ -29,12 +29,12 @@
 namespace Forge {
 
 Camera::Camera()
-	: mFovY(45.0f),
-	  mNearClip(1.0f),
-	  mFarClip(100.0f),
-	  mDirtyViewProjection(true),
-	  mProjectionMatrix(1.0f),
-	  mViewProjectionMatrix(1.0f)
+  : mFovY(45.0f),
+    mNearClip(1.0f),
+    mFarClip(100.0f),
+    mDirtyViewProjection(true),
+    mProjectionMatrix(1.0f),
+    mViewProjectionMatrix(1.0f)
 {
 }
 
@@ -44,57 +44,52 @@ Camera::~Camera()
 
 void Camera::setPerspectiveProjection(int width, int height)
 {
-	mWidth = width;
-	mHeight = height;
-	mProjectionMatrix = glm::perspective(mFovY, static_cast<float>(width) / height, mNearClip, mFarClip);
+  mWidth = width;
+  mHeight = height;
+  mProjectionMatrix = glm::perspective(mFovY, static_cast<float>(width) / height, mNearClip, mFarClip);
 }
 
 void Camera::setOrthogonalProjection(int width, int height)
 {
-	mWidth = width;
-	mHeight = height;
-	mProjectionMatrix = glm::mat4x4(1.0f);
-	mProjectionMatrix[0][0] = 2.0f / width;
-	mProjectionMatrix[1][1] = 2.0f / height;
-	mProjectionMatrix[2][2] = 1.0f / (mFarClip - mNearClip);
-	mProjectionMatrix[3][2] = -mNearClip / (mFarClip - mNearClip);
+  mWidth = width;
+  mHeight = height;
+  mProjectionMatrix = glm::mat4x4(1.0f);
+  mProjectionMatrix[0][0] = 2.0f / width;
+  mProjectionMatrix[1][1] = 2.0f / height;
+  mProjectionMatrix[2][2] = 1.0f / (mFarClip - mNearClip);
+  mProjectionMatrix[3][2] = -mNearClip / (mFarClip - mNearClip);
 }
 
 void Camera::setClipDistances(float near, float far) {
-	mNearClip = near;
-	mFarClip = far;
+  mNearClip = near;
+  mFarClip = far;
 }
 
 float Camera::getAspectRatio() const
 {
-	return static_cast<float>(mWidth) / mHeight;
+  return static_cast<float>(mWidth) / mHeight;
 }
 
 void Camera::setFovY(float fov)
 {
-	mFovY = fov;
+  mFovY = fov;
 }
 
 float Camera::getFovY() const
 {
-	return mFovY;
+  return mFovY;
 }
 
 void Camera::updateRotation(float yaw, float pitch, float roll)
 {
-	mRotation.x += glm::radians(yaw);
-	mRotation.y -= glm::radians(pitch);
-	mRotation.z += glm::radians(roll);
-}
-
-void Camera::notify(const ResizeEvent& event)
-{
-	setPerspectiveProjection(event.width, event.height);
+  mRotation.x += glm::radians(yaw);
+  mRotation.y -= glm::radians(pitch);
+  mRotation.z += glm::radians(roll);
 }
 
 void Camera::updatePosition(glm::vec3 translation)
 {
-	mPosition += translation;
+  mPosition += translation;
 }
 
 } // namespace Forge

@@ -103,6 +103,7 @@ void InGame::createState() {
 
   mCamera.setPosition(0.0f, 5.0f, -20.0f);
   mCamera.setTarget(0.0f, 5.0f, 0.0f);
+  mCamera.setPerspectiveProjection(mRenderer.getWidth(), mRenderer.getHeight());
 
   // Done. Allow the scene config to manipulate the scene
   mSceneConfig.setCamera(mCamera);
@@ -114,7 +115,6 @@ void InGame::createState() {
 
 void InGame::destroyState() {
   // Destroy game view
-  //mRenderer.unsubscribe(mCamera);
 }
 
 }}
