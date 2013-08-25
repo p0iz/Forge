@@ -26,27 +26,28 @@ namespace Forge {
 class HighResClock
 {
 public:
-	HighResClock(double scale = 1.0);
-	void init();
+  HighResClock(double scale = 1.0);
+  void init();
 
-	// Time deltas
-	void updateDeltaTime();
-	const float getGameDelta() const;
-	const float getRealDelta() const;
+  // Time deltas
+  void updateDeltaTime();
+  const float getGameDelta() const;
+  const float getRealDelta() const;
 
-	// Real-time
-	static const double getCurrentTime();
-	const float getElapsedRealTime() const;
+  // Real-time
+  static const double getCurrentTime();
+  const float getElapsedRealTime() const;
 
-	// Time scale manipulators
-	const double setTimeScale(double newFactor);
-	const double getTimeScale() const;
+  // Time scale manipulators
+  const double setTimeScale(double newFactor);
+  const double getTimeScale() const;
 
 private:
-	float mRealTimeDelta;
-	double mScaleFactor;
-	double mInitTime;
-	double mLastUpdateTime;
+  int mRealTimeDeltaMillis;
+  float mRealTimeDelta;
+  double mScaleFactor;
+  double mInitTime;
+  double mLastUpdateTime;
 };
 
 } // namespace Forge
