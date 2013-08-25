@@ -150,16 +150,16 @@ MeshPtr loadMesh(const std::string& file)
         if (idIter == vertexIds.end())
         {
           // Not found in existing vertices, add new index
-          glm::vec3 position = positions[pos];
+          glm::vec3 position = positions[pos-1];
           glm::vec2 texCoord;
           glm::vec3 normal;
           if (tex != -1)
           {
-            texCoord = texCoords[tex];
+            texCoord = texCoords[tex-1];
           }
           if (nor != -1)
           {
-            normal = normals[nor];
+            normal = normals[nor-1];
           }
           Vertex v(position, texCoord, normal);
           vertices.push_back(v);
