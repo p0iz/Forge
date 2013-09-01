@@ -75,7 +75,7 @@ void X11RenderContext::destroy()
 {
   if (mContext != nullptr)
   {
-    glXMakeCurrent(mDisplay, 0, 0);
+    glXMakeCurrent(mDisplay, 0, nullptr);
     glXDestroyContext(mDisplay, mContext);
   }
   mContext = nullptr;
