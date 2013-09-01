@@ -25,31 +25,18 @@
 
 namespace Forge { namespace Event {
 
-Display* X11EventHandler::display = nullptr;
+X11EventHandler::XDisplayConnection X11EventHandler::display;
 
 X11EventHandler::X11EventHandler():
   EventHandler(),
   mInputHandler(Input::InputHandler::getInstance())
 {
-  if (!X11EventHandler::display)
-  {
-    display = XOpenDisplay(nullptr);
-  }
-
-  if (!display)
-  {
-    Log::error << "Could not open X11 display connection!\n";
-  }
-  else
-  {
-    mWmDeleteMessageAtom = XInternAtom(X11EventHandler::display, "WM_DELETE_WINDOW", False);
-  }
+  mWmDeleteMessageAtom = XInternAtom(X11EventHandler::display, "WM_DELETE_WINDOW", False);
 }
 
 X11EventHandler::~X11EventHandler()
 {
   mWindowHandles.clear();
-  XCloseDisplay(X11EventHandler::display);
 }
 
 void X11EventHandler::registerWindow(Graphics::RenderWindowPtr window)

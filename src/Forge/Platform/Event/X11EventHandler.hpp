@@ -22,6 +22,7 @@
 
 #include "EventHandler.hpp"
 #include "../Input/InputHandler.hpp"
+#include "../../Util/Log.h"
 #include <unordered_set>
 
 #include <X11/Xlib.h>
@@ -40,7 +41,35 @@ class X11EventHandler : public EventHandler
 
     virtual bool pumpMessages();
 
-    static Display* display;
+    /* Make X11 connections RAII */
+    class XDisplayConnection
+    {
+      public:
+        XDisplayConnection():
+          mDisplay(XOpenDisplay(nullptr))
+        {
+          if (!mDisplay)
+          {
+            Log::error << "Could not open an X11 connection!\n";
+          }
+        }
+
+        ~XDisplayConnection()
+        {
+          XCloseDisplay(mDisplay);
+        }
+
+        operator Display*()
+        {
+          return mDisplay;
+        }
+
+      private:
+        Display* mDisplay;
+    };
+
+    static XDisplayConnection display;
+
   private:
     Input::InputHandler& mInputHandler;
 
