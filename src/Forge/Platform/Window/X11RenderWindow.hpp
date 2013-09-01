@@ -44,6 +44,9 @@ class X11RenderWindow : public RenderWindow
     virtual bool const isFullscreen() const;
     virtual void resize(int width, int height);
 
+    virtual int width() const;
+    virtual int height() const;
+
     virtual void setTitle(char const* title);
 
     unsigned long getHandle();

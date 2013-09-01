@@ -55,6 +55,9 @@ class RenderWindow : public Publisher<ResizeEvent>
     virtual bool const isFullscreen() const = 0;
     virtual void resize(int width, int height) = 0;
 
+    virtual int width() const = 0;
+    virtual int height() const = 0;
+
     /* This is a context-specific identifier for the render window */
     virtual unsigned long getHandle() = 0;
 
@@ -65,7 +68,6 @@ class RenderWindow : public Publisher<ResizeEvent>
     /* Use this to get a shared pointer to a new render window.
      * Implement this for each supported platform separately. */
     static RenderWindowPtr createInstance();
-
 };
 
 }}

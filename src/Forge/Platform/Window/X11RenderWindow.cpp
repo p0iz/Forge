@@ -319,6 +319,16 @@ void X11RenderWindow::resize(int width, int height)
   }
 }
 
+int X11RenderWindow::width() const
+{
+  return mWidth;
+}
+
+int X11RenderWindow::height() const
+{
+  return mHeight;
+}
+
 void X11RenderWindow::setTitle(char const* title)
 {
   mTitle = title;
