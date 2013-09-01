@@ -20,9 +20,11 @@
 
 #pragma once
 
-#include "Platform/Input/InputProcessor.hpp"
-
 #include "Graphics/Scene/SceneConfig.hpp"
+#include "Platform/Input/InputHandler.hpp"
+#include "Platform/Input/InputProcessor.hpp"
+#include "Platform/Input/KeySymbols.hpp"
+#include "Time/HighResClock.h"
 
 #include <map>
 
@@ -39,23 +41,29 @@ enum GameAction
 };
 
 template <class ActionType>
-using KeyMap = std::map<int, ActionType>;
+using KeyMap = std::map<Forge::Key, ActionType>;
 
 namespace Paddlemonium {
 
 class InGameProcessor : public Forge::Input::InputProcessor
 {
   public:
-    InGameProcessor();
+    InGameProcessor(
+      Forge::HighResClock& clock,
+      Forge::Graphics::RenderWindow& window
+    );
     virtual ~InGameProcessor();
 
     void setSceneConfig(Forge::SceneConfig* sceneConfig);
 
-    void process(float const delta, Forge::Input::InputHandler const& handler);
+    bool process(float const delta);
   private:
     void processMouseMove();
-    void processKeyPress();
+    bool processKeyPress();
 
+    Forge::Input::InputHandler& mInputHandler;
+    Forge::Graphics::RenderWindow& mWindow;
+    Forge::HighResClock& mClock;
     Forge::SceneConfig* mSceneConfig;
 
     void mapDefaultKeys();

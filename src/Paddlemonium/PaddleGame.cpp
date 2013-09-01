@@ -42,8 +42,8 @@ PaddleGame::PaddleGame():
   mEventHandler(Forge::Event::EventHandler::getInstance()),
   mRenderWindow(Forge::Graphics::RenderWindow::createInstance()),
   mStateMachine(),
-  mInGameProcessor(),
-  mInput(Forge::Input::InputHandler::createInstance())
+  mInGameProcessor(mClock, *mRenderWindow),
+  mInput(Forge::Input::InputHandler::getInstance())
 {
 }
 
@@ -52,7 +52,8 @@ void PaddleGame::initializeGameStates()
   Forge::GameStatePtr menuState(new State::Menu());
   menuState->createState();
 
-  mInput->setProcessor(&mInGameProcessor);
+  mInput.setProcessor(&mInGameProcessor);
+
   Forge::GameStatePtr inGameState(new State::InGame(mRenderer, mInGameProcessor));
 
   inGameState->createState();
@@ -71,7 +72,7 @@ void PaddleGame::init(std::string const& windowTitle, std::string const& cfgFile
   mRenderWindow->resize(cfg.display.width, cfg.display.height);
   mRenderWindow->show();
   mEventHandler.registerWindow(mRenderWindow);
-  mInput->setCurrentWindow(mRenderWindow);
+  mInput.setCurrentWindow(mRenderWindow);
 
   mRenderer.initialize();
   mRenderer.updateViewport(cfg.display.width, cfg.display.height);
@@ -86,22 +87,25 @@ int PaddleGame::run()
   mClock.init();
 
   bool running = true;
-  mInput->capture();
+  mInput.capture();
   while(running)
   {
     mClock.updateDeltaTime();
     float const delta = mClock.getGameDelta();
-    mInput->process(delta);
-    running = mStateMachine.update(delta);
+
+    running =
+      mInput.process(delta) &&
+      mStateMachine.update(delta) &&
+      mEventHandler.pumpMessages();
+
     mRenderWindow->getContext().swapBuffers();
-    running = mEventHandler.pumpMessages();
 
     // Sleep for rest of frame seconds
     mClock.updateDeltaTime();
     int sleepMillis = 1000 * (FRAME_SECONDS - mClock.getRealDelta());
     std::this_thread::sleep_for(std::chrono::milliseconds(sleepMillis));
   }
-  mInput->release();
+  mInput.release();
 
   return result;
 }

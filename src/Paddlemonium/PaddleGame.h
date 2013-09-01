@@ -51,7 +51,7 @@ private:
   Forge::SceneConfig mSceneConfig;
 
   InGameProcessor mInGameProcessor;
-  Forge::Input::InputHandlerPtr mInput;
+  Forge::Input::InputHandler& mInput;
 };
 
 }
