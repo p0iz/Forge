@@ -24,7 +24,14 @@
 namespace Forge { namespace Input {
 
 InputHandler::InputHandler():
-  mProcessor(nullptr)
+  mProcessor(nullptr),
+  mMouseRelX(0),
+  mMouseRelY(0),
+  mMouseX(0),
+  mMouseY(0),
+  mActiveKeys(),
+  mActiveButtons(),
+  mActiveModifiers()
 {
 }
 
@@ -35,6 +42,7 @@ InputHandler::~InputHandler()
 void InputHandler::injectKeyDown(Key key)
 {
   mActiveKeys.insert(key);
+  mPressedKeys.insert(key);
 }
 
 void InputHandler::injectKeyUp(Key key)
@@ -44,6 +52,8 @@ void InputHandler::injectKeyUp(Key key)
 
 void InputHandler::injectMouseMove(int x, int y)
 {
+  mMouseRelX = x - mMouseX;
+  mMouseRelY = y - mMouseY;
   mMouseX = x;
   mMouseY = y;
 }
@@ -51,6 +61,7 @@ void InputHandler::injectMouseMove(int x, int y)
 void InputHandler::injectMouseDown(MouseButton button)
 {
   mActiveButtons = static_cast<MouseButton>(mActiveButtons | button);
+  mClickedButtons = static_cast<MouseButton>(mClickedButtons | button);
 }
 
 void InputHandler::injectMouseUp(MouseButton button)
@@ -63,13 +74,21 @@ void InputHandler::setProcessor(InputProcessor* processor)
   mProcessor = processor;
 }
 
-bool InputHandler::process(float const delta) const
+bool InputHandler::process(float const delta)
 {
+  bool keepRunning = true;
   if (mProcessor)
   {
-    return mProcessor->process(delta);
+    keepRunning = mProcessor->process(delta);
   }
-  return true;
+  mPressedKeys.clear();
+  mClickedButtons = static_cast<MouseButton>(0);
+  return keepRunning;
+}
+
+bool InputHandler::isKeyPressed(Key key) const
+{
+  return mPressedKeys.count(key);
 }
 
 bool InputHandler::isKeyDown(Key key) const
@@ -85,6 +104,16 @@ bool InputHandler::isKeyUp(Key key) const
 const std::unordered_set<Key>&InputHandler::getActiveKeys() const
 {
   return mActiveKeys;
+}
+
+const std::unordered_set<Key>& InputHandler::getPressedKeys() const
+{
+  return mPressedKeys;
+}
+
+bool InputHandler::isMouseClicked(MouseButton mask) const
+{
+  return mClickedButtons & mask;
 }
 
 bool InputHandler::isMouseDown(MouseButton mask) const
@@ -105,6 +134,16 @@ int InputHandler::getMouseX() const
 int InputHandler::getMouseY() const
 {
   return mMouseY;
+}
+
+int InputHandler::getMouseRelX() const
+{
+  return mMouseRelX;
+}
+
+int InputHandler::getMouseRelY() const
+{
+  return mMouseRelY;
 }
 
 }}

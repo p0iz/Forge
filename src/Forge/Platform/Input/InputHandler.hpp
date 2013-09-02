@@ -54,27 +54,36 @@ class InputHandler
 
     /* Set the input processor to use for processing captured events */
     void setProcessor(InputProcessor* processor);
-    bool process(float const delta) const;
+    bool process(float const delta);
 
+    bool isKeyPressed(Key key) const;
     bool isKeyDown(Key key) const;
     bool isKeyUp(Key key) const;
     std::unordered_set<Key> const& getActiveKeys() const;
+    std::unordered_set<Key> const& getPressedKeys() const; // Cleared after each frame
+    bool isMouseClicked(MouseButton mask) const;
     bool isMouseDown(MouseButton mask) const;
     bool isMouseUp(MouseButton mask) const;
 
     int getMouseX() const;
     int getMouseY() const;
+    int getMouseRelX() const;
+    int getMouseRelY() const;
 
     static InputHandler& getInstance();
 
   private:
     InputProcessor* mProcessor;
 
+    int mMouseRelX;
+    int mMouseRelY;
     int mMouseX;
     int mMouseY;
 
     std::unordered_set<Key> mActiveKeys;
+    std::unordered_set<Key> mPressedKeys; // Single-frame container
     MouseButton mActiveButtons;
+    MouseButton mClickedButtons; // Single-frame container
     Modifier mActiveModifiers;
 };
 

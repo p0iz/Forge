@@ -60,31 +60,19 @@ bool InGameProcessor::process(const float delta)
   if (!mSceneConfig)
     return true;
 
-  Forge::SceneNode& paddleNode = mSceneConfig->getSceneNode("PaddleNode");
-
-  const double timeScale = mClock.getTimeScale();
-
-  for (Forge::Key key : mInputHandler.getActiveKeys()) {
-    if (mKeyMap.count(key) > 0) {
-      switch (mKeyMap[key]) {
-      case PaddleLeft:
-        // Move paddle to the left
-        paddleNode.mWorldTransform.translate(MOVE_SPEED * delta * timeScale, 0.0f, 0.0f);
-        break;
-      case PaddleRight:
-        // Move paddle to the right
-        paddleNode.mWorldTransform.translate(-MOVE_SPEED * delta * timeScale, 0.0f, 0.0f);
-        break;
+  // Press (one-shot) events from keymap
+  for (auto keyAction : mKeyMap) {
+    if (mInputHandler.isKeyPressed(keyAction.first)) {
+      switch (keyAction.second) {
       case ToggleDebug:
         Forge::DebugAxis::toggleDebuggingInfo();
-        // One-shot action
-        mInputHandler.injectKeyDown(key);
         break;
       default:
         break;
       }
     }
   }
+
   processMouseMove();
   return processKeyPress();
 }
@@ -111,7 +99,7 @@ bool InGameProcessor::processKeyPress()
 {
   using Forge::Key;
 
-  for (Key key : mInputHandler.getActiveKeys())
+  for (Key key : mInputHandler.getPressedKeys())
   {
     switch (key)
     {
