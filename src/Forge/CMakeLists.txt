@@ -48,6 +48,7 @@ target_link_libraries(Forge
   Time
   Util
   PlatformEvent
+  PlatformFileSystem
   PlatformInput
   PlatformWindow
 )
