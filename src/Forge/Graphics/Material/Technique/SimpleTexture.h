@@ -62,40 +62,24 @@ namespace Forge {
 class SimpleTexture : public Technique
 {
 public:
-	SimpleTexture();
+  SimpleTexture();
 
-	virtual Technique* clone();
+  virtual Technique* clone();
 
-	virtual void create();
-	virtual void destroy();
+  virtual void create();
+  virtual void destroy();
 
-	virtual void updateProperties(LuaProperties& properties);
+  virtual void updateProperties(LuaProperties& properties);
 
-	virtual void beginMaterial();
-	virtual void setTransforms(const glm::mat4& world,
-						  const glm::mat4& view,
-						  const glm::mat4& projection);
+  virtual void beginMaterial();
+  virtual void setTransforms(const glm::mat4& world,
+              const glm::mat4& view,
+              const glm::mat4& projection);
 private:
-	Shader vertexShader;
-	Shader fragmentShader;
-	ShaderProgram shaderProgram;
+  Shader vertexShader;
+  Shader fragmentShader;
+  ShaderProgram shaderProgram;
 
-	// Lighting
-	unsigned int lightsUniformIndex;
-
-	// Uniform locations
-	int wvpLocation; // World->View->Projection
-	int wvLocation; // World->View
-	int nLocation; // Normal matrix (upper 3x3 of WorldView)
-
-	int materialAmbientLoc;
-	int materialDiffuseLoc;
-	int materialSpecularLoc;
-	int materialShininessLoc;
-
-	int mDiffuseMapLoc;
-	int mSpecularMapLoc;
-	int mNormalMapLoc;
   // Textures
   unsigned int mDiffuseMap;
   unsigned int mSpecularMap;
@@ -104,6 +88,23 @@ private:
 
   unsigned int addTexture(const std::string& textureFile);
   void freeTextures();
+
+  // Lighting
+  unsigned int lightsUniformIndex;
+
+  // Uniform locations
+  int wvpLocation; // World->View->Projection
+  int wvLocation; // World->View
+  int nLocation; // Normal matrix (upper 3x3 of WorldView)
+
+  int materialAmbientLoc;
+  int materialDiffuseLoc;
+  int materialSpecularLoc;
+  int materialShininessLoc;
+
+  int mDiffuseMapLoc;
+  int mSpecularMapLoc;
+  int mNormalMapLoc;
 
 };
 

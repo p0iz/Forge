@@ -35,11 +35,11 @@ Menu::Menu():
 }
 
 Forge::GameStatePtr Menu::frameUpdate(float const /*delta*/) {
-	static Forge::GameStateLibrary& library = Forge::GameStateLibrary::getSingleton();
+  static Forge::GameStateLibrary& library = Forge::GameStateLibrary::getSingleton();
 
-	// Return next (this) state
-	Forge::Log::info << "Starting game.\n";
-	return library.get("InGame");
+  // Return next (this) state
+  Forge::Log::info << "Starting game.\n";
+  return library.get("InGame");
 }
 
 void Menu::createState() {

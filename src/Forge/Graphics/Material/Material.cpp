@@ -30,38 +30,40 @@ namespace Forge {
 
 void Material::loadMaterial(const std::string& materialFile, TechniqueLibrary& techLibrary)
 {
-	mMaterialFile = materialFile;
-	// First destroy old technique to make room for new
-	if (mTechnique) {
-		mTechnique->destroy();
-	}
+  mMaterialFile = materialFile;
+  // First destroy old technique to make room for new
+  if (mTechnique) {
+    mTechnique->destroy();
+  }
 
-	MaterialLoader loader;
-	loader.setTargetMaterial(this);
-	loader.setTechniqueLibrary(techLibrary);
-	loader.loadFile(materialFile);
+  MaterialLoader loader;
+  loader.setTargetMaterial(this);
+  loader.setTechniqueLibrary(techLibrary);
+  loader.loadFile(materialFile);
 }
 
 void Material::beginMaterial() const
 {
-	mTechnique->beginMaterial();
+  mTechnique->beginMaterial();
 }
 
-void Material::setTransforms(const glm::mat4& world,
-							 const glm::mat4& view,
-							 const glm::mat4& projection) const
+void Material::setTransforms(
+    glm::mat4 const& world,
+    glm::mat4 const& view,
+    glm::mat4 const& projection
+  ) const
 {
-	mTechnique->setTransforms(world, view, projection);
+  mTechnique->setTransforms(world, view, projection);
 }
 
 void Material::setDynamicProperty(const std::string& propertyName, const Property& value)
 {
-	mTechnique->setDynamicProperty(propertyName.c_str(), value);
+  mTechnique->setDynamicProperty(propertyName.c_str(), value);
 }
 
 bool operator==(const Material& lhs, const Material& rhs)
 {
-	return lhs.mMaterialFile == rhs.mMaterialFile;
+  return lhs.mMaterialFile == rhs.mMaterialFile;
 }
 
 } // namespace Forge

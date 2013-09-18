@@ -26,45 +26,45 @@
 namespace Forge {
 
 SimpleColor::SimpleColor()
-	: Technique("SimpleColor")
+  : Technique("SimpleColor")
 {
 }
 
 Technique* SimpleColor::clone()
 {
-	return new SimpleColor;
+  return new SimpleColor;
 }
 
 
 void SimpleColor::create()
 {
-	// Craft the test cube shaders
-	vertexShader.create(GL_VERTEX_SHADER);
-	vertexShader.loadCode("data/shaders/SimpleTexture.vs"); // same vertex shader as SimpleTexture
-	vertexShader.compile();
-	fragmentShader.create(GL_FRAGMENT_SHADER);
-	fragmentShader.loadCode("data/shaders/SimpleColor.fs");
-	fragmentShader.compile();
-	shaderProgram.create();
-	shaderProgram.setVertexShader(vertexShader.getId());
-	shaderProgram.setFragmentShader(fragmentShader.getId());
-	if (shaderProgram.link() != GL_TRUE)
-	{
-		Log::info << shaderProgram.getProgramInfoLog();
-	}
-	// Setup light uniform buffer binding
-	lightsUniformIndex = glGetUniformBlockIndex(shaderProgram.getId(), "Lights");
-	glUniformBlockBinding(shaderProgram.getId(), lightsUniformIndex, Light::UNIFORM_BINDING_POINT);
+  // Craft the test cube shaders
+  vertexShader.create(GL_VERTEX_SHADER);
+  vertexShader.loadCode("data/shaders/SimpleTexture.vs"); // same vertex shader as SimpleTexture
+  vertexShader.compile();
+  fragmentShader.create(GL_FRAGMENT_SHADER);
+  fragmentShader.loadCode("data/shaders/SimpleColor.fs");
+  fragmentShader.compile();
+  shaderProgram.create();
+  shaderProgram.setVertexShader(vertexShader.getId());
+  shaderProgram.setFragmentShader(fragmentShader.getId());
+  if (shaderProgram.link() != GL_TRUE)
+  {
+    Log::info << shaderProgram.getProgramInfoLog();
+  }
+  // Setup light uniform buffer binding
+  lightsUniformIndex = glGetUniformBlockIndex(shaderProgram.getId(), "Lights");
+  glUniformBlockBinding(shaderProgram.getId(), lightsUniformIndex, Light::UNIFORM_BINDING_POINT);
 
-	// Get uniform locations
-	wvpLocation = shaderProgram.getUniformLocation("WorldViewProjectionMatrix");
-	wvLocation = shaderProgram.getUniformLocation("WorldViewMatrix");
-	nLocation = shaderProgram.getUniformLocation("NormalMatrix");
+  // Get uniform locations
+  wvpLocation = shaderProgram.getUniformLocation("WorldViewProjectionMatrix");
+  wvLocation = shaderProgram.getUniformLocation("WorldViewMatrix");
+  nLocation = shaderProgram.getUniformLocation("NormalMatrix");
 
-	materialAmbientLoc = shaderProgram.getUniformLocation("MaterialAmbient");
-	materialDiffuseLoc = shaderProgram.getUniformLocation("MaterialDiffuse");
-	materialSpecularLoc = shaderProgram.getUniformLocation("MaterialSpecular");
-	materialShininessLoc = shaderProgram.getUniformLocation("MaterialShininess");
+  materialAmbientLoc = shaderProgram.getUniformLocation("MaterialAmbient");
+  materialDiffuseLoc = shaderProgram.getUniformLocation("MaterialDiffuse");
+  materialSpecularLoc = shaderProgram.getUniformLocation("MaterialSpecular");
+  materialShininessLoc = shaderProgram.getUniformLocation("MaterialShininess");
 }
 
 void SimpleColor::destroy()
@@ -73,48 +73,50 @@ void SimpleColor::destroy()
 
 void SimpleColor::updateProperties(LuaProperties &properties)
 {
-	shaderProgram.use();
+  shaderProgram.use();
 
-	// Ambient color reflectivity
-	if (properties.hasProperty("ambient"))
-	{
-		glUniform3fv(materialAmbientLoc, 1, &properties.getFloatArray("ambient")[0]);
-	}
+  // Ambient color reflectivity
+  if (properties.hasProperty("ambient"))
+  {
+    glUniform3fv(materialAmbientLoc, 1, &properties.getFloatArray("ambient")[0]);
+  }
 
-	// Diffuse color reflectivity
-	if (properties.hasProperty("diffuse"))
-	{
-		glUniform3fv(materialDiffuseLoc, 1, &properties.getFloatArray("diffuse")[0]);
-	}
+  // Diffuse color reflectivity
+  if (properties.hasProperty("diffuse"))
+  {
+    glUniform3fv(materialDiffuseLoc, 1, &properties.getFloatArray("diffuse")[0]);
+  }
 
-	// Specular color reflectivity
-	if (properties.hasProperty("specular"))
-	{
-		glUniform3fv(materialSpecularLoc, 1, &properties.getFloatArray("specular")[0]);
-	}
+  // Specular color reflectivity
+  if (properties.hasProperty("specular"))
+  {
+    glUniform3fv(materialSpecularLoc, 1, &properties.getFloatArray("specular")[0]);
+  }
 
-	// Shininess
-	if (properties.hasProperty("shininess"))
-	{
-		glUniform1f(materialShininessLoc, properties.getFloat("shininess"));
-	}
+  // Shininess
+  if (properties.hasProperty("shininess"))
+  {
+    glUniform1f(materialShininessLoc, properties.getFloat("shininess"));
+  }
 }
 
 void SimpleColor::beginMaterial()
 {
-	shaderProgram.use();
+  shaderProgram.use();
 }
 
-void SimpleColor::setTransforms(const glm::mat4& world,
-						   const glm::mat4& view,
-						   const glm::mat4& projection)
+void SimpleColor::setTransforms(
+    glm::mat4 const& world,
+    glm::mat4 const& view,
+    glm::mat4 const& projection
+  )
 {
-	// Update
-	const glm::mat4x4 worldViewTransform = view * world;
-	const glm::mat3x3 normalMatrix(worldViewTransform);
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(projection * worldViewTransform)[0][0]);
-	glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &worldViewTransform[0][0]);
-	glUniformMatrix3fv(nLocation, 1, GL_FALSE, &normalMatrix[0][0]);
+  // Update
+  const glm::mat4x4 worldViewTransform = view * world;
+  const glm::mat3x3 normalMatrix(worldViewTransform);
+  glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(projection * worldViewTransform)[0][0]);
+  glUniformMatrix4fv(wvLocation, 1, GL_FALSE, &worldViewTransform[0][0]);
+  glUniformMatrix3fv(nLocation, 1, GL_FALSE, &normalMatrix[0][0]);
 }
 
 }
