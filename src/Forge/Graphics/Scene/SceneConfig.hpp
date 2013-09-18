@@ -26,8 +26,9 @@
 #include "Graphics/Material/Material.h"
 #include "Graphics/Mesh.h"
 
-#include <unordered_map>
+#include <list>
 #include <set>
+#include <unordered_map>
 #include <vector>
 
 namespace Forge {
@@ -36,7 +37,8 @@ namespace Forge {
  */
 class SceneConfig {
 public:
-	SceneConfig();
+  SceneConfig();
+  ~SceneConfig();
 
 	const SceneNode& getRootSceneNode() const;
 
@@ -53,8 +55,8 @@ public:
 	// Mapping material -> mesh pointer vector
 	std::unordered_map<Material, std::vector<MeshPtr>> mMaterialMeshMap;
 
-	// Lights array
-	Light lights[Light::MAX_LIGHTS];
+  // Lights array
+  std::list<Light> lights;
 
 	const Camera& getCamera() const;
 	void setCamera(Camera& camera);

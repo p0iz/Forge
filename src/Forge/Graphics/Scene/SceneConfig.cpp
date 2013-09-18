@@ -31,6 +31,14 @@ namespace Forge {
 SceneConfig::SceneConfig()
 	: mNodes(1, SceneNode("Root Node")), mRootNode(mNodes[0]) { }
 
+SceneConfig::~SceneConfig()
+{
+  for (Light& light : lights)
+  {
+    light.releaseDataIndex();
+  }
+}
+
 void SceneConfig::removeSceneNode(SceneNodeId id)
 {
 	auto iterator = mNodes.begin()+id;

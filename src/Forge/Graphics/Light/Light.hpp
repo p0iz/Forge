@@ -24,77 +24,79 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <vector>
+
 
 namespace Forge {
 
 /* Describes a light in the game world */
 struct Light {
-	Light();
+  Light();
+  ~Light();
 
-	enum LightType {
-		DIRECTIONAL,
-		POINT,
-		SPOT,
-		DISABLED
-	};
+  /* Appends the data memory location for reuse */
+  void releaseDataIndex();
 
-	LightType type;
-	int id;
-	glm::vec4 position;
-	glm::vec3 direction;
+  enum LightType {
+    DIRECTIONAL,
+    POINT,
+    SPOT,
+    DISABLED
+  };
 
-	/* Light data structure */
-	struct Data {
-		Data() :
-			viewSpacePosition(0.0f),
-			color(0.0f),
-			attenuation({ 0.1f, 0.1f, 0.00025f }),
-			exponent(0.0f),
-			direction(0.0f),
-			cutoff(0.0f),
-			falloff(0.0f) { }
+  LightType type;
+  glm::vec4 position;
+  glm::vec3 direction;
+  int dataIndex;
 
-		glm::vec4 viewSpacePosition;
-		glm::vec4 color; // alpha component describes light intensity
-		struct {
-			float constant;
-			float linear;
-			float quadratic;
-		} attenuation; // distance attenuation
 
-		// Spotlight
-		float exponent;
-		glm::vec3 direction; // spot direction.
-		float cutoff; // cutoff angle (in degrees when specified, calculated to cosine when used)
-		float falloff; // falloff angle (in degrees when specified, calculated to cosine when used)
+  /* Light data structure for shaders */
+  struct Data {
+    Data() :
+      viewSpacePosition(0.0f),
+      color(0.0f),
+      attenuation({ 0.1f, 0.1f, 0.00025f }),
+      exponent(0.0f),
+      direction(0.0f),
+      cutoff(0.0f),
+      falloff(0.0f) { }
 
-		// Padding for std140 GLSL layout
-		float padding[3];
-	};
+    glm::vec4 viewSpacePosition;
+    glm::vec4 color; // alpha component describes light intensity
+    struct {
+      float constant;
+      float linear;
+      float quadratic;
+    } attenuation; // distance attenuation
 
-	static void createBuffer() {
-		glGenBuffers(1, &mLightUniformBuffer);
-		glBindBuffer(GL_UNIFORM_BUFFER, mLightUniformBuffer);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(Light::Data), nullptr, GL_DYNAMIC_DRAW);
-		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BINDING_POINT, mLightUniformBuffer);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	}
+    // Spotlight
+    float exponent;
+    glm::vec3 direction; // spot direction.
+    float cutoff; // cutoff angle (in degrees when specified, calculated to cosine when used)
+    float falloff; // falloff angle (in degrees when specified, calculated to cosine when used)
 
-	static void destroyBuffer() {
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		glDeleteBuffers(1, &mLightUniformBuffer);
-	}
+    // Padding for std140 GLSL layout
+    float padding[3];
+  };
 
-	static void updateBuffer(size_t lightIndex) {
-		glBindBuffer(GL_UNIFORM_BUFFER, mLightUniformBuffer);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light::Data), &Light::data[lightIndex]);
-	}
+  /* Initializes the buffer used for light uniforms */
+  static void createBuffer();
+  /* Destroys the buffer used for light uniforms */
+  static void destroyBuffer();
+  /* Uploads the selected data into the uniform */
+  static void updateBuffer(Data const& lightData);
 
-	static const int UNIFORM_BINDING_POINT = 1;
-	static const int MAX_LIGHTS = 8;
-	static Data data[MAX_LIGHTS];
+  static const int UNIFORM_BINDING_POINT = 1;
+
+  Data& getShaderData() const;
+
 private:
-	static unsigned int mLightUniformBuffer;
+  static unsigned int mLightUniformBuffer;
+
+  // Keep all shader data in contiguous memory
+  static std::vector<Data> shaderData;
+  // Store destroyed light data indices to reuse memory locations
+  static std::vector<int> freeList;
 };
 
 }

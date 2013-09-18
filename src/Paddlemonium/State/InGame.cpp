@@ -59,6 +59,12 @@ void InGame::createState() {
   mTechniqueLibrary.add(new Forge::SimpleTexture);
   mTechniqueLibrary.add(new Forge::SimpleColor);
 
+  Forge::Light light;
+  light.position = glm::vec4(10.0f, 10.0f, 1.0f, 1.0f);
+  light.type = Forge::Light::POINT;
+  light.getShaderData().color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+  mSceneConfig.lights.push_back(light);
+
   // Create game view
   mPaddleMesh = Forge::MeshLoader::loadMesh("data/paddle.obj");
   mPaddleNode = mSceneConfig.createSceneNode("PaddleNode");
@@ -94,12 +100,7 @@ void InGame::createState() {
   mBorderMesh->attachToNode(mBorderNode);
   mSceneConfig.getSceneNode(mBorderNode).mWorldTransform.translate(0.0f, 6.1f, 0.0f).rotate(90.0f, glm::vec3(1, 0, 0)).scale(0.4f);
 
-  Forge::Light& light = mSceneConfig.lights[0];
 
-  light.id = 0;
-  light.position = glm::vec4(10.0f, 10.0f, 1.0f, 1.0f);
-  light.type = Forge::Light::POINT;
-  light.data[0].color = glm::vec4(1.0f,1.0f, 1.0f, 1.0f);
 
   mCamera.setPosition(0.0f, 5.0f, -20.0f);
   mCamera.setTarget(0.0f, 5.0f, 0.0f);

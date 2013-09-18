@@ -58,11 +58,15 @@ void Renderer::updateViewport(int width, int height)
 
 void Renderer::updateLightData(const SceneConfig& scene, const glm::mat4& view)
 {
-  for (const Light& light : scene.lights) {
-    if (light.id >= 0) {
-      Light::Data& lightData = Light::data[light.id];
-      lightData.viewSpacePosition = view * light.position;
-      lightData.direction = glm::mat3(view) * light.direction;
+  for (Light const& light : scene.lights)
+  {
+    if (light.type != Light::DIRECTIONAL)
+    {
+      light.getShaderData().viewSpacePosition = view * light.position;
+    }
+    if (light.type != Light::POINT)
+    {
+      light.getShaderData().direction = glm::mat3(view) * light.direction;
     }
   }
 }
@@ -85,9 +89,11 @@ void Renderer::drawScene(const glm::mat4& view,
         const glm::mat4& world = scene.getSceneNode(nodeId).mWorldTransform.getMatrix();
 
         material.setTransforms(world, view, projection);
-        for (int i = 0; i < Light::MAX_LIGHTS; ++i) {
-          if (scene.lights[i].type != Light::DISABLED) {
-            Light::updateBuffer(scene.lights[i].id);
+        for (Light const& light : scene.lights)
+        {
+          if (light.type != Light::DISABLED)
+          {
+            Light::updateBuffer(light.getShaderData());
             mesh->draw();
           }
         }
