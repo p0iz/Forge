@@ -20,7 +20,6 @@
 
 #include "SimpleColor.hpp"
 
-#include "Graphics/Loaders/ImageLoader.h"
 #include "Graphics/Light/Light.hpp"
 #include "Util/Log.h"
 

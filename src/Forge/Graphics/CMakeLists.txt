@@ -6,11 +6,11 @@ add_subdirectory(Shader)
 # Add Text component to build
 add_subdirectory(Text)
 
+# Add Libraries component to build
+add_subdirectory(Libraries)
+
 # Add Light component to build
 add_subdirectory(Light)
-
-# Add Loaders component to build
-add_subdirectory(Loaders)
 
 # Add Material component to build
 add_subdirectory(Material)
@@ -38,7 +38,7 @@ include_directories(${GLEW_INCLUDE_DIRECTORIES})
 set(GraphicsLibs
   Event
   Light
-  Loaders
+  Libraries
   Shader
   Scene
   Material

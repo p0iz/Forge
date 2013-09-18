@@ -20,7 +20,7 @@
 
 #include "Material.h"
 #include "MaterialLoader.hpp"
-#include "Graphics/Loaders/ImageLoader.h"
+#include "Graphics/Libraries/TextureLibrary.hpp"
 #include "Technique/TechniqueLibrary.h"
 #include "Util/Log.h"
 

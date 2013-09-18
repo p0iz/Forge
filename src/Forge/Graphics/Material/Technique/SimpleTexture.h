@@ -22,6 +22,7 @@
 
 #include "Technique.h"
 
+#include "../../Libraries/TextureLibrary.hpp"
 #include "../../Light/Light.hpp"
 #include "../../Shader/Shader.h"
 #include "../../Shader/ShaderProgram.h"
@@ -79,15 +80,6 @@ private:
 	Shader fragmentShader;
 	ShaderProgram shaderProgram;
 
-	// Textures
-	unsigned int mDiffuseMap;
-	unsigned int mSpecularMap;
-	unsigned int mNormalMap;
-	std::vector<unsigned int> mLoadedTextures;
-
-	unsigned int addTexture(const std::string& textureFile);
-	void freeTextures();
-
 	// Lighting
 	unsigned int lightsUniformIndex;
 
@@ -104,6 +96,14 @@ private:
 	int mDiffuseMapLoc;
 	int mSpecularMapLoc;
 	int mNormalMapLoc;
+  // Textures
+  unsigned int mDiffuseMap;
+  unsigned int mSpecularMap;
+  unsigned int mNormalMap;
+  std::vector<Graphics::TextureHandle const*> mLoadedTextures;
+
+  unsigned int addTexture(const std::string& textureFile);
+  void freeTextures();
 
 };
 

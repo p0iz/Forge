@@ -1,23 +1,33 @@
 # Graphics - Loaders
 
-set(LoadersSources
-  ImageLoader.cpp
+set(LibrariesSources
   MeshLoader.cpp
+  TextureLibrary.cpp
+)
+
+set(LibrariesHeaders
+  AssetLibrary.hpp
+  AssetLoader.hpp
+  AssetTraits.hpp
+  MeshLibrary.hpp
+  MeshLoader.hpp
+  MeshTraits.hpp
+  TextureLibrary.hpp
 )
 
 # FreeImage dependency
 find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${CMAKE_SOURCE_DIR}/windows_deps/freeimage)
 
-add_library(Loaders ${LoadersSources})
+add_library(Libraries ${LibrariesSources} ${LibrariesHeaders})
 
 # Link to the shared FreeImage library
 if(WIN32)
   add_library(FreeImageDLL SHARED IMPORTED)
   set_property(TARGET FreeImageDLL PROPERTY IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/deps_w32/freeimage/FreeImage.dll)
   set_property(TARGET FreeImageDLL PROPERTY IMPORTED_IMPLIB ${CMAKE_SOURCE_DIR}/deps_w32/freeimage/FreeImage.lib)
-  list(APPEND LoadersLibs FreeImageDLL)
+  list(APPEND LibrariesLibs FreeImageDLL)
 else()
-  list(APPEND LoadersLibs ${FREEIMAGE_LIBRARY})
+  list(APPEND LibrariesLibs ${FREEIMAGE_LIBRARY})
 endif()
 
-target_link_libraries(Loaders Graphics ${LoadersLibs})
+target_link_libraries(Libraries Graphics ${LibrariesLibs})

@@ -20,15 +20,39 @@
 
 #pragma once
 
-#include "Graphics/Mesh.h"
-
+#include "../../Util/Singleton.hpp"
 #include <string>
+#include <unordered_map>
 
-namespace Forge {
 
-/* Namespace for mesh loading functions */
-namespace MeshLoader {
-	MeshPtr loadMesh(const std::string& file);
-}
+/* Image file library. Return OpenGL names for the allocated resources. */
+namespace Forge { namespace Graphics {
 
-} // namespace Forge
+/* Used to access a texture */
+struct TextureHandle
+{
+  TextureHandle():
+    name(""),
+    count(0),
+    handle(0)
+  {
+  }
+
+  std::string name;
+  unsigned int count;
+  unsigned int handle;
+};
+
+class TextureLibrary : public Singleton<TextureLibrary> {
+  public:
+    TextureLibrary();
+    virtual ~TextureLibrary();
+
+    TextureHandle const& loadTexture(std::string const& imageFile);
+    void unloadTexture(TextureHandle const& texture);
+
+  private:
+    std::unordered_map<std::string, TextureHandle> mLoadedTextures;
+};
+
+}}

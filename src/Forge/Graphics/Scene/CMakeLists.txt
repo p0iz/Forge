@@ -7,4 +7,4 @@ set(SceneSources
 	Transformation.cpp)
 
 add_library(Scene ${SceneSources})
-target_link_libraries(Scene Light Util)
+target_link_libraries(Scene Libraries Light Util)

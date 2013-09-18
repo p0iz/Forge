@@ -14,4 +14,4 @@ set(TechniqueSources
 find_package(GLEW REQUIRED)
 
 add_library(Technique ${TechniqueSources})
-target_link_libraries(Technique Loaders Shader ${GLEW_LIBRARIES})
+target_link_libraries(Technique Libraries Shader ${GLEW_LIBRARIES})

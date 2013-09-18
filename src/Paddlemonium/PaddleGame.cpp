@@ -28,6 +28,8 @@
 #include "State/GameStateLibrary.hpp"
 #include "Util/Log.h"
 
+#include "Platform/FileSystem/Directory.hpp"
+
 #include <thread>
 
 
@@ -73,6 +75,9 @@ void PaddleGame::init(std::string const& windowTitle, std::string const& cfgFile
   mRenderWindow->show();
   mEventHandler.registerWindow(mRenderWindow);
   mInput.setCurrentWindow(mRenderWindow);
+
+  Forge::Graphics::MeshLibrary::getSingleton().addDirectory("data");
+  Forge::Graphics::MeshLibrary::getSingleton().loadAssetInfo();
 
   mRenderer.initialize();
   mRenderer.updateViewport(cfg.display.width, cfg.display.height);

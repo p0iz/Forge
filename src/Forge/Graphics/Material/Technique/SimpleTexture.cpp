@@ -20,7 +20,6 @@
 
 #include "SimpleTexture.h"
 
-#include "Graphics/Loaders/ImageLoader.h"
 #include "Graphics/Light/Light.hpp"
 #include "Util/Log.h"
 
@@ -74,21 +73,26 @@ void SimpleTexture::create()
 
 void SimpleTexture::destroy()
 {
-	freeTextures();
+  freeTextures();
 }
 
 void SimpleTexture::freeTextures()
 {
-	glDeleteTextures(mLoadedTextures.size(), &mLoadedTextures[0]);
+  for (auto handle : mLoadedTextures)
+  {
+    Graphics::TextureLibrary::getSingleton().unloadTexture(*handle);
+  }
 }
 
-unsigned int SimpleTexture::addTexture(const std::string& textureFile)
+unsigned int SimpleTexture::addTexture(std::string const& textureFile)
 {
-	unsigned int loadedTexture = ImageLoader::loadAsTexture(textureFile);
-	if (loadedTexture > 0) {
-		mLoadedTextures.push_back(loadedTexture);
-	}
-	return loadedTexture;
+  Graphics::TextureHandle const loadedTexture =
+    Graphics::TextureLibrary::getSingleton().loadTexture(textureFile);
+
+  if (loadedTexture.count > 0) {
+    mLoadedTextures.push_back(&loadedTexture);
+  }
+  return loadedTexture.handle;
 }
 
 void SimpleTexture::updateProperties(LuaProperties& properties)

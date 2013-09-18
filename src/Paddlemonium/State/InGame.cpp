@@ -21,7 +21,6 @@
 #include "InGame.h"
 
 #include "State/GameStateLibrary.hpp"
-#include "Graphics/Loaders/MeshLoader.h"
 #include "Graphics/Material/Technique/InternalTechniques.hpp"
 #include "Platform/Input/InputHandler.hpp"
 #include "Time/HighResClock.h"
@@ -39,6 +38,10 @@ InGame::InGame(
   GameState("InGame"),
   mInput(input),
   mRenderer(renderer)
+{
+}
+
+InGame::~InGame()
 {
 }
 
@@ -66,40 +69,54 @@ void InGame::createState() {
   mSceneConfig.lights.push_back(light);
 
   // Create game view
-  mPaddleMesh = Forge::MeshLoader::loadMesh("data/paddle.obj");
-  mPaddleNode = mSceneConfig.createSceneNode("PaddleNode");
-  mSceneConfig.getSceneNode(mPaddleNode).mWorldTransform.scale(0.2f);
+
+  // Materials
   Forge::Material material;
   material.loadMaterial("data/materials/Paddle.material", mTechniqueLibrary);
-  mSceneConfig.mMaterialMeshMap[material].push_back(mPaddleMesh);
-  mPaddleMesh->attachToNode(mPaddleNode);
-
-  mTileMesh = Forge::MeshLoader::loadMesh("data/tile.obj");
   material.loadMaterial("data/materials/Tile.material", mTechniqueLibrary);
-  mSceneConfig.mMaterialMeshMap[material].push_back(mTileMesh);
 
+  // Paddle
+  mPaddleNode = mSceneConfig.createSceneNode("PaddleNode");
+  mSceneConfig.getSceneNode(mPaddleNode).mWorldTransform.scale(0.2f);
+
+  Forge::Graphics::MeshLibrary::getSingleton().obtainAsset("paddle");
+  Forge::MeshPtr paddleMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("paddle").asset;
+  mSceneConfig.mMaterialMeshMap[material].push_back(paddleMesh);
+  paddleMesh->attachToNode(mPaddleNode);
+
+
+  // Tiles
   mTileNode = mSceneConfig.createSceneNode("TileNode");
-  mTileMesh->attachToNode(mTileNode);
   mSceneConfig.getSceneNode(mTileNode).mWorldTransform.translate(5.0f, 10.0f, 0.0f).scale(0.2f);
 
+  Forge::Graphics::MeshLibrary::getSingleton().obtainAsset("tile");
+  Forge::MeshPtr tileMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("tile").asset;
+  mSceneConfig.mMaterialMeshMap[material].push_back(tileMesh);
+  tileMesh->attachToNode(mTileNode);
+
   mTileNode = mSceneConfig.createSceneNode("TileNode2");
-  mTileMesh->attachToNode(mTileNode);
   mSceneConfig.getSceneNode(mTileNode).mWorldTransform.translate(6.0f, 10.0f, 0.0f).scale(0.2f);
 
-  mBallMesh = Forge::MeshLoader::loadMesh("data/ball.obj");
-  mSceneConfig.mMaterialMeshMap[material].push_back(mBallMesh); // Use same material for ball
+  tileMesh->attachToNode(mTileNode);
 
+
+  // Ball
   mBallNode = mSceneConfig.createSceneNode("BallNode");
-  mBallMesh->attachToNode(mBallNode);
   mSceneConfig.getSceneNode(mBallNode).mWorldTransform.translate(0.0f, 5.0f, 0.0f).scale(0.2f);
 
-  mBorderMesh = Forge::MeshLoader::loadMesh("data/border.obj");
-  mSceneConfig.mMaterialMeshMap[material].push_back(mBorderMesh); // Use same material for ball
+  Forge::Graphics::MeshLibrary::getSingleton().obtainAsset("ball");
+  Forge::MeshPtr ballMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("ball").asset;
+  mSceneConfig.mMaterialMeshMap[material].push_back(ballMesh); // Use same material for ball
+  ballMesh->attachToNode(mBallNode);
+
 
   mBorderNode = mSceneConfig.createSceneNode("BorderNode");
-  mBorderMesh->attachToNode(mBorderNode);
   mSceneConfig.getSceneNode(mBorderNode).mWorldTransform.translate(0.0f, 6.1f, 0.0f).rotate(90.0f, glm::vec3(1, 0, 0)).scale(0.4f);
 
+  Forge::Graphics::MeshLibrary::getSingleton().obtainAsset("border");
+  Forge::MeshPtr borderMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("border").asset;
+  mSceneConfig.mMaterialMeshMap[material].push_back(borderMesh); // Use same material for ball
+  borderMesh->attachToNode(mBorderNode);
 
 
   mCamera.setPosition(0.0f, 5.0f, -20.0f);

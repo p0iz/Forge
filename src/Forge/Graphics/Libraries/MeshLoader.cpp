@@ -18,7 +18,8 @@
  *
  */
 
-#include "MeshLoader.h"
+#include "MeshLoader.hpp"
+#include "MeshTraits.hpp"
 #include "Graphics/Vertex.h"
 #include "Util/Log.h"
 
@@ -27,7 +28,7 @@
 #include <sstream>
 
 
-namespace Forge { namespace MeshLoader {
+namespace Forge {
 
 // Helper class to identify unique vertices
 struct VertexIdentifier
@@ -53,6 +54,7 @@ struct VertexIdentifier
     int mN;
 };
 
+
 /* Parse a string of type "<pos>/<tex>/<nor>" and return true if at least <pos> was found */
 void parseVertex(std::string const& vertex, int& posIndex, int& texIndex, int&norIndex)
 {
@@ -71,15 +73,16 @@ void parseVertex(std::string const& vertex, int& posIndex, int& texIndex, int&no
   }
 }
 
-MeshPtr loadMesh(const std::string& file)
+template <>
+MeshPtr AssetLoader<Mesh>::loadAsset(std::string const& file)
 {
-  MeshPtr loadedMesh(nullptr);
+  MeshPtr mesh;
 
   std::ifstream inputFile(file);
   if (!inputFile.is_open())
   {
     Log::error << "Could not open file '" << file << "'. Mesh loading failed.\n";
-    return loadedMesh;
+    return mesh;
   }
 
   std::string meshName;
@@ -137,7 +140,7 @@ MeshPtr loadMesh(const std::string& file)
         {
           Log::error << "Vertex definition must at least contain vertex position."
                         "Mesh loading failed.\n";
-          return loadedMesh;
+          return mesh;
         }
 
         VertexIdentifier id(pos, tex, nor, nextIndex);
@@ -181,10 +184,10 @@ MeshPtr loadMesh(const std::string& file)
     }
   }
 
-  loadedMesh.reset(new Mesh(vertices, elements));
-  loadedMesh->setName(meshName);
+  mesh.reset(new Mesh(vertices, elements));
+  mesh->setName(meshName);
 
-  return loadedMesh;
+  return mesh;
 }
 
-}}
+}

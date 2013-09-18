@@ -14,37 +14,26 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "Menu.h"
+#pragma once
 
-#include "State/GameStateLibrary.hpp"
-#include "Graphics/Material/Technique/InternalTechniques.hpp"
-#include "Time/HighResClock.h"
-#include "Util/Log.h"
+#include "AssetTraits.hpp"
+#include "../Mesh.h"
+#include <memory>
 
-#include <sstream>
 
-namespace Paddlemonium { namespace State {
+namespace Forge {
 
-Menu::Menu():
-  GameState("Menu")
+template <>
+struct AssetTraits<Mesh>
 {
+  typedef Mesh AssetType;
+  constexpr static char const* fileExtensions = ".obj";
+};
+
+typedef AssetTraits<Mesh> MeshTraits;
+
 }
-
-Forge::GameStatePtr Menu::frameUpdate(float const /*delta*/) {
-	static Forge::GameStateLibrary& library = Forge::GameStateLibrary::getSingleton();
-
-	// Return next (this) state
-	Forge::Log::info << "Starting game.\n";
-	return library.get("InGame");
-}
-
-void Menu::createState() {
-}
-
-void Menu::destroyState() { }
-
-}}

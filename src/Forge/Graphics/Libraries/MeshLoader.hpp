@@ -20,9 +20,12 @@
 
 #pragma once
 
-#include <string>
+#include "AssetLoader.hpp"
+#include "Graphics/Mesh.h"
 
-/* Loaders for image files. Return OpenGL names for the allocated resources. */
-namespace Forge { namespace ImageLoader {
-	unsigned int loadAsTexture(const std::string& imageFile);
+
+namespace Forge { namespace Graphics {
+
+typedef AssetLoader<Mesh> MeshLoader;
+
 }}

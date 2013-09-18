@@ -23,6 +23,7 @@
 #include "Input/InGameProcessor.hpp"
 
 // Forge includes
+#include "Graphics/Libraries/MeshLibrary.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Scene/SceneConfig.hpp"
 #include "Graphics/Material/Material.h"
@@ -46,6 +47,8 @@ public:
     InGameProcessor& input
   );
 
+  virtual ~InGame();
+
   virtual Forge::GameStatePtr frameUpdate(float const delta);
   virtual void createState();
   virtual void destroyState();
@@ -58,12 +61,6 @@ private:
 
   Forge::SceneConfig mSceneConfig;
   Forge::TechniqueLibrary mTechniqueLibrary;
-
-  // Game object meshes
-  Forge::MeshPtr mPaddleMesh;
-  Forge::MeshPtr mTileMesh;
-  Forge::MeshPtr mBallMesh;
-  Forge::MeshPtr mBorderMesh;
 
   // Game object nodes
   Forge::SceneNodeId mPaddleNode;
