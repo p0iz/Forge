@@ -11,6 +11,10 @@ This project is far from finished yet.
 It currently just loads a mesh and material from
 hard-coded paths and displays duplicates of it.
 
+Currently only a Linux backend is implemented. The aim is
+to create enough of an abstraction between Forge and the
+underlying system to make implementing backends for
+other platforms easy.
 
 Licensing
 -------
@@ -36,7 +40,6 @@ GLM (http://glm.g-truc.net/copying.txt)
 GLEW (http://glew.sourceforge.net/glew.txt)
 FreeType2 (http://www.freetype.org/license.html, FTL license)
 FreeImage (http://freeimage.sourceforge.net/license.html, FIPL license)
-Open Asset Import Library (http://assimp.sourceforge.net/main_license.html)
 Qt5 (http://qt-project.org/products/licensing, LGPL license)
 Lua (http://www.lua.org/license.html)
 
@@ -45,7 +48,7 @@ Building Forge
 
 Forge is built using CMake.
 
-Verified to build using CMake 2.8 on Win and Linux.
+Verified to build using CMake 2.8 on Linux.
 
 Forge has the following dependencies:
 
