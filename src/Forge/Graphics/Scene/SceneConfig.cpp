@@ -158,8 +158,10 @@ void SceneConfig::swapNodes(SceneNodeId node, SceneNodeId otherNode)
 
 SceneNodeId SceneConfig::createSceneNode(const std::string& name)
 {
-	mNodes.push_back(SceneNode(name));
-	return mNodes.size() - 1;
+  mNodes.push_back(SceneNode(name));
+  SceneNodeId id = mNodes.size() - 1;
+  mNodes[id].mId = id;
+  return id;
 }
 
 } // namespace Forge

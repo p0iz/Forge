@@ -43,10 +43,11 @@ class SceneConfig;
 typedef size_t SceneNodeId;
 
 struct SceneNode {
-	SceneNode(const std::string& name, SceneNodeId parent = 0);
-	std::string mName;
-	SceneNodeId mParent;
-	Transformation mWorldTransform;
+  SceneNode(const std::string& name, SceneNodeId parent = 0);
+  std::string mName;
+  SceneNodeId mId;
+  SceneNodeId mParent;
+  Transformation mWorldTransform;
 };
 
 }
