@@ -27,7 +27,6 @@
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Scene/SceneConfig.hpp"
 #include "Graphics/Material/Material.h"
-#include "Graphics/Material/Technique/TechniqueLibrary.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/TargetCamera.h"
 #include "State/GameState.h"
@@ -60,7 +59,6 @@ private:
   Forge::Graphics::Renderer& mRenderer;
 
   Forge::SceneConfig mSceneConfig;
-  Forge::TechniqueLibrary mTechniqueLibrary;
 
   // Game object nodes
   Forge::SceneNodeId mPaddleNode;

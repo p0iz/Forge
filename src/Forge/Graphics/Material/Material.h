@@ -22,11 +22,11 @@
 
 #include "Graphics/Material/Technique/Technique.h"
 
+#include <memory>
 #include <string>
 
-namespace Forge {
 
-class TechniqueLibrary;
+namespace Forge {
 
 /* A material to be used for a mesh
  *
@@ -36,32 +36,36 @@ class TechniqueLibrary;
 class Material
 {
 public:
-	void loadMaterial(const std::string& materialFile, TechniqueLibrary& techLibrary);
+  void loadMaterial(const std::string& materialFile);
 
-	void beginMaterial() const;
-	void setTransforms(const glm::mat4& world, const glm::mat4& view, const glm::mat4& projection) const;
+  void beginMaterial() const;
+  void setTransforms(const glm::mat4& world, const glm::mat4& view, const glm::mat4& projection) const;
 
-	void setDynamicProperty(const std::string& propertyName, const Property& value);
+  void setDynamicProperty(const std::string& propertyName, const Property& value);
 private:
-	TechniquePtr mTechnique;
-	std::string mMaterialFile;
+  TechniquePtr mTechnique;
+  std::string mMaterialFile;
 
   friend struct MaterialHandler;
   friend struct std::hash<Material>;
-	friend bool operator ==(const Material&, const Material&);
+  friend bool operator ==(const Material&, const Material&);
 };
 
 bool operator==(const Material& lhs, const Material& rhs);
 
+typedef std::shared_ptr<Material> MaterialPtr;
+
 } // namespace Forge
 
 namespace std {
+
 template<>
 struct hash<Forge::Material> {
 public:
-	size_t operator()(const Forge::Material &m) const
-	{
-		return std::hash<std::string>()(m.mMaterialFile);
-	}
+  size_t operator()(const Forge::Material &m) const
+  {
+    return std::hash<std::string>()(m.mMaterialFile);
+  }
 };
+
 }

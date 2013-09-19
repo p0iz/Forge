@@ -28,7 +28,7 @@
 
 namespace Forge {
 
-void Material::loadMaterial(const std::string& materialFile, TechniqueLibrary& techLibrary)
+void Material::loadMaterial(const std::string& materialFile)
 {
   mMaterialFile = materialFile;
   // First destroy old technique to make room for new
@@ -38,7 +38,6 @@ void Material::loadMaterial(const std::string& materialFile, TechniqueLibrary& t
 
   MaterialLoader loader;
   loader.setTargetMaterial(this);
-  loader.setTechniqueLibrary(techLibrary);
   loader.loadFile(materialFile);
 }
 

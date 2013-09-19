@@ -22,6 +22,7 @@
 
 #include "State/GameStateLibrary.hpp"
 #include "Graphics/Material/Technique/InternalTechniques.hpp"
+#include "Graphics/Material/Technique/TechniqueLibrary.h"
 #include "Graphics/Scene/SceneLoader.hpp"
 #include "Platform/Input/InputHandler.hpp"
 #include "Time/HighResClock.h"
@@ -55,8 +56,8 @@ Forge::GameStatePtr InGame::frameUpdate(float const delta) {
 }
 
 void InGame::createState() {
-  mTechniqueLibrary.add(new Forge::SimpleTexture);
-  mTechniqueLibrary.add(new Forge::SimpleColor);
+  Forge::TechniqueLibrary::getSingleton().add(new Forge::SimpleTexture);
+  Forge::TechniqueLibrary::getSingleton().add(new Forge::SimpleColor);
 
   Forge::Scene::SceneLoader loader;
   if (loader.loadScene("data/scene/TestScene.lua", mSceneConfig))
@@ -68,8 +69,8 @@ void InGame::createState() {
 
   // Materials
   Forge::Material material;
-  material.loadMaterial("data/materials/Paddle.material", mTechniqueLibrary);
-  material.loadMaterial("data/materials/Tile.material", mTechniqueLibrary);
+  material.loadMaterial("data/materials/Paddle.material");
+  material.loadMaterial("data/materials/Tile.material");
 
   // Paddle
   mPaddleNode = mSceneConfig.createSceneNode("PaddleNode");

@@ -27,21 +27,18 @@ struct lua_State;
 namespace Forge {
 
 class Material;
-class TechniqueLibrary;
 
 struct MaterialHandler {
-	MaterialHandler();
-	void setTargetMaterial(Material* material);
-	void setTechniqueLibrary(const TechniqueLibrary& techLibrary);
+  MaterialHandler();
+  void setTargetMaterial(Material* material);
 protected:
-	bool handleLoadedLua(lua_State* state) const;
+  bool handleLoadedLua(lua_State* state) const;
 private:
-	// Encapsulate the internal Lua state
-	TechniquePtr loadTechnique(lua_State* state) const;
-	bool loadProperties(lua_State* state, TechniquePtr technique) const;
+  // Encapsulate the internal Lua state
+  TechniquePtr loadTechnique(lua_State* state) const;
+  bool loadProperties(lua_State* state, TechniquePtr technique) const;
 
-	Material* mTargetMaterial;
-	const TechniqueLibrary* mTechLibrary;
+  Material* mTargetMaterial;
 };
 
 }
