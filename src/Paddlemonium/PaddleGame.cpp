@@ -76,7 +76,7 @@ void PaddleGame::init(std::string const& windowTitle, std::string const& cfgFile
   mEventHandler.registerWindow(mRenderWindow);
   mInput.setCurrentWindow(mRenderWindow);
 
-  Forge::Graphics::MeshLibrary::getSingleton().addDirectory("data");
+  Forge::Graphics::MeshLibrary::getSingleton().addDirectory("data/meshes");
   Forge::Graphics::MeshLibrary::getSingleton().loadAssetInfo();
 
   mRenderer.initialize();
