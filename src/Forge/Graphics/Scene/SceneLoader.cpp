@@ -20,6 +20,7 @@
 
 #include "SceneLoader.hpp"
 #include "Graphics/Libraries/MeshLibrary.hpp"
+#include "Graphics/Libraries/MaterialLibrary.hpp"
 #include "../../Util/Exceptions.hpp"
 #include "../../Util/Log.h"
 
@@ -30,6 +31,7 @@ luaL_Reg const SceneLoader::LoaderLib[] =
   { "addDirectionalLight", SceneLoader::addDirectionalLight },
   { "addPointLight", SceneLoader::addPointLight },
   { "loadMesh", SceneLoader::loadMesh },
+  { "loadMaterial", SceneLoader::loadMaterial },
   { nullptr, nullptr }
 };
 
@@ -167,6 +169,39 @@ int SceneLoader::loadMesh(lua_State* state)
 
   // Return true if mesh was successfully loaded
   lua_pushboolean(state, mesh ? 1 : 0);
+
+  return 1;
+}
+
+// Material functions
+int SceneLoader::loadMaterial(lua_State* state)
+{
+  if (lua_gettop(state) != 1)
+  {
+    return luaL_error(
+      state,
+      "loadMaterial takes only one string argument, %d given",
+      lua_gettop(state)
+    );
+  }
+
+  std::string materialName(lua_tolstring(state, -1, nullptr));
+  lua_pop(state, 1);
+
+  MaterialPtr material = Graphics::MaterialLibrary::getSingleton().obtainAsset(materialName);
+
+  if (material)
+  {
+    SceneConfig* sc = getSceneConfig(state);
+    sc->addUsedMaterial(materialName);
+  }
+  else
+  {
+    Log::error << "Failed to load material asset '" << materialName << "'.\n";
+  }
+
+  // Return true if material was successfully loaded
+  lua_pushboolean(state, material ? 1 : 0);
 
   return 1;
 }

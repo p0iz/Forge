@@ -1,6 +1,7 @@
 # Graphics - Loaders
 
 set(LibrariesSources
+  MaterialLoader.cpp
   MeshLoader.cpp
   TextureLibrary.cpp
 )
@@ -9,6 +10,8 @@ set(LibrariesHeaders
   AssetLibrary.hpp
   AssetLoader.hpp
   AssetTraits.hpp
+  MaterialLibrary.hpp
+  MaterialTraits.hpp
   MeshLibrary.hpp
   MeshLoader.hpp
   MeshTraits.hpp

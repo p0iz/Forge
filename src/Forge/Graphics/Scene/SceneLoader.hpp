@@ -45,8 +45,11 @@ class SceneLoader
     /* Lua: addDirectionalLight(scene_config, position[3], color[4]) -- add a point light */
     static int addPointLight(lua_State* state);
 
-    /* Lua: loadMesh(filename) -- returns a light userdata to mesh handle or nil */
+    /* Lua: loadMesh(assetName) -- loads the mesh for use in the current scene config */
     static int loadMesh(lua_State* state);
+
+    /* Lua: loadMaterial(assetName) -- load material for use in the current scene config */
+    static int loadMaterial(lua_State* state);
 
     /* Lua: get_scene_node(name) -- return scene node id
      *   -- name parameter is optional; if left out, root scene node is returned */
@@ -60,9 +63,6 @@ class SceneLoader
      *
      * (add technique to library, implement technique DLL's)
      * -- add_technique(dllname)
-     *
-     * load material (make technique library and material library singletons)
-     * -- load_material(filename)
      *
      * attach attachable to scene node
      * -- attach_to_node(node_id, attachable)

@@ -19,6 +19,7 @@
  */
 
 #include "SceneConfig.hpp"
+#include "../Libraries/MaterialLibrary.hpp"
 #include "../Libraries/MeshLibrary.hpp"
 #include "Util/Exceptions.hpp"
 #include "Util/Log.h"
@@ -37,6 +38,16 @@ SceneConfig::SceneConfig():
 
 SceneConfig::~SceneConfig()
 {
+  clearScene();
+}
+
+void SceneConfig::clearScene()
+{
+  // Release assets
+  for (std::string const& material : mUsedMaterials)
+  {
+    Graphics::MaterialLibrary::getSingleton().releaseAsset(material);
+  }
   for (std::string const& mesh : mUsedMeshes)
   {
     Graphics::MeshLibrary::getSingleton().releaseAsset(mesh);
@@ -45,6 +56,10 @@ SceneConfig::~SceneConfig()
   {
     light.releaseDataIndex();
   }
+
+  mNodes.clear();
+
+  mCurrentCamera = nullptr;
 }
 
 void SceneConfig::removeSceneNode(SceneNodeId id)
@@ -134,6 +149,11 @@ void SceneConfig::calculateWorldTransforms()
 void SceneConfig::addUsedMesh(std::string const& meshName)
 {
   mUsedMeshes.push_back(meshName);
+}
+
+void SceneConfig::addUsedMaterial(std::string const& materialName)
+{
+  mUsedMaterials.push_back(materialName);
 }
 
 void SceneConfig::updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent) {

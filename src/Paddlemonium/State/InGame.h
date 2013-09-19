@@ -24,6 +24,7 @@
 
 // Forge includes
 #include "Graphics/Libraries/MeshLibrary.hpp"
+#include "Graphics/Libraries/MaterialLibrary.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Scene/SceneConfig.hpp"
 #include "Graphics/Material/Material.h"

@@ -40,6 +40,9 @@ public:
   SceneConfig();
   ~SceneConfig();
 
+  // Removes everything from the scene
+  void clearScene();
+
   const SceneNode& getRootSceneNode() const;
 
   SceneNodeId createSceneNode(const std::string& = "");
@@ -68,7 +71,9 @@ public:
   /* This function calculates all world matrices in the current scene graph */
   void calculateWorldTransforms();
 
+  /* Mark assets as obtained */
   void addUsedMesh(std::string const& meshName);
+  void addUsedMaterial(std::string const& materialName);
 
 private:
   void updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent);
@@ -82,6 +87,7 @@ private:
   SceneNode& mRootNode;
 
   std::vector<std::string> mUsedMeshes;
+  std::vector<std::string> mUsedMaterials;
 
   friend class SceneLoader;
   friend class DebugAxis;
