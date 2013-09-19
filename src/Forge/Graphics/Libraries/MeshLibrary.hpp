@@ -24,12 +24,10 @@
 #include "MeshTraits.hpp"
 #include "MeshLoader.hpp"
 #include "../Mesh.h"
-#include <memory>
 
 
 namespace Forge { namespace Graphics {
 
 typedef AssetLibrary<Mesh, MeshLoader> MeshLibrary;
-typedef std::shared_ptr<Mesh> MeshPtr;
 
 }}

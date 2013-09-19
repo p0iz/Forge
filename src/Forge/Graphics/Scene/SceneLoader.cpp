@@ -157,7 +157,7 @@ int SceneLoader::loadMesh(lua_State* state)
   std::string meshName(lua_tolstring(state, -1, nullptr));
   lua_pop(state, 1);
 
-  Graphics::MeshPtr mesh = Graphics::MeshLibrary::getSingleton().obtainAsset(meshName);
+  MeshPtr mesh = Graphics::MeshLibrary::getSingleton().obtainAsset(meshName);
 
   if (mesh)
   {
