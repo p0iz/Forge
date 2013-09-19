@@ -19,7 +19,7 @@
  */
 
 #include "SceneConfig.hpp"
-
+#include "../../Graphics/Libraries/MeshLibrary.hpp"
 #include "Util/Exceptions.hpp"
 #include "Util/Log.h"
 
@@ -28,11 +28,19 @@
 
 namespace Forge {
 
-SceneConfig::SceneConfig()
-	: mNodes(1, SceneNode("Root Node")), mRootNode(mNodes[0]) { }
+SceneConfig::SceneConfig():
+  mNodes(1, SceneNode("Root Node")),
+  mRootNode(mNodes[0]),
+  mUsedMeshes()
+{
+}
 
 SceneConfig::~SceneConfig()
 {
+  for (std::string const& mesh : mUsedMeshes)
+  {
+    Graphics::MeshLibrary::getSingleton().releaseAsset(mesh);
+  }
   for (Light& light : lights)
   {
     light.releaseDataIndex();
@@ -121,6 +129,11 @@ void SceneConfig::calculateWorldTransforms()
 	for (SceneNode& node : mNodes) {
 		node.mWorldTransform.applyMatrix(mNodes[node.mParent].mWorldTransform.getMatrix());
 	}
+}
+
+void SceneConfig::addUsedMesh(std::string const& meshName)
+{
+  mUsedMeshes.push_back(meshName);
 }
 
 void SceneConfig::updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent) {

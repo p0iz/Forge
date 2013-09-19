@@ -68,6 +68,7 @@ public:
 	/* This function calculates all world matrices in the current scene graph */
 	void calculateWorldTransforms();
 
+  void addUsedMesh(std::string const& meshName);
 
 private:
 	void updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent);
@@ -80,7 +81,10 @@ private:
 	std::vector<SceneNode> mNodes;
 	SceneNode& mRootNode;
 
-	friend class DebugAxis;
+  std::vector<std::string> mUsedMeshes;
+
+  friend class SceneLoader;
+  friend class DebugAxis;
 };
 
 } // namespace Forge
