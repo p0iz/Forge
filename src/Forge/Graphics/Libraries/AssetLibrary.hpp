@@ -124,6 +124,7 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType, AssetLoader> >
 
     void parseDirContents(std::string const& directory)
     {
+      Log::info << "Looking for " << AssetTraits<AssetType>::assetTypeStr << " assets...\n";
       FileSystem::Directory assetDir(directory);
       for (std::string const& filename : assetDir.listFiles())
       {

@@ -32,6 +32,7 @@ struct AssetTraits<Mesh>
 {
   typedef Mesh AssetType;
   constexpr static char const* fileExtensions = ".obj";
+  constexpr static char const* assetTypeStr = "mesh";
 };
 
 typedef AssetTraits<Mesh> MeshTraits;
