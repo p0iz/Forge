@@ -31,7 +31,7 @@ template <>
 struct AssetTraits<Material>
 {
   typedef Material AssetType;
-  constexpr static char const* fileExtensions = ".material";
+  constexpr static char const* fileExtensions = ".lua";
   constexpr static char const* assetTypeStr = "material";
 };
 
