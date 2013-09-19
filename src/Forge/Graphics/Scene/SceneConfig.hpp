@@ -40,46 +40,46 @@ public:
   SceneConfig();
   ~SceneConfig();
 
-	const SceneNode& getRootSceneNode() const;
+  const SceneNode& getRootSceneNode() const;
 
-	SceneNodeId createSceneNode(const std::string& = "");
-	void removeSceneNode(SceneNodeId id);
-	SceneNode& getRootSceneNode();
+  SceneNodeId createSceneNode(const std::string& = "");
+  void removeSceneNode(SceneNodeId id);
+  SceneNode& getRootSceneNode();
 
-	// Prefer ID-based searches!
-	SceneNode& getSceneNode(const std::string& name);
-	SceneNode& getSceneNode(SceneNodeId id);
-	const SceneNode& getSceneNode(const std::string& name) const;
-	const SceneNode& getSceneNode(SceneNodeId id) const;
+  // Prefer ID-based searches!
+  SceneNode& getSceneNode(const std::string& name);
+  SceneNode& getSceneNode(SceneNodeId id);
+  const SceneNode& getSceneNode(const std::string& name) const;
+  const SceneNode& getSceneNode(SceneNodeId id) const;
 
-	// Mapping material -> mesh pointer vector
-	std::unordered_map<Material, std::vector<MeshPtr>> mMaterialMeshMap;
+  // Mapping material -> mesh pointer vector
+  std::unordered_map<Material, std::vector<MeshPtr>> mMaterialMeshMap;
 
   // Lights array
   std::list<Light> lights;
 
-	const Camera& getCamera() const;
-	void setCamera(Camera& camera);
+  const Camera& getCamera() const;
+  void setCamera(Camera& camera);
 
-	/* This function reorders nodes to create a sorted graph for fast access.
-	 * Should only be called when loading a scene. */
-	void validateSceneGraph();
+  /* This function reorders nodes to create a sorted graph for fast access.
+   * Should only be called when loading a scene. */
+  void validateSceneGraph();
 
-	/* This function calculates all world matrices in the current scene graph */
-	void calculateWorldTransforms();
+  /* This function calculates all world matrices in the current scene graph */
+  void calculateWorldTransforms();
 
   void addUsedMesh(std::string const& meshName);
 
 private:
-	void updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent);
-	std::unordered_set<SceneNodeId> collectParents();
-	std::vector<SceneNodeId> collectChildNodes(SceneNodeId parent);
-	void swapNodes(SceneNodeId node, SceneNodeId otherNode);
+  void updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent);
+  std::unordered_set<SceneNodeId> collectParents();
+  std::vector<SceneNodeId> collectChildNodes(SceneNodeId parent);
+  void swapNodes(SceneNodeId node, SceneNodeId otherNode);
 
-	Camera* mCurrentCamera;
+  Camera* mCurrentCamera;
 
-	std::vector<SceneNode> mNodes;
-	SceneNode& mRootNode;
+  std::vector<SceneNode> mNodes;
+  SceneNode& mRootNode;
 
   std::vector<std::string> mUsedMeshes;
 

@@ -19,7 +19,7 @@
  */
 
 #include "SceneConfig.hpp"
-#include "../../Graphics/Libraries/MeshLibrary.hpp"
+#include "../Libraries/MeshLibrary.hpp"
 #include "Util/Exceptions.hpp"
 #include "Util/Log.h"
 
@@ -49,86 +49,86 @@ SceneConfig::~SceneConfig()
 
 void SceneConfig::removeSceneNode(SceneNodeId id)
 {
-	auto iterator = mNodes.begin()+id;
-	mNodes.erase(iterator);
-	for (SceneNodeId current = id; current < mNodes.size(); ++current) {
-		if (mNodes[current].mParent >= id) {
-			--mNodes[current].mParent;
-		}
-	}
+  auto iterator = mNodes.begin()+id;
+  mNodes.erase(iterator);
+  for (SceneNodeId current = id; current < mNodes.size(); ++current) {
+    if (mNodes[current].mParent >= id) {
+      --mNodes[current].mParent;
+    }
+  }
 }
 
 SceneNode& SceneConfig::getRootSceneNode()
 {
-	return mRootNode;
+  return mRootNode;
 }
 
 SceneNode& SceneConfig::getSceneNode(const std::string& name) {
-	auto iter = std::find_if(mNodes.begin(),
-							 mNodes.end(),
-							 [&name](const SceneNode& node) { return node.mName == name; });
-	if (iter != mNodes.end()) {
-		return *iter;
-	} else {
-		throw NotFoundException(name);
-	}
+  auto iter = std::find_if(mNodes.begin(),
+               mNodes.end(),
+               [&name](const SceneNode& node) { return node.mName == name; });
+  if (iter != mNodes.end()) {
+    return *iter;
+  } else {
+    throw NotFoundException(name);
+  }
 }
 
 SceneNode& SceneConfig::getSceneNode(SceneNodeId id) {
-	return mNodes[id];
+  return mNodes[id];
 }
 
 const SceneNode& SceneConfig::getSceneNode(const std::string& name) const {
-	auto iter = std::find_if(mNodes.begin(),
-							 mNodes.end(),
-							 [name](const SceneNode& node) { return node.mName == name; });
-	if (iter != mNodes.end()) {
-		return *iter;
-	} else {
-		throw NotFoundException(name);
-	}
+  auto iter = std::find_if(mNodes.begin(),
+               mNodes.end(),
+               [name](const SceneNode& node) { return node.mName == name; });
+  if (iter != mNodes.end()) {
+    return *iter;
+  } else {
+    throw NotFoundException(name);
+  }
 }
 
 const SceneNode& SceneConfig::getSceneNode(SceneNodeId id) const {
-	return mNodes[id];
+  return mNodes[id];
 }
 
 const Camera& SceneConfig::getCamera() const
 {
-	return *mCurrentCamera;
+  return *mCurrentCamera;
 }
 
 void SceneConfig::setCamera(Camera& camera)
 {
-	mCurrentCamera = &camera;
+  mCurrentCamera = &camera;
 }
 
 void SceneConfig::validateSceneGraph()
 {
-	// Collect all parent nodes
-	std::unordered_set<SceneNodeId> parents = collectParents();
+  // Collect all parent nodes
+  std::unordered_set<SceneNodeId> parents = collectParents();
 
-	// For each parent node, verify that all children are after it in the vector
-	for (SceneNodeId parent : parents) {
-		std::vector<SceneNodeId> childNodes = collectChildNodes(parent);
-		SceneNodeId newParentPosition = parent;
+  // For each parent node, verify that all children are after it in the vector
+  for (SceneNodeId parent : parents) {
+    std::vector<SceneNodeId> childNodes = collectChildNodes(parent);
+    SceneNodeId newParentPosition = parent;
 
-		for (SceneNodeId node : childNodes) {
-			if (node < parent) {
-				// Move node after parent and update the nodes in open range ]node, parent[
-				swapNodes(node, parent);
-				newParentPosition = node;
-			}
-		}
-		updateNodeParents(newParentPosition, parent);
-	}
+    for (SceneNodeId node : childNodes) {
+      if (node < parent) {
+        // Move node after parent and update the nodes in open range ]node, parent[
+        swapNodes(node, parent);
+        newParentPosition = node;
+      }
+    }
+    updateNodeParents(newParentPosition, parent);
+  }
 }
 
 void SceneConfig::calculateWorldTransforms()
 {
-	for (SceneNode& node : mNodes) {
-		node.mWorldTransform.applyMatrix(mNodes[node.mParent].mWorldTransform.getMatrix());
-	}
+  for (SceneNode& node : mNodes) {
+    node.mWorldTransform.applyMatrix(mNodes[node.mParent].mWorldTransform.getMatrix());
+  }
 }
 
 void SceneConfig::addUsedMesh(std::string const& meshName)
@@ -137,31 +137,31 @@ void SceneConfig::addUsedMesh(std::string const& meshName)
 }
 
 void SceneConfig::updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent) {
-	for (SceneNode& node : mNodes) {
-		if (node.mParent == oldParent) {
-			node.mParent = newParent;
-		}
-	}
+  for (SceneNode& node : mNodes) {
+    if (node.mParent == oldParent) {
+      node.mParent = newParent;
+    }
+  }
 }
 
 std::unordered_set<SceneNodeId> SceneConfig::collectParents()
 {
-	std::unordered_set<SceneNodeId> parents;
-	for (SceneNode node : mNodes) {
-		parents.insert(node.mParent);
-	}
-	return parents;
+  std::unordered_set<SceneNodeId> parents;
+  for (SceneNode node : mNodes) {
+    parents.insert(node.mParent);
+  }
+  return parents;
 }
 
 std::vector<SceneNodeId> SceneConfig::collectChildNodes(SceneNodeId parent)
 {
-	std::vector<SceneNodeId> childNodes;
-	for (SceneNodeId current = 0; current < mNodes.size(); ++current) {
-		if (mNodes[current].mParent == parent) {
-			childNodes.push_back(current);
-		}
-	}
-	return childNodes;
+  std::vector<SceneNodeId> childNodes;
+  for (SceneNodeId current = 0; current < mNodes.size(); ++current) {
+    if (mNodes[current].mParent == parent) {
+      childNodes.push_back(current);
+    }
+  }
+  return childNodes;
 }
 
 void SceneConfig::swapNodes(SceneNodeId node, SceneNodeId otherNode)
