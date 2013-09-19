@@ -67,6 +67,9 @@ void PaddleGame::initializeGameStates()
 
 void PaddleGame::init(std::string const& windowTitle, std::string const& cfgFile)
 {
+  Forge::Log::info << "Initializing Forge game engine...\n"
+                      "Built on " << __DATE__ << " at " << __TIME__ "\n";
+
   const Forge::Configuration& cfg = Forge::Configuration::getSingleton();
   cfg.loadConfig(cfgFile);
   mRenderWindow->setTitle(windowTitle.c_str());
@@ -86,8 +89,6 @@ void PaddleGame::init(std::string const& windowTitle, std::string const& cfgFile
 
 int PaddleGame::run()
 {
-  Forge::Log::info << "Built on " << __DATE__ << " at " << __TIME__ "\n";
-
   int result = 0;
   mClock.init();
 

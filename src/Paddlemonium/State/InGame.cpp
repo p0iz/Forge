@@ -62,7 +62,7 @@ void InGame::createState() {
   Forge::Scene::SceneLoader loader;
   if (loader.loadScene("data/scene/TestScene.lua", mSceneConfig))
   {
-    Forge::Log::info << "Scene loaded succesfully";
+    Forge::Log::info << "Scene loaded succesfully\n";
   }
 
   // Create game view

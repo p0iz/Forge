@@ -100,8 +100,6 @@ int SceneLoader::addDirectionalLight(lua_State* state)
   light.getShaderData().color = color;
   sceneConfig->lights.push_back(light);
 
-  Log::info << "Data index: " << light.dataIndex;
-
   return 0;
 }
 
@@ -139,8 +137,6 @@ int SceneLoader::addPointLight(lua_State* state)
   light.position = position;
   light.getShaderData().color = color;
   sceneConfig->lights.push_back(light);
-
-  Log::info << "Data index: " << light.dataIndex;
 
   return 0;
 }
