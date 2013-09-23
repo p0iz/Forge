@@ -18,7 +18,7 @@
  *
  */
 
-#include "MaterialLoader.hpp"
+#include "MaterialLibrary.hpp"
 #include "MaterialTraits.hpp"
 #include "Graphics/Vertex.h"
 #include "Util/Log.h"
@@ -31,7 +31,7 @@
 namespace Forge {
 
 template <>
-MaterialPtr AssetLoader<Material>::loadAsset(std::string const& file)
+MaterialPtr Graphics::MaterialLibrary::loadAsset(std::string const& file)
 {
   MaterialPtr material(new Material);
   material->loadMaterial(file);

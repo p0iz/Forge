@@ -23,6 +23,7 @@
 
 namespace Forge {
 
+/* This struct provides a collection of static properties for a specific asset library */
 template <class AssetType>
 struct AssetTraits
 {

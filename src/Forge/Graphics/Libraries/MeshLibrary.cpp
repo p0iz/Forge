@@ -18,7 +18,7 @@
  *
  */
 
-#include "MeshLoader.hpp"
+#include "MeshLibrary.hpp"
 #include "MeshTraits.hpp"
 #include "Graphics/Vertex.h"
 #include "Util/Log.h"
@@ -30,30 +30,20 @@
 
 namespace Forge {
 
-// Helper class to identify unique vertices
+/* Helper class to identify unique vertices */
 struct VertexIdentifier
 {
-    VertexIdentifier(int p, int t, int n, unsigned int element):
-      mElement(element),
-      mP(p),
-      mT(t),
-      mN(n)
-    {
-    }
+    int position;
+    int texCoord;
+    int normal;
+
+    unsigned int element;
 
     bool operator==(VertexIdentifier const& rhs) const
     {
-      return mP == rhs.mP && mT == rhs.mT && mN == rhs.mN;
+      return position == rhs.position && texCoord == rhs.texCoord && normal == rhs.normal;
     }
-
-    unsigned int mElement;
-
-  private:
-    int mP;
-    int mT;
-    int mN;
 };
-
 
 /* Parse a string of type "<pos>/<tex>/<nor>" and return true if at least <pos> was found */
 void parseVertex(std::string const& vertex, int& posIndex, int& texIndex, int&norIndex)
@@ -73,8 +63,8 @@ void parseVertex(std::string const& vertex, int& posIndex, int& texIndex, int&no
   }
 }
 
-template <>
-MeshPtr AssetLoader<Mesh>::loadAsset(std::string const& file)
+template<>
+MeshPtr Graphics::MeshLibrary::loadAsset(std::string const& file)
 {
   MeshPtr mesh;
 
@@ -143,7 +133,7 @@ MeshPtr AssetLoader<Mesh>::loadAsset(std::string const& file)
           return mesh;
         }
 
-        VertexIdentifier id(pos, tex, nor, nextIndex);
+        VertexIdentifier id = { pos, tex, nor, nextIndex };
         auto idIter = std::find_if(
           vertexIds.begin(),
           vertexIds.end(),
@@ -166,14 +156,14 @@ MeshPtr AssetLoader<Mesh>::loadAsset(std::string const& file)
           }
           Vertex v(position, texCoord, normal);
           vertices.push_back(v);
-          elements.push_back(id.mElement);
+          elements.push_back(id.element);
 
           vertexIds.push_back(id);
           ++nextIndex;
         }
         else
         {
-          elements.push_back(idIter->mElement);
+          elements.push_back(idIter->element);
         }
       }
     }

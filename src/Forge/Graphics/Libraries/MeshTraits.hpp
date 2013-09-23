@@ -22,11 +22,11 @@
 
 #include "AssetTraits.hpp"
 #include "../Mesh.h"
-#include <memory>
 
 
 namespace Forge {
 
+/* Mesh asset properties */
 template <>
 struct AssetTraits<Mesh>
 {

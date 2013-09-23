@@ -22,12 +22,11 @@
 
 #include "AssetLibrary.hpp"
 #include "MeshTraits.hpp"
-#include "MeshLoader.hpp"
 #include "../Mesh.h"
 
 
 namespace Forge { namespace Graphics {
 
-typedef AssetLibrary<Mesh, MeshLoader> MeshLibrary;
+typedef AssetLibrary<Mesh> MeshLibrary;
 
 }}

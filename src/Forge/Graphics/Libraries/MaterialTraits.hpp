@@ -22,11 +22,11 @@
 
 #include "AssetTraits.hpp"
 #include "../Material/Material.h"
-#include <memory>
 
 
 namespace Forge {
 
+/* Material asset properties */
 template <>
 struct AssetTraits<Material>
 {

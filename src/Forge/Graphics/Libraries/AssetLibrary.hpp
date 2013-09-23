@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "AssetLoader.hpp"
 #include "AssetTraits.hpp"
 #include "../../Platform/FileSystem/Directory.hpp"
 #include "../../Util/Log.h"
@@ -36,11 +35,10 @@ namespace Forge {
 
 /* Generic asset library
  *
- * Add a set of directories and provide a loader for searching them
- * for assets of a specific type.
+ * Add a set of directories and search them for assets of a specific type.
  */
-template <class AssetType, class AssetLoader>
-class AssetLibrary : public Singleton<AssetLibrary<AssetType, AssetLoader> >
+template <class AssetType>
+class AssetLibrary : public Singleton<AssetLibrary<AssetType> >
 {
   public:
     AssetLibrary():
@@ -90,7 +88,7 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType, AssetLoader> >
 
       if (!info.valid)
       {
-        info.asset = AssetLoader::loadAsset(info.filename);
+        info.asset = loadAsset(info.filename);
         info.valid = info.asset ? true : false;
         info.useCount = info.valid ? 1 : 0;
       }
@@ -121,6 +119,9 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType, AssetLoader> >
     /* Loading */
     std::unordered_set<std::string> mAssetDirectories;
     std::string const mSupportedExtensions;
+
+    /* Loads an asset using a method defined via template specialization */
+    std::shared_ptr<AssetType> loadAsset(std::string const& filename);
 
     void parseDirContents(std::string const& directory)
     {

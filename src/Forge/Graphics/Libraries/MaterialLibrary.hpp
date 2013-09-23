@@ -22,12 +22,11 @@
 
 #include "AssetLibrary.hpp"
 #include "MaterialTraits.hpp"
-#include "MaterialLoader.hpp"
 #include "../Material/Material.h"
 
 
 namespace Forge { namespace Graphics {
 
-typedef AssetLibrary<Material, MaterialLoader> MaterialLibrary;
+typedef AssetLibrary<Material> MaterialLibrary;
 
 }}
