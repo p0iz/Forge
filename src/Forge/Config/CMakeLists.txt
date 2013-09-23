@@ -1,9 +1,8 @@
 # Config
 
 set(ConfigSources
-	ConfigHandler.cpp
-	ConfigLoader.hpp
-	Configuration.cpp)
+  ConfigLoader.cpp
+  Configuration.cpp)
 
 include_directories(${LUA_INCLUDE_DIRECTORIES})
 

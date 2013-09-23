@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Graphics/Material/Technique/Technique.h"
-
+#include "Lua/Loader.hpp"
 #include <memory>
 #include <string>
 
@@ -46,7 +46,7 @@ private:
   TechniquePtr mTechnique;
   std::string mMaterialFile;
 
-  friend struct MaterialHandler;
+  friend class Lua::Loader<Material>;
   friend struct std::hash<Material>;
   friend bool operator ==(const Material&, const Material&);
 };

@@ -18,31 +18,24 @@
  *
  */
 
-#include "ConfigHandler.hpp"
-
-#include "Configuration.hpp"
-#include "Util/Log.h"
+#pragma once
 
 #include "lua.hpp"
 
-namespace Forge {
 
-bool ConfigHandler::handleLoadedLua(lua_State* state) const
-{
-	bool loaded = false;
+namespace Forge { namespace Lua {
 
-	Configuration& config = Configuration::getSingleton();
+/* Helper struct to give Lua state some RAII */
+class State {
+public:
+  State();
+  ~State();
 
-	lua_getglobal(state, "width");
-	lua_getglobal(state, "height");
-	if (lua_isnumber(state, -2) && lua_isnumber(state, -1)) {
-		config.display.width = lua_tonumber(state, -2);
-		config.display.height = lua_tonumber(state, -1);
-		loaded = true;
-	} else {
-		Log::error << "Config error: display parameters should be numbers!\n";
-	}
-	return loaded;
-}
+  lua_State* get();
 
-}
+private:
+  lua_State* mState;
+
+};
+
+}}

@@ -18,27 +18,30 @@
  *
  */
 
-#pragma once
+#include "ConfigLoader.hpp"
+#include "Configuration.hpp"
+#include "Util/Log.h"
 
-#include "Technique/Technique.h"
+#include "lua.hpp"
 
-struct lua_State;
 
-namespace Forge {
+namespace Forge { namespace Lua {
 
-class Material;
+template <>
+bool ConfigLoader::handleLoadedLua(lua_State* state) const
+{
+  bool loaded = false;
 
-struct MaterialHandler {
-  MaterialHandler();
-  void setTargetMaterial(Material* material);
-protected:
-  bool handleLoadedLua(lua_State* state) const;
-private:
-  // Encapsulate the internal Lua state
-  TechniquePtr loadTechnique(lua_State* state) const;
-  bool loadProperties(lua_State* state, TechniquePtr technique) const;
-
-  Material* mTargetMaterial;
-};
-
+  lua_getglobal(state, "width");
+  lua_getglobal(state, "height");
+  if (lua_isnumber(state, -2) && lua_isnumber(state, -1)) {
+    mTarget->display.width = lua_tonumber(state, -2);
+    mTarget->display.height = lua_tonumber(state, -1);
+    loaded = true;
+  } else {
+    Log::error << "Config error: display parameters should be numbers!\n";
+  }
+  return loaded;
 }
+
+}}

@@ -18,17 +18,24 @@
  *
  */
 
-#include "Configuration.hpp"
+#include "State.hpp"
 
-#include "ConfigLoader.hpp"
+namespace Forge { namespace Lua {
 
-namespace Forge {
-
-void Configuration::loadConfig(const std::string& configFile)
+State::State():
+  mState(luaL_newstate())
 {
-  ConfigLoader loader;
-  loader.setTarget(getSingleton());
-  loader.loadFile(configFile);
+  luaL_openlibs(mState);
 }
 
+State::~State()
+{
+  lua_close(mState);
 }
+
+lua_State* State::get()
+{
+  return mState;
+}
+
+}}

@@ -37,7 +37,7 @@ void Material::loadMaterial(const std::string& materialFile)
   }
 
   MaterialLoader loader;
-  loader.setTargetMaterial(this);
+  loader.setTarget(*this);
   loader.loadFile(materialFile);
 }
 

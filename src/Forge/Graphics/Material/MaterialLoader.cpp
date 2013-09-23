@@ -18,7 +18,7 @@
  *
  */
 
-#include "MaterialHandler.hpp"
+#include "MaterialLoader.hpp"
 #include "Material.h"
 #include "Technique/LuaProperties.hpp"
 #include "Technique/TechniqueLibrary.h"
@@ -26,33 +26,12 @@
 
 #include "lua.hpp"
 
-namespace Forge {
+namespace Forge { namespace Lua {
 
-MaterialHandler::MaterialHandler():
-  mTargetMaterial(nullptr)
-{
-}
+// Define helpers in anonymous namespace
+namespace {
 
-void MaterialHandler::setTargetMaterial(Material* material) {
-  mTargetMaterial = material;
-}
-
-bool MaterialHandler::handleLoadedLua(lua_State* state) const
-{
-  bool loaded = false;
-  lua_getglobal(state, "material");
-  if (lua_istable(state, -1)) {
-    TechniquePtr technique = loadTechnique(state);
-    if (technique) {
-      technique->create();
-      mTargetMaterial->mTechnique = technique;
-      loaded = loadProperties(state, technique);
-    }
-  }
-  return loaded;
-}
-
-TechniquePtr MaterialHandler::loadTechnique(lua_State* state) const
+TechniquePtr loadTechnique(lua_State* state)
 {
   TechniquePtr technique;
   lua_getfield(state, -1, "technique");
@@ -65,7 +44,7 @@ TechniquePtr MaterialHandler::loadTechnique(lua_State* state) const
   return technique;
 }
 
-bool MaterialHandler::loadProperties(lua_State* state, TechniquePtr technique) const
+bool loadProperties(lua_State* state, TechniquePtr technique)
 {
   lua_getfield(state, -1, "properties");
   bool loaded = lua_istable(state, -1);
@@ -82,3 +61,21 @@ bool MaterialHandler::loadProperties(lua_State* state, TechniquePtr technique) c
 }
 
 }
+
+template <>
+bool MaterialLoader::handleLoadedLua(lua_State* state) const
+{
+  bool loaded = false;
+  lua_getglobal(state, "material");
+  if (lua_istable(state, -1)) {
+    TechniquePtr technique = loadTechnique(state);
+    if (technique) {
+      technique->create();
+      mTarget->mTechnique = technique;
+      loaded = loadProperties(state, technique);
+    }
+  }
+  return loaded;
+}
+
+}}

@@ -4,9 +4,8 @@
 add_subdirectory(Technique)
 
 set(MaterialSources
-	Material.cpp
-	MaterialHandler.cpp
-	MaterialLoader.hpp)
+  Material.cpp
+  MaterialLoader.cpp)
 
 add_library(Material ${MaterialSources})
-target_link_libraries(Material Graphics Technique)
+target_link_libraries(Material ForgeLua Graphics Technique)

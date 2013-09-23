@@ -20,11 +20,11 @@
 
 #pragma once
 
-#include "ConfigHandler.hpp"
-#include "Util/LuaLoader.hpp"
+#include "Configuration.hpp"
+#include "Lua/Loader.hpp"
 
 namespace Forge {
 
-typedef LuaLoader<ConfigHandler> ConfigLoader;
+typedef Lua::Loader<Configuration> ConfigLoader;
 
 }
