@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "AssetTraits.hpp"
+#include "../../Asset/AssetTraits.hpp"
 #include "../Material/Material.h"
 
 

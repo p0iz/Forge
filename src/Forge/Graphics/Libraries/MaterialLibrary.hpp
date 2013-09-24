@@ -20,8 +20,8 @@
 
 #pragma once
 
-#include "AssetLibrary.hpp"
 #include "MaterialTraits.hpp"
+#include "../../Asset/AssetLibrary.hpp"
 #include "../Material/Material.h"
 
 

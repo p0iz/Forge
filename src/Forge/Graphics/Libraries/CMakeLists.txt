@@ -7,8 +7,6 @@ set(LibrariesSources
 )
 
 set(LibrariesHeaders
-  AssetLibrary.hpp
-  AssetTraits.hpp
   MaterialLibrary.hpp
   MaterialTraits.hpp
   MeshLibrary.hpp

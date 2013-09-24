@@ -21,9 +21,9 @@
 #pragma once
 
 #include "AssetTraits.hpp"
-#include "../../Platform/FileSystem/Directory.hpp"
-#include "../../Util/Log.h"
-#include "../../Util/Singleton.hpp"
+#include "../Platform/FileSystem/Directory.hpp"
+#include "../Util/Log.h"
+#include "../Util/Singleton.hpp"
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>

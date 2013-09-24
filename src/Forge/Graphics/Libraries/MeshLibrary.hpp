@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "AssetLibrary.hpp"
+#include "../../Asset/AssetLibrary.hpp"
 #include "MeshTraits.hpp"
 #include "../Mesh.h"
 

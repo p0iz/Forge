@@ -32,6 +32,7 @@ find_package(Lua52 REQUIRED)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Add subsystems
+add_subdirectory(Asset)
 add_subdirectory(Config)
 add_subdirectory(State)
 add_subdirectory(Graphics)
