@@ -10,18 +10,15 @@ ball = Assets.loadMesh("ball");
 tile = Assets.loadMesh("tile");
 border = Assets.loadMesh("border");
 
--- Load materials apply them to meshes
+-- Load materials
 tileMat = Assets.loadMaterial("Tile");
-
-print("The name of the material is: " .. tileMat.name);
-
 paddleMat = Assets.loadMaterial("Paddle");
-
 
 ball:setMaterial(tileMat);
 tile:setMaterial(tileMat);
 border:setMaterial(tileMat);
 paddle:setMaterial(paddleMat);
+
 --[[
 -- Create a scene graph from a single function call
 Scene.graph{
