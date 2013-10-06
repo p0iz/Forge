@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Graphics/Material/Technique/Technique.h"
+#include "Graphics/Mesh.h"
 #include "Lua/Loader.hpp"
 #include <memory>
 #include <string>
@@ -36,15 +37,25 @@ namespace Forge {
 class Material
 {
 public:
+
+  ~Material();
+
   void loadMaterial(const std::string& materialFile);
 
   void beginMaterial() const;
   void setTransforms(const glm::mat4& world, const glm::mat4& view, const glm::mat4& projection) const;
 
   void setDynamicProperty(const std::string& propertyName, const Property& value);
+
+  std::vector<MeshPtr> const& getMeshes() const;
+  void useOn(MeshPtr const& mesh);
+  void clearUsers();
+
 private:
   TechniquePtr mTechnique;
   std::string mMaterialFile;
+
+  std::vector<MeshPtr> mMeshes;
 
   friend class Lua::Loader<Material>;
   friend struct std::hash<Material>;

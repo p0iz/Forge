@@ -45,12 +45,6 @@ class SceneLoader
     /* Lua: addDirectionalLight(scene_config, position[3], color[4]) -- add a point light */
     static int addPointLight(lua_State* state);
 
-    /* Lua: loadMesh(assetName) -- loads the mesh for use in the current scene config */
-    static int loadMesh(lua_State* state);
-
-    /* Lua: loadMaterial(assetName) -- load material for use in the current scene config */
-    static int loadMaterial(lua_State* state);
-
     /* Lua: get_scene_node(name) -- return scene node id
      *   -- name parameter is optional; if left out, root scene node is returned */
     static int getSceneNode(lua_State* state);
@@ -74,13 +68,15 @@ class SceneLoader
      *   (validate scene graph and calculate world transforms, could be done in loadScene)
      */
 
+    /* Helper to get the global scene config userdata from the Lua state */
+    static SceneConfig* getSceneConfig(lua_State* state);
+
   private:
     /* A table containing all the functions available to configure a scene in Lua */
-    static luaL_Reg const LoaderLib[];
+    static luaL_Reg const SceneLib[];
 
-    /* Helpers to store/retrieve the global scene config userdata to/from the Lua state */
+    /* Helper to store the global scene config userdata to the Lua state */
     static void setSceneConfig(lua_State* state, SceneConfig& config);
-    static SceneConfig* getSceneConfig(lua_State* state);
 
     lua_State* mState;
 };

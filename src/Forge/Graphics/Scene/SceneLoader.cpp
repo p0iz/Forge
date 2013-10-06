@@ -21,17 +21,17 @@
 #include "SceneLoader.hpp"
 #include "Graphics/Libraries/MeshLibrary.hpp"
 #include "Graphics/Libraries/MaterialLibrary.hpp"
+#include "Lua/AssetLoader.hpp"
+#include "Lua/Material.hpp"
 #include "../../Util/Exceptions.hpp"
 #include "../../Util/Log.h"
 
 namespace Forge { namespace Scene {
 
-luaL_Reg const SceneLoader::LoaderLib[] =
+luaL_Reg const SceneLoader::SceneLib[] =
 {
   { "addDirectionalLight", SceneLoader::addDirectionalLight },
   { "addPointLight", SceneLoader::addPointLight },
-  { "loadMesh", SceneLoader::loadMesh },
-  { "loadMaterial", SceneLoader::loadMaterial },
   { nullptr, nullptr }
 };
 
@@ -40,9 +40,11 @@ SceneLoader::SceneLoader():
 {
   luaL_openlibs(mState);
 
-  // Register loader functions into 'Loader' table
-  luaL_newlib(mState, LoaderLib);
-  lua_setglobal(mState, "Loader");
+  // Register Scene management functions into 'Scene' table
+  luaL_newlib(mState, SceneLib);
+  lua_setglobal(mState, "Scene");
+
+  Lua::AssetLoader::import(mState);
 
   // Disable I/O library to reduce tampering
   lua_pushnil(mState);
@@ -141,69 +143,6 @@ int SceneLoader::addPointLight(lua_State* state)
   sceneConfig->lights.push_back(light);
 
   return 0;
-}
-
-// Mesh functions
-int SceneLoader::loadMesh(lua_State* state)
-{
-  if (lua_gettop(state) != 1)
-  {
-    Log::error << "loadMesh called with the wrong arguments.\n";
-    return luaL_error(state, "loadMesh takes only one argument, %d given", lua_gettop(state));
-  }
-
-  std::string meshName(lua_tolstring(state, -1, nullptr));
-  lua_pop(state, 1);
-
-  MeshPtr mesh = Graphics::MeshLibrary::getSingleton().obtainAsset(meshName);
-
-  if (mesh)
-  {
-    SceneConfig* sc = getSceneConfig(state);
-    sc->addUsedMesh(meshName);
-  }
-  else
-  {
-    Log::error << "Failed to load mesh asset '" << meshName << "'.\n";
-  }
-
-  // Return true if mesh was successfully loaded
-  lua_pushboolean(state, mesh ? 1 : 0);
-
-  return 1;
-}
-
-// Material functions
-int SceneLoader::loadMaterial(lua_State* state)
-{
-  if (lua_gettop(state) != 1)
-  {
-    return luaL_error(
-      state,
-      "loadMaterial takes only one string argument, %d given",
-      lua_gettop(state)
-    );
-  }
-
-  std::string materialName(lua_tolstring(state, -1, nullptr));
-  lua_pop(state, 1);
-
-  MaterialPtr material = Graphics::MaterialLibrary::getSingleton().obtainAsset(materialName);
-
-  if (material)
-  {
-    SceneConfig* sc = getSceneConfig(state);
-    sc->addUsedMaterial(materialName);
-  }
-  else
-  {
-    Log::error << "Failed to load material asset '" << materialName << "'.\n";
-  }
-
-  // Return true if material was successfully loaded
-  lua_pushboolean(state, material ? 1 : 0);
-
-  return 1;
 }
 
 // Scene graph functions

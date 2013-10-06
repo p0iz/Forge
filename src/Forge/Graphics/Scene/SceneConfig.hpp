@@ -55,9 +55,6 @@ public:
   const SceneNode& getSceneNode(const std::string& name) const;
   const SceneNode& getSceneNode(SceneNodeId id) const;
 
-  // Mapping material -> mesh pointer vector
-  std::unordered_map<Material, std::vector<MeshPtr>> mMaterialMeshMap;
-
   // Lights array
   std::list<Light> lights;
 
@@ -74,6 +71,7 @@ public:
   /* Mark assets as obtained */
   void addUsedMesh(std::string const& meshName);
   void addUsedMaterial(std::string const& materialName);
+  std::vector<std::string> const& getUsedMaterials() const;
 
 private:
   void updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent);

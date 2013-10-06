@@ -74,7 +74,6 @@ void InGame::createState() {
   Forge::MaterialPtr paddleMat =
     Forge::Graphics::MaterialLibrary::getSingleton().getAssetInfo("Paddle").asset;
   Forge::MeshPtr paddleMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("paddle").asset;
-  mSceneConfig.mMaterialMeshMap[*paddleMat].push_back(paddleMesh);
   paddleMesh->attachToNode(mPaddleNode);
 
   Forge::MaterialPtr tileMat =
@@ -86,7 +85,6 @@ void InGame::createState() {
   mSceneConfig.getSceneNode(mTileNode).mWorldTransform.translate(5.0f, 10.0f, 0.0f).scale(0.2f);
 
   Forge::MeshPtr tileMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("tile").asset;
-  mSceneConfig.mMaterialMeshMap[*tileMat].push_back(tileMesh);
   tileMesh->attachToNode(mTileNode);
 
   mTileNode = mSceneConfig.createSceneNode("TileNode2");
@@ -100,7 +98,6 @@ void InGame::createState() {
   mSceneConfig.getSceneNode(mBallNode).mWorldTransform.translate(0.0f, 5.0f, 0.0f).scale(0.2f);
 
   Forge::MeshPtr ballMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("ball").asset;
-  mSceneConfig.mMaterialMeshMap[*tileMat].push_back(ballMesh); // Use same material for ball
   ballMesh->attachToNode(mBallNode);
 
 
@@ -109,7 +106,6 @@ void InGame::createState() {
   mSceneConfig.getSceneNode(mBorderNode).mWorldTransform.translate(0.0f, 6.1f, 0.0f).rotate(90.0f, glm::vec3(1, 0, 0)).scale(0.4f);
 
   Forge::MeshPtr borderMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("border").asset;
-  mSceneConfig.mMaterialMeshMap[*tileMat].push_back(borderMesh); // Use same material for border
   borderMesh->attachToNode(mBorderNode);
 
 

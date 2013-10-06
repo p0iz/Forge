@@ -156,6 +156,11 @@ void SceneConfig::addUsedMaterial(std::string const& materialName)
   mUsedMaterials.push_back(materialName);
 }
 
+std::vector<std::string> const& SceneConfig::getUsedMaterials() const
+{
+  return mUsedMaterials;
+}
+
 void SceneConfig::updateNodeParents(SceneNodeId newParent, SceneNodeId oldParent) {
   for (SceneNode& node : mNodes) {
     if (node.mParent == oldParent) {

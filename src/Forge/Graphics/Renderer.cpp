@@ -18,13 +18,14 @@
  *
  */
 
-#include "GL/glew.h"
-
 #include "Renderer.h"
-
 #include "DebugAxis.h"
+#include "Libraries/MaterialLibrary.hpp"
 #include "Scene/SceneConfig.hpp"
 #include "Util/Log.h"
+
+#include "GL/glew.h"
+
 
 namespace Forge { namespace Graphics {
 
@@ -75,10 +76,11 @@ void Renderer::drawScene(const glm::mat4& view,
                const glm::mat4& projection,
                const SceneConfig& scene)
 {
-  for (auto materialMeshPair : scene.mMaterialMeshMap) {
-    const Material& material = materialMeshPair.first;
+  for (auto materialName : scene.getUsedMaterials()) {
+    Material const& material =
+        *Graphics::MaterialLibrary::getSingleton().getAssetInfo(materialName).asset;
     bool materialSelected = false;
-    const std::vector<MeshPtr>& meshes = materialMeshPair.second;
+    std::vector<MeshPtr> const& meshes = material.getMeshes();
     for (MeshPtr mesh : meshes) {
       // For each mesh, get the world transform
       for (SceneNodeId nodeId : mesh->getAttachedNodes()) {

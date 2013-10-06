@@ -28,6 +28,11 @@
 
 namespace Forge {
 
+Material::~Material()
+{
+  clearUsers();
+}
+
 void Material::loadMaterial(const std::string& materialFile)
 {
   mMaterialFile = materialFile;
@@ -58,6 +63,21 @@ void Material::setTransforms(
 void Material::setDynamicProperty(const std::string& propertyName, const Property& value)
 {
   mTechnique->setDynamicProperty(propertyName.c_str(), value);
+}
+
+const std::vector<MeshPtr>&Material::getMeshes() const
+{
+  return mMeshes;
+}
+
+void Material::useOn(MeshPtr const& mesh)
+{
+  mMeshes.push_back(mesh);
+}
+
+void Material::clearUsers()
+{
+  mMeshes.clear();
 }
 
 bool operator==(const Material& lhs, const Material& rhs)
