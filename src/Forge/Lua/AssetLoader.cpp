@@ -62,7 +62,14 @@ int AssetLoader::loadMesh(lua_State* state)
   if (mesh)
   {
     SceneConfig* sc = SceneLoader::getSceneConfig(state);
-    sc->addUsedMesh(meshName);
+    if (sc)
+    {
+      sc->addUsedMesh(meshName);
+    }
+    else
+    {
+      Graphics::MeshLibrary::getSingleton().releaseAsset(meshName);
+    }
     Lua::Mesh(meshName).create(state);
   }
   else
@@ -93,7 +100,14 @@ int AssetLoader::loadMaterial(lua_State* state)
   if (material)
   {
     SceneConfig* sc = SceneLoader::getSceneConfig(state);
-    sc->addUsedMaterial(materialName);
+    if (sc)
+    {
+      sc->addUsedMaterial(materialName);
+    }
+    else
+    {
+      Graphics::MaterialLibrary::getSingleton().releaseAsset(materialName);
+    }
     Material(materialName).create(state);
   }
   else
