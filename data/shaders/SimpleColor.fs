@@ -57,7 +57,8 @@ layout (std140) uniform Lights
 // Outputs
 out vec3 color;
 
-vec3 ads_lighting() {
+vec3 ads_lighting()
+{
 	// Need to re-normalize interpolated values
 	vec3 normal = normalize(view_space_normal);
 	vec3 eye = normalize(-view_space_vertex);
@@ -66,7 +67,6 @@ vec3 ads_lighting() {
 	// Calculate ADS lighting per light
 	vec3 halfway = normalize(lightVec + eye);
 	float diffuse = max(dot(lightVec, normal), 0.0f);
-	vec3 lighting = vec3(0.0f);
 	float specular = pow(max(dot(halfway, normal), 0.0f), MaterialShininess);
 	float spotlight = 1.0f;
 	// Spotlight
@@ -83,13 +83,15 @@ vec3 ads_lighting() {
       );
 		spotlight = pow(spotlight * fade, light.spotExponent);
 	}
-	vec3 lightContribution = light.color.rgb * light.color.a * spotlight *
-		(MaterialAmbient +
-		MaterialDiffuse * diffuse +
-		MaterialSpecular * specular);
-	lighting += lightContribution * attenuation;
-
-	return lighting;
+	vec3 lightContribution =
+    light.color.rgb * light.color.a *
+    spotlight *
+		(
+      MaterialAmbient +
+      MaterialDiffuse * diffuse +
+	  	MaterialSpecular * specular
+    );
+	return lightContribution * attenuation;
 }
 
 void main(void)
