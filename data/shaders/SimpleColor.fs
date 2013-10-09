@@ -43,10 +43,10 @@ struct Light
 	float quadratic;
 
 	// For spot lights
-	float exponent;
-	vec3 direction;
-	float cutoff;
-	float falloff;
+	float spotExponent;
+	vec3  spotDirection;
+	float spotCutoff;
+	float spotFalloff;
 };
 
 layout (std140) uniform Lights
@@ -61,26 +61,27 @@ vec3 ads_lighting() {
 	// Need to re-normalize interpolated values
 	vec3 normal = normalize(view_space_normal);
 	vec3 eye = normalize(-view_space_vertex);
+	vec3 lightVec = normalize(vec3(light.position) - view_space_vertex);
 
 	// Calculate ADS lighting per light
+	vec3 halfway = normalize(lightVec + eye);
+	float diffuse = max(dot(lightVec, normal), 0.0f);
 	vec3 lighting = vec3(0.0f);
-	vec3 view_space_light = normalize(vec3(light.position) - view_space_vertex);
-	vec3 halfway = normalize(view_space_light + eye);
-	float diffuse = max(dot(view_space_light, normal), 0.0f);
-	float specular = 0.0f;
+	float specular = pow(max(dot(halfway, normal), 0.0f), MaterialShininess);
 	float spotlight = 1.0f;
-	if (diffuse > 0.0f) {
-		// Spotlight
-		if (light.exponent > 0.0f) {
-			// Calculate fragment illumination
-			spotlight = max(-dot(view_space_light, normalize(light.direction)), 0.0f);
-			// Fade
-			float fade =
-				clamp((light.cutoff - spotlight) / light.cutoff - light.falloff, 0.0f, 1.0f);
-			spotlight = pow(spotlight * fade, light.exponent);
-		}
-		// Specular
-		specular = pow(max(dot(halfway, normal), 0.0f), MaterialShininess);
+	// Spotlight
+	if (light.spotExponent > 0.0f) 
+  {
+		// Calculate fragment illumination
+		spotlight = max(-dot(lightVec, normalize(light.spotDirection)), 0.0f);
+		// Fade
+		float fade =
+			clamp(
+        (light.spotCutoff - spotlight) / light.spotCutoff - light.spotFalloff,
+        0.0f,
+        1.0f
+      );
+		spotlight = pow(spotlight * fade, light.spotExponent);
 	}
 	vec3 lightContribution = light.color.rgb * light.color.a * spotlight *
 		(MaterialAmbient +

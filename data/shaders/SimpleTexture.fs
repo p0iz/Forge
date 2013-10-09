@@ -49,10 +49,10 @@ struct Light
 	float quadratic;
 
 	// For spot lights
-	float exponent;
-	vec3 direction;
-	float cutoff;
-	float falloff;
+	float spotExponent;
+	vec3  spotDirection;
+	float spotCutoff;
+	float spotFalloff;
 };
 
 layout (std140) uniform Lights
@@ -86,13 +86,13 @@ vec3 ads_lighting() {
 		MaterialSpecular * specular);
 		
 	// Spotlight
-	if (light.exponent > 0.0f) {
+	if (light.spotExponent > 0.0f) {
 		// Calculate fragment illumination
 		float spotlight = max(dot(light.position.xyz, normalize(view_space_spot_direction)), 0.0f);
 		// Fade
 		float fade =
-			clamp((light.cutoff - spotlight) / light.cutoff - light.falloff, 0.0f, 1.0f);
-		spotlight = pow(spotlight * fade, light.exponent);
+			clamp((light.spotCutoff - spotlight) / light.spotCutoff - light.spotFalloff, 0.0f, 1.0f);
+		spotlight = pow(spotlight * fade, light.spotExponent);
 		lightContribution *= spotlight;
 	}
 

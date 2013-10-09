@@ -87,7 +87,7 @@ int SceneLoader::addDirectionalLight(lua_State* state)
 
   Light light;
   light.type = Light::DIRECTIONAL;
-  light.direction = direction;
+  light.position = glm::vec4(direction, 0.0f);
   light.getShaderData().color = color;
   sceneConfig->lights.push_back(light);
 

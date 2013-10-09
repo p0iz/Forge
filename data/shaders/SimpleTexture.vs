@@ -39,10 +39,10 @@ struct Light
 	float quadratic;
 
 	// For spot lights
-	float exponent;
-	vec3 direction;
-	float cutoff;
-	float falloff;
+	float spotExponent;
+	vec3  spotDirection;
+	float spotCutoff;
+	float spotFalloff;
 };
 
 layout (std140) uniform Lights
@@ -89,8 +89,8 @@ void main(void)
 		attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
 	}
 	
-	if (light.exponent > 0.0f) {
-		view_space_spot_direction = NormalMatrix * light.direction;
+	if (light.spotExponent > 0.0f) {
+		view_space_spot_direction = NormalMatrix * light.spotDirection;
 	}
 
 	gl_Position = WorldViewProjectionMatrix * pos;

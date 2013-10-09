@@ -46,7 +46,7 @@ struct Light {
 
   LightType type;
   glm::vec4 position;
-  glm::vec3 direction;
+  glm::vec3 spotDirection;
   int dataIndex;
 
 
@@ -56,10 +56,10 @@ struct Light {
       viewSpacePosition(0.0f),
       color(0.0f),
       attenuation({ 0.1f, 0.1f, 0.00025f }),
-      exponent(0.0f),
-      direction(0.0f),
-      cutoff(0.0f),
-      falloff(0.0f) { }
+      spotExponent(0.0f),
+      spotDirection(0.0f),
+      spotCutoff(0.0f),
+      spotFalloff(0.0f) { }
 
     glm::vec4 viewSpacePosition;
     glm::vec4 color; // alpha component describes light intensity
@@ -70,10 +70,10 @@ struct Light {
     } attenuation; // distance attenuation
 
     // Spotlight
-    float exponent;
-    glm::vec3 direction; // spot direction.
-    float cutoff; // cutoff angle (in degrees when specified, calculated to cosine when used)
-    float falloff; // falloff angle (in degrees when specified, calculated to cosine when used)
+    float spotExponent;
+    glm::vec3 spotDirection; // spot direction.
+    float spotCutoff; // cutoff angle (in degrees when specified, calculated to cosine when used)
+    float spotFalloff; // falloff angle (in degrees when specified, calculated to cosine when used)
 
     // Padding for std140 GLSL layout
     float padding[3];

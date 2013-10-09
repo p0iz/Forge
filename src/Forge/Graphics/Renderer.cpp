@@ -61,13 +61,10 @@ void Renderer::updateLightData(const SceneConfig& scene, const glm::mat4& view)
 {
   for (Light const& light : scene.lights)
   {
-    if (light.type != Light::DIRECTIONAL)
+    light.getShaderData().viewSpacePosition = view * light.position;
+    if (light.type == Light::SPOT)
     {
-      light.getShaderData().viewSpacePosition = view * light.position;
-    }
-    if (light.type != Light::POINT)
-    {
-      light.getShaderData().direction = glm::mat3(view) * light.direction;
+      light.getShaderData().spotDirection = glm::mat3(view) * light.spotDirection;
     }
   }
 }
