@@ -21,6 +21,7 @@
 #include "SceneLoader.hpp"
 #include "Lua/AssetLoader.hpp"
 #include "Lua/Material.hpp"
+#include "Lua/Utils.hpp"
 #include "Util/Exceptions.hpp"
 #include "Util/Log.h"
 
@@ -76,22 +77,10 @@ int SceneLoader::addDirectionalLight(lua_State* state)
     return luaL_error(state, " Usage: addDirectionalLight(direction[3], color[4])");
   }
 
-  glm::vec4 color;
-  for (int i = 0; i < 4; ++i)
-  {
-    lua_rawgeti(state, -1, i+1);
-    color[i] = lua_tonumber(state, -1);
-    lua_pop(state, 1);
-  }
+  glm::vec4 color = Utils::parseVec4(state);
   lua_pop(state, 1);
 
-  glm::vec3 direction;
-  for (int i = 0; i < 3; ++i)
-  {
-    lua_rawgeti(state, -1, i+1);
-    direction[i] = lua_tonumber(state, -1);
-    lua_pop(state, 1);
-  }
+  glm::vec3 direction = Utils::parseVec3(state);
   lua_pop(state, 1);
 
   SceneConfig* sceneConfig = getSceneConfig(state);
@@ -113,24 +102,11 @@ int SceneLoader::addPointLight(lua_State* state)
     return luaL_error(state, " Usage: addPointLight(position[3], color[4])");
   }
 
-  glm::vec4 color;
-  for (int i = 0; i < 4; ++i)
-  {
-    lua_rawgeti(state, -1, i+1);
-    color[i] = lua_tonumber(state, -1);
-    lua_pop(state, 1);
-  }
+  glm::vec4 color = Utils::parseVec4(state);
   lua_pop(state, 1);
 
-  glm::vec4 position;
-  for (int i = 0; i < 3; ++i)
-  {
-    lua_rawgeti(state, -1, i+1);
-    position[i] = lua_tonumber(state, -1);
-    lua_pop(state, 1);
-  }
+  glm::vec4 position = Utils::parseVec4(state);
   lua_pop(state, 1);
-  position.w = 1.0f;
 
   SceneConfig* sceneConfig = getSceneConfig(state);
 

@@ -6,6 +6,7 @@ set(ForgeLuaSources
   Mesh.cpp
   SceneLoader.cpp
   State.cpp
+  Utils.cpp
 )
 
 set(ForgeLuaHeaders
@@ -16,6 +17,7 @@ set(ForgeLuaHeaders
   ObjectCreator.hpp
   SceneLoader.hpp
   State.hpp
+  Utils.hpp
 )
 
 add_library(ForgeLua ${ForgeLuaSources} ${ForgeLuaHeaders})

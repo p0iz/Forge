@@ -2,7 +2,7 @@
 
 -- Setup lighting
 Scene.addDirectionalLight({ 0.0, 1.0, 1.0 }, { 0.0, 0.0, 1.0, 1.0 });
-Scene.addPointLight({ 10.0, 10.0, 1.0 }, { 1.0, 1.0, 1.0, 1.0 }); 
+Scene.addPointLight({ 10.0, 10.0, 1.0, 1.0 }, { 1.0, 1.0, 1.0, 1.0 }); 
 
 -- Load meshes
 paddle = Assets.loadMesh("paddle");

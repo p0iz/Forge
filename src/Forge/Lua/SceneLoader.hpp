@@ -42,7 +42,7 @@ class SceneLoader
     /* Lua: addDirectionalLight(scene_config, direction[3], color[4]) -- add a directional light */
     static int addDirectionalLight(lua_State* state);
 
-    /* Lua: addDirectionalLight(scene_config, position[3], color[4]) -- add a point light */
+    /* Lua: addDirectionalLight(scene_config, position[4], color[4]) -- add a point light */
     static int addPointLight(lua_State* state);
 
     /* Lua: get_scene_node(name) -- return scene node id
