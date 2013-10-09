@@ -23,7 +23,7 @@
 #include "State/GameStateLibrary.hpp"
 #include "Graphics/Material/Technique/InternalTechniques.hpp"
 #include "Graphics/Material/Technique/TechniqueLibrary.h"
-#include "Graphics/Scene/SceneLoader.hpp"
+#include "Lua/SceneLoader.hpp"
 #include "Platform/Input/InputHandler.hpp"
 #include "Time/HighResClock.h"
 #include "Util/Log.h"
@@ -59,7 +59,7 @@ void InGame::createState() {
   Forge::TechniqueLibrary::getSingleton().add(new Forge::SimpleTexture);
   Forge::TechniqueLibrary::getSingleton().add(new Forge::SimpleColor);
 
-  Forge::Scene::SceneLoader loader;
+  Forge::Lua::SceneLoader loader;
   if (loader.loadScene("data/scene/TestScene.lua", mSceneConfig))
   {
     Forge::Log::info << "Scene loaded succesfully\n";

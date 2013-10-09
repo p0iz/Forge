@@ -20,12 +20,12 @@
 
 #pragma once
 
-#include "SceneConfig.hpp"
+#include "Graphics/Scene/SceneConfig.hpp"
 #include "lua.hpp"
 #include <string>
 
 
-namespace Forge { namespace Scene {
+namespace Forge { namespace Lua {
 
 /* First, load assets from predefined directories using AssetLoader.
  * Second, load scene from scene script

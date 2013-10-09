@@ -24,9 +24,9 @@
 #include "Graphics/Material/Material.h"
 #include "Graphics/Mesh.h"
 #include "Graphics/Scene/SceneConfig.hpp"
-#include "Graphics/Scene/SceneLoader.hpp"
 #include "Lua/Material.hpp"
 #include "Lua/Mesh.hpp"
+#include "Lua/SceneLoader.hpp"
 #include "lua.hpp"
 
 
@@ -61,7 +61,7 @@ int AssetLoader::loadMesh(lua_State* state)
 
   if (mesh)
   {
-    SceneConfig* sc = Scene::SceneLoader::getSceneConfig(state);
+    SceneConfig* sc = SceneLoader::getSceneConfig(state);
     sc->addUsedMesh(meshName);
     Lua::Mesh(meshName).create(state);
   }
@@ -92,7 +92,7 @@ int AssetLoader::loadMaterial(lua_State* state)
 
   if (material)
   {
-    SceneConfig* sc = Scene::SceneLoader::getSceneConfig(state);
+    SceneConfig* sc = SceneLoader::getSceneConfig(state);
     sc->addUsedMaterial(materialName);
     Material(materialName).create(state);
   }

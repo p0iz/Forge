@@ -19,14 +19,12 @@
  */
 
 #include "SceneLoader.hpp"
-#include "Graphics/Libraries/MeshLibrary.hpp"
-#include "Graphics/Libraries/MaterialLibrary.hpp"
 #include "Lua/AssetLoader.hpp"
 #include "Lua/Material.hpp"
-#include "../../Util/Exceptions.hpp"
-#include "../../Util/Log.h"
+#include "Util/Exceptions.hpp"
+#include "Util/Log.h"
 
-namespace Forge { namespace Scene {
+namespace Forge { namespace Lua {
 
 luaL_Reg const SceneLoader::SceneLib[] =
 {

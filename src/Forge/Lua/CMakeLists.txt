@@ -4,6 +4,7 @@ set(ForgeLuaSources
   AssetLoader.cpp
   Material.cpp
   Mesh.cpp
+  SceneLoader.cpp
   State.cpp
 )
 
@@ -13,6 +14,7 @@ set(ForgeLuaHeaders
   Material.hpp
   Mesh.hpp
   ObjectCreator.hpp
+  SceneLoader.hpp
   State.hpp
 )
 
