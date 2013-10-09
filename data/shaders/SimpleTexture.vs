@@ -84,9 +84,10 @@ void main(void)
 	object_space_view = object_local_matrix * normalize(-view_space_vertex);
 	object_space_halfway = normalize(object_space_light + object_space_view);
 
+  attenuation = 1.0;
 	if (light.position.w > 0.0f) {
 		float dist = distance(view_space_vertex, vec3(light.position));
-		attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
+		attenuation /= (light.constant + light.linear * dist + light.quadratic * dist * dist);
 	}
 	
 	if (light.spotExponent > 0.0f) {
