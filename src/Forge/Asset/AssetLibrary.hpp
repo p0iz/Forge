@@ -131,7 +131,7 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType> >
       {
         std::string::size_type extensionStart = filename.find_last_of(".");
         std::string extension = filename.substr(extensionStart);
-        if (mSupportedExtensions.find(extension) != std::string::npos)
+        if (mSupportedExtensions == "" || mSupportedExtensions.find(extension) != std::string::npos)
         {
           AssetInfo info =
           {
