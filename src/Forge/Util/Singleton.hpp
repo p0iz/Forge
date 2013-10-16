@@ -22,8 +22,8 @@
 
 template <class T>
 struct Singleton {
-	static T& getSingleton() {
-		static T inst;
-		return inst;
-	}
+  static T& instance() {
+    static T inst;
+    return inst;
+  }
 };

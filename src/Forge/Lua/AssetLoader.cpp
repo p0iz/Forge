@@ -57,7 +57,7 @@ int AssetLoader::loadMesh(lua_State* state)
   std::string meshName(lua_tolstring(state, -1, nullptr));
   lua_pop(state, 1);
 
-  MeshPtr mesh = Graphics::MeshLibrary::getSingleton().obtainAsset(meshName);
+  MeshPtr mesh = Graphics::MeshLibrary::instance().obtainAsset(meshName);
 
   if (mesh)
   {
@@ -68,7 +68,7 @@ int AssetLoader::loadMesh(lua_State* state)
     }
     else
     {
-      Graphics::MeshLibrary::getSingleton().releaseAsset(meshName);
+      Graphics::MeshLibrary::instance().releaseAsset(meshName);
     }
     Lua::Mesh(meshName).create(state);
   }
@@ -95,7 +95,7 @@ int AssetLoader::loadMaterial(lua_State* state)
   std::string materialName(lua_tolstring(state, -1, nullptr));
   lua_pop(state, 1);
 
-  MaterialPtr material = Graphics::MaterialLibrary::getSingleton().obtainAsset(materialName);
+  MaterialPtr material = Graphics::MaterialLibrary::instance().obtainAsset(materialName);
 
   if (material)
   {
@@ -106,7 +106,7 @@ int AssetLoader::loadMaterial(lua_State* state)
     }
     else
     {
-      Graphics::MaterialLibrary::getSingleton().releaseAsset(materialName);
+      Graphics::MaterialLibrary::instance().releaseAsset(materialName);
     }
     Material(materialName).create(state);
   }

@@ -60,8 +60,8 @@ void PaddleGame::initializeGameStates()
 
   inGameState->createState();
 
-  Forge::GameStateLibrary::getSingleton().add(menuState);
-  Forge::GameStateLibrary::getSingleton().add(inGameState);
+  Forge::GameStateLibrary::instance().add(menuState);
+  Forge::GameStateLibrary::instance().add(inGameState);
   mStateMachine.init(menuState);
 }
 
@@ -70,7 +70,7 @@ void PaddleGame::init(std::string const& windowTitle, std::string const& cfgFile
   Forge::Log::info << "Initializing Forge game engine...\n"
                       "Built on " << __DATE__ << " at " << __TIME__ "\n";
 
-  const Forge::Configuration& cfg = Forge::Configuration::getSingleton();
+  const Forge::Configuration& cfg = Forge::Configuration::instance();
   cfg.loadConfig(cfgFile);
   mRenderWindow->setTitle(windowTitle.c_str());
   mRenderWindow->setFullscreen(false);

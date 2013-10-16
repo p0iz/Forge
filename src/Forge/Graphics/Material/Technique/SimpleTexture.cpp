@@ -80,14 +80,14 @@ void SimpleTexture::freeTextures()
 {
   for (auto handle : mLoadedTextures)
   {
-    Graphics::TextureLibrary::getSingleton().unloadTexture(*handle);
+    Graphics::TextureLibrary::instance().unloadTexture(*handle);
   }
 }
 
 unsigned int SimpleTexture::addTexture(std::string const& textureFile)
 {
   Graphics::TextureHandle const loadedTexture =
-    Graphics::TextureLibrary::getSingleton().loadTexture(textureFile);
+    Graphics::TextureLibrary::instance().loadTexture(textureFile);
 
   if (loadedTexture.count > 0) {
     mLoadedTextures.push_back(&loadedTexture);

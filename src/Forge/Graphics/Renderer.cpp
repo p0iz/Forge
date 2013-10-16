@@ -46,7 +46,7 @@ void Renderer::initialize()
   glEnable(GL_CULL_FACE);
   glBlendFunc(GL_ONE, GL_ONE);
 
-  DebugAxis::getSingleton();
+  DebugAxis::instance();
   Light::createBuffer();
 }
 
@@ -75,7 +75,7 @@ void Renderer::drawScene(const glm::mat4& view,
 {
   for (auto materialName : scene.getUsedMaterials()) {
     Material const& material =
-        *Graphics::MaterialLibrary::getSingleton().getAssetInfo(materialName).asset;
+        *Graphics::MaterialLibrary::instance().getAssetInfo(materialName).asset;
     bool materialSelected = false;
     std::vector<MeshPtr> const& meshes = material.getMeshes();
     for (MeshPtr mesh : meshes) {
@@ -118,7 +118,7 @@ void Renderer::render(const SceneConfig& scene)
 
   // Render debug overlay
   if (DebugAxis::isDebugVisible()) {
-    DebugAxis::getSingleton().render(scene);
+    DebugAxis::instance().render(scene);
   }
 
   // Actual rendering
@@ -131,7 +131,7 @@ void Renderer::render(const SceneConfig& scene)
 
   // Render debug overlay
   if (DebugAxis::isDebugVisible()) {
-    DebugAxis::getSingleton().render(scene);
+    DebugAxis::instance().render(scene);
   }
 
   glDisable(GL_BLEND);

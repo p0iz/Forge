@@ -61,7 +61,7 @@ int Forge::Lua::Mesh::setMaterial(lua_State* state)
   char const* meshName = lua_tostring(state, -1);
   lua_pop(state, 3);
 
-  MaterialPtr material = Graphics::MaterialLibrary::getSingleton().getAssetInfo(materialName).asset;
+  MaterialPtr material = Graphics::MaterialLibrary::instance().getAssetInfo(materialName).asset;
 
   if (!material)
   {
@@ -69,7 +69,7 @@ int Forge::Lua::Mesh::setMaterial(lua_State* state)
     return 0;
   }
 
-  MeshPtr mesh = Graphics::MeshLibrary::getSingleton().getAssetInfo(meshName).asset;
+  MeshPtr mesh = Graphics::MeshLibrary::instance().getAssetInfo(meshName).asset;
 
   if (!mesh)
   {

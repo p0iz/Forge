@@ -27,7 +27,7 @@ namespace Forge {
 void Configuration::loadConfig(const std::string& configFile)
 {
   ConfigLoader loader;
-  loader.setTarget(getSingleton());
+  loader.setTarget(instance());
   loader.loadFile(configFile);
 }
 

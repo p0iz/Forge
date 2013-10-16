@@ -38,7 +38,7 @@ TechniquePtr loadTechnique(lua_State* state)
   if (lua_isstring(state, -1)) {
     std::string techniqueName = lua_tostring(state, -1);
     Log::info << "Loading technique '" << techniqueName << "'...\n";
-    technique = TechniqueLibrary::getSingleton().get(techniqueName);
+    technique = TechniqueLibrary::instance().get(techniqueName);
   }
   lua_pop(state, 1);
   return technique;

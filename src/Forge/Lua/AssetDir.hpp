@@ -60,18 +60,18 @@ class AssetDir
 
       if (mNumEntries == 0)
       {
-        AssetLibrary<AssetType>::getSingleton().addDirectory(lua_tostring(state, -1));
+        AssetLibrary<AssetType>::instance().addDirectory(lua_tostring(state, -1));
       }
       else
       {
         for (int i = 0; i < mNumEntries; ++i)
         {
           lua_rawgeti(state, -1, i + 1);
-          AssetLibrary<AssetType>::getSingleton().addDirectory(lua_tostring(state, -1));
+          AssetLibrary<AssetType>::instance().addDirectory(lua_tostring(state, -1));
           lua_pop(state, 1);
         }
       }
-      AssetLibrary<AssetType>::getSingleton().loadAssetInfo();
+      AssetLibrary<AssetType>::instance().loadAssetInfo();
       lua_pop(state, 1);
     }
 

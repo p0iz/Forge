@@ -48,7 +48,7 @@ InGame::~InGame()
 }
 
 Forge::GameStatePtr InGame::frameUpdate(float const delta) {
-  static Forge::GameStateLibrary& library = Forge::GameStateLibrary::getSingleton();
+  static Forge::GameStateLibrary& library = Forge::GameStateLibrary::instance();
 
   // Render
   mRenderer.render(mSceneConfig);
@@ -56,8 +56,8 @@ Forge::GameStatePtr InGame::frameUpdate(float const delta) {
 }
 
 void InGame::createState() {
-  Forge::TechniqueLibrary::getSingleton().add(new Forge::SimpleTexture);
-  Forge::TechniqueLibrary::getSingleton().add(new Forge::SimpleColor);
+  Forge::TechniqueLibrary::instance().add(new Forge::SimpleTexture);
+  Forge::TechniqueLibrary::instance().add(new Forge::SimpleColor);
 
   Forge::Lua::SceneLoader loader;
   if (loader.loadScene("data/scene/TestScene.lua", mSceneConfig))
@@ -72,19 +72,19 @@ void InGame::createState() {
   mSceneConfig.getSceneNode(mPaddleNode).mWorldTransform.scale(0.2f);
 
   Forge::MaterialPtr paddleMat =
-    Forge::Graphics::MaterialLibrary::getSingleton().getAssetInfo("Paddle").asset;
-  Forge::MeshPtr paddleMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("paddle").asset;
+    Forge::Graphics::MaterialLibrary::instance().getAssetInfo("Paddle").asset;
+  Forge::MeshPtr paddleMesh = Forge::Graphics::MeshLibrary::instance().getAssetInfo("paddle").asset;
   paddleMesh->attachToNode(mPaddleNode);
 
   Forge::MaterialPtr tileMat =
-    Forge::Graphics::MaterialLibrary::getSingleton().getAssetInfo("Tile").asset;
+    Forge::Graphics::MaterialLibrary::instance().getAssetInfo("Tile").asset;
 
 
   // Tiles
   mTileNode = mSceneConfig.createSceneNode("TileNode");
   mSceneConfig.getSceneNode(mTileNode).mWorldTransform.translate(5.0f, 10.0f, 0.0f).scale(0.2f);
 
-  Forge::MeshPtr tileMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("tile").asset;
+  Forge::MeshPtr tileMesh = Forge::Graphics::MeshLibrary::instance().getAssetInfo("tile").asset;
   tileMesh->attachToNode(mTileNode);
 
   mTileNode = mSceneConfig.createSceneNode("TileNode2");
@@ -97,7 +97,7 @@ void InGame::createState() {
   mBallNode = mSceneConfig.createSceneNode("BallNode");
   mSceneConfig.getSceneNode(mBallNode).mWorldTransform.translate(0.0f, 5.0f, 0.0f).scale(0.2f);
 
-  Forge::MeshPtr ballMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("ball").asset;
+  Forge::MeshPtr ballMesh = Forge::Graphics::MeshLibrary::instance().getAssetInfo("ball").asset;
   ballMesh->attachToNode(mBallNode);
 
 
@@ -105,7 +105,7 @@ void InGame::createState() {
   mBorderNode = mSceneConfig.createSceneNode("BorderNode");
   mSceneConfig.getSceneNode(mBorderNode).mWorldTransform.translate(0.0f, 6.1f, 0.0f).rotate(90.0f, glm::vec3(1, 0, 0)).scale(0.4f);
 
-  Forge::MeshPtr borderMesh = Forge::Graphics::MeshLibrary::getSingleton().getAssetInfo("border").asset;
+  Forge::MeshPtr borderMesh = Forge::Graphics::MeshLibrary::instance().getAssetInfo("border").asset;
   borderMesh->attachToNode(mBorderNode);
 
 

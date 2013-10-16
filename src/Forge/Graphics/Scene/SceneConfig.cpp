@@ -46,11 +46,11 @@ void SceneConfig::clearScene()
   // Release assets
   for (std::string const& material : mUsedMaterials)
   {
-    Graphics::MaterialLibrary::getSingleton().releaseAsset(material);
+    Graphics::MaterialLibrary::instance().releaseAsset(material);
   }
   for (std::string const& mesh : mUsedMeshes)
   {
-    Graphics::MeshLibrary::getSingleton().releaseAsset(mesh);
+    Graphics::MeshLibrary::instance().releaseAsset(mesh);
   }
   for (Light& light : lights)
   {
