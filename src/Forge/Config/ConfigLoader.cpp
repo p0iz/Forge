@@ -19,6 +19,11 @@
  */
 
 #include "ConfigLoader.hpp"
+
+#include "Asset/AssetTraits.hpp"
+#include "Asset/AssetLibrary.hpp"
+#include "Graphics/Libraries/MeshTraits.hpp"
+#include "Graphics/Libraries/MaterialTraits.hpp"
 #include "Configuration.hpp"
 #include "Util/Log.h"
 
@@ -27,11 +32,54 @@
 
 namespace Forge { namespace Lua {
 
+namespace {
+
+// Reads the asset directories from a Lua state
+template <class AssetType>
+class AssetDirConfig
+{
+  public:
+    /* Returns the number of directory entries for a given asset tyoe */
+    AssetDirConfig(lua_State* state):
+      mNumEntries(0)
+    {
+      // Load asset configuration
+      lua_getglobal(state, AssetTraits<AssetType>::assetTypeStr);
+      if (!lua_isnil(state, -1))
+      {
+        lua_len(state, -1);
+        mNumEntries = lua_tointeger(state, -1);
+        lua_pop(state, 1);
+      }
+      lua_pop(state, 1);
+    }
+
+    void load(lua_State* state)
+    {
+      lua_getglobal(state, AssetTraits<AssetType>::assetTypeStr);
+      for (int i = 0; i < mNumEntries; ++i)
+      {
+        lua_rawgeti(state, -1, i + 1);
+        AssetLibrary<AssetType>::getSingleton().addDirectory(lua_tostring(state, -1));
+        lua_pop(state, 1);
+      }
+      AssetLibrary<AssetType>::getSingleton().loadAssetInfo();
+      lua_pop(state, 1);
+    }
+
+  private:
+    int mNumEntries;
+};
+
+}
+
+
 template <>
 bool ConfigLoader::handleLoadedLua(lua_State* state) const
 {
   bool loaded = false;
 
+  // Load window configuration
   lua_getglobal(state, "width");
   lua_getglobal(state, "height");
   if (lua_isnumber(state, -2) && lua_isnumber(state, -1)) {
@@ -41,6 +89,12 @@ bool ConfigLoader::handleLoadedLua(lua_State* state) const
   } else {
     Log::error << "Config error: display parameters should be numbers!\n";
   }
+
+  AssetDirConfig<Mesh> meshDirs(state);
+  AssetDirConfig<Material> materialDirs(state);
+  meshDirs.load(state);
+  materialDirs.load(state);
+
   return loaded;
 }
 
