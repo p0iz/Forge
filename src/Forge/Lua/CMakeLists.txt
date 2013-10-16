@@ -9,6 +9,7 @@ set(ForgeLuaSources
 )
 
 set(ForgeLuaHeaders
+  AssetDir.hpp
   AssetLoader.hpp
   Loader.hpp
   Material.hpp
