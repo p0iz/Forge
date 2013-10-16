@@ -77,11 +77,14 @@ int SceneLoader::addDirectionalLight(lua_State* state)
     return luaL_error(state, " Usage: addDirectionalLight(direction[3], color[4])");
   }
 
-  glm::vec4 color = Utils::parseVec4(state);
+  glm::vec4 color;
+  Utils::parseVec(state, 4, &color[0]);
   lua_pop(state, 1);
 
-  glm::vec3 direction = Utils::parseVec3(state);
+  glm::vec3 direction;
+  Utils::parseVec(state, 3, &direction[0]);
   lua_pop(state, 1);
+
 
   SceneConfig* sceneConfig = getSceneConfig(state);
 
@@ -102,10 +105,12 @@ int SceneLoader::addPointLight(lua_State* state)
     return luaL_error(state, " Usage: addPointLight(position[3], color[4])");
   }
 
-  glm::vec4 color = Utils::parseVec4(state);
+  glm::vec4 color;
+  Utils::parseVec(state, 4, &color[0]);
   lua_pop(state, 1);
 
-  glm::vec4 position = Utils::parseVec4(state);
+  glm::vec4 position;
+  Utils::parseVec(state, 4, &position[0]);
   lua_pop(state, 1);
 
   SceneConfig* sceneConfig = getSceneConfig(state);

@@ -6,7 +6,6 @@ set(ForgeLuaSources
   Mesh.cpp
   SceneLoader.cpp
   State.cpp
-  Utils.cpp
 )
 
 set(ForgeLuaHeaders

@@ -26,8 +26,26 @@
 
 namespace Forge { namespace Lua { namespace Utils {
 
-glm::vec2 parseVec2(lua_State* state);
-glm::vec3 parseVec3(lua_State* state);
-glm::vec4 parseVec4(lua_State* state);
+// Parses a vector into an array and returns the number of values read
+template <class DataType>
+int parseVec(lua_State* state, int length, DataType* result)
+{
+  int idx = 0;
+
+  if (!lua_istable(state, -1))
+  {
+    return idx;
+  }
+
+  while (!lua_isnil(state, idx) && (idx < length))
+  {
+    lua_rawgeti(state, -1, idx+1);
+    result[idx] = lua_tonumber(state, -1);
+    lua_pop(state, 1);
+    ++idx;
+  }
+
+  return idx;
+}
 
 }}}
