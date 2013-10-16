@@ -41,10 +41,8 @@ template <class AssetType>
 class AssetLibrary : public Singleton<AssetLibrary<AssetType> >
 {
   public:
-    AssetLibrary():
-       mSupportedExtensions(AssetTraits<AssetType>::fileExtensions)
-    {
-    }
+    AssetLibrary(AssetLibrary&&) = delete;
+    AssetLibrary const& operator=(AssetLibrary const&) = delete;
 
     ~AssetLibrary()
     {
@@ -116,6 +114,11 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType> >
     }
 
   private:
+    AssetLibrary():
+       mSupportedExtensions(AssetTraits<AssetType>::fileExtensions)
+    {
+    }
+
     /* Loading */
     std::unordered_set<std::string> mAssetDirectories;
     std::string const mSupportedExtensions;
@@ -154,6 +157,8 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType> >
 
     /* Access */
     std::unordered_map<std::string, AssetInfo> mAssetInfoMap;
+
+    friend class Singleton<AssetLibrary<AssetType> >;
 };
 
 }
