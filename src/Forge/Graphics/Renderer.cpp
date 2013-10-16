@@ -78,21 +78,20 @@ void Renderer::drawScene(const glm::mat4& view,
         *Graphics::MaterialLibrary::instance().getAssetInfo(materialName).asset;
     bool materialSelected = false;
     std::vector<MeshPtr> const& meshes = material.getMeshes();
-    for (MeshPtr mesh : meshes) {
-      // For each mesh, get the world transform
-      for (SceneNodeId nodeId : mesh->getAttachedNodes()) {
-        if (!materialSelected) {
-          material.beginMaterial();
-          materialSelected = true;
-        }
-        const glm::mat4& world = scene.getSceneNode(nodeId).mWorldTransform.getMatrix();
-
-        material.setTransforms(world, view, projection);
-        for (Light const& light : scene.lights)
-        {
-          if (light.type != Light::DISABLED)
-          {
-            Light::updateBuffer(light.getShaderData());
+    for (Light const& light : scene.lights)
+    {
+      if (light.type != Light::DISABLED)
+      {
+        Light::updateBuffer(light.getShaderData());
+        for (MeshPtr mesh : meshes) {
+          // For each mesh, get the world transform
+          for (SceneNodeId nodeId : mesh->getAttachedNodes()) {
+            if (!materialSelected) {
+              material.beginMaterial();
+              materialSelected = true;
+            }
+            const glm::mat4& world = scene.getSceneNode(nodeId).mWorldTransform.getMatrix();
+            material.setTransforms(world, view, projection);
             mesh->draw();
           }
         }
