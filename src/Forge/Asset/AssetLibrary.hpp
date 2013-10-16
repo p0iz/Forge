@@ -146,7 +146,7 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType> >
               nameStart,
               extensionStart > nameStart ? extensionStart - nameStart : std::string::npos
             );
-          Forge::Log::info << "Added asset '" << assetName << "'.\n";
+          Forge::Log::info << "Added " << AssetTraits<AssetType>::assetTypeStr << " '" << assetName << "'.\n";
           mAssetInfoMap[assetName] = info;
         }
       }
