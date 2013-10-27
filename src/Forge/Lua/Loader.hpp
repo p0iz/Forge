@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "State.hpp"
 #include "Util/Log.h"
 
 #include "lua.hpp"
@@ -41,8 +40,14 @@ template <class LoadableType>
 class Loader {
 public:
   Loader():
-    mTarget(nullptr)
+    mTarget(nullptr),
+    mState(luaL_newstate())
   {
+  }
+
+  ~Loader()
+  {
+    lua_close(mState);
   }
 
   /* Executes a Lua script and then calls a type-specific handler to parse the read data into an
@@ -62,6 +67,7 @@ public:
 
 private:
   LoadableType* mTarget;
+  lua_State* mState;
 
   bool handleLoadedLua(lua_State*) const;
 };
@@ -70,14 +76,17 @@ template <class LoadableType>
 bool Loader<LoadableType>::loadFile(const std::string& file) const
 {
   bool loaded = false;
-  State state;
-  lua_State* L = state.get();
-  int error = luaL_loadfile(L, file.c_str()) || lua_pcall(L, 0, 0, 0);
-  if (error) {
-    Log::error << lua_tostring(state.get(), -1) << "\n";
-  } else if (handleLoadedLua(L)) {
+  int error = luaL_loadfile(mState, file.c_str()) || lua_pcall(mState, 0, 0, 0);
+  if (error)
+  {
+    Log::error << lua_tostring(mState, -1) << "\n";
+  }
+  else if (handleLoadedLua(mState))
+  {
     loaded = true;
-  } else {
+  }
+  else
+  {
     Log::error << "Failed to load Lua code from file '" << file << "'\n";
   }
   return loaded;
