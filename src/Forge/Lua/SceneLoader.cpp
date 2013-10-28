@@ -102,7 +102,7 @@ int SceneLoader::addPointLight(lua_State* state)
   // This function takes two arguments (position, color)
   if ((lua_gettop(state) != 2) || (!lua_istable(state, -2)) || (!lua_istable(state, -1)))
   {
-    return luaL_error(state, " Usage: addPointLight(position[3], color[4])");
+    return luaL_error(state, " Usage: addPointLight(position[4], color[4])");
   }
 
   glm::vec4 color;
