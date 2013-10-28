@@ -5,6 +5,7 @@ set(ForgeLuaSources
   Material.cpp
   Mesh.cpp
   SceneLoader.cpp
+  SystemInfo.cpp
 )
 
 set(ForgeLuaHeaders
@@ -15,6 +16,7 @@ set(ForgeLuaHeaders
   Mesh.hpp
   ObjectCreator.hpp
   SceneLoader.hpp
+  SystemInfo.hpp
   Utils.hpp
 )
 

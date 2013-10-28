@@ -20,9 +20,10 @@
 
 #pragma once
 
+#include "Lua/SystemInfo.hpp"
 #include "Util/Log.h"
+#include <lua.hpp>
 
-#include "lua.hpp"
 
 namespace Forge { namespace Lua {
 
@@ -43,6 +44,7 @@ public:
     mTarget(nullptr),
     mState(luaL_newstate())
   {
+    ForgeInfo::create(mState);
   }
 
   ~Loader()
