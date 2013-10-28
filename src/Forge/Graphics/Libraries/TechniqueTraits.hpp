@@ -20,40 +20,22 @@
 
 #pragma once
 
-#include <vector>
+#include "../../Asset/AssetTraits.hpp"
+#include "../Material/Technique/Technique.hpp"
+
 
 namespace Forge {
 
-/* Nasty class that can be a pointer-to or a value depending on the implicit conversions.
- * Used for storing dynamic property values, i.e. values that can be changed during run-time
- */
-class PropertyValue
+/* Material asset properties */
+template <>
+struct AssetTraits<Technique>
 {
-public:
-	PropertyValue(float value);
-	PropertyValue(double value);
-	PropertyValue(int value);
-	PropertyValue(unsigned int value);
-
-	operator float() const;
-	operator int() const;
-	operator unsigned int() const;
-	operator const float*() const;
-	operator const int*() const;
-	operator const unsigned int*() const;
-
-private:
-	typedef union
-	{
-		float fval;
-		int ival;
-		unsigned int uval;
-	} PropertyValueType;
-
-	PropertyValueType mValue;
+  typedef Technique AssetType;
+  constexpr static char const* fileExtensions = ".lua";
+  constexpr static char const* assetTypeStr = "technique";
+  constexpr static bool const isRefCounted = false;
 };
 
-/* This vector describes a single property */
-typedef std::vector<PropertyValue> Property;
+typedef AssetTraits<Technique> TechniqueTraits;
 
 }

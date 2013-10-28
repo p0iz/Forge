@@ -14,14 +14,32 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2012 Tommi Martela
  *
  */
 
-#pragma once
+#include "TechniqueLibrary.hpp"
+#include "TechniqueTraits.hpp"
 
-/* This file just includes all the built-in techniques */
-#include "DefaultTechnique.h"
-#include "SimpleColor.hpp"
-#include "SimpleTexture.h"
-#include "UnshadedColor.hpp"
+#include "Graphics/Material/Technique/TechniqueLoader.hpp"
+
+#include "Util/Log.h"
+
+namespace Forge {
+
+template <>
+TechniquePtr Graphics::TechniqueLibrary::loadAsset(std::string const& file)
+{
+  TechniquePtr technique(new Technique);
+  TechniqueLoader loader;
+
+  loader.setTarget(*technique);
+  if (!loader.loadFile(file))
+  {
+    technique.reset();
+  }
+
+  return technique;
+}
+
+}

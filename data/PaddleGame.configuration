@@ -9,6 +9,10 @@ mesh = {
 	"data/meshes"
 }
 
+technique = {
+  "data/techniques"
+}
+
 material = {
 	"data/materials"
 }

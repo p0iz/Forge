@@ -29,10 +29,10 @@ in vec3 view_space_spot_direction;
 in vec2 texture_coordinate;
 
 // Uniforms
-uniform vec3 MaterialAmbient;
-uniform vec3 MaterialDiffuse;
-uniform vec3 MaterialSpecular;
-uniform float MaterialShininess;
+uniform vec3 ambient;
+uniform vec3 diffuse;
+uniform vec3 specular;
+uniform float shininess;
 
 uniform sampler2D DiffuseMap;
 uniform sampler2D SpecularMap;
@@ -77,13 +77,11 @@ vec3 ads_lighting() {
 	if (lightProjection > 0.0f)
 	{
 		diffuse = lightProjection;
-		specular = pow(max(dot(halfwayDir, normal), 0.0f), MaterialShininess);
+		specular = pow(max(dot(halfwayDir, normal), 0.0f), shininess);
 	}
 	
 	vec3 lightContribution = light.color.rgb * light.color.a *
-		(MaterialAmbient +
-		MaterialDiffuse * diffuse +
-		MaterialSpecular * specular);
+		(ambient + diffuse * diffuse + specular * specular);
 		
 	// Spotlight
 	if (light.spotExponent > 0.0f) {

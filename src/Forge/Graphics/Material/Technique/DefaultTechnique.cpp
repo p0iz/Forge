@@ -22,7 +22,6 @@
 
 #include "Graphics/Camera.h"
 #include "Graphics/Scene/SceneConfig.hpp"
-#include "LuaProperties.hpp"
 #include "Util/Log.h"
 
 #include <glm/glm.hpp>
@@ -30,56 +29,43 @@
 namespace Forge {
 
 DefaultTechnique::DefaultTechnique()
-	: Technique("DefaultTechnique")
+  : Technique()
 {
+  vertexShader.create(Shader::VertexShader);
+  vertexShader.loadCode("data/shaders/DefaultTechnique.vs");
+  vertexShader.compile();
+  fragmentShader.create(Shader::FragmentShader);
+  fragmentShader.loadCode("data/shaders/DefaultTechnique.fs");
+  fragmentShader.compile();
+  shaderProgram.create();
+  shaderProgram.attachShader(vertexShader.getId());
+  shaderProgram.attachShader(fragmentShader.getId());
+  if (!shaderProgram.link())
+  {
+    Log::error << shaderProgram.getProgramInfoLog();
+  }
+
+  // Get uniform location
+  wvpLocation = shaderProgram.getUniformLocation("WorldViewProjectionMatrix");
 }
 
-Technique* DefaultTechnique::clone()
+TechniquePtr DefaultTechnique::clone()
 {
-	return new DefaultTechnique;
-}
-
-
-void DefaultTechnique::create()
-{
-	vertexShader.create(GL_VERTEX_SHADER);
-	vertexShader.loadCode("data/shaders/DefaultTechnique.vs");
-	vertexShader.compile();
-	fragmentShader.create(GL_FRAGMENT_SHADER);
-	fragmentShader.loadCode("data/shaders/DefaultTechnique.fs");
-	fragmentShader.compile();
-	shaderProgram.create();
-	shaderProgram.setVertexShader(vertexShader.getId());
-	shaderProgram.setFragmentShader(fragmentShader.getId());
-	if (shaderProgram.link() != GL_TRUE)
-	{
-		Log::error << shaderProgram.getProgramInfoLog();
-	}
-
-	// Get uniform location
-	wvpLocation = shaderProgram.getUniformLocation("WorldViewProjectionMatrix");
-}
-
-void DefaultTechnique::destroy()
-{
-}
-
-void DefaultTechnique::updateProperties(LuaProperties&)
-{
+  return TechniquePtr(new DefaultTechnique);
 }
 
 void DefaultTechnique::beginMaterial()
 {
-	shaderProgram.use();
+  shaderProgram.use();
 }
 
 void DefaultTechnique::setTransforms(const glm::mat4& world,
-								const glm::mat4& view,
-								const glm::mat4& projection)
+                const glm::mat4& view,
+                const glm::mat4& projection)
 {
-	// Update
-	const glm::mat4x4 wvp = projection * view * world;
-	glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(wvp)[0][0]);
+  // Update
+  const glm::mat4x4 wvp = projection * view * world;
+  glUniformMatrix4fv(wvpLocation, 1, GL_FALSE, &(wvp)[0][0]);
 }
 
 }

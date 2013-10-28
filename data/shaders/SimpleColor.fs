@@ -27,10 +27,10 @@ in vec3 view_space_vertex;
 in float attenuation;
 
 // Uniforms
-uniform vec3 MaterialAmbient;
-uniform vec3 MaterialDiffuse;
-uniform vec3 MaterialSpecular;
-uniform float MaterialShininess;
+uniform vec3 ambient;
+uniform vec3 diffuse;
+uniform vec3 specular;
+uniform float shininess;
 
 struct Light
 {
@@ -66,8 +66,8 @@ vec3 ads_lighting()
 
 	// Calculate ADS lighting per light
 	vec3 halfway = normalize(lightVec + eye);
-	float diffuse = max(dot(lightVec, normal), 0.0f);
-	float specular = pow(max(dot(halfway, normal), 0.0f), MaterialShininess);
+	float diffuseVal = max(dot(lightVec, normal), 0.0f);
+	float specularVal = pow(max(dot(halfway, normal), 0.0f), shininess);
 	float spotlight = 1.0f;
 	// Spotlight
 	if (light.spotExponent > 0.0f) 
@@ -87,9 +87,9 @@ vec3 ads_lighting()
     light.color.rgb * light.color.a *
     spotlight *
 		(
-      MaterialAmbient +
-      MaterialDiffuse * diffuse +
-	  	MaterialSpecular * specular
+      ambient +
+      diffuseVal * diffuse +
+	  	specularVal * specular
     );
 	return lightContribution * attenuation;
 }

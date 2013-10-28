@@ -1,15 +1,9 @@
 # Graphics - Material - Technique
 
 set(TechniqueSources
-  InternalTechniques.hpp
   DefaultTechnique.cpp
-  LuaProperties.cpp
-  Property.cpp
-  SimpleColor.cpp
-  SimpleTexture.cpp
-  Technique.h
-  TechniqueLibrary.cpp
-  UnshadedColor.cpp)
+  Technique.cpp
+  TechniqueLoader.cpp)
 
 find_package(GLEW REQUIRED)
 

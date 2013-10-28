@@ -24,7 +24,6 @@
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Scene/SceneConfig.hpp"
 #include "Graphics/Material/Material.h"
-#include "Graphics/Material/Technique/TechniqueLibrary.h"
 #include "Platform/Input/InputHandler.hpp"
 #include "State/GameState.h"
 #include "Time/HighResClock.h"

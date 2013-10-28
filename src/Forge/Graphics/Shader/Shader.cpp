@@ -27,87 +27,87 @@
 namespace Forge {
 
 Shader::Shader()
-	: mId(0), mType(0)
+  : mId(0), mType(0)
 {
 }
 
 Shader::~Shader()
 {
-	if (mId)
-	{
-		glDeleteShader(mId);
-	}
+  if (mId)
+  {
+    glDeleteShader(mId);
+  }
 }
 
-void Shader::create(GLint type)
+void Shader::create(ShaderType type)
 {
-	if (mId)
-	{
-		glDeleteShader(mId);
-	}
-	mType = type;
-	mId = glCreateShader(type);
+  if (mId)
+  {
+    glDeleteShader(mId);
+  }
+  mType = type;
+  mId = glCreateShader(type);
 }
 
 const GLint Shader::compile()
 {
-	glCompileShader(mId);
-	GLint result = GL_FALSE;
-	glGetShaderiv(mId, GL_COMPILE_STATUS, &result);
-	if (!result)
-	{
-		printInfoLog();
-	}
-	return result;
+  glCompileShader(mId);
+  GLint result = GL_FALSE;
+  glGetShaderiv(mId, GL_COMPILE_STATUS, &result);
+  if (!result)
+  {
+    printInfoLog();
+  }
+  return result;
 }
 
 std::string Shader::getInfoLog() const
 {
-	std::string infoLog;
-	int logLength;
-	glGetShaderiv(mId, GL_INFO_LOG_LENGTH, &logLength);
-	char* shaderInfoLog = new char[logLength];
-	glGetShaderInfoLog(mId, logLength, NULL, shaderInfoLog);
-	infoLog.assign(shaderInfoLog);
-	delete[] shaderInfoLog;
-	return infoLog;
+  std::string infoLog;
+  int logLength;
+  glGetShaderiv(mId, GL_INFO_LOG_LENGTH, &logLength);
+  char* shaderInfoLog = new char[logLength];
+  glGetShaderInfoLog(mId, logLength, NULL, shaderInfoLog);
+  infoLog.assign(shaderInfoLog);
+  delete[] shaderInfoLog;
+  return infoLog;
 }
 
 void Shader::printInfoLog() const
 {
-	std::string infoLog = getInfoLog();
+  std::string infoLog = getInfoLog();
 
-	const char* shaderType = nullptr;
-	switch (mType)
-	{
-	case GL_FRAGMENT_SHADER:
-		shaderType = "fragment";
-		break;
-	case GL_VERTEX_SHADER:
-		shaderType = "vertex";
-		break;
-	case GL_GEOMETRY_SHADER:
-		shaderType = "geometry";
-		break;
-	}
+  const char* shaderType = nullptr;
+  switch (mType)
+  {
+  case GL_FRAGMENT_SHADER:
+    shaderType = "fragment";
+    break;
+  case GL_VERTEX_SHADER:
+    shaderType = "vertex";
+    break;
+  case GL_GEOMETRY_SHADER:
+    shaderType = "geometry";
+    break;
+  }
 
-	printf("Error while compiling %s shader: %s\n",
-		   shaderType,
-		   infoLog.c_str());
+  printf("Error while compiling %s shader: %s\n",
+       shaderType,
+       infoLog.c_str());
 }
 
 void Shader::loadCode(const std::string& file)
 {
-	std::ifstream shaderFile(file);
-	if (shaderFile)
-	{
-		std::stringstream shaderBuffer;
-		shaderBuffer << shaderFile.rdbuf();
-		std::string shaderCode(shaderBuffer.str());
-		const char* code = shaderCode.c_str();
-		int codeLength = shaderCode.length();
-		glShaderSource(mId, 1, &code, &codeLength);
-	}
+  std::ifstream shaderFile(file);
+  if (shaderFile)
+  {
+    std::stringstream shaderBuffer;
+    shaderBuffer << shaderFile.rdbuf();
+    std::string shaderCode(shaderBuffer.str());
+    const char* code = shaderCode.c_str();
+    int codeLength = shaderCode.length();
+    glShaderSource(mId, 1, &code, &codeLength);
+  }
 }
 
 } // namespace Forge

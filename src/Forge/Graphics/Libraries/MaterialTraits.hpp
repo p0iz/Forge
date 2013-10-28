@@ -33,6 +33,7 @@ struct AssetTraits<Material>
   typedef Material AssetType;
   constexpr static char const* fileExtensions = ".lua";
   constexpr static char const* assetTypeStr = "material";
+  constexpr static bool const isRefCounted = true;
 };
 
 typedef AssetTraits<Material> MaterialTraits;

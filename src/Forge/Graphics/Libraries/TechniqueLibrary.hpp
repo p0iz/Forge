@@ -20,34 +20,13 @@
 
 #pragma once
 
-#include "Technique.h"
+#include "TechniqueTraits.hpp"
+#include "../../Asset/AssetLibrary.hpp"
+#include "../Material/Technique/Technique.hpp"
 
-#include "../../Shader/Shader.h"
-#include "../../Shader/ShaderProgram.h"
 
-namespace Forge {
+namespace Forge { namespace Graphics {
 
-/* This renders anything thrown at it with a single color */
-class UnshadedColor : public Technique
-{
-public:
-	UnshadedColor();
-	virtual Technique* clone();
-	virtual void create();
-	virtual void destroy();
-	virtual void updateProperties(LuaProperties&);
-	virtual void beginMaterial();
-	virtual void setTransforms(const glm::mat4& world,
-						  const glm::mat4& view,
-						  const glm::mat4& projection);
-private:
-	Shader vertexShader;
-	Shader fragmentShader;
-	ShaderProgram shaderProgram;
+typedef AssetLibrary<Technique, false> TechniqueLibrary;
 
-	// Uniform location
-	unsigned int wvpLocation;
-	unsigned int colorLocation;
-};
-
-}
+}}

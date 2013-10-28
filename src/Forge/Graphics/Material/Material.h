@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Graphics/Material/Technique/Technique.h"
+#include "Graphics/Material/Technique/Technique.hpp"
 #include "Graphics/Mesh.h"
 #include "Lua/Loader.hpp"
 #include <memory>
@@ -44,8 +44,6 @@ public:
 
   void beginMaterial() const;
   void setTransforms(const glm::mat4& world, const glm::mat4& view, const glm::mat4& projection) const;
-
-  void setDynamicProperty(const std::string& propertyName, const Property& value);
 
   std::vector<MeshPtr> const& getMeshes() const;
   void useOn(MeshPtr const& mesh);

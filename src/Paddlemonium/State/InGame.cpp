@@ -21,8 +21,6 @@
 #include "InGame.h"
 
 #include "State/GameStateLibrary.hpp"
-#include "Graphics/Material/Technique/InternalTechniques.hpp"
-#include "Graphics/Material/Technique/TechniqueLibrary.h"
 #include "Lua/SceneLoader.hpp"
 #include "Platform/Input/InputHandler.hpp"
 #include "Time/HighResClock.h"
@@ -56,9 +54,6 @@ Forge::GameStatePtr InGame::frameUpdate(float const delta) {
 }
 
 void InGame::createState() {
-  Forge::TechniqueLibrary::instance().add(new Forge::SimpleTexture);
-  Forge::TechniqueLibrary::instance().add(new Forge::SimpleColor);
-
   Forge::Lua::SceneLoader loader;
   if (loader.loadScene("data/scene/TestScene.lua", mSceneConfig))
   {

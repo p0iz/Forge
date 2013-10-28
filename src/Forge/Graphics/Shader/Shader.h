@@ -30,25 +30,34 @@ namespace Forge {
 class Shader
 {
 public:
-	Shader();
-	~Shader();
+  enum ShaderType
+  {
+    VertexShader = GL_VERTEX_SHADER,
+    GeometryShader = GL_GEOMETRY_SHADER,
+    FragmentShader = GL_FRAGMENT_SHADER,
+    TessControlShader = GL_TESS_CONTROL_SHADER,
+    TessEvaluationShader = GL_TESS_EVALUATION_SHADER
+  };
 
-	void create(GLint type);
-	void loadCode(const std::string& file);
-	const GLint compile();
+  Shader();
+  ~Shader();
 
-	GLuint getId()
-	{
-		return mId;
-	}
+  void create(ShaderType type);
+  void loadCode(const std::string& file);
+  const GLint compile();
 
-	std::string getInfoLog() const;
+  GLuint getId() const
+  {
+    return mId;
+  }
+
+  std::string getInfoLog() const;
 
 private:
-	void printInfoLog() const;
+  void printInfoLog() const;
 
-	GLuint mId;
-	GLint mType;
+  GLuint mId;
+  GLint mType;
 };
 
 } // namespace Forge

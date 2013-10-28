@@ -19,12 +19,9 @@
  */
 
 #include "Menu.h"
-
 #include "State/GameStateLibrary.hpp"
-#include "Graphics/Material/Technique/InternalTechniques.hpp"
 #include "Time/HighResClock.h"
 #include "Util/Log.h"
-
 #include <sstream>
 
 namespace Paddlemonium { namespace State {

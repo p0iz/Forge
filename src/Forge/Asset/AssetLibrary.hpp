@@ -37,8 +37,8 @@ namespace Forge {
  *
  * Add a set of directories and search them for assets of a specific type.
  */
-template <class AssetType>
-class AssetLibrary : public Singleton<AssetLibrary<AssetType> >
+template <class AssetType, bool RefCounted = true>
+class AssetLibrary : public Singleton<AssetLibrary<AssetType, RefCounted> >
 {
   public:
     AssetLibrary(AssetLibrary&&) = delete;
@@ -84,13 +84,17 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType> >
     {
       AssetInfo& info = mAssetInfoMap[assetName];
 
-      if (!info.valid)
+      if (!RefCounted)
+      {
+        return loadAsset(info.filename);
+      }
+      else if (!info.valid)
       {
         info.asset = loadAsset(info.filename);
         info.valid = info.asset ? true : false;
-        info.useCount = info.valid ? 1 : 0;
+        info.useCount = info.valid  ? 1 : 0;
       }
-      else
+      else if (RefCounted)
       {
         ++info.useCount;
       }
@@ -133,7 +137,8 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType> >
       for (std::string const& filename : assetDir.listFiles())
       {
         std::string::size_type extensionStart = filename.find_last_of(".");
-        std::string extension = filename.substr(extensionStart);
+        bool const noExtension = (extensionStart == std::string::npos);
+        std::string extension = noExtension ? "" : filename.substr(extensionStart);
         if (mSupportedExtensions == "" || mSupportedExtensions.find(extension) != std::string::npos)
         {
           AssetInfo info =
@@ -158,7 +163,7 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType> >
     /* Access */
     std::unordered_map<std::string, AssetInfo> mAssetInfoMap;
 
-    friend class Singleton<AssetLibrary<AssetType> >;
+    friend class Singleton<AssetLibrary<AssetType, RefCounted> >;
 };
 
 }

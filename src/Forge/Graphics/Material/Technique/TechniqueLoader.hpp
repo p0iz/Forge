@@ -20,24 +20,12 @@
 
 #pragma once
 
-#include "Graphics/Material/Technique/Technique.h"
-#include "../../../Util/Singleton.hpp"
-#include <string>
-#include <unordered_map>
+#include "Technique.hpp"
+#include "Lua/Loader.hpp"
+
 
 namespace Forge {
 
-/* TechniqueLibrary is a collection of techniques
- * that can be used to retrieve a technique copies */
-class TechniqueLibrary : public Singleton<TechniqueLibrary>
-{
-public:
-  ~TechniqueLibrary();
-  void add(Technique* technique);
-  TechniquePtr get(const std::string& techniqueName) const;
-private:
-  typedef std::unordered_map<std::string, TechniquePtr> TechniqueMap;
-  TechniqueMap mTechniqueMap;
-};
+typedef Lua::Loader<Technique> TechniqueLoader;
 
 }

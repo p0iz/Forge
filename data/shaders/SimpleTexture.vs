@@ -51,7 +51,7 @@ layout (std140) uniform Lights
 };
 
 uniform mat3 NormalMatrix;
-uniform mat4 WorldViewProjectionMatrix;
+uniform mat4 WorldViewProjection;
 uniform mat4 WorldViewMatrix;
 
 // Outputs
@@ -94,5 +94,5 @@ void main(void)
 		view_space_spot_direction = NormalMatrix * light.spotDirection;
 	}
 
-	gl_Position = WorldViewProjectionMatrix * pos;
+	gl_Position = WorldViewProjection * pos;
 }

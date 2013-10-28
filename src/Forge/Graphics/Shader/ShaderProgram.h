@@ -21,7 +21,10 @@
 #ifndef SHADERPROGRAM_H
 #define SHADERPROGRAM_H
 
+#include "Shader.h"
 #include <string>
+#include <vector>
+
 
 namespace Forge {
 
@@ -29,31 +32,38 @@ namespace Forge {
 class ShaderProgram
 {
 public:
-	ShaderProgram();
-	~ShaderProgram();
+  ShaderProgram();
+  ~ShaderProgram();
 
-	void create();
-	const int link();
+  void create();
+  bool link();
 
-	const unsigned int getAttribLocation(const char* attribName) const;
-	const unsigned int getUniformLocation(const char* uniformName) const;
-	const unsigned int getId();
+  bool isLinked() const;
 
-	const std::string getProgramInfoLog() const;
+  const unsigned int getAttribLocation(const char* attribName) const;
+  int const getUniformLocation(const char* uniformName) const;
+  const unsigned int getId();
 
-	void setVertexShader(unsigned int shader);
-	void setGeometryShader(unsigned int shader);
-	void setFragmentShader(unsigned int shader);
+  bool setUniform1fv(char const* name, GLfloat const* values);
+  bool setUniform2fv(char const* name, GLfloat const* values);
+  bool setUniform3fv(char const* name, GLfloat const* values);
+  bool setUniform4fv(char const* name, GLfloat const* values);
+  bool setUniform1f(char const* name, GLfloat value);
 
-	void use() const;
+  const std::string getProgramInfoLog() const;
 
-	static void release();
+  std::vector<std::string> getUniformNames() const;
+
+  void attachShader(Shader const& shader);
+  void attachShader(unsigned int shader);
+
+  void use() const;
+
+  static void release();
 
 private:
-	unsigned int mId;
-	unsigned int mVertexShaderId;
-	unsigned int mGeometryShaderId;
-	unsigned int mFragmentShaderId;
+  unsigned int mId;
+
 };
 
 } // namespace Forge

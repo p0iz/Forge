@@ -21,7 +21,7 @@
 #include "Material.h"
 #include "MaterialLoader.hpp"
 #include "Graphics/Libraries/TextureLibrary.hpp"
-#include "Technique/TechniqueLibrary.h"
+#include "Graphics/Libraries/TechniqueLibrary.hpp"
 #include "Util/Log.h"
 
 #include <GL/glew.h>
@@ -31,6 +31,7 @@ namespace Forge {
 Material::~Material()
 {
   clearUsers();
+  Graphics::TechniqueLibrary::instance().releaseAsset(mTechnique->getName());
 }
 
 void Material::loadMaterial(const std::string& materialFile)
@@ -38,7 +39,7 @@ void Material::loadMaterial(const std::string& materialFile)
   mMaterialFile = materialFile;
   // First destroy old technique to make room for new
   if (mTechnique) {
-    mTechnique->destroy();
+    Graphics::TechniqueLibrary::instance().releaseAsset(mTechnique->getName());
   }
 
   MaterialLoader loader;
@@ -58,11 +59,6 @@ void Material::setTransforms(
   ) const
 {
   mTechnique->setTransforms(world, view, projection);
-}
-
-void Material::setDynamicProperty(const std::string& propertyName, const Property& value)
-{
-  mTechnique->setDynamicProperty(propertyName.c_str(), value);
 }
 
 const std::vector<MeshPtr>&Material::getMeshes() const

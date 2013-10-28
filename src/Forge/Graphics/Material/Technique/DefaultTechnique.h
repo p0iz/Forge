@@ -20,10 +20,10 @@
 
 #pragma once
 
-#include "Technique.h"
-
+#include "Technique.hpp"
 #include "../../Shader/Shader.h"
 #include "../../Shader/ShaderProgram.h"
+
 
 namespace Forge {
 
@@ -31,22 +31,21 @@ namespace Forge {
 class DefaultTechnique : public Technique
 {
 public:
-	DefaultTechnique();
-	virtual Technique* clone();
-	virtual void create();
-	virtual void destroy();
-	virtual void updateProperties(LuaProperties&);
-	virtual void beginMaterial();
-	virtual void setTransforms(const glm::mat4& world,
-						  const glm::mat4& view,
-						  const glm::mat4& projection);
+  DefaultTechnique();
+  virtual TechniquePtr clone();
+  virtual void create();
+  virtual void destroy();
+  virtual void beginMaterial();
+  virtual void setTransforms(const glm::mat4& world,
+              const glm::mat4& view,
+              const glm::mat4& projection);
 private:
-	Shader vertexShader;
-	Shader fragmentShader;
-	ShaderProgram shaderProgram;
+  Shader vertexShader;
+  Shader fragmentShader;
+  ShaderProgram shaderProgram;
 
-	// Uniform location
-	unsigned int wvpLocation;
+  // Uniform location
+  unsigned int wvpLocation;
 };
 
 }

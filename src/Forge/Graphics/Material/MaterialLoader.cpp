@@ -20,11 +20,10 @@
 
 #include "MaterialLoader.hpp"
 #include "Material.h"
-#include "Technique/LuaProperties.hpp"
-#include "Technique/TechniqueLibrary.h"
+#include "Graphics/Libraries/TechniqueLibrary.hpp"
+#include "Lua/Utils.hpp"
 #include "Util/Log.h"
-
-#include "lua.hpp"
+#include <lua.hpp>
 
 namespace Forge { namespace Lua {
 
@@ -35,29 +34,29 @@ TechniquePtr loadTechnique(lua_State* state)
 {
   TechniquePtr technique;
   lua_getfield(state, -1, "technique");
-  if (lua_isstring(state, -1)) {
+  if (lua_isstring(state, -1))
+  {
     std::string techniqueName = lua_tostring(state, -1);
     Log::info << "Loading technique '" << techniqueName << "'...\n";
-    technique = TechniqueLibrary::instance().get(techniqueName);
+    technique = Graphics::TechniqueLibrary::instance().obtainAsset(techniqueName);
+    if (technique)
+    {
+      technique->setName(techniqueName);
+    }
   }
   lua_pop(state, 1);
   return technique;
 }
 
-bool loadProperties(lua_State* state, TechniquePtr technique)
+void onNoSuchUniform(std::string const& name, TechniquePtr technique)
 {
-  lua_getfield(state, -1, "properties");
-  bool loaded = lua_istable(state, -1);
-  if (loaded) {
-    // Update technique properties using Lua state with properties table on top
-    LuaProperties properties(state);
-    technique->updateProperties(properties);
-  } else {
-    Log::error << "Failed to load material properties.\n"
-           << "Ensure that material has a subtable called 'properties'\n";
+  Log::LogStream& stream = Log::error << "No uniforms called '" << name << "' in technique.\n"
+                                         "Possible values are:\n";
+  auto names = technique->getUniformNames();
+  for (auto name : names)
+  {
+    stream << name << "\n";
   }
-  lua_pop(state, 1);
-  return loaded;
 }
 
 }
@@ -67,14 +66,47 @@ bool MaterialLoader::handleLoadedLua(lua_State* state) const
 {
   bool loaded = false;
   lua_getglobal(state, "material");
-  if (lua_istable(state, -1)) {
+  if (lua_istable(state, -1))
+  {
     TechniquePtr technique = loadTechnique(state);
-    if (technique) {
-      technique->create();
+    if (technique)
+    {
       mTarget->mTechnique = technique;
-      loaded = loadProperties(state, technique);
+      loaded = true;
+      // Read settings for the tecnique
+      lua_getfield(state, -1, "properties");
+      if (lua_istable(state, -1))
+      {
+        lua_pushnil(state);
+        while (lua_next(state, -2))
+        {
+          std::string name = lua_tostring(state, -2);
+
+          int length = 1;
+          float values[4];
+          if (lua_istable(state, -1))
+          {
+            lua_len(state, -1);
+            length = lua_tonumber(state, -1);
+            lua_pop(state, 1);
+            Utils::parseVec(state, length, values);
+          }
+          else
+          {
+            values[0] = lua_tonumber(state, -1);
+          }
+
+          if (!technique->setUniform(name, length, values))
+          {
+            onNoSuchUniform(name, technique);
+            loaded = false;
+          }
+          lua_pop(state, 1);
+        }
+      }
     }
   }
+  lua_pop(state, 1);
   return loaded;
 }
 

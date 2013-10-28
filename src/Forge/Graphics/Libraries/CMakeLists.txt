@@ -4,6 +4,7 @@ set(LibrariesSources
   MaterialLibrary.cpp
   MeshLibrary.cpp
   TextureLibrary.cpp
+  TechniqueLibrary.cpp
 )
 
 set(LibrariesHeaders
@@ -11,6 +12,8 @@ set(LibrariesHeaders
   MaterialTraits.hpp
   MeshLibrary.hpp
   MeshTraits.hpp
+  TechniqueLibrary.hpp
+  TechniqueTraits.hpp
   TextureLibrary.hpp
 )
 

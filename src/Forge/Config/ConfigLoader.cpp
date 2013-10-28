@@ -24,6 +24,7 @@
 #include "Asset/AssetLibrary.hpp"
 #include "Graphics/Libraries/MeshTraits.hpp"
 #include "Graphics/Libraries/MaterialTraits.hpp"
+#include "Graphics/Libraries/TechniqueTraits.hpp"
 #include "Lua/AssetDir.hpp"
 #include "Lua/Utils.hpp"
 #include "Configuration.hpp"
@@ -52,8 +53,10 @@ bool ConfigLoader::handleLoadedLua(lua_State* state) const
 
   AssetDir<Mesh> meshDirs(state);
   AssetDir<Material> materialDirs(state);
+  AssetDir<Technique> techniqueDirs(state);
   meshDirs.load(state);
   materialDirs.load(state);
+  techniqueDirs.load(state);
 
   return loaded;
 }

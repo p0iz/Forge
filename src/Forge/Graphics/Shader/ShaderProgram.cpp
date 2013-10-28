@@ -26,96 +26,176 @@
 
 namespace Forge {
 
-ShaderProgram::ShaderProgram()
-	: mId(0), mVertexShaderId(0), mFragmentShaderId(0)
+ShaderProgram::ShaderProgram():
+  mId(0)
 {
 }
 
 ShaderProgram::~ShaderProgram()
 {
-	int numShaders = 0;
-	glGetProgramiv(mId, GL_ATTACHED_SHADERS, &numShaders);
+  if (mId == 0)
+  {
+    return;
+  }
 
-	std::vector<unsigned int> shaders(numShaders);
-	glGetAttachedShaders(mId, numShaders, nullptr, &shaders[0]);
-	for (unsigned int shader : shaders)
-	{
-		glDetachShader(mId, shader);
-	}
-	glDeleteProgram(mId);
+  int numShaders = 0;
+  glGetProgramiv(mId, GL_ATTACHED_SHADERS, &numShaders);
+
+  std::vector<unsigned int> shaders(numShaders);
+  glGetAttachedShaders(mId, numShaders, nullptr, &shaders[0]);
+  for (unsigned int shader : shaders)
+  {
+    glDetachShader(mId, shader);
+  }
+  glDeleteProgram(mId);
 }
 
 void ShaderProgram::create()
 {
-	mId = glCreateProgram();
+  mId = glCreateProgram();
 }
 
-const int ShaderProgram::link()
+bool ShaderProgram::link()
 {
-	if (!mId)
-		mId = glCreateProgram();
-
-	glLinkProgram(mId);
-	GLint linkStatus;
-	glGetProgramiv(mId, GL_LINK_STATUS, &linkStatus);
-	return linkStatus;
+  if (!mId)
+  {
+    return false;
+  }
+  glLinkProgram(mId);
+  return isLinked();
 }
 
-
+bool ShaderProgram::isLinked() const
+{
+  GLint linkStatus;
+  glGetProgramiv(mId, GL_LINK_STATUS, &linkStatus);
+  return linkStatus;
+}
 
 const GLuint ShaderProgram::getAttribLocation(const char *attribName) const
 {
-	return glGetAttribLocation(mId, attribName);
+  return glGetAttribLocation(mId, attribName);
 }
 
-const GLuint ShaderProgram::getUniformLocation(const char *uniformName) const
+int const ShaderProgram::getUniformLocation(const char *uniformName) const
 {
-	return glGetUniformLocation(mId, uniformName);
+  return glGetUniformLocation(mId, uniformName);
 }
 
 const unsigned int ShaderProgram::getId()
 {
-	return mId;
+  return mId;
+}
+
+bool ShaderProgram::setUniform1fv(char const* name, GLfloat const* values)
+{
+  GLint location = glGetUniformLocation(mId, name);
+  if (location == -1)
+  {
+    return false;
+  }
+  glUseProgram(mId);
+  glUniform1fv(location, 1, values);
+  return true;
+}
+
+bool ShaderProgram::setUniform2fv(char const* name, GLfloat const* values)
+{
+  GLint location = glGetUniformLocation(mId, name);
+  if (location == -1)
+  {
+    return false;
+  }
+  glUseProgram(mId);
+  glUniform2fv(location, 1, values);
+  return true;
+}
+
+bool ShaderProgram::setUniform3fv(char const* name, GLfloat const* values)
+{
+  GLint location = glGetUniformLocation(mId, name);
+  if (location == -1)
+  {
+    return false;
+  }
+  glUseProgram(mId);
+  glUniform3fv(location, 1, values);
+  return true;
+}
+
+bool ShaderProgram::setUniform4fv(char const* name, GLfloat const* values)
+{
+  GLint location = glGetUniformLocation(mId, name);
+  if (location == -1)
+  {
+    return false;
+  }
+  glUseProgram(mId);
+  glUniform4fv(location, 1, values);
+  return true;
+}
+
+bool ShaderProgram::setUniform1f(const char* name, GLfloat value)
+{
+  GLint location = glGetUniformLocation(mId, name);
+  if (location == -1)
+  {
+    return false;
+  }
+  glUseProgram(mId);
+  glUniform1f(location, value);
+  return true;
 }
 
 const std::string ShaderProgram::getProgramInfoLog() const
 {
-	std::string logString;
-	int logLength = 0;
-	glGetProgramiv(mId, GL_INFO_LOG_LENGTH, &logLength);
-	char* logChars = new char[logLength];
-	glGetProgramInfoLog(mId, logLength, nullptr, logChars);
-	logString.assign(logChars);
-	delete[] logChars;
-	return logString;
+  std::string logString;
+  int logLength = 0;
+  glGetProgramiv(mId, GL_INFO_LOG_LENGTH, &logLength);
+  char* logChars = new char[logLength];
+  glGetProgramInfoLog(mId, logLength, nullptr, logChars);
+  logString.assign(logChars);
+  delete[] logChars;
+  return logString;
 }
 
-void ShaderProgram::setVertexShader(unsigned int shader)
+std::vector<std::string> ShaderProgram::getUniformNames() const
 {
-	mVertexShaderId = shader;
-	glAttachShader(mId, shader);
+  std::vector<std::string> names;
+
+  int numUniforms;
+  glGetProgramiv(mId, GL_ACTIVE_UNIFORMS, &numUniforms);
+  int maxNameLength;
+  glGetProgramiv(mId, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxNameLength);
+
+  for (int i = 1; i <= numUniforms; ++i)
+  {
+    char name[256];
+    glGetActiveUniformName(mId, i, sizeof(name), nullptr, name);
+    names.push_back(name);
+  }
+
+  return names;
 }
 
-void ShaderProgram::setGeometryShader(unsigned int shader)
+void ShaderProgram::attachShader(Shader const& shader)
 {
-	mVertexShaderId = shader;
-	glAttachShader(mId, shader);
+  glAttachShader(mId, shader.getId());
 }
 
-void ShaderProgram::setFragmentShader(unsigned int shader)
+void ShaderProgram::attachShader(unsigned int shader)
 {
-	mFragmentShaderId = shader;
-	glAttachShader(mId, shader);
+  glAttachShader(mId, shader);
 }
 
 void ShaderProgram::use() const
 {
-	glUseProgram(mId);
+  glUseProgram(mId);
 }
 
 void ShaderProgram::release()
 {
-	glUseProgram(0);
+  glUseProgram(0);
 }
 
 } // namespace Forge
