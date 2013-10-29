@@ -11,5 +11,3 @@ add_subdirectory(src/Forge)
 # Add Game to build
 add_subdirectory(src/Paddlemonium)
 
-# Add Editor to build
-#add_subdirectory(src/Editor)
