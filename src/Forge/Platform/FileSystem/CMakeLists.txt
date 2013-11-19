@@ -15,4 +15,4 @@ if (UNIX)
   )
 endif()
 
-add_library(PlatformFileSystem ${PlatformFileSystemSources})
+add_library(PlatformFileSystem ${PlatformFileSystemSources} ${PlatformFileSystemHeaders})
