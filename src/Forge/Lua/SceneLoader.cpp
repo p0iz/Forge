@@ -31,6 +31,7 @@ luaL_Reg const SceneLoader::SceneLib[] =
 {
   { "addDirectionalLight", SceneLoader::addDirectionalLight },
   { "addPointLight", SceneLoader::addPointLight },
+  { "addSpotLight", SceneLoader::addSpotLight },
   { nullptr, nullptr }
 };
 
@@ -118,6 +119,49 @@ int SceneLoader::addPointLight(lua_State* state)
   Light light;
   light.type = Light::POINT;
   light.position = position;
+  light.getShaderData().color = color;
+  sceneConfig->lights.push_back(light);
+
+  return 0;
+}
+
+int SceneLoader::addSpotLight(lua_State* state)
+{
+  if ((lua_gettop(state) != 6) || (!lua_istable(state, -6)) || (!lua_istable(state, -5)) || (!lua_istable(state, -1)))
+  {
+    return luaL_error(state, " Usage: addSpotLight(position[4], direction[3], exponent, falloff, cutoff, color[4])");
+  }
+
+  glm::vec4 color;
+  Utils::parseVec(state, 4, &color[0]);
+  lua_pop(state, 1);
+
+  float cutoff = lua_tonumber(state, -1);
+  lua_pop(state, 1);
+
+  float falloff = lua_tonumber(state, -1);
+  lua_pop(state, 1);
+
+  float exponent = lua_tonumber(state, -1);
+  lua_pop(state, 1);
+
+  glm::vec3 direction;
+  Utils::parseVec(state, 3, &direction[0]);
+  lua_pop(state, 1);
+
+  glm::vec4 position;
+  Utils::parseVec(state, 4, &position[0]);
+  lua_pop(state, 1);
+
+  SceneConfig* sceneConfig = getSceneConfig(state);
+
+  Light light;
+  light.type = Light::SPOT;
+  light.position = position;
+  light.spotDirection = direction;
+  light.getShaderData().spotCutoff = cutoff;
+  light.getShaderData().spotFalloff = falloff;
+  light.getShaderData().spotExponent = exponent;
   light.getShaderData().color = color;
   sceneConfig->lights.push_back(light);
 
