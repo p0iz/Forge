@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Graphics/Scene/SceneConfig.hpp"
+#include "Platform/Window/RenderWindow.hpp"
 #include "Platform/Input/InputHandler.hpp"
 #include "Platform/Input/InputProcessor.hpp"
 #include "Platform/Input/KeySymbols.hpp"
@@ -37,7 +38,16 @@ enum GameAction
 
   // Misc.
   ToggleFullscreen,
-  ToggleDebug
+  ToggleDebug,
+
+  // Speed
+  SpeedPaused,
+  SpeedSlow,
+  SpeedNormal,
+  SpeedFast,
+
+  // Quit
+  QuitGame
 };
 
 template <class ActionType>
@@ -50,24 +60,23 @@ class InGameProcessor : public Forge::Input::InputProcessor
   public:
     InGameProcessor(
       Forge::HighResClock& clock,
-      Forge::Graphics::RenderWindow& window
+      Forge::Input::InputHandler& input,
+      Forge::Graphics::RenderWindow& window,
+      Forge::SceneConfig& scene
     );
     virtual ~InGameProcessor();
 
-    void setSceneConfig(Forge::SceneConfig* sceneConfig);
-
-    bool process(float const delta);
+    virtual bool process(float const delta);
   private:
     void processMouseMove();
-    bool processKeyPress();
+    bool processKeyPress(float const delta);
+    void mapDefaultKeys();
 
+    Forge::SceneConfig& mScene;
+    KeyMap<GameAction> mKeyMap;
+    Forge::HighResClock& mClock;
     Forge::Input::InputHandler& mInputHandler;
     Forge::Graphics::RenderWindow& mWindow;
-    Forge::HighResClock& mClock;
-    Forge::SceneConfig* mSceneConfig;
-
-    void mapDefaultKeys();
-    KeyMap<GameAction> mKeyMap;
 };
 
 }

@@ -20,6 +20,8 @@
 
 #include "InGame.h"
 
+#include "Graphics/Libraries/MaterialLibrary.hpp"
+#include "Graphics/Libraries/MeshLibrary.hpp"
 #include "State/GameStateLibrary.hpp"
 #include "Lua/SceneLoader.hpp"
 #include "Platform/Input/InputHandler.hpp"
@@ -31,13 +33,12 @@
 
 namespace Paddlemonium { namespace State {
 
-InGame::InGame(
-    Forge::Graphics::Renderer& renderer,
-    InGameProcessor& input
-  ):
+InGame::InGame(Forge::ForgeMain& forge):
   GameState("InGame"),
-  mInput(input),
-  mRenderer(renderer)
+  mSceneConfig(),
+  mInput(forge.clock(), forge.input(), forge.window(), mSceneConfig),
+  mCamera(),
+  mRenderer(forge.renderer())
 {
 }
 
@@ -110,8 +111,6 @@ void InGame::createState() {
 
   // Done. Allow the scene config to manipulate the scene
   mSceneConfig.setCamera(mCamera);
-  mInput.setSceneConfig(&mSceneConfig);
-
   mSceneConfig.validateSceneGraph();
   mSceneConfig.calculateWorldTransforms();
 }

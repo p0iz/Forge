@@ -20,9 +20,8 @@
 
 #pragma once
 
-#include "RenderContext.hpp"
-
-#include <memory>
+#include <string>
+#include <SDL2/SDL.h>
 
 
 /* This abstract class provides a contract for implementing a render window
@@ -33,41 +32,44 @@
  * RenderContext contract and make it current at the end of the constructor.
  */
 
-#include "Event/Publisher.hpp"
-#include "../../Graphics/ResizeEvent.h"
 
 namespace Forge { namespace Graphics {
 
-class RenderWindow;
-typedef std::shared_ptr<RenderWindow> RenderWindowPtr;
-
-class RenderWindow : public Publisher<ResizeEvent>
+class RenderWindow
 {
   public:
     RenderWindow();
-    virtual ~RenderWindow();
+    ~RenderWindow();
 
-    virtual bool const isValid() const = 0;
+    bool const isValid() const;
 
-    virtual void show() = 0;
-    virtual void hide() = 0;
-    virtual void setFullscreen(bool const enabled) = 0;
-    virtual bool const isFullscreen() const = 0;
-    virtual void resize(int width, int height) = 0;
+    void show();
+    void hide();
+    void setFullscreen(bool const enabled);
+    bool const isFullscreen() const;
+    void resize(int width, int height);
 
-    virtual int width() const = 0;
-    virtual int height() const = 0;
+    int width() const;
+    int height() const;
 
     /* This is a context-specific identifier for the render window */
-    virtual unsigned long getHandle() = 0;
+    unsigned long getHandle();
 
-    virtual void setTitle(char const* title) = 0;
+    void setTitle(std::string const& title);
+    std::string const& title() const;
 
-    virtual RenderContext& getContext() = 0;
+    void swapBuffers();
 
-    /* Use this to get a shared pointer to a new render window.
-     * Implement this for each supported platform separately. */
-    static RenderWindowPtr createInstance();
+  private:
+    SDL_Window* mWindow;
+    SDL_GLContext mContext;
+
+    bool mFullscreen;
+    std::string mTitle;
+
+    int mWidth;
+    int mHeight;
+
 };
 
 }}

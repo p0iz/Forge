@@ -21,17 +21,8 @@
 #pragma once
 
 #include "Input/InGameProcessor.hpp"
-
-// Forge includes
-#include "Graphics/Libraries/MeshLibrary.hpp"
-#include "Graphics/Libraries/MaterialLibrary.hpp"
-#include "Graphics/Light/Light.hpp"
-#include "Graphics/Scene/SceneConfig.hpp"
-#include "Graphics/Material/Material.h"
-#include "Graphics/Renderer.h"
+#include "ForgeMain.hpp"
 #include "Graphics/TargetCamera.h"
-#include "State/GameState.h"
-#include "Time/HighResClock.h"
 
 #include <memory>
 #include <string>
@@ -42,10 +33,7 @@ namespace Paddlemonium { namespace State {
 class InGame : public Forge::GameState
 {
 public:
-  InGame(
-    Forge::Graphics::Renderer& renderer,
-    InGameProcessor& input
-  );
+  InGame(Forge::ForgeMain& forge);
 
   virtual ~InGame();
 
@@ -54,12 +42,11 @@ public:
   virtual void destroyState();
 
 private:
-  InGameProcessor& mInput;
+  Forge::SceneConfig mSceneConfig;
+  InGameProcessor mInput;
 
   Forge::TargetCamera mCamera;
   Forge::Graphics::Renderer& mRenderer;
-
-  Forge::SceneConfig mSceneConfig;
 
   // Game object nodes
   Forge::SceneNodeId mPaddleNode;

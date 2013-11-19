@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Platform/Input/InputHandler.hpp"
 #include "Platform/Window/RenderWindow.hpp"
 
 
@@ -28,15 +29,18 @@ namespace Forge { namespace Event {
 class EventHandler
 {
   public:
-    EventHandler();
+    EventHandler(
+      Input::InputHandler& input,
+      Graphics::RenderWindow& window
+    );
     virtual ~EventHandler() { }
 
-    virtual void registerWindow(Graphics::RenderWindowPtr window) = 0;
-    virtual void deregisterWindow(Graphics::RenderWindowPtr window) = 0;
+    virtual bool pumpMessages();
 
-    virtual bool pumpMessages() = 0;
+  private:
+    Input::InputHandler& mInput;
+    Graphics::RenderWindow& mWindow;
 
-    static EventHandler& getInstance();
 };
 
 }}

@@ -6,10 +6,9 @@ project(Paddlemonium)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic")
 
 set(Game_SOURCES
-  PaddleGame.cpp
   Input/InGameProcessor.cpp
-	State/InGame.cpp
-	State/Menu.cpp
+  State/InGame.cpp
+  State/Menu.cpp
   main.cpp)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -24,10 +23,9 @@ if(WIN32)
     ${CMAKE_SOURCE_DIR}/windows_deps/glew/include
     ${CMAKE_SOURCE_DIR}/windows_deps/glm
     ${CMAKE_SOURCE_DIR}/windows_deps/freeimage
-		${LUA_INCLUDE_DIRECTORIES}
+    ${LUA_INCLUDE_DIRECTORIES}
   )
 endif()
 
 add_executable(Paddlemonium ${Game_SOURCES})
-
-target_link_libraries(Paddlemonium Forge )
+target_link_libraries(Paddlemonium Forge)

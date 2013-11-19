@@ -34,14 +34,16 @@ namespace {
 }
 
 InGameProcessor::InGameProcessor(
-    Forge::HighResClock& clock,
-    Forge::Graphics::RenderWindow& window
-  ):
-  mInputHandler(Forge::Input::InputHandler::getInstance()),
-  mWindow(window),
+  Forge::HighResClock& clock,
+  Forge::Input::InputHandler& input,
+  Forge::Graphics::RenderWindow& window,
+  Forge::SceneConfig& scene
+):
+  mScene(scene),
+  mKeyMap(),
   mClock(clock),
-  mSceneConfig(nullptr),
-  mKeyMap()
+  mInputHandler(input),
+  mWindow(window)
 {
   mapDefaultKeys();
 }
@@ -50,76 +52,67 @@ InGameProcessor::~InGameProcessor()
 {
 }
 
-void InGameProcessor::setSceneConfig(Forge::SceneConfig* sceneConfig)
-{
-  mSceneConfig = sceneConfig;
-}
-
 bool InGameProcessor::process(const float delta)
 {
-  if (!mSceneConfig)
-    return true;
-
-  // Press (one-shot) events from keymap
-  for (auto keyAction : mKeyMap) {
-    if (mInputHandler.isKeyPressed(keyAction.first)) {
-      switch (keyAction.second) {
-      case ToggleDebug:
-        Forge::DebugAxis::toggleDebuggingInfo();
-        break;
-      default:
-        break;
-      }
-    }
-  }
-
   processMouseMove();
-  return processKeyPress();
+
+  return processKeyPress(delta);
 }
 
 void InGameProcessor::processMouseMove()
 {
-  if (!mSceneConfig)
-    return;
+  const Forge::Camera& camera = mScene.getCamera();
+  Forge::SceneNode& paddleNode = mScene.getSceneNode("PaddleNode");
 
-  const Forge::Camera& camera = mSceneConfig->getCamera();
-
-  Forge::SceneNode& paddleNode = mSceneConfig->getSceneNode("PaddleNode");
   float distance = (camera.getViewMatrix() * paddleNode.mWorldTransform.getMatrix())[3][2];
   float frustumHeight = glm::tan(glm::radians(camera.getFovY() * 0.5f)) * distance;
   float frustumWidth = camera.getAspectRatio() * frustumHeight;
-
   float percentageX = static_cast<float>(mInputHandler.getMouseX()) / mWindow.width();
-
   float screenPos = frustumWidth * (2 * percentageX - 1);
+
   paddleNode.mWorldTransform.setPosition(screenPos, 0.0f, 0.0f);
 }
 
-bool InGameProcessor::processKeyPress()
+bool InGameProcessor::processKeyPress(float const delta)
 {
   using Forge::Key;
 
   for (Key key : mInputHandler.getPressedKeys())
   {
-    switch (key)
+    switch (mKeyMap[key])
     {
-      case Key::_0:
+      case PaddleLeft:
+      {
+        Forge::SceneNode& paddleNode = mScene.getSceneNode("PaddleNode");
+        paddleNode.mWorldTransform.translate(-10 * delta, 0, 0);
+        break;
+      }
+      case PaddleRight:
+      {
+        Forge::SceneNode& paddleNode = mScene.getSceneNode("PaddleNode");
+        paddleNode.mWorldTransform.translate(-10 * delta, 0, 0);
+        break;
+      }
+      case SpeedPaused:
         mClock.setTimeScale(0.0);
         break;
-      case Key::_1:
+      case SpeedNormal:
         mClock.setTimeScale(1.0);
         break;
-      case Key::_2:
+      case SpeedFast:
         mClock.setTimeScale(2.0);
         break;
-      case Key::_3:
+      case SpeedSlow:
         mClock.setTimeScale(0.5);
         break;
-      case Key::Escape:
+      case QuitGame:
         Forge::Log::info << "Exit game\n";
         return false;
-      case Key::F:
+      case ToggleFullscreen:
         //mWindow->setFullscreen(!mWindow->isFullscreen());
+        break;
+      case ToggleDebug:
+        Forge::DebugAxis::toggleDebuggingInfo();
         break;
       default:
         break;
@@ -137,6 +130,11 @@ void InGameProcessor::mapDefaultKeys()
   mKeyMap[Key::D] = GameAction::PaddleRight;
   mKeyMap[Key::Space] = GameAction::ToggleDebug;
   mKeyMap[Key::F] = GameAction::ToggleFullscreen;
+  mKeyMap[Key::_0] = GameAction::SpeedPaused;
+  mKeyMap[Key::_1] = GameAction::SpeedSlow;
+  mKeyMap[Key::_2] = GameAction::SpeedNormal;
+  mKeyMap[Key::_3] = GameAction::SpeedFast;
+  mKeyMap[Key::Escape] = GameAction::QuitGame;
 }
 
 }

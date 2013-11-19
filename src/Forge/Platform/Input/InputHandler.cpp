@@ -29,6 +29,8 @@ InputHandler::InputHandler():
   mMouseRelY(0),
   mMouseX(0),
   mMouseY(0),
+  mMouseWheelX(0),
+  mMouseWheelY(0),
   mActiveKeys(),
   mActiveButtons(),
   mActiveModifiers()
@@ -67,6 +69,11 @@ void InputHandler::injectMouseDown(MouseButton button)
 void InputHandler::injectMouseUp(MouseButton button)
 {
   mActiveButtons = static_cast<MouseButton>(mActiveButtons & ~button);
+}
+
+void InputHandler::injectMouseWheel(int x, int y)
+{
+
 }
 
 void InputHandler::setProcessor(InputProcessor* processor)
@@ -124,6 +131,20 @@ bool InputHandler::isMouseDown(MouseButton mask) const
 bool InputHandler::isMouseUp(MouseButton mask) const
 {
   return (mActiveButtons & mask) == 0;
+}
+
+int InputHandler::getMouseWheelX()
+{
+  int temp = mMouseWheelX;
+  mMouseWheelX = 0;
+  return temp;
+}
+
+int InputHandler::getMouseWheelY()
+{
+  int temp = mMouseWheelY;
+  mMouseWheelY = 0;
+  return temp;
 }
 
 int InputHandler::getMouseX() const

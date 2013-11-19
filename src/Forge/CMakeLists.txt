@@ -26,9 +26,15 @@ if(WIN32)
   )
 endif()
 
+# Find Lua 5.2 with included cmake file
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}")
 find_package(Lua52 REQUIRED)
 
+# Find SDL2 with pkg-config
+include(FindPkgConfig)
+pkg_search_module(SDL2 REQUIRED sdl2)
+
+include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Add subsystems
@@ -42,7 +48,16 @@ add_subdirectory(Util)
 add_subdirectory(Event)
 add_subdirectory(Platform)
 
-add_library(Forge ForgeVersion.cpp)
+set(Forge_SRC
+  ForgeMain.cpp
+)
+
+set(Forge_HDR
+  ForgeMain.hpp
+  ForgeVersion.hpp
+)
+
+add_library(Forge ${Forge_SRC} ${Forge_HDR})
 target_link_libraries(Forge
   Config
   State
@@ -53,6 +68,7 @@ target_link_libraries(Forge
   PlatformFileSystem
   PlatformInput
   PlatformWindow
+  ${SDL2_LIBRARIES}
 )
 
 if(USE_QT)

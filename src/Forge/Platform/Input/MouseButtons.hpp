@@ -19,9 +19,18 @@
  */
 
 #pragma once
+#include "SDL2/SDL_mouse.h"
 
-#ifdef __linux__
-#include "X11MouseButtons.hpp"
-#else
-#error "Unsupported OS"
-#endif
+
+namespace Forge {
+
+enum MouseButton
+{
+  Left = SDL_BUTTON_LMASK,
+  Middle = SDL_BUTTON_MMASK,
+  Right = SDL_BUTTON_RMASK,
+  ExtraButton1 = SDL_BUTTON_X1MASK,
+  ExtraButton2 = SDL_BUTTON_X2MASK
+};
+
+}

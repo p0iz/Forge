@@ -20,12 +20,11 @@
 
 #pragma once
 
-#include "../Window/RenderWindow.hpp"
 #include "InputProcessor.hpp"
 #include "KeySymbols.hpp"
 #include "MouseButtons.hpp"
-
 #include <memory>
+#include <unordered_set>
 
 
 namespace Forge { namespace Input {
@@ -37,20 +36,13 @@ class InputHandler
     InputHandler();
     virtual ~InputHandler();
 
-    /* Set the window to read events from */
-    virtual void setCurrentWindow(Graphics::RenderWindowPtr) = 0;
-    virtual Graphics::RenderWindowPtr const getCurrentWindow() const = 0;
-
-    /* Capture must be done before input can be processed */
-    virtual void capture() = 0;
-    virtual void release() = 0;
-
     /* Used by e.g. event handler to inject input events */
     void injectKeyDown(Key key);
     void injectKeyUp(Key key);
     void injectMouseMove(int x, int y);
     void injectMouseDown(MouseButton button);
     void injectMouseUp(MouseButton button);
+    void injectMouseWheel(int x, int y);
 
     /* Set the input processor to use for processing captured events */
     void setProcessor(InputProcessor* processor);
@@ -65,12 +57,14 @@ class InputHandler
     bool isMouseDown(MouseButton mask) const;
     bool isMouseUp(MouseButton mask) const;
 
+    // Can only get these once
+    int getMouseWheelX();
+    int getMouseWheelY();
+
     int getMouseX() const;
     int getMouseY() const;
     int getMouseRelX() const;
     int getMouseRelY() const;
-
-    static InputHandler& getInstance();
 
   private:
     InputProcessor* mProcessor;
@@ -79,6 +73,9 @@ class InputHandler
     int mMouseRelY;
     int mMouseX;
     int mMouseY;
+
+    int mMouseWheelX;
+    int mMouseWheelY;
 
     std::unordered_set<Key> mActiveKeys;
     std::unordered_set<Key> mPressedKeys; // Single-frame container

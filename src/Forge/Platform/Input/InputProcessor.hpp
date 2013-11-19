@@ -23,7 +23,11 @@
 #include <memory>
 
 
-namespace Forge { namespace Input {
+namespace Forge {
+
+class SceneConfig;
+
+namespace Input {
 
 class InputProcessor
 {

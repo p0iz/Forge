@@ -18,12 +18,25 @@
  *
  */
 
-#include "PaddleGame.h"
+#include "ForgeMain.hpp"
+#include "State/GameStateLibrary.hpp"
+
+#include "State/InGame.h"
+#include "State/Menu.h"
+#include "Input/InGameProcessor.hpp"
 
 
 int main(int argc, char** argv)
 {
-	Paddlemonium::PaddleGame game;
-	game.init();
-	return game.run();
+  Forge::ForgeMain forge;
+  forge.init("Paddlemonium");
+
+  // Create the initial state and pass it to Forge
+  Forge::GameStatePtr inGame(new Paddlemonium::State::InGame(forge));
+  inGame->createState();
+  Forge::GameStateLibrary::instance().add(inGame);
+
+  forge.start(inGame);
+
+  return 0;
 }

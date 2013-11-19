@@ -19,12 +19,50 @@
  */
 
 #include "EventHandler.hpp"
+#include "SDL2/SDL.h"
 
 
 namespace Forge { namespace Event {
 
-EventHandler::EventHandler()
+EventHandler::EventHandler(
+  Input::InputHandler& input,
+  Graphics::RenderWindow& window
+):
+  mInput(input),
+  mWindow(window)
 {
+}
+
+bool EventHandler::pumpMessages()
+{
+  SDL_Event e;
+  while(SDL_PollEvent(&e))
+  {
+    switch (e.type)
+    {
+      case SDL_QUIT:
+        return false;
+      case SDL_KEYDOWN:
+        mInput.injectKeyDown(static_cast<Forge::Key>(e.key.keysym.sym));
+        break;
+      case SDL_KEYUP:
+        mInput.injectKeyUp(static_cast<Forge::Key>(e.key.keysym.sym));
+        break;
+      case SDL_MOUSEMOTION:
+        mInput.injectMouseMove(e.motion.x, e.motion.y);
+        break;
+      case SDL_MOUSEBUTTONDOWN:
+        mInput.injectMouseDown(static_cast<Forge::MouseButton>(SDL_BUTTON(e.button.button)));
+        break;
+      case SDL_MOUSEBUTTONUP:
+        mInput.injectMouseDown(static_cast<Forge::MouseButton>(SDL_BUTTON(e.button.button)));
+        break;
+      case SDL_MOUSEWHEEL:
+        mInput.injectMouseWheel(e.wheel.x, e.wheel.y);
+        break;
+    }
+  }
+  return true;
 }
 
 }}

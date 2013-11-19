@@ -19,16 +19,88 @@
  */
 
 #include "RenderWindow.hpp"
+#include "Util/Log.h"
+#include <SDL2/SDL.h>
 
 
 namespace Forge { namespace Graphics {
 
-RenderWindow::RenderWindow()
+RenderWindow::RenderWindow():
+  mWindow(nullptr),
+  mContext(nullptr),
+  mFullscreen(false),
+  mTitle("Forge render window"),
+  mWidth(640),
+  mHeight(480)
 {
 }
 
 RenderWindow::~RenderWindow()
 {
+  SDL_GL_DeleteContext(mContext);
+  SDL_DestroyWindow(mWindow);
+  mWindow = nullptr;
+}
+
+void RenderWindow::show()
+{
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+  mWindow = SDL_CreateWindow(
+    mTitle.c_str(),
+    SDL_WINDOWPOS_CENTERED,
+    SDL_WINDOWPOS_CENTERED,
+    mWidth,
+    mHeight,
+    SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_OPENGL
+  );
+  mContext = SDL_GL_CreateContext(mWindow);
+  SDL_GL_SetSwapInterval(1);
+}
+
+void RenderWindow::setFullscreen(const bool enabled)
+{
+  mFullscreen = enabled;
+}
+
+const bool RenderWindow::isFullscreen() const
+{
+  return mFullscreen;
+}
+
+void RenderWindow::resize(int width, int height)
+{
+  mWidth = width;
+  mHeight = height;
+}
+
+int RenderWindow::width() const
+{
+  return mWidth;
+}
+
+int RenderWindow::height() const
+{
+  return mHeight;
+}
+
+void RenderWindow::setTitle(const std::string& title)
+{
+  mTitle = title;
+}
+
+const std::string&RenderWindow::title() const
+{
+  return mTitle;
+}
+
+void RenderWindow::swapBuffers()
+{
+  SDL_GL_SwapWindow(mWindow);
 }
 
 }}
