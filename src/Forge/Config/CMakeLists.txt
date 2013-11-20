@@ -2,9 +2,8 @@
 
 set(ConfigSources
   ConfigLoader.cpp
-  Configuration.cpp)
-
-include_directories(${LUA_INCLUDE_DIRECTORIES})
+  Configuration.cpp
+)
 
 add_library(Config ${ConfigSources})
-target_link_libraries(Config Util)
+target_link_libraries(Config Util ${LUA_LIBRARIES})

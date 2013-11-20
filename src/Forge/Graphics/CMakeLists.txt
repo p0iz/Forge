@@ -28,13 +28,6 @@ set(GraphicsSources
   TargetCamera.cpp
 )
 
-# Find OpenGL
-find_package(OpenGL REQUIRED)
-
-# GLEW dependency
-find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIRECTORIES})
-
 set(GraphicsLibs
   Event
   Light

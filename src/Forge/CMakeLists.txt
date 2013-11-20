@@ -15,26 +15,8 @@ elseif(CMAKE_BUILD_TYPE MATCHES Debug)
   set(CMAKE_EXECUTABLE_SUFFIX "_dbg")
 endif()
 
-# Add Windows build include directories
-if(WIN32)
-  message(STATUS "Adding Windows dependency includes...")
-  include_directories(
-    ${CMAKE_SOURCE_DIR}/windows_deps/glew/include
-    ${CMAKE_SOURCE_DIR}/windows_deps/glm
-    ${CMAKE_SOURCE_DIR}/windows_deps/freeimage
-    ${CMAKE_SOURCE_DIR}/windows_deps/lua/include
-  )
-endif()
+include(ForgeDependencies.cmake)
 
-# Find Lua 5.2 with included cmake file
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}")
-find_package(Lua52 REQUIRED)
-
-# Find SDL2 with pkg-config
-include(FindPkgConfig)
-pkg_search_module(SDL2 REQUIRED sdl2)
-
-include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Add subsystems
@@ -57,18 +39,19 @@ set(Forge_HDR
   ForgeVersion.hpp
 )
 
-add_library(Forge ${Forge_SRC} ${Forge_HDR})
+add_library(Forge SHARED ${Forge_SRC} ${Forge_HDR})
 target_link_libraries(Forge
+  Asset
   Config
   State
   Graphics
   Time
   Util
+  ForgeLua
   PlatformEvent
   PlatformFileSystem
   PlatformInput
   PlatformWindow
-  ${SDL2_LIBRARIES}
 )
 
 if(USE_QT)

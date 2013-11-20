@@ -17,19 +17,6 @@ set(LibrariesHeaders
   TextureLibrary.hpp
 )
 
-# FreeImage dependency
-find_library(FREEIMAGE_LIBRARY NAMES FreeImage freeimage PATHS ${CMAKE_SOURCE_DIR}/windows_deps/freeimage)
-
 add_library(Libraries ${LibrariesSources} ${LibrariesHeaders})
+target_link_libraries(Libraries ${FREEIMAGE_LIBRARY} ${LUA_LIBRARIES} ${GLEW_LIBRARIES})
 
-# Link to the shared FreeImage library
-if(WIN32)
-  add_library(FreeImageDLL SHARED IMPORTED)
-  set_property(TARGET FreeImageDLL PROPERTY IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/deps_w32/freeimage/FreeImage.dll)
-  set_property(TARGET FreeImageDLL PROPERTY IMPORTED_IMPLIB ${CMAKE_SOURCE_DIR}/deps_w32/freeimage/FreeImage.lib)
-  list(APPEND LibrariesLibs FreeImageDLL)
-else()
-  list(APPEND LibrariesLibs ${FREEIMAGE_LIBRARY})
-endif()
-
-target_link_libraries(Libraries Graphics ${LibrariesLibs})

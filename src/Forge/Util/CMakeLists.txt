@@ -8,4 +8,3 @@ set(UtilSources
   UniqueId.hpp)
 
 add_library(Util ${UtilSources})
-target_link_libraries(Util)
