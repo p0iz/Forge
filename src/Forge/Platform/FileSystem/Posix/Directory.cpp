@@ -43,72 +43,18 @@ Directory::Directory():
   }
 }
 
-Directory::Directory(std::string const& path):
-  mCurrentPath(path)
-{
-  // Strip trailing '/'
-  if (*path.rbegin() == '/')
-  {
-    mCurrentPath.pop_back();
-  }
-  convertToAbsolutePath();
-}
-
-std::string const& Directory::getCurrentPath() const
-{
-  return mCurrentPath;
-}
-
-std::string Directory::getName() const
-{
-  return mCurrentPath.substr(mCurrentPath.find_last_of('/')+1);
-}
-
-void Directory::goUp()
-{
-  mCurrentPath = getParent();
-}
-
-bool Directory::cd(std::string const& dir)
-{
-  Directory newDir(getCurrentPath());
-  std::string::size_type startIndex = 0;
-  std::string::size_type endIndex = 0;
-  do
-  {
-    endIndex = dir.find_first_of('/', startIndex);
-    std::string nextDir = dir.substr(startIndex, endIndex - startIndex);
-
-    if (nextDir == "..")
-    {
-      newDir.goUp();
-    }
-    else if (nextDir != "." && nextDir != "")
-    {
-      if (!newDir.hasSubDir(nextDir))
-      {
-        return false;
-      }
-      else
-      {
-        std::string newPath(newDir.getCurrentPath());
-        newDir = Directory(newPath.append("/").append(nextDir));
-      }
-    }
-    startIndex = endIndex+1;
-  }
-  while (endIndex != std::string::npos);
-
-  mCurrentPath = newDir.getCurrentPath();
-
-  return true;
-}
-
 bool Directory::create()
 {
   if (exists())
     return false;
   return mkdir(mCurrentPath.c_str(), NewDirMode) == 0;
+}
+
+std::string Directory::getCurrentWorkingDir()
+{
+  char currentDir[PATH_MAX];
+  getcwd(currentDir, PATH_MAX);
+  return currentDir;
 }
 
 bool Directory::exists() const
@@ -202,42 +148,9 @@ constexpr char Directory::getSeparator()
   return '/';
 }
 
-std::string Directory::getParent() const
-{
-  return mCurrentPath.substr(0, mCurrentPath.find_last_of(getSeparator()));
-}
-
 bool Directory::isAbsolutePath() const
 {
   return (mCurrentPath[0] == '/');
-}
-
-void Directory::convertToAbsolutePath()
-{
-  if (isAbsolutePath())
-    return;
-
-  char currentDir[PATH_MAX];
-  getcwd(currentDir, PATH_MAX);
-  std::string currentWorkingDir(currentDir);
-  std::string::size_type startIndex = 0;
-  std::string::size_type endIndex = 0;
-  while (endIndex != std::string::npos)
-  {
-    endIndex = mCurrentPath.find_first_of(getSeparator(), startIndex);
-    std::string currentElement = mCurrentPath.substr(startIndex, endIndex);
-    if (currentElement == "..")
-    {
-      // Remove one level of current working dir
-      currentWorkingDir = currentWorkingDir.substr(currentWorkingDir.find_last_of('/'));
-    }
-    else if (currentElement != ".")
-    {
-      currentWorkingDir.append("/").append(currentElement);
-    }
-    startIndex = endIndex+1;
-  }
-  mCurrentPath = currentWorkingDir;
 }
 
 }}

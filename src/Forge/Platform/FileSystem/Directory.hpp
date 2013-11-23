@@ -41,6 +41,8 @@ class Directory
     bool exists() const;
     bool create();
 
+    static std::string getCurrentWorkingDir();
+
     // Operate on children
     bool contains(std::string const& name) const;
     bool hasSubDir(std::string const& name) const;
