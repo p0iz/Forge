@@ -143,7 +143,7 @@ class AssetLibrary : public Singleton<AssetLibrary<AssetType, RefCounted> >
         {
           AssetInfo info =
           {
-            filename,
+            directory + FileSystem::Directory::getSeparator() + filename,
             0,
             false,
             nullptr
