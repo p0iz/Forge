@@ -20,8 +20,8 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Graphics/Scene/Attachable.hpp"
-
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <vector>
@@ -30,7 +30,7 @@
 namespace Forge {
 
 /* Describes a light in the game world */
-struct Light {
+struct FORGE_EXPORT Light {
   Light();
   ~Light();
 
@@ -48,7 +48,6 @@ struct Light {
   glm::vec4 position;
   glm::vec3 spotDirection;
   int dataIndex;
-
 
   /* Light data structure for shaders */
   struct Data {
@@ -89,14 +88,6 @@ struct Light {
   static const int UNIFORM_BINDING_POINT = 1;
 
   Data& getShaderData() const;
-
-private:
-  static unsigned int mLightUniformBuffer;
-
-  // Keep all shader data in contiguous memory
-  static std::vector<Data> shaderData;
-  // Store destroyed light data indices to reuse memory locations
-  static std::vector<int> freeList;
 };
 
 }

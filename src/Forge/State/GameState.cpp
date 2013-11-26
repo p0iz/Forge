@@ -27,7 +27,7 @@ namespace Forge
 GameState::GameState(const std::string& name) : mName(name) { }
 
 GameState::~GameState() {
-	destroyState();
+  destroyState();
 }
 
 void GameState::enter()
@@ -39,11 +39,11 @@ void GameState::destroyState() { }
 
 GameStatePtr GameState::frameUpdate(const float delta)
 {
-	return GameStatePtr(nullptr);
+  return GameStatePtr(nullptr);
 }
 
 const std::string& GameState::getName() const {
-	return mName;
+  return mName;
 }
 
 } // namespace Forge

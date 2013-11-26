@@ -20,12 +20,13 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Material.h"
 #include "Lua/Loader.hpp"
 
 
 namespace Forge {
 
-typedef Lua::Loader<Material> MaterialLoader;
+typedef FORGE_EXPORT Lua::Loader<Material> MaterialLoader;
 
 }

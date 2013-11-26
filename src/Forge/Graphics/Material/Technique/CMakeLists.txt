@@ -6,4 +6,4 @@ set(TechniqueSources
   TechniqueLoader.cpp)
 
 add_library(Technique ${TechniqueSources})
-target_link_libraries(Technique Libraries Shader ${GLEW_LIBRARIES})
+target_link_libraries(Technique Libraries Shader)

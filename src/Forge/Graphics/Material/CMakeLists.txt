@@ -8,4 +8,4 @@ set(MaterialSources
   MaterialLoader.cpp)
 
 add_library(Material ${MaterialSources})
-target_link_libraries(Material ForgeLua Graphics Technique ${GLEW_LIBRARIES})
+target_link_libraries(Material Graphics Technique)

@@ -32,7 +32,7 @@
 
 namespace Forge {
 
-bool DebugAxis::showDebug = false;
+bool showDebug = false;
 
 DebugAxis::DebugAxis()
   : initialized(GL_FALSE)

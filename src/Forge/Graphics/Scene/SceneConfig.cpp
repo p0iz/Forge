@@ -21,6 +21,7 @@
 #include "SceneConfig.hpp"
 #include "../Libraries/MaterialLibrary.hpp"
 #include "../Libraries/MeshLibrary.hpp"
+#include "../TargetCamera.h"
 #include "Util/Exceptions.hpp"
 #include "Util/Log.h"
 

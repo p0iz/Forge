@@ -20,13 +20,14 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Platform/Input/InputHandler.hpp"
 #include "Platform/Window/RenderWindow.hpp"
 
 
 namespace Forge { namespace Event {
 
-class EventHandler
+class FORGE_EXPORT EventHandler
 {
   public:
     EventHandler(

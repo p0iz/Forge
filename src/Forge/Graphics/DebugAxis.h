@@ -21,45 +21,41 @@
 #ifndef DEBUGDRAWABLE_H
 #define DEBUGDRAWABLE_H
 
+#include "ForgeExport.h"
 #include "Shader/Shader.h"
 #include "Shader/ShaderProgram.h"
-
 #include "Util/Singleton.hpp"
 
 #include <GL/glew.h>
-#include <glm/glm.hpp>
 
 namespace Forge {
 
 class SceneConfig;
 
-class DebugAxis : public Singleton<DebugAxis>
+class FORGE_EXPORT DebugAxis : public Singleton<DebugAxis>
 {
 public:
-	DebugAxis();
-	~DebugAxis();
+  DebugAxis();
+  ~DebugAxis();
 
-	static void toggleDebuggingInfo();
-	static void setDebuggingInfo(bool state);
-	static bool isDebugVisible();
+  static void toggleDebuggingInfo();
+  static void setDebuggingInfo(bool state);
+  static bool isDebugVisible();
 
-	void render(const SceneConfig& scene) const;
+  void render(const SceneConfig& scene) const;
 
 private:
-	void initialize();
+  void initialize();
 
-	GLuint debugVertexArrayId;
-	GLuint debugBuffers[2];
-	GLuint debugUniformMVP;
+  GLuint debugVertexArrayId;
+  GLuint debugBuffers[2];
+  GLuint debugUniformMVP;
 
-	Shader debugVertexShader;
-	Shader debugFragmentShader;
-	ShaderProgram debugShaderProgram;
+  Shader debugVertexShader;
+  Shader debugFragmentShader;
+  ShaderProgram debugShaderProgram;
 
-	GLint initialized;
-
-	static DebugAxis* singleton;
-	static bool showDebug;
+  GLint initialized;
 };
 
 } // namespace Forge

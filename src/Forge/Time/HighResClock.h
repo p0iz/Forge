@@ -20,10 +20,13 @@
 
 #pragma once
 
+#include "ForgeExport.h"
+
+
 /** A high-res clock wrapper using the std::chrono::high_resolution_clock of C++11 */
 namespace Forge {
 
-class HighResClock
+class FORGE_EXPORT HighResClock
 {
 public:
   HighResClock(double scale = 1.0);

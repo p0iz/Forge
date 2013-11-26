@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "SceneNode.hpp"
 #include "Graphics/Camera.h"
 #include "Graphics/Light/Light.hpp"
@@ -31,11 +32,12 @@
 #include <unordered_map>
 #include <vector>
 
+
 namespace Forge {
 
 /* This class contains the scene (i.e. level, world chunk, etc.) configuration.
  */
-class SceneConfig {
+class FORGE_EXPORT SceneConfig {
 public:
   SceneConfig();
   ~SceneConfig();

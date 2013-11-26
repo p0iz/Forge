@@ -5,4 +5,3 @@ set(ShaderSources
   ShaderProgram.cpp)
 
 add_library(Shader ${ShaderSources})
-target_link_libraries(Shader ${GLEW_LIBRARIES})

@@ -24,9 +24,13 @@
 #include "State/InGame.h"
 #include "State/Menu.h"
 #include "Input/InGameProcessor.hpp"
+#include <windows.h>
 
-
+#ifdef _WIN32
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+#else
 int main(int argc, char** argv)
+#endif
 {
   Forge::ForgeMain forge;
   forge.init("Paddlemonium");

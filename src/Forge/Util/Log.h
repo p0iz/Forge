@@ -20,58 +20,59 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include <fstream>
 #include <iostream>
 
 namespace Forge { namespace Log {
 
-class LogStream
+class FORGE_EXPORT LogStream
 {
 public:
-	LogStream(std::ostream& output, const char* file);
+  LogStream(std::ostream& output, const char* file);
 
-	template <typename MessageType>
-	LogStream& operator<<(MessageType message);
+  template <typename MessageType>
+  LogStream& operator<<(MessageType message);
 
-	bool openLogFile(const char* newFile);
+  bool openLogFile(const char* newFile);
 private:
-	const char* mFileName;
-	std::ofstream mFileStream;
-	std::ostream& mOutputStream;
+  const char* mFileName;
+  std::ofstream mFileStream;
+  std::ostream& mOutputStream;
 };
 
-class LogStreamHandler
+class FORGE_EXPORT LogStreamHandler
 {
 public:
-	LogStreamHandler(std::ostream& output, const char* file);
+  LogStreamHandler(std::ostream& output, const char* file);
 
-	bool openLogFile(const char* newFile);
+  bool openLogFile(const char* newFile);
 
-	template <typename MessageType>
-	LogStream& operator<<(MessageType message);
+  template <typename MessageType>
+  LogStream& operator<<(MessageType message);
 
 private:
-	static std::string timestamp();
-	LogStream mStream;
+  static std::string timestamp();
+  LogStream mStream;
 };
 
 template <typename MessageType>
 LogStream& LogStream::operator<<(MessageType logMessage)
 {
-	if (!mFileStream.is_open())
-		openLogFile(mFileName);
+  if (!mFileStream.is_open())
+    openLogFile(mFileName);
 
-	if (mFileStream.good())
-		mFileStream << logMessage;
+  if (mFileStream.good())
+    mFileStream << logMessage;
 
-	mOutputStream << logMessage << std::flush;
-	return *this;
+  mOutputStream << logMessage << std::flush;
+  return *this;
 }
 
 template <typename MessageType>
 LogStream& LogStreamHandler::operator<<(MessageType message)
 {
-	return mStream << timestamp() << message;
+  return mStream << timestamp() << message;
 }
 
 static LogStreamHandler info(std::cout, "./forge.log");

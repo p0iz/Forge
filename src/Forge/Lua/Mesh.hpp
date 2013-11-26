@@ -20,13 +20,14 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "ObjectCreator.hpp"
 #include <string>
 
 
 namespace Forge { namespace Lua {
 
-class Mesh : public ObjectCreator
+class FORGE_EXPORT Mesh : public ObjectCreator
 {
   public:
     Mesh(std::string const& name);

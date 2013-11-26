@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include <glm/glm.hpp>
 
 
@@ -30,7 +31,7 @@ class SceneConfig;
 namespace Forge { namespace Graphics {
 
 /* A class that is used to render scenes from scene configurations */
-class Renderer
+class FORGE_EXPORT Renderer
 {
 public:
   ~Renderer();

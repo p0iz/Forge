@@ -9,6 +9,7 @@ find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+include_directories(${CMAKE_SOURCE_DIR}/src/Forge)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(MaterialEditor_SRC
@@ -42,6 +43,13 @@ set(MaterialEditor_UI
 
 qt5_wrap_ui(UI_HDR ${MaterialEditor_UI})
 
+add_library(ForgeDLL SHARED IMPORTED)
+set_property(TARGET ForgeDLL PROPERTY IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/src/Forge/Forge.dll)
+set_property(TARGET ForgeDLL PROPERTY IMPORTED_IMPLIB ${CMAKE_BINARY_DIR}/src/Forge/libForge.dll.a)
+
 add_executable(MaterialEditor ${MaterialEditor_SRC} ${MaterialEditor_HDR} ${UI_HDR})
-target_link_libraries(MaterialEditor Qt5::Core Qt5::Widgets Util)
+if(WIN32)
+  set(Win32LinkerFlag "-Wl,--subsystem,windows")
+endif()
+target_link_libraries(MaterialEditor Qt5::Core Qt5::Widgets ForgeDLL ${Win32LinkerFlag})
 

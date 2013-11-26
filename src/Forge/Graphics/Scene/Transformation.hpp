@@ -20,23 +20,24 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include <glm/glm.hpp>
 
 namespace Forge {
 
 // A struct that contains a single transformation (translation, scaling and rotation)
 // from one space to another.
-struct Transformation {
-	Transformation& translate(float x, float y, float z);
-	Transformation& setPosition(float x, float y, float z);
-	Transformation& scale(float size); // Only allow uniform scaling
-	Transformation& rotate(float angle, const glm::vec3& axis);
-	void reset();
-	Transformation& applyMatrix(const glm::mat4& matrix);
-	glm::mat4 getMatrix() const;
+struct FORGE_EXPORT Transformation {
+  Transformation& translate(float x, float y, float z);
+  Transformation& setPosition(float x, float y, float z);
+  Transformation& scale(float size); // Only allow uniform scaling
+  Transformation& rotate(float angle, const glm::vec3& axis);
+  void reset();
+  Transformation& applyMatrix(const glm::mat4& matrix);
+  glm::mat4 getMatrix() const;
 private:
-	glm::mat4 mMatrix;
-	float mScale = 1.0f;
+  glm::mat4 mMatrix;
+  float mScale = 1.0f;
 };
 
 }

@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "InputProcessor.hpp"
 #include "KeySymbols.hpp"
 #include "MouseButtons.hpp"
@@ -30,7 +31,7 @@
 namespace Forge { namespace Input {
 
 /* Base class for platform-specific implementations */
-class InputHandler
+class FORGE_EXPORT InputHandler
 {
   public:
     InputHandler();

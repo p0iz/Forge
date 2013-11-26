@@ -4,4 +4,3 @@ set(PlatformWindowSources
 )
 
 add_library(PlatformWindow ${PlatformWindowSources})
-target_link_libraries(PlatformWindow Graphics)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ForgeExport.h"
 #include "Graphics/Renderer.h"
 #include "Platform/Event/EventHandler.hpp"
 #include "Platform/Input/InputHandler.hpp"
@@ -11,37 +12,36 @@
 
 namespace Forge {
 
-class ForgeMain
+class FORGE_EXPORT ForgeMain
 {
   public:
-    ForgeMain();
+  ForgeMain();
 
-    ~ForgeMain();
+  ~ForgeMain();
 
-    void init(
-      std::string const& windowTitle = "Forge render window",
-      std::string const& cfgFile = "data/PaddleGame.configuration"
-    );
+  void init(
+    std::string const& windowTitle = "Forge render window",
+    std::string const& cfgFile = "data/PaddleGame.configuration"
+  );
 
-    void start(Forge::GameStatePtr const& startState);
+  void start(Forge::GameStatePtr const& startState);
 
-    Graphics::Renderer& renderer();
+  Graphics::Renderer& renderer();
 
-    Graphics::RenderWindow& window();
+  Graphics::RenderWindow& window();
 
-    Input::InputHandler& input();
+  Input::InputHandler& input();
 
-    HighResClock& clock();
+  HighResClock& clock();
 
   private:
-    std::thread mMainThread;
-    HighResClock mClock;
-    Graphics::RenderWindow mRenderWindow;
-    Graphics::Renderer mRenderer;
-    GameStateMachine mStateMachine;
-    Input::InputHandler mInput;
-    Event::EventHandler mEventHandler;
-    bool mRunning;
+  HighResClock mClock;
+  Graphics::RenderWindow mRenderWindow;
+  Graphics::Renderer mRenderer;
+  GameStateMachine mStateMachine;
+  Input::InputHandler mInput;
+  Event::EventHandler mEventHandler;
+  bool mRunning;
 
 };
 

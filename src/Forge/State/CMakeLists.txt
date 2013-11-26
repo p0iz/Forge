@@ -1,7 +1,7 @@
 
 set(StateSources
-	GameState.cpp
-	GameStateLibrary.cpp
-	GameStateMachine.cpp)
+  GameState.cpp
+  GameStateLibrary.cpp
+  GameStateMachine.cpp)
 
-add_library(State ${StateSources})
+add_library(State OBJECT ${StateSources})

@@ -16,5 +16,13 @@ set(Game_SOURCES
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${CMAKE_SOURCE_DIR}/src/Forge)
 
+if(WIN32)
+  set(Win32LinkerFlags "-Wl,--subsystem,windows")
+endif()
+
+add_library(ForgeDLL SHARED IMPORTED)
+set_property(TARGET ForgeDLL PROPERTY IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/src/Forge/Forge.dll)
+set_property(TARGET ForgeDLL PROPERTY IMPORTED_IMPLIB ${CMAKE_BINARY_DIR}/src/Forge/libForge.dll.a)
+
 add_executable(Paddlemonium ${Game_SOURCES})
-target_link_libraries(Paddlemonium Forge)
+target_link_libraries(Paddlemonium ForgeDLL ${Win32LinkerFlags})

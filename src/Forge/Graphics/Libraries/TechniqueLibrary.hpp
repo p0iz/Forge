@@ -20,12 +20,19 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "TechniqueTraits.hpp"
 #include "../../Asset/AssetLibrary.hpp"
 #include "../Material/Technique/Technique.hpp"
 
 
-namespace Forge { namespace Graphics {
+namespace Forge {
+
+#ifdef _WIN32
+template class FORGE_EXPORT AssetLibrary<Technique, false>;
+#endif
+
+namespace Graphics {
 
 typedef AssetLibrary<Technique, false> TechniqueLibrary;
 

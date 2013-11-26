@@ -20,12 +20,13 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include <glm/glm.hpp>
 
 
 namespace Forge {
 
-class Camera
+class FORGE_EXPORT Camera
 {
 public:
   Camera();

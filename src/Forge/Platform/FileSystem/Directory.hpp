@@ -20,13 +20,14 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include <string>
 #include <vector>
 
 
 namespace Forge { namespace FileSystem {
 
-class Directory
+class FORGE_EXPORT Directory
 {
   public:
     Directory();

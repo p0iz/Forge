@@ -21,6 +21,7 @@
 #ifndef VERTEXLISTDRAWABLE_H
 #define VERTEXLISTDRAWABLE_H
 
+#include "ForgeExport.h"
 #include "Vertex.h"
 
 #include "Shader/ShaderProgram.h"
@@ -36,7 +37,7 @@
 
 namespace Forge {
 
-class Mesh : public Attachable
+class FORGE_EXPORT Mesh : public Attachable
 {
   public:
     Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);
@@ -68,7 +69,7 @@ class Mesh : public Attachable
     Bounds mBounds;
 };
 
-typedef std::shared_ptr<Mesh> MeshPtr;
+typedef std::shared_ptr<Mesh> FORGE_EXPORT MeshPtr;
 
 } // namespace Forge
 

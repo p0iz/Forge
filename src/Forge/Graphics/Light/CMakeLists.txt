@@ -1,6 +1,6 @@
 # Graphics - Light
 
 set(LightSources
-	Light.cpp)
+  Light.cpp)
 
 add_library(Light ${LightSources})

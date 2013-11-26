@@ -75,7 +75,7 @@ MeshPtr Graphics::MeshLibrary::loadAsset(std::string const& file)
     return mesh;
   }
 
-  std::string meshName;
+  std::string meshName = file;
 
   std::vector<glm::vec3> positions;
   std::vector<glm::vec3> normals;

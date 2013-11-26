@@ -18,5 +18,4 @@ set(LibrariesHeaders
 )
 
 add_library(Libraries ${LibrariesSources} ${LibrariesHeaders})
-target_link_libraries(Libraries ${FREEIMAGE_LIBRARY} ${LUA_LIBRARIES} ${GLEW_LIBRARIES})
-
+target_link_libraries(Libraries Technique)

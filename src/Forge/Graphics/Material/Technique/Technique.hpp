@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Graphics/Shader/Shader.h"
 #include "Graphics/Shader/ShaderProgram.h"
 #include <glm/glm.hpp>
@@ -32,7 +33,7 @@
 namespace Forge {
 
 /* Technique is comprised of one or several shader passes and accompanying properties */
-class Technique
+class FORGE_EXPORT Technique
 {
 public:
   enum TransformType

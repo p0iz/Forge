@@ -1,12 +1,18 @@
 # This file contains all of the dependencies for Forge
 
+# This file can be used to simplify dependency management on Windows
+if(WIN32 AND EXISTS ${CMAKE_SOURCE_DIR}/ForgeWin32Variables.cmake)
+  include(${CMAKE_SOURCE_DIR}/ForgeWin32Variables.cmake NO_POLICY_SCOPE)
+  message(STATUS "Found a Forge dependency variable file.")
+endif()
+
 # Lua 5.2 dependency
 if(WIN32)
   if(NOT LUA_DIR)
-  message(ERROR "You need to specify LUA_DIR (Lua 5.2 installation dir)")
+  message(ERROR "You need to specify LUA_DIR (Lua installation dir, i.e. the dir with the Makefile)")
   endif()
-  include_directories(${LUA_DIR}/include)
-  find_library(LUA_LIBRARIES NAMES lua52 PATHS ${LUA_DIR})
+  include_directories(${LUA_DIR}/src)
+  find_library(LUA_LIBRARIES NAMES lua PATHS ${LUA_DIR}/src)
 else()
   set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}")
   find_package(Lua52 REQUIRED)
@@ -47,7 +53,8 @@ if(WIN32)
   message(ERROR "You need to specify GLEW_DIR (GLEW installation dir)")
   endif()
   set(GLEW_INCLUDE_DIRECTORIES "${GLEW_DIR}/include")
-  find_library(GLEW_LIBRARIES NAMES glew32 PATHS "${GLEW_DIR}/lib/Release/Win32")
+  find_library(GLEW_LIBRARIES NAMES glew32s PATHS ${GLEW_DIR}/lib/Release/Win32)
+  add_definitions(-DGLEW_STATIC)
   include_directories(${GLEW_INCLUDE_DIRECTORIES})
 else()
   find_package(GLEW REQUIRED)
@@ -81,8 +88,8 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 # Collect all dependencies in one nice place
 set(ForgeLibDeps
-  ${SDL2_LIBRARIES}
   ${GLEW_LIBRARIES}
+  ${SDL2_LIBRARIES}
   ${OPENGL_LIBRARIES}
   ${FREEIMAGE_LIBRARY}
   ${FT2_LIB}

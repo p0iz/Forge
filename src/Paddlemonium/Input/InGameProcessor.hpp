@@ -29,7 +29,6 @@
 
 #include <map>
 
-
 enum GameAction
 {
   // Paddle
@@ -58,25 +57,25 @@ namespace Paddlemonium {
 class InGameProcessor : public Forge::Input::InputProcessor
 {
   public:
-    InGameProcessor(
-      Forge::HighResClock& clock,
-      Forge::Input::InputHandler& input,
-      Forge::Graphics::RenderWindow& window,
-      Forge::SceneConfig& scene
-    );
-    virtual ~InGameProcessor();
+  InGameProcessor(
+    Forge::HighResClock& clock,
+    Forge::Input::InputHandler& input,
+    Forge::Graphics::RenderWindow& window,
+    Forge::SceneConfig& scene
+  );
+  virtual ~InGameProcessor();
 
-    virtual bool process(float const delta);
+  virtual bool process(float const delta);
   private:
-    void processMouseMove();
-    bool processKeyPress(float const delta);
-    void mapDefaultKeys();
+  void processMouseMove();
+  bool processKeyPress(float const delta);
+  void mapDefaultKeys();
 
-    Forge::SceneConfig& mScene;
-    KeyMap<GameAction> mKeyMap;
-    Forge::HighResClock& mClock;
-    Forge::Input::InputHandler& mInputHandler;
-    Forge::Graphics::RenderWindow& mWindow;
+  Forge::SceneConfig& mScene;
+  KeyMap<GameAction> mKeyMap;
+  Forge::HighResClock& mClock;
+  Forge::Input::InputHandler& mInputHandler;
+  Forge::Graphics::RenderWindow& mWindow;
 };
 
 }

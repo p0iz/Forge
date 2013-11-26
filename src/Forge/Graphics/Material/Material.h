@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Graphics/Material/Technique/Technique.hpp"
 #include "Graphics/Mesh.h"
 #include "Lua/Loader.hpp"
@@ -34,7 +35,7 @@ namespace Forge {
  * Material contains a technique and metadata about the technique.
  * Material is also responsible for parsing the material file. */
 
-class Material
+class FORGE_EXPORT Material
 {
 public:
 

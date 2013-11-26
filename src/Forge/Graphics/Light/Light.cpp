@@ -23,10 +23,10 @@
 
 namespace Forge {
 
-std::vector<Light::Data> Light::shaderData;
-std::vector<int> Light::freeList;
+std::vector<Light::Data> shaderData;
+std::vector<int> freeList;
 
-unsigned int Light::mLightUniformBuffer = 0;
+unsigned int lightUniformBuffer = 0;
 
 Light::Light():
   type(DISABLED),
@@ -38,12 +38,12 @@ Light::Light():
     int newIndex = freeList.back();
     freeList.pop_back();
     dataIndex = newIndex;
-    Light::shaderData[dataIndex] = Light::Data();
+    shaderData[dataIndex] = Light::Data();
   }
   else
   {
-    Light::shaderData.push_back(Light::Data());
-    dataIndex = Light::shaderData.size() - 1;
+    shaderData.push_back(Light::Data());
+    dataIndex = shaderData.size() - 1;
   }
 }
 
@@ -58,24 +58,24 @@ void Light::releaseDataIndex()
 
 Light::Data& Light::getShaderData() const
 {
-  return Light::shaderData[dataIndex];
+  return shaderData[dataIndex];
 }
 
 void Light::createBuffer() {
-  glGenBuffers(1, &mLightUniformBuffer);
-  glBindBuffer(GL_UNIFORM_BUFFER, mLightUniformBuffer);
+  glGenBuffers(1, &lightUniformBuffer);
+  glBindBuffer(GL_UNIFORM_BUFFER, lightUniformBuffer);
   glBufferData(GL_UNIFORM_BUFFER, sizeof(Light::Data), nullptr, GL_DYNAMIC_DRAW);
-  glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BINDING_POINT, mLightUniformBuffer);
+  glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BINDING_POINT, lightUniformBuffer);
   glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void Light::destroyBuffer() {
   glBindBuffer(GL_UNIFORM_BUFFER, 0);
-  glDeleteBuffers(1, &mLightUniformBuffer);
+  glDeleteBuffers(1, &lightUniformBuffer);
 }
 
 void Light::updateBuffer(Data const& lightData) {
-  glBindBuffer(GL_UNIFORM_BUFFER, mLightUniformBuffer);
+  glBindBuffer(GL_UNIFORM_BUFFER, lightUniformBuffer);
   glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light::Data), &lightData);
 }
 

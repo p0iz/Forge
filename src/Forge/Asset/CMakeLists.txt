@@ -5,6 +5,3 @@ set(AssetHeaders
   AssetTraits.hpp
 )
 
-add_library(Asset STATIC ${AssetHeaders})
-set_target_properties(Asset PROPERTIES LINKER_LANGUAGE CXX)
-

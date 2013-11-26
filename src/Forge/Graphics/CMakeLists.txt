@@ -19,13 +19,13 @@ add_subdirectory(Material)
 add_subdirectory(Scene)
 
 set(GraphicsSources
+  TargetCamera.cpp
   Camera.cpp
   DebugAxis.cpp
   Mesh.cpp
   OrbitalCamera.cpp
   Renderer.cpp
   ResizeEvent.cpp
-  TargetCamera.cpp
 )
 
 set(GraphicsLibs
@@ -36,8 +36,6 @@ set(GraphicsLibs
   Scene
   Material
   Text
-  ${GLEW_LIBRARIES}
-  ${OPENGL_LIBRARIES}
 )
 
 add_library(Graphics ${GraphicsSources})

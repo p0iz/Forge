@@ -20,5 +20,4 @@ set(ForgeLuaHeaders
   Utils.hpp
 )
 
-add_library(ForgeLua ${ForgeLuaSources} ${ForgeLuaHeaders})
-target_link_libraries(ForgeLua Graphics ${LUA_LIBRARIES})
+add_library(ForgeLua OBJECT ${ForgeLuaSources} ${ForgeLuaHeaders})

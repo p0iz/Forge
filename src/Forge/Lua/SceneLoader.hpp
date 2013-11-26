@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Graphics/Scene/SceneConfig.hpp"
 #include "lua.hpp"
 #include <string>
@@ -30,7 +31,7 @@ namespace Forge { namespace Lua {
 /* First, load assets from predefined directories using AssetLoader.
  * Second, load scene from scene script
  */
-class SceneLoader
+class FORGE_EXPORT SceneLoader
 {
   public:
     SceneLoader();

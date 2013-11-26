@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include <string>
 #include <SDL2/SDL.h>
 
@@ -35,7 +36,7 @@
 
 namespace Forge { namespace Graphics {
 
-class RenderWindow
+class FORGE_EXPORT RenderWindow
 {
   public:
     RenderWindow();

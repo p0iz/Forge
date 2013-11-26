@@ -20,17 +20,17 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "GameState.h"
-
 #include "Util/Singleton.hpp"
-
 #include <unordered_map>
 #include <string>
+
 
 namespace Forge {
 
 /* This class can be used to store and access a library of game states. */
-class GameStateLibrary : public Singleton<GameStateLibrary> {
+class FORGE_EXPORT GameStateLibrary : public Singleton<GameStateLibrary> {
 public:
   void add(GameStatePtr state);
   GameStatePtr get(const std::string& name);

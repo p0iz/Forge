@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Technique.hpp"
 #include "Lua/Loader.hpp"
 
@@ -27,5 +28,9 @@
 namespace Forge {
 
 typedef Lua::Loader<Technique> TechniqueLoader;
+
+#ifndef Forge_EXPORTS
+extern bool TechniqueLoader::handleLoadedLua(lua_State* state) const;
+#endif
 
 }

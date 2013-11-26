@@ -7,11 +7,10 @@
 namespace Forge {
 
 namespace {
-  float const constexpr SecondsPerFrame = 1.0/60;
+  float constexpr SecondsPerFrame = 1.0/60;
 }
 
 ForgeMain::ForgeMain():
-  mMainThread(),
   mClock(),
   mRenderWindow(),
   mRenderer(),
@@ -22,7 +21,7 @@ ForgeMain::ForgeMain():
 {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
   {
-    Log::error << "Failed to initialize SDL: " << SDL_GetError() << "\n";
+  Log::error << "Failed to initialize SDL: " << SDL_GetError() << "\n";
   }
 }
 
@@ -34,7 +33,7 @@ ForgeMain::~ForgeMain()
 void ForgeMain::init(std::string const& windowTitle, std::string const& cfgFile)
 {
   Forge::Log::info << "Initializing Forge game engine...\n"
-                      "Built on " << __DATE__ << " at " << __TIME__ "\n";
+            "Built on " << __DATE__ << " at " << __TIME__ "\n";
 
   const Forge::Configuration& cfg = Forge::Configuration::instance();
   cfg.loadConfig(cfgFile);
@@ -54,22 +53,22 @@ void ForgeMain::start(GameStatePtr const& startState)
   mRunning = true;
   while(mRunning)
   {
+  mEventHandler.pumpMessages();
+
+  mClock.updateDeltaTime();
+  float const delta = mClock.getGameDelta();
+
+  mRunning =
+    mInput.process(delta) &&
+    mStateMachine.update(delta) &&
     mEventHandler.pumpMessages();
 
-    mClock.updateDeltaTime();
-    float const delta = mClock.getGameDelta();
+  mRenderWindow.swapBuffers();
 
-    mRunning =
-      mInput.process(delta) &&
-      mStateMachine.update(delta) &&
-      mEventHandler.pumpMessages();
-
-    mRenderWindow.swapBuffers();
-
-    // Sleep for rest of frame seconds
-    mClock.updateDeltaTime();
-    int sleepMillis = 1000 * (SecondsPerFrame - mClock.getRealDelta());
-    std::this_thread::sleep_for(std::chrono::milliseconds(sleepMillis));
+  // Sleep for rest of frame seconds
+  mClock.updateDeltaTime();
+  int sleepMillis = 1000 * (SecondsPerFrame - mClock.getRealDelta());
+  //std::this_thread::sleep_for(std::chrono::milliseconds(sleepMillis));
   }
 }
 

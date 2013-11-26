@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.8.8)
 
 project(Forge)
 
+include(GenerateExportHeader)
+include(ForgeDependencies.cmake)
+
 # Set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic")
 
@@ -15,9 +18,10 @@ elseif(CMAKE_BUILD_TYPE MATCHES Debug)
   set(CMAKE_EXECUTABLE_SUFFIX "_dbg")
 endif()
 
-include(ForgeDependencies.cmake)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+add_compiler_export_flags()
+add_definitions(-DForge_EXPORTS)
 
 # Add subsystems
 add_subdirectory(Asset)
@@ -39,20 +43,36 @@ set(Forge_HDR
   ForgeVersion.hpp
 )
 
-add_library(Forge SHARED ${Forge_SRC} ${Forge_HDR})
+# Remove the unnecessary prefix from windows DLL
+if(WIN32)
+  set(CMAKE_SHARED_LIBRARY_PREFIX "")
+endif()
+
+add_library(Forge SHARED
+  ${Forge_SRC}
+  ${Forge_HDR}
+  ${AssetHeaders}
+  $<TARGET_OBJECTS:State>
+  $<TARGET_OBJECTS:ForgeLua>
+)
+
 target_link_libraries(Forge
-  Asset
+  "-Wl,--whole-archive"
   Config
-  State
   Graphics
   Time
   Util
-  ForgeLua
   PlatformEvent
   PlatformFileSystem
   PlatformInput
   PlatformWindow
+  "-Wl,--no-whole-archive"
+  ${ForgeLibDeps}
 )
+generate_export_header(Forge
+  EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/ForgeExport.h
+)
+
 
 if(USE_QT)
   message(STATUS "Creating library with Qt5 support")

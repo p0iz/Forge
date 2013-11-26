@@ -20,9 +20,9 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Graphics/Shader/Shader.h"
 #include "Graphics/Shader/ShaderProgram.h"
-
 #include <glm/glm.hpp>
 #include <string>
 
@@ -33,49 +33,49 @@ struct FT_GlyphSlotRec_;
 
 namespace Forge {
 
-class Text
+class FORGE_EXPORT Text
 {
 public:
-	~Text();
+  ~Text();
 
-	void initialize();
-	void setFont(const char* fileName);
-	void setFontSize(int pt);
-	void setPosition(float x, float y);
-	void setColor(float r, float g, float b, float a);
-	void setScreenAttributes(int width, int height);
-	void setText(const char* text);
-	void draw();
+  void initialize();
+  void setFont(const char* fileName);
+  void setFontSize(int pt);
+  void setPosition(float x, float y);
+  void setColor(float r, float g, float b, float a);
+  void setScreenAttributes(int width, int height);
+  void setText(const char* text);
+  void draw();
 
-	void createBuffer();
+  void createBuffer();
 private:
 
-	unsigned int pow2(unsigned int n);
+  unsigned int pow2(unsigned int n);
 
-	void createShaders();
-	void createTexture();
+  void createShaders();
+  void createTexture();
 
-	glm::vec2 mPosition;
-	glm::vec2 mScale;
+  glm::vec2 mPosition;
+  glm::vec2 mScale;
 
-	float color[4];
+  float color[4];
 
-	Shader vertexShader;
-	Shader fragmentShader;
-	ShaderProgram textProgram;
+  Shader vertexShader;
+  Shader fragmentShader;
+  ShaderProgram textProgram;
 
-	std::string mText;
+  std::string mText;
 
-	unsigned int glyphTextureId;
-	unsigned int glyphTextureUniform;
-	unsigned int colorUniform;
+  unsigned int glyphTextureId;
+  unsigned int glyphTextureUniform;
+  unsigned int colorUniform;
 
-	unsigned int glyphVertexArray;
-	unsigned int glyphVertexBuffer;
+  unsigned int glyphVertexArray;
+  unsigned int glyphVertexBuffer;
 
-	FT_LibraryRec_* mFontLibrary;
-	FT_FaceRec_* face;
-	FT_GlyphSlotRec_* glyph;
+  FT_LibraryRec_* mFontLibrary;
+  FT_FaceRec_* face;
+  FT_GlyphSlotRec_* glyph;
 };
 
 } // Forge

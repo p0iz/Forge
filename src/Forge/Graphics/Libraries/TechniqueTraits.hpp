@@ -33,7 +33,7 @@ struct AssetTraits<Technique>
   typedef Technique AssetType;
   constexpr static char const* fileExtensions = ".lua";
   constexpr static char const* assetTypeStr = "technique";
-  constexpr static bool const isRefCounted = false;
+  constexpr static bool isRefCounted = false;
 };
 
 typedef AssetTraits<Technique> TechniqueTraits;

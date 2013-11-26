@@ -21,13 +21,13 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include "ForgeExport.h"
 #include <GL/glew.h>
-
 #include <string>
 
 namespace Forge {
 
-class Shader
+class FORGE_EXPORT Shader
 {
 public:
   enum ShaderType

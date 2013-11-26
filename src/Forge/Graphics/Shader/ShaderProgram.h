@@ -21,6 +21,7 @@
 #ifndef SHADERPROGRAM_H
 #define SHADERPROGRAM_H
 
+#include "ForgeExport.h"
 #include "Shader.h"
 #include <string>
 #include <vector>
@@ -29,7 +30,7 @@
 namespace Forge {
 
 // Class for shader programs
-class ShaderProgram
+class FORGE_EXPORT ShaderProgram
 {
 public:
   ShaderProgram();

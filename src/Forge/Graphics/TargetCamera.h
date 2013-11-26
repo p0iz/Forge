@@ -20,11 +20,12 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Camera.h"
 
 namespace Forge {
 
-class TargetCamera : public Camera
+class FORGE_EXPORT TargetCamera : public Camera
 {
 public:
   TargetCamera();

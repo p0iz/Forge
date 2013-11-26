@@ -1,7 +1,7 @@
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
  *
@@ -12,34 +12,35 @@
  *
  * You should have received a copy of the GNU Lesser General
  * Public License along with Forge.  If not, see
- * <http://www.gnu.org/licenses/>. 
- * 
+ * <http://www.gnu.org/licenses/>.
+ *
  * Copyright 2012 Tommi Martela
  *
  */
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Camera.h"
 
 namespace Forge {
 
-class OrbitalCamera : public Camera
+class FORGE_EXPORT OrbitalCamera : public Camera
 {
 public:
-	explicit OrbitalCamera(float radius = 1.0f);
-	virtual ~OrbitalCamera() { }
+  explicit OrbitalCamera(float radius = 1.0f);
+  virtual ~OrbitalCamera() { }
 
-	void setRadius(float radius);
-	const float getRadius() const
-	{
-		return mRadius;
-	}
+  void setRadius(float radius);
+  const float getRadius() const
+  {
+    return mRadius;
+  }
 
-	virtual const glm::mat4x4 getViewMatrix() const;
+  virtual const glm::mat4x4 getViewMatrix() const;
 
 private:
-	float mRadius;
+  float mRadius;
 };
 
 } // namespace Forge

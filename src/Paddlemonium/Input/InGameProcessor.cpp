@@ -79,44 +79,44 @@ bool InGameProcessor::processKeyPress(float const delta)
 
   for (Key key : mInputHandler.getPressedKeys())
   {
-    switch (mKeyMap[key])
-    {
-      case PaddleLeft:
-      {
-        Forge::SceneNode& paddleNode = mScene.getSceneNode("PaddleNode");
-        paddleNode.mWorldTransform.translate(-10 * delta, 0, 0);
-        break;
-      }
-      case PaddleRight:
-      {
-        Forge::SceneNode& paddleNode = mScene.getSceneNode("PaddleNode");
-        paddleNode.mWorldTransform.translate(-10 * delta, 0, 0);
-        break;
-      }
-      case SpeedPaused:
-        mClock.setTimeScale(0.0);
-        break;
-      case SpeedNormal:
-        mClock.setTimeScale(1.0);
-        break;
-      case SpeedFast:
-        mClock.setTimeScale(2.0);
-        break;
-      case SpeedSlow:
-        mClock.setTimeScale(0.5);
-        break;
-      case QuitGame:
-        Forge::Log::info << "Exit game\n";
-        return false;
-      case ToggleFullscreen:
-        //mWindow->setFullscreen(!mWindow->isFullscreen());
-        break;
-      case ToggleDebug:
-        Forge::DebugAxis::toggleDebuggingInfo();
-        break;
-      default:
-        break;
-    }
+	switch (mKeyMap[key])
+	{
+	  case PaddleLeft:
+	  {
+		Forge::SceneNode& paddleNode = mScene.getSceneNode("PaddleNode");
+		paddleNode.mWorldTransform.translate(-10 * delta, 0, 0);
+		break;
+	  }
+	  case PaddleRight:
+	  {
+		Forge::SceneNode& paddleNode = mScene.getSceneNode("PaddleNode");
+		paddleNode.mWorldTransform.translate(-10 * delta, 0, 0);
+		break;
+	  }
+	  case SpeedPaused:
+		mClock.setTimeScale(0.0);
+		break;
+	  case SpeedNormal:
+		mClock.setTimeScale(1.0);
+		break;
+	  case SpeedFast:
+		mClock.setTimeScale(2.0);
+		break;
+	  case SpeedSlow:
+		mClock.setTimeScale(0.5);
+		break;
+	  case QuitGame:
+		Forge::Log::info << "Exit game\n";
+		return false;
+	  case ToggleFullscreen:
+		//mWindow->setFullscreen(!mWindow->isFullscreen());
+		break;
+	  case ToggleDebug:
+		Forge::DebugAxis::toggleDebuggingInfo();
+		break;
+	  default:
+		break;
+	}
   }
   return true;
 }

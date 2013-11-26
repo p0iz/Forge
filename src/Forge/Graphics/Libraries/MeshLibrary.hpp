@@ -25,7 +25,13 @@
 #include "../Mesh.h"
 
 
-namespace Forge { namespace Graphics {
+namespace Forge {
+
+#ifdef _WIN32
+template class FORGE_EXPORT AssetLibrary<Mesh>;
+#endif
+
+namespace Graphics {
 
 typedef AssetLibrary<Mesh> MeshLibrary;
 

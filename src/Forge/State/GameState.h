@@ -20,25 +20,26 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include <memory>
 #include <string>
 
 namespace Forge
 {
 
-struct GameState {
-	explicit GameState(const std::string& name);
-	virtual ~GameState();
-	virtual void enter();
+struct FORGE_EXPORT GameState {
+  explicit GameState(const std::string& name);
+  virtual ~GameState();
+  virtual void enter();
   virtual std::shared_ptr<GameState> frameUpdate(float const delta);
 
-	/* Calling these two functions is left to the users' discretion */
-	virtual void createState();
-	virtual void destroyState();
+  /* Calling these two functions is left to the users' discretion */
+  virtual void createState();
+  virtual void destroyState();
 
-	const std::string& getName() const;
+  const std::string& getName() const;
 private:
-	std::string mName;
+  std::string mName;
 };
 
 typedef std::shared_ptr<GameState> GameStatePtr;
