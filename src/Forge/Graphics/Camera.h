@@ -34,6 +34,9 @@ public:
   void setPerspectiveProjection(int width, int height);
   void setOrthogonalProjection(int width, int height);
 
+  void setPosition(float x, float y, float z);
+  const glm::vec3 getPosition() const;
+
   virtual const glm::mat4x4 getViewMatrix() const = 0;
 
   void setFovY(float fov);
@@ -42,10 +45,7 @@ public:
 
   float getAspectRatio() const;
 
-  const glm::mat4x4& getProjectionMatrix() const
-  {
-    return mProjectionMatrix;
-  }
+  const glm::mat4x4& getProjectionMatrix() const;
 
   // Call this whenever you need a fresh VP (e.g. each frame)
   void updateViewProjectionMatrix();
@@ -53,15 +53,7 @@ public:
   void updatePosition(glm::vec3 translation);
   void updateRotation(float yaw = 0, float pitch = 0, float roll = 0);
 
-  const glm::vec3 getRotation() const
-  {
-    return mRotation;
-  }
-
-  const glm::vec3 getPosition() const
-  {
-    return mPosition;
-  }
+  const glm::vec3 getRotation() const;
 
 private:
 

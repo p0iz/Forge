@@ -70,6 +70,11 @@ float Camera::getAspectRatio() const
   return static_cast<float>(mWidth) / mHeight;
 }
 
+const glm::mat4x4& Camera::getProjectionMatrix() const
+{
+  return mProjectionMatrix;
+}
+
 void Camera::setFovY(float fov)
 {
   mFovY = fov;
@@ -85,6 +90,23 @@ void Camera::updateRotation(float yaw, float pitch, float roll)
   mRotation.x += glm::radians(yaw);
   mRotation.y -= glm::radians(pitch);
   mRotation.z += glm::radians(roll);
+}
+
+const glm::vec3 Camera::getRotation() const
+{
+  return mRotation;
+}
+
+void Camera::setPosition(float x, float y, float z)
+{
+  mPosition[0] = x;
+  mPosition[1] = y;
+  mPosition[2] = z;
+}
+
+const glm::vec3 Camera::getPosition() const
+{
+  return mPosition;
 }
 
 void Camera::updatePosition(glm::vec3 translation)

@@ -27,14 +27,15 @@ namespace Forge {
 class TargetCamera : public Camera
 {
 public:
-	void setPosition(float x, float y, float z);
-	void setTarget(float x, float y, float z);
+  TargetCamera();
+  virtual ~TargetCamera();
 
-	virtual const glm::mat4x4 getViewMatrix() const;
+  void setTarget(float x, float y, float z);
+
+  virtual const glm::mat4x4 getViewMatrix() const;
 
 private:
-	float mPosition[3];
-	float mTarget[3];
+  float mTarget[3];
 };
 
 } // namespace Forge

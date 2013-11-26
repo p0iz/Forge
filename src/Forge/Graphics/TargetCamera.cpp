@@ -24,26 +24,27 @@
 
 namespace Forge {
 
-void Forge::TargetCamera::setPosition(float x, float y, float z)
+TargetCamera::TargetCamera():
+  Camera()
 {
-	mPosition[0] = x;
-	mPosition[1] = y;
-	mPosition[2] = z;
 }
 
+TargetCamera::~TargetCamera()
+{
+}
 
 void Forge::TargetCamera::setTarget(float x, float y, float z)
 {
-	mTarget[0] = x;
-	mTarget[1] = y;
-	mTarget[2] = z;
+  mTarget[0] = x;
+  mTarget[1] = y;
+  mTarget[2] = z;
 }
 
 const glm::mat4x4 TargetCamera::getViewMatrix() const
 {
-	return glm::lookAt(glm::vec3(mPosition[0], mPosition[1], mPosition[2]),
-			glm::vec3(mTarget[0], mTarget[1], mTarget[2]),
-			glm::vec3(0, 1, 0));
+  return glm::lookAt(getPosition(),
+      glm::vec3(mTarget[0], mTarget[1], mTarget[2]),
+      glm::vec3(0, 1, 0));
 }
 
 }
