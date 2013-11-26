@@ -25,6 +25,15 @@
 
 namespace Forge { namespace FileSystem {
 
+namespace {
+
+bool IsDir(DWORD fileAttributes)
+{
+  return fileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+}
+
+}
+
 Directory::Directory():
   mCurrentPath(getenv("%HOMEDRIVE%"))
 {
@@ -64,7 +73,7 @@ bool Directory::hasSubDir(const std::string& name) const
   std::string subDirPath(mCurrentPath + getSeparator());
   subDirPath.append(name);
   DWORD fileAttribute = GetFileAttributes(subDirPath.c_str());
-  return fileAttribute == FILE_ATTRIBUTE_DIRECTORY;
+  return IsDir(fileAttribute);
 }
 
 bool Directory::createDir(const std::string& name)
@@ -83,16 +92,21 @@ std::vector<std::string> Directory::listFiles() const
 
   WIN32_FIND_DATA findData;
 
-  HANDLE findHandle = FindFirstFile((mCurrentPath + "\\*").c_str(), &findData);
+  std::string searchPath(mCurrentPath + "\\*");
+
+  HANDLE findHandle = FindFirstFile(searchPath.c_str(), &findData);
 
   if (findHandle == INVALID_HANDLE_VALUE)
   {
+    std::string errorMessage = "Failed to read files from ";
+    errorMessage.append(mCurrentPath);
+    MessageBox(NULL, errorMessage.c_str(), "Error reading asset files!", MB_ICONERROR | MB_OK);
     return files;
   }
 
   do
   {
-    if (findData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL)
+    if (!IsDir(findData.dwFileAttributes))
     {
       files.push_back(findData.cFileName);
     }
