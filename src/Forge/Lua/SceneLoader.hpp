@@ -52,7 +52,7 @@ class SceneLoader
      *   -- name parameter is optional; if left out, root scene node is returned */
     static int getSceneNode(lua_State* state);
 
-    /* Lua: create_scene_node(parent_id) -- return new scene node id
+    /* Lua: create_scene_node(name, [parent_id]) -- return new scene node id
      *   -- parent_id is optional; if left out, parent is root node */
     static int createSceneNode(lua_State* state);
 

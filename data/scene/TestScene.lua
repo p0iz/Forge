@@ -27,6 +27,22 @@ tile:setMaterial(tileMat);
 border:setMaterial(tileMat);
 paddle:setMaterial(paddleMat);
 
+-- Attach meshes to nodes
+paddleNode = Scene.getSceneNode("PaddleNode");
+paddle:attachTo(paddleNode);
+
+ballNode = Scene.getSceneNode("BallNode");
+ball:attachTo(ballNode);
+
+tileNode = Scene.getSceneNode("TileNode");
+tile:attachTo(tileNode);
+tileNode = Scene.getSceneNode("TileNode2");
+tile:attachTo(tileNode);
+
+borderNode = Scene.getSceneNode("BorderNode");
+border:attachTo(borderNode);
+
+
 --[[
 -- Create a scene graph from a single function call
 Scene.graph{

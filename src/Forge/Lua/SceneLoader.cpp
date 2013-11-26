@@ -32,6 +32,8 @@ luaL_Reg const SceneLoader::SceneLib[] =
   { "addDirectionalLight", SceneLoader::addDirectionalLight },
   { "addPointLight", SceneLoader::addPointLight },
   { "addSpotLight", SceneLoader::addSpotLight },
+  { "getSceneNode", SceneLoader::getSceneNode },
+  { "createSceneNode", SceneLoader::createSceneNode },
   { nullptr, nullptr }
 };
 
@@ -183,7 +185,8 @@ int SceneLoader::getSceneNode(lua_State* state)
         lua_pop(state, 1);
         try
         {
-          lua_pushinteger(state, sc->getSceneNode(nodeName).mId);
+          SceneNode& node = sc->getSceneNode(nodeName);
+          lua_pushinteger(state, node.mId);
         }
         catch (NotFoundException nfe)
         {
@@ -200,7 +203,24 @@ int SceneLoader::getSceneNode(lua_State* state)
 
 int SceneLoader::createSceneNode(lua_State* state)
 {
-  lua_pushinteger(state, 0);
+  SceneConfig* sc = getSceneConfig(state);
+
+  int parentId = 0;
+
+  if (lua_gettop(state) == 2)
+  {
+    parentId = lua_tonumber(state, -1);
+    lua_pop(state, 1);
+  }
+
+  lua_pop(state, 1);
+
+  SceneNodeId node = sc->createSceneNode(lua_tostring(state, -1));
+
+  sc->getSceneNode(node).mParent = parentId;
+
+  lua_pushnumber(state, node);
+
   return 1;
 }
 

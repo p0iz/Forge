@@ -55,55 +55,30 @@ Forge::GameStatePtr InGame::frameUpdate(float const delta) {
 }
 
 void InGame::createState() {
-  Forge::Lua::SceneLoader loader;
-  if (loader.loadScene("data/scene/TestScene.lua", mSceneConfig))
-  {
-    Forge::Log::info << "Scene loaded succesfully\n";
-  }
-
-  // Create game view
-
   // Paddle
   mPaddleNode = mSceneConfig.createSceneNode("PaddleNode");
   mSceneConfig.getSceneNode(mPaddleNode).mWorldTransform.scale(0.2f);
-
-  Forge::MaterialPtr paddleMat =
-    Forge::Graphics::MaterialLibrary::instance().getAssetInfo("Paddle").asset;
-  Forge::MeshPtr paddleMesh = Forge::Graphics::MeshLibrary::instance().getAssetInfo("paddle").asset;
-  paddleMesh->attachToNode(mPaddleNode);
-
-  Forge::MaterialPtr tileMat =
-    Forge::Graphics::MaterialLibrary::instance().getAssetInfo("Tile").asset;
-
 
   // Tiles
   mTileNode = mSceneConfig.createSceneNode("TileNode");
   mSceneConfig.getSceneNode(mTileNode).mWorldTransform.translate(5.0f, 10.0f, 0.0f).scale(0.2f);
 
-  Forge::MeshPtr tileMesh = Forge::Graphics::MeshLibrary::instance().getAssetInfo("tile").asset;
-  tileMesh->attachToNode(mTileNode);
-
   mTileNode = mSceneConfig.createSceneNode("TileNode2");
   mSceneConfig.getSceneNode(mTileNode).mWorldTransform.translate(6.0f, 10.0f, 0.0f).scale(0.2f);
-
-  tileMesh->attachToNode(mTileNode);
-
 
   // Ball
   mBallNode = mSceneConfig.createSceneNode("BallNode");
   mSceneConfig.getSceneNode(mBallNode).mWorldTransform.translate(0.0f, 5.0f, 0.0f).scale(0.2f);
 
-  Forge::MeshPtr ballMesh = Forge::Graphics::MeshLibrary::instance().getAssetInfo("ball").asset;
-  ballMesh->attachToNode(mBallNode);
-
-
   // Border
   mBorderNode = mSceneConfig.createSceneNode("BorderNode");
   mSceneConfig.getSceneNode(mBorderNode).mWorldTransform.translate(0.0f, 6.1f, 0.0f).rotate(90.0f, glm::vec3(1, 0, 0)).scale(0.4f);
 
-  Forge::MeshPtr borderMesh = Forge::Graphics::MeshLibrary::instance().getAssetInfo("border").asset;
-  borderMesh->attachToNode(mBorderNode);
-
+  Forge::Lua::SceneLoader loader;
+  if (loader.loadScene("data\\scene\\TestScene.lua", mSceneConfig))
+  {
+    Forge::Log::info << "Scene loaded succesfully\n";
+  }
 
   mCamera.setPosition(0.0f, 5.0f, -20.0f);
   mCamera.setTarget(0.0f, 5.0f, 0.0f);

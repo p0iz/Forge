@@ -36,6 +36,8 @@ void Forge::Lua::Mesh::create(lua_State* state)
   lua_setfield(state, -2, "name");
   lua_pushcfunction(state, setMaterial);
   lua_setfield(state, -2, "setMaterial");
+  lua_pushcfunction(state, attachTo);
+  lua_setfield(state, -2, "attachTo");
 }
 
 int Forge::Lua::Mesh::setMaterial(lua_State* state)
@@ -79,6 +81,35 @@ int Forge::Lua::Mesh::setMaterial(lua_State* state)
 
   material->useOn(mesh);
 
+  Forge::Log::info << "Material '" << materialName << "' applied to mesh '" << meshName << "'.\n";
+
   return 0;
+}
+
+int Forge::Lua::Mesh::attachTo(lua_State* state)
+{
+  if (lua_gettop(state) != 2)
+  {
+    while (lua_gettop(state))
+    {
+      lua_pop(state, 1);
+    }
+    lua_pushboolean(state, false);
+    return 1;
+  }
+
+  std::size_t id = lua_tonumber(state, -1);
+  lua_pop(state, 1);
+  lua_getfield(state, -1, "name");
+  std::string name = lua_tostring(state, -1);
+  lua_pop(state, 1);
+  MeshPtr mesh = Graphics::MeshLibrary::instance().getAssetInfo(name).asset;
+  mesh->attachToNode(id);
+
+  lua_pushboolean(state, true);
+
+  Forge::Log::info << "Attached mesh '" << name << "' to scene node with ID " << id << "\n";
+
+  return 1;
 }
 

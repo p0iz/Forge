@@ -36,6 +36,9 @@ class Mesh : public ObjectCreator
     /* Lua: setMaterial(material) -- Sets the material for this mesh */
     static int setMaterial(lua_State* state);
 
+    /* Lua: attachTo(nodeId) -- Attaches this mesh to the requested node id */
+    static int attachTo(lua_State* state);
+
   private:
     std::string mName;
 
