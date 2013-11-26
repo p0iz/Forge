@@ -22,17 +22,18 @@
 
 #include "State/GameState.h"
 
+
 namespace Forge {
 
 class GameStateMachine
 {
 public:
-	GameStateMachine();
+  GameStateMachine();
   void init(GameStatePtr const& initialState);
   bool update(float const delta);
-	void reset();
+  void reset();
 private:
-	GameStatePtr mCurrentState;
+  GameStatePtr mCurrentState;
 };
 
 }

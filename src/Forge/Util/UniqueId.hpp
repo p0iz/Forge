@@ -29,11 +29,11 @@ typedef unsigned long long Id;
 template <class T>
 class UniqueId {
 public:
-	UniqueId() : mId(UniqueId::nextId++) { }
-	inline Id getID() const;
+  UniqueId() : mId(UniqueId::nextId++) { }
+  inline Id getID() const;
 private:
-	Id mId;
-	static Id nextId;
+  Id mId;
+  static Id nextId;
 };
 
 template <class T>
@@ -42,7 +42,7 @@ Id UniqueId<T>::nextId = 0;
 template <class T>
 Id UniqueId<T>::getID() const
 {
-	return mId;
+  return mId;
 }
 
 }

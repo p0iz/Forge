@@ -5,6 +5,7 @@ set(UtilSources
   JsonParser.cpp
   Log.cpp
   Singleton.hpp
-  UniqueId.hpp)
+  UniqueId.hpp
+)
 
 add_library(Util ${UtilSources})
