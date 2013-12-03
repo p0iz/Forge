@@ -14,7 +14,7 @@ namespace Forge {
 
 class FORGE_EXPORT ForgeMain
 {
-  public:
+public:
   ForgeMain();
 
   ~ForgeMain();
@@ -34,7 +34,7 @@ class FORGE_EXPORT ForgeMain
 
   HighResClock& clock();
 
-  private:
+private:
   HighResClock mClock;
   Graphics::RenderWindow mRenderWindow;
   Graphics::Renderer mRenderer;

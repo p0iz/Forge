@@ -77,12 +77,12 @@ Graphics::Renderer& ForgeMain::renderer()
   return mRenderer;
 }
 
-Graphics::RenderWindow&ForgeMain::window()
+Graphics::RenderWindow& ForgeMain::window()
 {
   return mRenderWindow;
 }
 
-Input::InputHandler&ForgeMain::input()
+Input::InputHandler& ForgeMain::input()
 {
   return mInput;
 }
