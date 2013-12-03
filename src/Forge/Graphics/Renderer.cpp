@@ -46,7 +46,8 @@ void Renderer::initialize()
   glEnable(GL_CULL_FACE);
   glBlendFunc(GL_ONE, GL_ONE);
 
-  DebugAxis::instance();
+  mDebugAxis.initialize();
+
   Light::createBuffer();
 }
 
@@ -117,7 +118,7 @@ void Renderer::render(const SceneConfig& scene)
 
   // Render debug overlay
   if (DebugAxis::isDebugVisible()) {
-    DebugAxis::instance().render(scene);
+    mDebugAxis.render(scene);
   }
 
   // Actual rendering
@@ -130,7 +131,7 @@ void Renderer::render(const SceneConfig& scene)
 
   // Render debug overlay
   if (DebugAxis::isDebugVisible()) {
-    DebugAxis::instance().render(scene);
+    mDebugAxis.render(scene);
   }
 
   glDisable(GL_BLEND);

@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "DebugAxis.h"
 #include "ForgeExport.h"
 #include <glm/glm.hpp>
 
@@ -49,6 +50,7 @@ private:
              const SceneConfig& scene);
   int mWidth;
   int mHeight;
+  DebugAxis mDebugAxis;
 };
 
 }}

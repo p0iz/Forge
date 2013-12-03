@@ -37,7 +37,6 @@ bool showDebug = false;
 DebugAxis::DebugAxis()
   : initialized(GL_FALSE)
 {
-  initialize();
 }
 
 
@@ -137,6 +136,9 @@ bool DebugAxis::isDebugVisible()
 
 void DebugAxis::render(const SceneConfig& scene) const
 {
+  if (!initialized)
+    return;
+
   debugShaderProgram.use();
   for (auto node : scene.mNodes) {
     glm::mat4 mvp =

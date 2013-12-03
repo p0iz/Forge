@@ -24,19 +24,19 @@
 #include "ForgeExport.h"
 #include "Shader/Shader.h"
 #include "Shader/ShaderProgram.h"
-#include "Util/Singleton.hpp"
-
 #include <GL/glew.h>
 
 namespace Forge {
 
 class SceneConfig;
 
-class FORGE_EXPORT DebugAxis : public Singleton<DebugAxis>
+class FORGE_EXPORT DebugAxis
 {
 public:
   DebugAxis();
   ~DebugAxis();
+
+  void initialize();
 
   static void toggleDebuggingInfo();
   static void setDebuggingInfo(bool state);
@@ -45,8 +45,6 @@ public:
   void render(const SceneConfig& scene) const;
 
 private:
-  void initialize();
-
   GLuint debugVertexArrayId;
   GLuint debugBuffers[2];
   GLuint debugUniformMVP;
