@@ -53,15 +53,14 @@ void ForgeMain::start(GameStatePtr const& startState)
   mRunning = true;
   while(mRunning)
   {
-  mEventHandler.pumpMessages();
 
   mClock.updateDeltaTime();
   float const delta = mClock.getGameDelta();
 
   mRunning =
+    mEventHandler.pumpMessages() &&
     mInput.process(delta) &&
-    mStateMachine.update(delta) &&
-    mEventHandler.pumpMessages();
+    mStateMachine.update(delta);
 
   mRenderWindow.swapBuffers();
 
