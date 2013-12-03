@@ -47,6 +47,7 @@ class FORGE_EXPORT InputHandler
 
     /* Set the input processor to use for processing captured events */
     void setProcessor(InputProcessor* processor);
+    InputProcessor* currentProcessor();
     bool process(float const delta);
 
     bool isKeyPressed(Key key) const;

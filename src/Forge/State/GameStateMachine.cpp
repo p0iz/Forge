@@ -26,21 +26,27 @@ namespace Forge {
 GameStateMachine::GameStateMachine() : mCurrentState(nullptr) { }
 
 void GameStateMachine::init(const GameStatePtr& initialState) {
-	mCurrentState = initialState;
+  mCurrentState = initialState;
+  mCurrentState->enter();
 }
 
 bool GameStateMachine::update(float const delta) {
-	if (mCurrentState) {
-    mCurrentState = mCurrentState->frameUpdate(delta);
-		return true;
-	} else {
-		return false;
-	}
+  if (mCurrentState) {
+    GameStatePtr nextState = mCurrentState->frameUpdate(delta);
+    if (nextState != mCurrentState)
+    {
+      mCurrentState = nextState;
+      mCurrentState->enter();
+    }
+    return true;
+  } else {
+    return false;
+  }
 }
 
 void GameStateMachine::reset()
 {
-	mCurrentState.reset();
+  mCurrentState.reset();
 }
 
 }

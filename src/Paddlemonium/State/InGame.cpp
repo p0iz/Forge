@@ -36,7 +36,8 @@ namespace Paddlemonium { namespace State {
 InGame::InGame(Forge::ForgeMain& forge):
   GameState("InGame"),
   mSceneConfig(),
-  mInput(forge.clock(), forge.input(), forge.window(), mSceneConfig),
+  mInputHandler(forge.input()),
+  mInput(forge.clock(), mInputHandler, forge.window(), mSceneConfig),
   mCamera(),
   mRenderer(forge.renderer())
 {
@@ -44,9 +45,19 @@ InGame::InGame(Forge::ForgeMain& forge):
 
 InGame::~InGame()
 {
+  if (mInputHandler.currentProcessor() == &mInput)
+  {
+    mInputHandler.setProcessor(nullptr);
+  }
 }
 
-Forge::GameStatePtr InGame::frameUpdate(float const delta) {
+void InGame::enter()
+{
+  mInputHandler.setProcessor(&mInput);
+}
+
+Forge::GameStatePtr InGame::frameUpdate(float const delta)
+{
   static Forge::GameStateLibrary& library = Forge::GameStateLibrary::instance();
 
   // Render

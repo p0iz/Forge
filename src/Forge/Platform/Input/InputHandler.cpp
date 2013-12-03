@@ -81,6 +81,11 @@ void InputHandler::setProcessor(InputProcessor* processor)
   mProcessor = processor;
 }
 
+InputProcessor*InputHandler::currentProcessor()
+{
+  return mProcessor;
+}
+
 bool InputHandler::process(float const delta)
 {
   bool keepRunning = true;

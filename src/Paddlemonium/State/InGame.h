@@ -37,12 +37,14 @@ public:
 
   virtual ~InGame();
 
+  virtual void enter();
   virtual Forge::GameStatePtr frameUpdate(float const delta);
   virtual void createState();
   virtual void destroyState();
 
 private:
   Forge::SceneConfig mSceneConfig;
+  Forge::Input::InputHandler& mInputHandler;
   InGameProcessor mInput;
 
   Forge::TargetCamera mCamera;
