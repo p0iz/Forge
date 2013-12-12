@@ -33,6 +33,8 @@ class FORGE_EXPORT Directory
     Directory();
     explicit Directory(std::string const& path);
 
+    static char const SEPARATOR;
+
     std::string const& getCurrentPath() const;
     std::string getName() const;
     void goUp();
@@ -52,8 +54,6 @@ class FORGE_EXPORT Directory
 
     std::vector<std::string> listFiles() const;
     std::vector<Directory> listDirectories() const;
-
-    constexpr static char getSeparator();
 
     std::string getParent() const;
 

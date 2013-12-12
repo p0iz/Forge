@@ -33,6 +33,8 @@ namespace {
   const mode_t NewDirMode = 0644;
 }
 
+char const Directory::SEPARATOR = '/';
+
 Directory::Directory():
   mCurrentPath(getenv("HOME"))
 {
@@ -141,11 +143,6 @@ std::vector<Directory> Directory::listDirectories() const
   );
 
   return directories;
-}
-
-constexpr char Directory::getSeparator()
-{
-  return '/';
 }
 
 bool Directory::isAbsolutePath() const

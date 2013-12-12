@@ -34,6 +34,8 @@ bool IsDir(DWORD fileAttributes)
 
 }
 
+char const Directory::SEPARATOR = '\\';
+
 Directory::Directory():
   mCurrentPath(getenv("%HOMEDRIVE%"))
 {
@@ -70,7 +72,7 @@ bool Directory::contains(const std::string& name) const
 
 bool Directory::hasSubDir(const std::string& name) const
 {
-  std::string subDirPath(mCurrentPath + getSeparator());
+  std::string subDirPath(mCurrentPath + SEPARATOR);
   subDirPath.append(name);
   DWORD fileAttribute = GetFileAttributes(subDirPath.c_str());
   return IsDir(fileAttribute);
@@ -78,12 +80,12 @@ bool Directory::hasSubDir(const std::string& name) const
 
 bool Directory::createDir(const std::string& name)
 {
-  return CreateDirectory((mCurrentPath + getSeparator() + name).c_str(), NULL);
+  return CreateDirectory((mCurrentPath + SEPARATOR + name).c_str(), NULL);
 }
 
 bool Directory::createFile(const std::string& name)
 {
-  return CreateDirectory((mCurrentPath + getSeparator() + name).c_str(), NULL);
+  return CreateDirectory((mCurrentPath + SEPARATOR + name).c_str(), NULL);
 }
 
 std::vector<std::string> Directory::listFiles() const
@@ -135,7 +137,7 @@ std::vector<Forge::FileSystem::Directory> Directory::listDirectories() const
   {
     if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
     {
-      directories.push_back(Directory(mCurrentPath + getSeparator() + findData.cFileName));
+      directories.push_back(Directory(mCurrentPath + SEPARATOR + findData.cFileName));
     }
   }
   while (FindNextFile(findHandle, &findData) != 0);
@@ -145,14 +147,9 @@ std::vector<Forge::FileSystem::Directory> Directory::listDirectories() const
   return directories;
 }
 
-constexpr char Directory::getSeparator()
-{
-  return '\\';
-}
-
 bool Directory::isAbsolutePath() const
 {
-  return mCurrentPath[1] == ':' && mCurrentPath[2] == getSeparator();
+  return mCurrentPath[1] == ':' && mCurrentPath[2] == SEPARATOR;
 }
 
 }}

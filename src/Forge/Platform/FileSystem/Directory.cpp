@@ -27,7 +27,7 @@ namespace Forge { namespace FileSystem {
 Directory::Directory(std::string const& path):
   mCurrentPath(path)
 {
-  if (*path.rbegin() == getSeparator())
+  if (*path.rbegin() == SEPARATOR)
   {
     mCurrentPath.pop_back();
   }
@@ -41,7 +41,7 @@ const std::string& Directory::getCurrentPath() const
 
 std::string Directory::getName() const
 {
-  return mCurrentPath.substr(mCurrentPath.find_last_of(getSeparator())+1);
+  return mCurrentPath.substr(mCurrentPath.find_last_of(SEPARATOR)+1);
 }
 
 void Directory::goUp()
@@ -56,7 +56,7 @@ bool Directory::cd(std::string const& dir)
   std::string::size_type endIndex = 0;
   do
   {
-    endIndex = dir.find_first_of(getSeparator(), startIndex);
+    endIndex = dir.find_first_of(SEPARATOR, startIndex);
     std::string nextDir = dir.substr(startIndex, endIndex - startIndex);
 
     if (nextDir == "..")
@@ -94,7 +94,7 @@ void Directory::convertToAbsolutePath()
   std::string::size_type endIndex = 0;
   while (endIndex != std::string::npos)
   {
-    endIndex = mCurrentPath.find_first_of(getSeparator(), startIndex);
+    endIndex = mCurrentPath.find_first_of(SEPARATOR, startIndex);
     std::string currentElement = mCurrentPath.substr(startIndex, endIndex);
     if (currentElement == "..")
     {
@@ -103,7 +103,7 @@ void Directory::convertToAbsolutePath()
     }
     else if (currentElement != ".")
     {
-      currentWorkingDir.push_back(getSeparator());
+      currentWorkingDir.push_back(SEPARATOR);
       currentWorkingDir.append(currentElement);
     }
     startIndex = endIndex+1;
@@ -113,7 +113,7 @@ void Directory::convertToAbsolutePath()
 
 std::string Directory::getParent() const
 {
-  return mCurrentPath.substr(0, mCurrentPath.find_last_of(getSeparator()));
+  return mCurrentPath.substr(0, mCurrentPath.find_last_of(SEPARATOR));
 }
 
 }}
