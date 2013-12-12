@@ -4,4 +4,4 @@ set(StateSources
   GameStateLibrary.cpp
   GameStateMachine.cpp)
 
-add_library(State OBJECT ${StateSources})
+add_library(State ${StateSources})

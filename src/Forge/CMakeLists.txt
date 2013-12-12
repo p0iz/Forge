@@ -52,8 +52,6 @@ add_library(Forge SHARED
   ${Forge_SRC}
   ${Forge_HDR}
   ${AssetHeaders}
-  $<TARGET_OBJECTS:State>
-  $<TARGET_OBJECTS:ForgeLua>
 )
 
 target_link_libraries(Forge
@@ -67,6 +65,8 @@ target_link_libraries(Forge
   PlatformFileSystem
   PlatformInput
   PlatformWindow
+  ForgeLua
+  State
   "-Wl,--no-whole-archive"
   ${ForgeLibDeps}
 )

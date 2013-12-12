@@ -20,4 +20,4 @@ set(ForgeLuaHeaders
   Utils.hpp
 )
 
-add_library(ForgeLua OBJECT ${ForgeLuaSources} ${ForgeLuaHeaders})
+add_library(ForgeLua ${ForgeLuaSources} ${ForgeLuaHeaders})
