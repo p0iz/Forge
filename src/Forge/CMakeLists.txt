@@ -58,6 +58,7 @@ add_library(Forge SHARED
 
 target_link_libraries(Forge
   "-Wl,--whole-archive"
+  Asset
   Config
   Graphics
   Time
