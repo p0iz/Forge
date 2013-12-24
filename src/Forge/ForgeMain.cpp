@@ -54,20 +54,20 @@ void ForgeMain::start(GameStatePtr const& startState)
   while(mRunning)
   {
 
-  mClock.updateDeltaTime();
-  float const delta = mClock.getGameDelta();
+    mClock.updateDeltaTime();
+    float const delta = mClock.getGameDelta();
 
-  mRunning =
-    mEventHandler.pumpMessages() &&
-    mInput.process(delta) &&
-    mStateMachine.update(delta);
+    mRunning =
+      mEventHandler.pumpMessages() &&
+      mInput.process(delta) &&
+      mStateMachine.update(delta);
 
-  mRenderWindow.swapBuffers();
+    mRenderWindow.swapBuffers();
 
-  // Sleep for rest of frame seconds
-  mClock.updateDeltaTime();
-  int sleepMillis = 1000 * (SecondsPerFrame - mClock.getRealDelta());
-  std::this_thread::sleep_for(std::chrono::milliseconds(sleepMillis));
+    // Sleep for rest of frame seconds
+    mClock.updateDeltaTime();
+    int sleepMillis = 1000 * (SecondsPerFrame - mClock.getRealDelta());
+    std::this_thread::sleep_for(std::chrono::milliseconds(sleepMillis));
   }
 }
 
