@@ -18,6 +18,11 @@ elseif(CMAKE_BUILD_TYPE MATCHES Debug)
   set(CMAKE_EXECUTABLE_SUFFIX "_dbg")
 endif()
 
+# Enable position-independent code if not building for Windows
+if(NOT WIN32)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_compiler_export_flags()
@@ -48,6 +53,7 @@ if(WIN32)
   set(CMAKE_SHARED_LIBRARY_PREFIX "")
 endif()
 
+# The library
 add_library(Forge SHARED
   ${Forge_SRC}
   ${Forge_HDR}
