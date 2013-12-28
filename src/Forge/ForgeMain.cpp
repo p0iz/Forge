@@ -67,7 +67,7 @@ void ForgeMain::start(GameStatePtr const& startState)
   // Sleep for rest of frame seconds
   mClock.updateDeltaTime();
   int sleepMillis = 1000 * (SecondsPerFrame - mClock.getRealDelta());
-  //std::this_thread::sleep_for(std::chrono::milliseconds(sleepMillis));
+  std::this_thread::sleep_for(std::chrono::milliseconds(sleepMillis));
   }
 }
 

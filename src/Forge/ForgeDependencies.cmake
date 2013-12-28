@@ -41,7 +41,7 @@ if(WIN32)
   set(FREEIMAGE_LIBRARY ${FreeImageDLL})
   include_directories(${FREEIMAGE_DIR})
 else()
-  find_library(FREEIMAGE_LIBRARY NAMES FreeImage)
+  find_library(FREEIMAGE_LIBRARY NAMES freeimage FreeImage)
 endif()
 
 # OpenGL dependency

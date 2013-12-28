@@ -43,13 +43,16 @@ set(MaterialEditor_UI
 
 qt5_wrap_ui(UI_HDR ${MaterialEditor_UI})
 
-add_library(ForgeDLL SHARED IMPORTED)
-set_property(TARGET ForgeDLL PROPERTY IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/src/Forge/Forge.dll)
-set_property(TARGET ForgeDLL PROPERTY IMPORTED_IMPLIB ${CMAKE_BINARY_DIR}/src/Forge/libForge.dll.a)
-
 add_executable(MaterialEditor ${MaterialEditor_SRC} ${MaterialEditor_HDR} ${UI_HDR})
 if(WIN32)
   set(Win32LinkerFlag "-Wl,--subsystem,windows")
+
+  add_library(ForgeDLL SHARED IMPORTED)
+  set_property(TARGET ForgeDLL PROPERTY IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/src/Forge/Forge.dll)
+  set_property(TARGET ForgeDLL PROPERTY IMPORTED_IMPLIB ${CMAKE_BINARY_DIR}/src/Forge/libForge.dll.a)
+else()
+  add_library(ForgeDLL SHARED IMPORTED)
+  set_property(TARGET ForgeDLL PROPERTY IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/src/Forge/libForge.so)
 endif()
 target_link_libraries(MaterialEditor Qt5::Core Qt5::Widgets ForgeDLL ${Win32LinkerFlag})
 

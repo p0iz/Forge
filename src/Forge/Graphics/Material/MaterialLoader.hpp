@@ -27,6 +27,6 @@
 
 namespace Forge {
 
-typedef FORGE_EXPORT Lua::Loader<Material> MaterialLoader;
+typedef Lua::Loader<Material> MaterialLoader;
 
 }

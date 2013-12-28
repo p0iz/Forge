@@ -69,7 +69,7 @@ class FORGE_EXPORT Mesh : public Attachable
     Bounds mBounds;
 };
 
-typedef std::shared_ptr<Mesh> FORGE_EXPORT MeshPtr;
+typedef std::shared_ptr<Mesh> MeshPtr;
 
 } // namespace Forge
 

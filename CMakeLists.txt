@@ -14,3 +14,6 @@ add_subdirectory(src/Tools)
 # Add Game to build
 add_subdirectory(src/Paddlemonium)
 
+# Ensure that Forge is built first
+add_dependencies(Paddlemonium Forge)
+

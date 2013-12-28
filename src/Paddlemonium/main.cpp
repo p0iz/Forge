@@ -24,9 +24,10 @@
 #include "State/InGame.h"
 #include "State/Menu.h"
 #include "Input/InGameProcessor.hpp"
-#include <windows.h>
 
 #ifdef _WIN32
+#include <windows.h>
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 #else
 int main(int argc, char** argv)
