@@ -78,10 +78,3 @@ target_link_libraries(Forge
 generate_export_header(Forge
   EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/ForgeExport.h
 )
-
-
-if(USE_QT)
-  message(STATUS "Creating library with Qt5 support")
-  add_subdirectory(Qt)
-  target_link_libraries(Forge ${FORGE_QT_LIBRARIES})
-endif()
