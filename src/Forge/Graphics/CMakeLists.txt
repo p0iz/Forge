@@ -25,11 +25,9 @@ set(GraphicsSources
   Mesh.cpp
   OrbitalCamera.cpp
   Renderer.cpp
-  ResizeEvent.cpp
 )
 
 set(GraphicsLibs
-  Event
   Light
   Libraries
   Shader

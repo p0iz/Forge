@@ -36,7 +36,6 @@ add_subdirectory(Graphics)
 add_subdirectory(Lua)
 add_subdirectory(Time)
 add_subdirectory(Util)
-add_subdirectory(Event)
 add_subdirectory(Platform)
 
 set(Forge_SRC
