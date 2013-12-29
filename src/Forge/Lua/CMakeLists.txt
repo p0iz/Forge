@@ -2,6 +2,7 @@
 
 set(ForgeLuaSources
   AssetLoader.cpp
+  LuaState.cpp
   Material.cpp
   Mesh.cpp
   SceneLoader.cpp
@@ -12,6 +13,9 @@ set(ForgeLuaHeaders
   AssetDir.hpp
   AssetLoader.hpp
   Loader.hpp
+  LuaLibrary.hpp
+  LuaScript.hpp
+  LuaState.hpp
   Material.hpp
   Mesh.hpp
   ObjectCreator.hpp
