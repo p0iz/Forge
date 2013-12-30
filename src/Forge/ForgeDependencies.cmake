@@ -16,6 +16,7 @@ if(WIN32)
 else()
   set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}")
   find_package(Lua52 REQUIRED)
+  include_directories(${LUA_INCLUDE_DIR})
 endif()
 
 # FreeType dependency
