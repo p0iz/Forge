@@ -62,11 +62,16 @@ else()
 endif()
 
 #GLM dependency
-if(WIN32)
-  if(NOT GLM_DIR)
-  message(ERROR "You need to specify GLM_DIR (GLM installation dir)")
+if(NOT GLM_DIR)
+  if(WIN32)
+    message(ERROR "You need to specify GLM_DIR (GLM installation dir)")
+  elseif(NOT EXISTS "/usr/include/glm")
+    message("GLM installation not found in default prefix. Install GLM or set GLM dir to GLM_DIR CMake variable.")
   endif()
+elseif(EXISTS "${GLM_DIR}/glm")
   include_directories(${GLM_DIR})
+else()
+  message("Invalid GLM installation directory: ${GLM_DIR}")
 endif()
 
 # SDL2 dependency
