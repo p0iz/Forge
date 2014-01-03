@@ -19,6 +19,7 @@
  */
 
 #include "RenderWindow.hpp"
+#include "SDLGraphicsContext.hpp"
 #include "Util/Log.h"
 #include <SDL2/SDL.h>
 
@@ -27,7 +28,7 @@ namespace Forge { namespace Graphics {
 
 RenderWindow::RenderWindow():
   mWindow(nullptr),
-  mContext(nullptr),
+  mRenderingContext(nullptr),
   mFullscreen(false),
   mTitle("Forge render window"),
   mWidth(640),
@@ -37,7 +38,7 @@ RenderWindow::RenderWindow():
 
 RenderWindow::~RenderWindow()
 {
-  SDL_GL_DeleteContext(mContext);
+  SDL_GL_DeleteContext(mRenderingContext);
   SDL_DestroyWindow(mWindow);
   mWindow = nullptr;
 }
@@ -58,7 +59,7 @@ void RenderWindow::show()
     mHeight,
     SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_OPENGL
   );
-  mContext = SDL_GL_CreateContext(mWindow);
+  mRenderingContext = SDL_GL_CreateContext(mWindow);
   SDL_GL_SetSwapInterval(1);
 }
 
@@ -93,7 +94,7 @@ void RenderWindow::setTitle(const std::string& title)
   mTitle = title;
 }
 
-const std::string&RenderWindow::title() const
+std::string const& RenderWindow::title() const
 {
   return mTitle;
 }
@@ -101,6 +102,17 @@ const std::string&RenderWindow::title() const
 void RenderWindow::swapBuffers()
 {
   SDL_GL_SwapWindow(mWindow);
+}
+
+bool RenderWindow::makeRenderCurrent()
+{
+  return SDL_GL_MakeCurrent(mWindow, mRenderingContext) == 0;
+}
+
+GraphicsContext* RenderWindow::createAuxContext() const
+{
+  SDL_GLContext context = SDL_GL_CreateContext(mWindow);
+  return new SDLGraphicsContext(context, mWindow);
 }
 
 }}

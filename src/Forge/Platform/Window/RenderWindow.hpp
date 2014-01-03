@@ -21,13 +21,12 @@
 #pragma once
 
 #include "ForgeExport.h"
+#include "GraphicsContext.hpp"
 #include <string>
 #include <SDL2/SDL.h>
 
 
-/* This abstract class provides a contract for implementing a render window
- * for Forge. The function implementations should provide intuitive behaviour
- * with regard to rendering into a window.
+/* This class provides an SDL render window for Forge.
  *
  * The constructor should create a OpenGL rendering context that fulfills the
  * RenderContext contract and make it current at the end of the constructor.
@@ -53,17 +52,22 @@ class FORGE_EXPORT RenderWindow
     int width() const;
     int height() const;
 
-    /* This is a context-specific identifier for the render window */
-    unsigned long getHandle();
-
     void setTitle(std::string const& title);
     std::string const& title() const;
 
     void swapBuffers();
 
+    // Create additional contexts for processing graphics commands (buffering, loading, etc.)
+    // Do NOT issue draw commands from these contexts. Draw commands should only be issued from
+    // the rendering context.
+    GraphicsContext* createAuxContext() const;
+
+    // Make the rendering context the current graphics context
+    bool makeRenderCurrent();
+
   private:
     SDL_Window* mWindow;
-    SDL_GLContext mContext;
+    SDL_GLContext mRenderingContext;
 
     bool mFullscreen;
     std::string mTitle;
