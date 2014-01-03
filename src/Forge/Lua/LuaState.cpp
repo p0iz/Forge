@@ -85,13 +85,9 @@ bool LuaState::runChunk(std::string const& programName, std::string const& chunk
   int status = luaL_loadbuffer(mState, chunk.data(), chunk.length(), programName.data());
   if (status == LUA_OK)
   {
-    status = lua_pcall(mState, 0, LUA_MULTRET, lua_gettop(mState));
-    if (status == LUA_OK && lua_gettop(mState) > 0)
-    {
-      lua_getglobal(mState, "print");
-      lua_insert(mState, 1);
-      status = lua_pcall(mState, lua_gettop(mState) - 1, 0, 0);
-    }
+    lua_getglobal(mState, "print");
+    lua_insert(mState, 1);
+    lua_pcall(mState, 0, LUA_MULTRET, 1);
   }
 
   if (status != LUA_OK && !lua_isnil(mState, -1))
@@ -103,7 +99,8 @@ bool LuaState::runChunk(std::string const& programName, std::string const& chunk
     }
     else
     {
-      std::cerr << "Failed to get Lua error string, but something bad did indeed happen.\n";
+      std::cerr << "Failed to get Lua error string, but something bad\n"
+                   "did indeed happen while making the protected call.\n";
     }
     lua_pop(mState, 1);
   }
