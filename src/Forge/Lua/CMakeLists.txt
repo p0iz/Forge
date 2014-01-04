@@ -13,6 +13,7 @@ set(ForgeLuaHeaders
   AssetDir.hpp
   AssetLoader.hpp
   Loader.hpp
+  LuaForwardDeclarations.hpp
   LuaLibrary.hpp
   LuaState.hpp
   Material.hpp

@@ -19,6 +19,7 @@
  */
 
 #include "LuaState.hpp"
+#include <lua.hpp>
 #include <iostream>
 #include <string>
 

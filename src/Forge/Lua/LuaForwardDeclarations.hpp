@@ -20,17 +20,6 @@
 
 #pragma once
 
-#include "LuaForwardDeclarations.hpp"
+/* Forward declarations for Lua structures */
 
-
-namespace Forge {
-
-class LuaLibrary
-{
-  public:
-    virtual void import(lua_State* state) = 0;
-
-    virtual void remove(lua_State* state) = 0;
-};
-
-}
+struct lua_State;

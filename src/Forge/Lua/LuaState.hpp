@@ -21,9 +21,9 @@
 #pragma once
 
 #include "ForgeExport.h"
+#include "LuaForwardDeclarations.hpp"
 #include "LuaLibrary.hpp"
 #include <iosfwd>
-#include <lua.hpp>
 
 
 namespace Forge {
