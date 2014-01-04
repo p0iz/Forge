@@ -47,9 +47,10 @@ set(Forge_HDR
   ForgeVersion.hpp
 )
 
-# Remove the unnecessary prefix from windows DLL
+# Remove the unnecessary prefix from windows DLL and link statically to GCC and stdlibc++
 if(WIN32)
   set(CMAKE_SHARED_LIBRARY_PREFIX "")
+  set(Win32LinkerFlag "-static -static-libstdc++ -static-libgcc")
 endif()
 
 # The library
@@ -74,6 +75,7 @@ target_link_libraries(Forge
   State
   "-Wl,--no-whole-archive"
   ${ForgeLibDeps}
+  ${Win32LinkerFlag}
 )
 generate_export_header(Forge
   EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/ForgeExport.h
