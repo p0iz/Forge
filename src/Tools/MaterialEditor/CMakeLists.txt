@@ -4,7 +4,8 @@ project(MaterialEditor)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Core REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -44,6 +45,9 @@ set(MaterialEditor_UI
 qt5_wrap_ui(UI_HDR ${MaterialEditor_UI})
 
 add_executable(MaterialEditor ${MaterialEditor_SRC} ${MaterialEditor_HDR} ${UI_HDR})
+
+qt5_use_modules(MaterialEditor Core Widgets)
+
 if(WIN32)
   set(Win32LinkerFlag "-Wl,--subsystem,windows")
 
