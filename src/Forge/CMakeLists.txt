@@ -46,7 +46,6 @@ set(Forge_SRC
 
 set(Forge_HDR
   ForgeMain.hpp
-  ForgeVersion.hpp
 )
 
 # Remove the unnecessary prefix from windows DLL and link statically to GCC and stdlibc++
