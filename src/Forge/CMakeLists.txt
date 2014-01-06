@@ -69,6 +69,7 @@ target_link_libraries(Forge
   Graphics
   Time
   Util
+  PlatformDynamicLoader
   PlatformEvent
   PlatformFileSystem
   PlatformInput
