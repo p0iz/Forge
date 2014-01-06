@@ -22,8 +22,7 @@
 
 #include "ForgeExport.h"
 #include "LuaLibrary.hpp"
-#include "LuaScript.hpp"
-#include <string>
+#include <iosfwd>
 #include <lua.hpp>
 
 
@@ -43,7 +42,7 @@ class FORGE_EXPORT LuaState
 
     void removeLibrary(LuaLibrary& library);
 
-    void runScript(LuaScript& scriptFile);
+    void runScript(std::string const& scriptFile);
 
     bool isIncompleteChunk(std::string const& chunk);
 

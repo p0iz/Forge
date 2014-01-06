@@ -14,7 +14,6 @@ set(ForgeLuaHeaders
   AssetLoader.hpp
   Loader.hpp
   LuaLibrary.hpp
-  LuaScript.hpp
   LuaState.hpp
   Material.hpp
   Mesh.hpp

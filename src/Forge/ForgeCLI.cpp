@@ -60,6 +60,11 @@ bool ForgeCLI::endOfStream() const
   return mInput.eof();
 }
 
+void ForgeCLI::runScript(std::string const& filename)
+{
+  mState.runScript(filename);
+}
+
 }
 
 // main function for CLI

@@ -20,6 +20,7 @@
 
 #include "LuaState.hpp"
 #include <iostream>
+#include <string>
 
 
 namespace Forge {
@@ -60,9 +61,12 @@ void LuaState::removeLibrary(LuaLibrary& library)
   library.remove(mState);
 }
 
-void LuaState::runScript(LuaScript& script)
+void LuaState::runScript(std::string const& scriptFile)
 {
-  script.execute(mState);
+  lua_getglobal(mState, "print");
+  lua_getglobal(mState, "dofile");
+  lua_pushstring(mState, scriptFile.c_str());
+  lua_pcall(mState, 1, LUA_MULTRET, 1);
 }
 
 bool LuaState::isIncompleteChunk(const std::string& chunk)

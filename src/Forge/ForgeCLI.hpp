@@ -39,6 +39,8 @@ class ForgeCLI
 
     bool endOfStream() const;
 
+    void runScript(std::string const& filename);
+
   private:
     LuaState mState;
     std::istream& mInput;
