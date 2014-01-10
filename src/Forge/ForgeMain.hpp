@@ -26,7 +26,7 @@ public:
 
   void start(Forge::GameStatePtr const& startState);
 
-  Graphics::Renderer& renderer();
+  Renderer& renderer();
 
   RenderWindow& window();
 
@@ -37,7 +37,7 @@ public:
 private:
   HighResClock mClock;
   RenderWindow mRenderWindow;
-  Graphics::Renderer mRenderer;
+  Renderer mRenderer;
   GameStateMachine mStateMachine;
   Input::InputHandler mInput;
   Event::EventHandler mEventHandler;

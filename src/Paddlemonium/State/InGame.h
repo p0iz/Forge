@@ -48,7 +48,8 @@ private:
   InGameProcessor mInput;
 
   Forge::TargetCamera mCamera;
-  Forge::Graphics::Renderer& mRenderer;
+  Forge::Renderer& mRenderer;
+  Forge::RenderWindow& mWindow;
 
   // Game object nodes
   Forge::SceneNodeId mPaddleNode;

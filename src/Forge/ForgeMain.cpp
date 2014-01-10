@@ -71,7 +71,7 @@ void ForgeMain::start(GameStatePtr const& startState)
   }
 }
 
-Graphics::Renderer& ForgeMain::renderer()
+Renderer& ForgeMain::renderer()
 {
   return mRenderer;
 }

@@ -27,7 +27,7 @@
 #include "GL/glew.h"
 
 
-namespace Forge { namespace Graphics {
+namespace Forge {
 
 Renderer::~Renderer()
 {
@@ -153,4 +153,4 @@ void Renderer::renderDebugOverlay(const SceneConfig& scene) {
 
 }
 
-}}
+}

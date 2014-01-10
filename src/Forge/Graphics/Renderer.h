@@ -29,7 +29,7 @@ namespace Forge {
 class SceneConfig;
 }
 
-namespace Forge { namespace Graphics {
+namespace Forge {
 
 /* A class that is used to render scenes from scene configurations */
 class FORGE_EXPORT Renderer
@@ -53,4 +53,4 @@ private:
   DebugAxis mDebugAxis;
 };
 
-}}
+}

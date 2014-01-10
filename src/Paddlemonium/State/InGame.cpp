@@ -39,7 +39,8 @@ InGame::InGame(Forge::ForgeMain& forge):
   mInputHandler(forge.input()),
   mInput(forge.clock(), mInputHandler, forge.window(), mSceneConfig),
   mCamera(),
-  mRenderer(forge.renderer())
+  mRenderer(forge.renderer()),
+  mWindow(forge.window())
 {
 }
 
@@ -93,7 +94,7 @@ void InGame::createState() {
 
   mCamera.setPosition(0.0f, 5.0f, -20.0f);
   mCamera.setTarget(0.0f, 5.0f, 0.0f);
-  mCamera.setPerspectiveProjection(mRenderer.getWidth(), mRenderer.getHeight());
+  mCamera.setPerspectiveProjection(mWindow.width(), mWindow.height());
 
   // Done. Allow the scene config to manipulate the scene
   mSceneConfig.setCamera(mCamera);
