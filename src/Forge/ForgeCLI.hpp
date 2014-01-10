@@ -41,9 +41,12 @@ class ForgeCLI
 
     void runScript(std::string const& filename);
 
+    void start();
+
   private:
     LuaState mState;
     std::istream& mInput;
+
 };
 
 }

@@ -19,59 +19,30 @@
  */
 
 #include "ForgeCLI.hpp"
+#include "Lua/AssetsLibrary.hpp"
 #include <iostream>
-#include <string>
 
 
-namespace Forge {
-
-namespace {
-
-static std::string const ProgramName = "=ForgeCLI";
-
-}
-
-ForgeCLI::ForgeCLI(std::istream& input):
-  mState(),
-  mInput(input)
+// main function for CLI
+int main(int argc, char* argv[])
 {
-  mState.initialize();
-}
+  // Optimization for freeing std::cin from syncing with stdin (makes Valgrind sad)
+  //std::cin.sync_with_stdio(false);
 
-void ForgeCLI::readInput()
-{
-  std::string chunk, line;
-  do {
-    std::getline(mInput, line);
-    chunk.append(line);
-    chunk.push_back('\n');
-  }
-  while (mState.isIncompleteChunk(chunk) && std::cout << " ... ");
-  mState.runChunk(ProgramName, chunk);
-}
+  Forge::ForgeCLI cli(std::cin);
 
-void ForgeCLI::printPrompt()
-{
-  std::cout << "Forge > ";
-}
+  Forge::AssetsLibrary assets;
+  cli.addLibrary(assets);
 
-bool ForgeCLI::endOfStream() const
-{
-  return mInput.eof();
-}
-
-void ForgeCLI::runScript(std::string const& filename)
-{
-  mState.runScript(filename);
-}
-
-void ForgeCLI::start()
-{
-  while (!endOfStream())
+  if (argc > 1)
   {
-    printPrompt();
-    readInput();
+    cli.runScript(argv[1]);
+    return 0;
   }
-}
 
+  cli.start();
+
+  std::cout << std::endl;
+
+  return 0;
 }

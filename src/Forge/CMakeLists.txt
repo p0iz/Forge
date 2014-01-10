@@ -87,6 +87,7 @@ generate_export_header(Forge
 # The CLI
 set(ForgeCLI_SRC
   ForgeCLI.cpp
+  main.cpp
 )
 set(ForgeCLI_HDR
   ForgeCLI.hpp
