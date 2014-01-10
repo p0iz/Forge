@@ -95,4 +95,10 @@ std::string File::readLine()
   return line;
 }
 
+std::string File::getExtension(std::string const& filename)
+{
+  std::string::size_type lastDotIdx = filename.find_last_of('.');
+  return (lastDotIdx == std::string::npos) ? "" : filename.substr(lastDotIdx+1);
+}
+
 }}

@@ -40,6 +40,9 @@ add_subdirectory(Time)
 add_subdirectory(Util)
 add_subdirectory(Platform)
 
+# Add standard asset plugins
+add_subdirectory(AssetPlugins)
+
 set(Forge_SRC
   ForgeMain.cpp
 )

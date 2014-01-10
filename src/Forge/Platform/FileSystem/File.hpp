@@ -52,8 +52,6 @@ class FORGE_EXPORT File
 
     std::string readLine();
 
-
-
     template <class Writable>
     std::fstream& operator<<(Writable const& source)
     {
@@ -70,6 +68,9 @@ class FORGE_EXPORT File
     }
 
     std::fstream& getFileStream();
+
+    /* Returns the file name extension */
+    static std::string getExtension(std::string const& filename);
 
   private:
     AccessMode mMode;

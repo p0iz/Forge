@@ -1,6 +1,7 @@
 # Lua API
 
 set(ForgeLuaSources
+  AssetsLibrary.cpp
   AssetLoader.cpp
   LuaState.cpp
   Material.cpp
@@ -10,6 +11,7 @@ set(ForgeLuaSources
 )
 
 set(ForgeLuaHeaders
+  AssetsLibrary.hpp
   AssetDir.hpp
   AssetLoader.hpp
   Loader.hpp

@@ -20,35 +20,33 @@
 
 #pragma once
 
-#include "Lua/LuaState.hpp"
 #include "ForgeExport.h"
 #include <iosfwd>
 
-
 namespace Forge {
 
-/** Class that represents the command-line Lua interface for the Forge engine */
-class ForgeCLI
+class LoaderInterface
 {
   public:
-    explicit ForgeCLI(std::istream& input);
+    virtual ~LoaderInterface() { }
 
-    void readInput();
+    virtual void* load(std::string const& filename) = 0;
 
-    void addLibrary(LuaLibrary& library);
-
-    void printPrompt();
-
-    bool endOfStream() const;
-
-    void runScript(std::string const& filename);
-
-    void start();
-
-  private:
-    LuaState mState;
-    std::istream& mInput;
-
+    virtual void unload(void* asset) = 0;
 };
 
+}
+
+typedef Forge::LoaderInterface* (*LoaderCreateFn)();
+
+typedef char const* (*LoaderInfoFn)();
+
+/* Library interface definition */
+extern "C"
+{
+  FORGE_EXPORT Forge::LoaderInterface* createInterface();
+
+  FORGE_EXPORT const char* supportedExtensions();
+
+  FORGE_EXPORT const char* category();
 }

@@ -19,6 +19,7 @@
  */
 
 #include "ForgeCLI.hpp"
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -48,6 +49,14 @@ void ForgeCLI::readInput()
   }
   while (mState.isIncompleteChunk(chunk) && std::cout << " ... ");
   mState.runChunk(ProgramName, chunk);
+}
+
+void ForgeCLI::addLibrary(LuaLibrary& library)
+{
+  if (mState.isInitialized())
+  {
+    mState.importLibrary(library);
+  }
 }
 
 void ForgeCLI::printPrompt()
