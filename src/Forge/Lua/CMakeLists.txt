@@ -2,6 +2,7 @@
 
 set(ForgeLuaSources
   AssetsLibrary.cpp
+  RendererLibrary.cpp
   AssetLoader.cpp
   LuaState.cpp
   Material.cpp
@@ -12,6 +13,7 @@ set(ForgeLuaSources
 
 set(ForgeLuaHeaders
   AssetsLibrary.hpp
+  RendererLibrary.hpp
   AssetDir.hpp
   AssetLoader.hpp
   Loader.hpp

@@ -35,21 +35,22 @@ namespace Forge {
 class FORGE_EXPORT Renderer
 {
 public:
+  Renderer();
   ~Renderer();
   void initialize();
+  void deinitialize();
+
   void updateViewport(int width, int height);
   void render(const SceneConfig& scene);
 
-  int const getWidth() const;
-  int const getHeight() const;
 private:
+  bool mInitialized;
   void renderDebugOverlay(const SceneConfig& scene);
   void updateLightData(const SceneConfig& scene, const glm::mat4& view);
   void drawScene(const glm::mat4& view,
              const glm::mat4& projection,
              const SceneConfig& scene);
-  int mWidth;
-  int mHeight;
+
   DebugAxis mDebugAxis;
 };
 

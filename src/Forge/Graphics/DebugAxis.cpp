@@ -119,6 +119,14 @@ void DebugAxis::initialize()
   initialized = GL_TRUE;
 }
 
+void DebugAxis::deinitialize()
+{
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+  glDeleteBuffers(2, debugBuffers);
+  glDeleteVertexArrays(1, &debugVertexArrayId);
+}
+
 void DebugAxis::toggleDebuggingInfo()
 {
   showDebug = !showDebug;
@@ -153,10 +161,6 @@ void DebugAxis::render(const SceneConfig& scene) const
 
 DebugAxis::~DebugAxis()
 {
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-  glDeleteBuffers(2, debugBuffers);
-  glDeleteVertexArrays(1, &debugVertexArrayId);
 }
 
 } // namespace Forge

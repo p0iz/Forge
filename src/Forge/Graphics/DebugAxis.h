@@ -38,6 +38,8 @@ public:
 
   void initialize();
 
+  void deinitialize();
+
   static void toggleDebuggingInfo();
   static void setDebuggingInfo(bool state);
   static bool isDebugVisible();

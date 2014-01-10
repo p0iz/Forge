@@ -25,6 +25,7 @@ set(GraphicsSources
   Mesh.cpp
   OrbitalCamera.cpp
   Renderer.cpp
+  RendererThread.cpp
 )
 
 set(GraphicsLibs

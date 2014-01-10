@@ -29,16 +29,27 @@
 
 namespace Forge {
 
+Renderer::Renderer():
+  mInitialized(false)
+{
+}
+
 Renderer::~Renderer()
 {
-  Light::destroyBuffer();
 }
 
 void Renderer::initialize()
 {
+  if (mInitialized) return;
+
   // Flag to load all extensions, needed by OpenGL 3.3
-  glewExperimental = GL_TRUE;
-  assert(glewInit() == GLEW_OK);
+  static bool glewInitialized = false;
+  if (!glewInitialized)
+  {
+    glewExperimental = GL_TRUE;
+    assert(glewInit() == GLEW_OK);
+    glewInitialized = true;
+  }
 
   glClearColor(0.1f,0.1f,0.1f,1.0f);
   glEnable(GL_DEPTH_TEST);
@@ -49,12 +60,21 @@ void Renderer::initialize()
   mDebugAxis.initialize();
 
   Light::createBuffer();
+
+  mInitialized = true;
+}
+
+void Renderer::deinitialize()
+{
+  if (!mInitialized) return;
+
+  Light::destroyBuffer();
+  mDebugAxis.deinitialize();
+  mInitialized = false;
 }
 
 void Renderer::updateViewport(int width, int height)
 {
-  mWidth = width;
-  mHeight = height;
   glViewport(0, 0, width, height);
 }
 
@@ -139,18 +159,8 @@ void Renderer::render(const SceneConfig& scene)
   // Post process
 }
 
-const int Renderer::getWidth() const
+void Renderer::renderDebugOverlay(const SceneConfig& scene)
 {
-  return mWidth;
-}
-
-const int Renderer::getHeight() const
-{
-  return mHeight;
-}
-
-void Renderer::renderDebugOverlay(const SceneConfig& scene) {
-
 }
 
 }

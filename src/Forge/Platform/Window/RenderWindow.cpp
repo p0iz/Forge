@@ -45,22 +45,42 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::show()
 {
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+  if (!mWindow)
+  {
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-  mWindow = SDL_CreateWindow(
-    mTitle.c_str(),
-    SDL_WINDOWPOS_CENTERED,
-    SDL_WINDOWPOS_CENTERED,
-    mWidth,
-    mHeight,
-    SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_OPENGL
-  );
-  mRenderingContext = SDL_GL_CreateContext(mWindow);
-  SDL_GL_SetSwapInterval(1);
+    mWindow = SDL_CreateWindow(
+      mTitle.c_str(),
+      SDL_WINDOWPOS_CENTERED,
+      SDL_WINDOWPOS_CENTERED,
+      mWidth,
+      mHeight,
+      SDL_WINDOW_OPENGL
+    );
+  }
+  else
+  {
+    SDL_ShowWindow(mWindow);
+    SDL_GL_MakeCurrent(mWindow, mRenderingContext);
+  }
+
+  if (!mRenderingContext)
+  {
+    mRenderingContext = SDL_GL_CreateContext(mWindow);
+    SDL_GL_SetSwapInterval(1);
+  }
+}
+
+void RenderWindow::hide()
+{
+  if (mWindow)
+  {
+    SDL_HideWindow(mWindow);
+  }
 }
 
 void RenderWindow::setFullscreen(const bool enabled)

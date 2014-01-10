@@ -18,35 +18,35 @@
  *
  */
 
-#include "ForgeCLI.hpp"
-#include "Lua/AssetsLibrary.hpp"
-#include "Lua/RendererLibrary.hpp"
-#include <iostream>
+#pragma once
+
+#include "Graphics/Renderer.h"
+#include "Platform/Window/RenderWindow.hpp"
+#include <thread>
 
 
-// main function for CLI
-int main(int argc, char* argv[])
+namespace Forge {
+
+class RendererThread
 {
-  // Optimization for freeing std::cin from syncing with stdin (makes Valgrind sad)
-  //std::cin.sync_with_stdio(false);
+  public:
+    RendererThread();
 
-  Forge::ForgeCLI cli(std::cin);
+    bool start();
 
-  Forge::AssetsLibrary assets;
-  cli.addLibrary(assets);
+    void stop();
 
-  Forge::RendererLibrary renderer;
-  cli.addLibrary(renderer);
+    GraphicsContext* createAuxContext();
 
-  if (argc > 1)
-  {
-    cli.runScript(argv[1]);
-    return 0;
-  }
+    RenderWindow& window();
 
-  cli.start();
+    Renderer& renderer();
 
-  std::cout << std::endl;
+  private:
+    bool mRunning;
+    std::thread mThread;
+    Renderer mRenderer;
+    RenderWindow mWindow;
+};
 
-  return 0;
 }
