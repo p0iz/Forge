@@ -60,7 +60,7 @@ class InGameProcessor : public Forge::Input::InputProcessor
   InGameProcessor(
     Forge::HighResClock& clock,
     Forge::Input::InputHandler& input,
-    Forge::Graphics::RenderWindow& window,
+    Forge::RenderWindow& window,
     Forge::SceneConfig& scene
   );
   virtual ~InGameProcessor();
@@ -75,7 +75,7 @@ class InGameProcessor : public Forge::Input::InputProcessor
   KeyMap<GameAction> mKeyMap;
   Forge::HighResClock& mClock;
   Forge::Input::InputHandler& mInputHandler;
-  Forge::Graphics::RenderWindow& mWindow;
+  Forge::RenderWindow& mWindow;
 };
 
 }

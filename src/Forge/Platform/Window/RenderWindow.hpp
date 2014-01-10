@@ -33,7 +33,7 @@
  */
 
 
-namespace Forge { namespace Graphics {
+namespace Forge {
 
 class FORGE_EXPORT RenderWindow
 {
@@ -77,4 +77,4 @@ class FORGE_EXPORT RenderWindow
 
 };
 
-}}
+}

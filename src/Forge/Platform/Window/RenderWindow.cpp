@@ -24,7 +24,7 @@
 #include <SDL2/SDL.h>
 
 
-namespace Forge { namespace Graphics {
+namespace Forge {
 
 RenderWindow::RenderWindow():
   mWindow(nullptr),
@@ -115,4 +115,4 @@ GraphicsContext* RenderWindow::createAuxContext() const
   return new SDLGraphicsContext(context, mWindow);
 }
 
-}}
+}

@@ -76,7 +76,7 @@ Graphics::Renderer& ForgeMain::renderer()
   return mRenderer;
 }
 
-Graphics::RenderWindow& ForgeMain::window()
+RenderWindow& ForgeMain::window()
 {
   return mRenderWindow;
 }

@@ -32,7 +32,7 @@ class FORGE_EXPORT EventHandler
   public:
     EventHandler(
       Input::InputHandler& input,
-      Graphics::RenderWindow& window
+      RenderWindow& window
     );
     virtual ~EventHandler() { }
 
@@ -40,7 +40,7 @@ class FORGE_EXPORT EventHandler
 
   private:
     Input::InputHandler& mInput;
-    Graphics::RenderWindow& mWindow;
+    RenderWindow& mWindow;
 
 };
 

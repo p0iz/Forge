@@ -26,7 +26,7 @@ namespace Forge { namespace Event {
 
 EventHandler::EventHandler(
   Input::InputHandler& input,
-  Graphics::RenderWindow& window
+  RenderWindow& window
 ):
   mInput(input),
   mWindow(window)

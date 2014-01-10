@@ -28,7 +28,7 @@ public:
 
   Graphics::Renderer& renderer();
 
-  Graphics::RenderWindow& window();
+  RenderWindow& window();
 
   Input::InputHandler& input();
 
@@ -36,7 +36,7 @@ public:
 
 private:
   HighResClock mClock;
-  Graphics::RenderWindow mRenderWindow;
+  RenderWindow mRenderWindow;
   Graphics::Renderer mRenderer;
   GameStateMachine mStateMachine;
   Input::InputHandler mInput;
