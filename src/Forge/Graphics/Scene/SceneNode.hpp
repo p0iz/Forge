@@ -20,9 +20,7 @@
 
 #pragma once
 
-#include "Graphics/Mesh.h"
 #include "Graphics/Scene/Transformation.hpp"
-
 #include <string>
 #include <set>
 
