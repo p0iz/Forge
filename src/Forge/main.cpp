@@ -25,8 +25,17 @@
 
 
 // main function for CLI
-int main(int argc, char* argv[])
+#ifdef _WIN32
+#include <windows.h>
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+  int argc = __argc;
+  char** argv = __argv;
+#else
+int main(int argc, char** argv)
+{
+#endif
   // Optimization for freeing std::cin from syncing with stdin (makes Valgrind sad)
   //std::cin.sync_with_stdio(false);
 

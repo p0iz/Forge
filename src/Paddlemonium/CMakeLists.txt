@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8.8)
 
 project(Paddlemonium)
 
+include("../Forge/ForgeDependencies.cmake")
+
 # Set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic")
 
@@ -15,7 +17,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${CMAKE_SOURCE_DIR}/src/Forge)
 
 if(WIN32)
-  set(Win32LinkerFlags "-Wl,--subsystem,windows")
+  set(Win32LinkerFlags "-Wl,--subsystem,windows -static -static-libstdc++ -static-libgcc")
 
   add_library(ForgeDLL SHARED IMPORTED)
   set_property(TARGET ForgeDLL PROPERTY IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/src/Forge/Forge.dll)
