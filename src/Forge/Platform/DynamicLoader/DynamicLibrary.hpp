@@ -20,13 +20,14 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "LibraryHandle.hpp"
 #include <unordered_map>
 
 
 namespace Forge {
 
-class DynamicLibrary
+class FORGE_EXPORT DynamicLibrary
 {
   public:
     DynamicLibrary();
