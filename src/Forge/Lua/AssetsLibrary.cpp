@@ -50,9 +50,10 @@ int AssetsLibrary::addLoader(lua_State* state)
   lua_pop(state, 1);
 
   DynamicLibrary* loaderLib = dllLoader.open(loader);
-  if (!loaderLib->isValid())
+  if (!loaderLib || !loaderLib->isValid())
   {
     Log::error << "Failed to load plugin '" << loader << "'\n";
+    return luaL_error(state, "Error loading loader plugin '%s'", loader.c_str());
   }
   LoaderCreateFn createInterface = loaderLib->loadSymbol<LoaderCreateFn>("createInterface");
   LoaderInfoFn category = loaderLib->loadSymbol<LoaderInfoFn>("category");
