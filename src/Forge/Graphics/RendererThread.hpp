@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ForgeExport.h"
 #include "Graphics/Renderer.h"
 #include "Platform/Window/RenderWindow.hpp"
 #include <thread>
@@ -27,7 +28,7 @@
 
 namespace Forge {
 
-class RendererThread
+class FORGE_EXPORT RendererThread
 {
   public:
     RendererThread();

@@ -24,6 +24,7 @@ set(ObjLoaderHeaders
 
 add_library(ObjLoader SHARED ${ObjLoaderSources} ${ObjLoaderHeaders})
 target_link_libraries(ObjLoader ForgeDLL ${Win32LinkerFlags})
+add_dependencies(ObjLoader Forge)
 
 #ImageLoader -- loads all types of images
 set(ImageLoaderSources
@@ -37,3 +38,4 @@ set(ImageLoaderHeaders
 
 add_library(ImageLoader SHARED ${ImageLoaderSources} ${ImageLoaderHeaders})
 target_link_libraries(ImageLoader ForgeDLL ${FREEIMAGE_LIBRARY} ${Win32LinkerFlags})
+add_dependencies(ImageLoader Forge)
