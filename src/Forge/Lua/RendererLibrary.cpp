@@ -72,4 +72,9 @@ int RendererLibrary::stop(lua_State* state)
   return 0;
 }
 
+RendererThread& RendererLibrary::thread()
+{
+  return mThread;
+}
+
 }

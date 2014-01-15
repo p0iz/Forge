@@ -47,6 +47,10 @@ int main(int argc, char** argv)
   Forge::RendererLibrary renderer;
   cli.addLibrary(renderer);
 
+  // Create an auxiliary context to use for loading asset data into OpenGL from scripts
+  Forge::GraphicsContext* loaderContext = renderer.thread().createAuxContext();
+  loaderContext->makeCurrent();
+
   if (argc > 1)
   {
     cli.runScript(argv[1]);

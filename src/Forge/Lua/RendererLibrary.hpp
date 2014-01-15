@@ -58,6 +58,8 @@ class FORGE_EXPORT RendererLibrary : public LuaLibrary
      */
     static int stop(lua_State* state);
 
+    RendererThread& thread();
+
 private:
     RendererThread mThread;
 
