@@ -64,6 +64,7 @@ int AssetsLibrary::addLoader(lua_State* state)
     std::string extensions = supportedExtensions();
     if (extensions.length() == 0)
     {
+      delete loaderLib;
       return luaL_error(state, "Loader says that it does not support any extensions");
     }
 
@@ -123,6 +124,37 @@ int AssetsLibrary::deleteLoader(lua_State* state)
   return 0;
 }
 
+int AssetsLibrary::load(lua_State* state)
+{
+  std::string filename = luaL_checkstring(state, 1);
+  std::string extension = FileSystem::File::getExtension(filename);
+  lua_getglobal(state, "Assets");
+  lua_getfield(state, -1, "loaders");
+  lua_getfield(state, -1, extension.c_str());
+  if (lua_isnil(state, -1) == false)
+  {
+    lua_getfield(state, -1, "loaderPtr");
+    LoaderInterface* loader = static_cast<LoaderInterface*>(lua_touserdata(state, -1));
+    if (loader)
+    {
+      void* asset = loader->load(filename);
+      if (asset)
+      {
+        lua_pushlightuserdata(state, asset);
+      }
+      else
+      {
+        lua_pushnil(state);
+      }
+    }
+  }
+  else
+  {
+    return luaL_error(state, "No loader found for extension '%s'", extension.c_str());
+  }
+  return 1;
+}
+
 void AssetsLibrary::import(lua_State* state)
 {
   lua_newtable(state);
@@ -134,6 +166,8 @@ void AssetsLibrary::import(lua_State* state)
   lua_setfield(state, -2, "setLoaderPath");
   lua_pushcfunction(state, addLoader);
   lua_setfield(state, -2, "addLoader");
+  lua_pushcfunction(state, load);
+  lua_setfield(state, -2, "load");
   lua_newtable(state);
   lua_setfield(state, -2, "loaders");
   lua_setglobal(state, "Assets");

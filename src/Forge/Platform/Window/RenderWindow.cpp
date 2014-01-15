@@ -22,6 +22,7 @@
 #include "SDLGraphicsContext.hpp"
 #include "Util/Log.h"
 #include <SDL2/SDL.h>
+#include "GL/glew.h"
 
 
 namespace Forge {
@@ -51,6 +52,16 @@ RenderWindow::RenderWindow():
 
   SDL_GLContext context = SDL_GL_CreateContext(mWindow);
   mRenderingContext = new SDLGraphicsContext(context, mWindow);
+
+  if (context)
+  {
+    // Flag to load all extensions, needed by OpenGL 3.3
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK)
+    {
+      Log::error << "Failed to initialize OpenGL functions. A crash is imminent...\n";
+    }
+  }
 
   SDL_GL_SetSwapInterval(1);
 }

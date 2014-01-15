@@ -37,6 +37,7 @@ class FORGE_EXPORT Renderer
 public:
   Renderer();
   ~Renderer();
+
   void initialize();
   void deinitialize();
 

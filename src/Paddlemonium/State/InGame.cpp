@@ -87,7 +87,7 @@ void InGame::createState() {
   mSceneConfig.getSceneNode(mBorderNode).mWorldTransform.translate(0.0f, 6.1f, 0.0f).rotate(90.0f, glm::vec3(1, 0, 0)).scale(0.4f);
 
   Forge::Lua::SceneLoader loader;
-  if (loader.loadScene("data\\scene\\TestScene.lua", mSceneConfig))
+  if (loader.loadScene("data/scene/TestScene.lua", mSceneConfig))
   {
     Forge::Log::info << "Scene loaded succesfully\n";
   }

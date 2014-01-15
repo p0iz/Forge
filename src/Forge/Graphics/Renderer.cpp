@@ -23,7 +23,6 @@
 #include "Libraries/MaterialLibrary.hpp"
 #include "Scene/SceneConfig.hpp"
 #include "Util/Log.h"
-
 #include "GL/glew.h"
 
 
@@ -41,15 +40,6 @@ Renderer::~Renderer()
 void Renderer::initialize()
 {
   if (mInitialized) return;
-
-  // Flag to load all extensions, needed by OpenGL 3.3
-  static bool glewInitialized = false;
-  if (!glewInitialized)
-  {
-    glewExperimental = GL_TRUE;
-    assert(glewInit() == GLEW_OK);
-    glewInitialized = true;
-  }
 
   glClearColor(0.1f,0.1f,0.1f,1.0f);
   glEnable(GL_DEPTH_TEST);

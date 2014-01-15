@@ -21,7 +21,7 @@ ForgeMain::ForgeMain():
 {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
   {
-  Log::error << "Failed to initialize SDL: " << SDL_GetError() << "\n";
+    Log::error << "Failed to initialize SDL: " << SDL_GetError() << "\n";
   }
 }
 

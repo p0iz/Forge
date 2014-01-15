@@ -89,6 +89,20 @@ class FORGE_EXPORT AssetsLibrary : public LuaLibrary
      *    Nothing
      */
     static int deleteLoader(lua_State* state);
+
+    /* Lua: load(path)
+     *
+     * Description:
+     *    Loads an asset from the given path
+     *
+     * Parameter(s):
+     *    path: Filename of the asset (e.g. data/meshes/paddle.obj)
+     *
+     * Return values:
+     *    The asset if a loader for the file extension is loaded and the asset is valid,
+     *    otherwise returns nil.
+     */
+    static int load(lua_State* state);
 };
 
 }
