@@ -23,7 +23,6 @@
 #include "ForgeExport.h"
 #include "GraphicsContext.hpp"
 #include <string>
-#include <SDL2/SDL.h>
 
 
 /* This class provides an SDL render window for Forge.
@@ -32,6 +31,8 @@
  * RenderContext contract and make it current at the end of the constructor.
  */
 
+
+class SDL_Window;
 
 namespace Forge {
 
@@ -67,7 +68,7 @@ class FORGE_EXPORT RenderWindow
 
   private:
     SDL_Window* mWindow;
-    SDL_GLContext mRenderingContext;
+    GraphicsContext* mRenderingContext;
 
     bool mFullscreen;
     std::string mTitle;

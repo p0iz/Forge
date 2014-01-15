@@ -34,53 +34,44 @@ RenderWindow::RenderWindow():
   mWidth(640),
   mHeight(480)
 {
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+  mWindow = SDL_CreateWindow(
+    mTitle.c_str(),
+    SDL_WINDOWPOS_CENTERED,
+    SDL_WINDOWPOS_CENTERED,
+    mWidth,
+    mHeight,
+    SDL_WINDOW_HIDDEN | SDL_WINDOW_OPENGL
+  );
+
+  SDL_GLContext context = SDL_GL_CreateContext(mWindow);
+  mRenderingContext = new SDLGraphicsContext(context, mWindow);
+
+  SDL_GL_SetSwapInterval(1);
 }
 
 RenderWindow::~RenderWindow()
 {
-  SDL_GL_DeleteContext(mRenderingContext);
+  delete mRenderingContext;
+  mRenderingContext = nullptr;
   SDL_DestroyWindow(mWindow);
   mWindow = nullptr;
 }
 
 void RenderWindow::show()
 {
-  if (!mWindow)
-  {
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
-    mWindow = SDL_CreateWindow(
-      mTitle.c_str(),
-      SDL_WINDOWPOS_CENTERED,
-      SDL_WINDOWPOS_CENTERED,
-      mWidth,
-      mHeight,
-      SDL_WINDOW_OPENGL
-    );
-  }
-  else
-  {
-    SDL_ShowWindow(mWindow);
-    SDL_GL_MakeCurrent(mWindow, mRenderingContext);
-  }
-
-  if (!mRenderingContext)
-  {
-    mRenderingContext = SDL_GL_CreateContext(mWindow);
-    SDL_GL_SetSwapInterval(1);
-  }
+  SDL_ShowWindow(mWindow);
+  mRenderingContext->makeCurrent();
 }
 
 void RenderWindow::hide()
 {
-  if (mWindow)
-  {
-    SDL_HideWindow(mWindow);
-  }
+  SDL_HideWindow(mWindow);
 }
 
 void RenderWindow::setFullscreen(const bool enabled)
@@ -126,12 +117,13 @@ void RenderWindow::swapBuffers()
 
 bool RenderWindow::makeRenderCurrent()
 {
-  return SDL_GL_MakeCurrent(mWindow, mRenderingContext) == 0;
+  return mRenderingContext->makeCurrent();
 }
 
 GraphicsContext* RenderWindow::createAuxContext() const
 {
   SDL_GLContext context = SDL_GL_CreateContext(mWindow);
+  mRenderingContext->makeCurrent();
   return new SDLGraphicsContext(context, mWindow);
 }
 
