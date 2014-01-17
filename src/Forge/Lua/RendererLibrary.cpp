@@ -39,12 +39,10 @@ RendererLibrary::~RendererLibrary()
 void RendererLibrary::import(lua_State* state)
 {
   lua_newtable(state);
-  lua_pushcfunction(state, start);
-  lua_setfield(state, -2, "start");
-  lua_pushcfunction(state, stop);
-  lua_setfield(state, -2, "stop");
   lua_pushlightuserdata(state, &mThread);
   lua_setfield(state, -2, "threadPtr");
+  LIB_FUNC(state, start);
+  LIB_FUNC(state, stop);
   lua_setglobal(state, "Renderer");
 }
 

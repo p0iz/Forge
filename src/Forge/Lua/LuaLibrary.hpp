@@ -22,6 +22,10 @@
 
 #include "LuaForwardDeclarations.hpp"
 
+// Helper macro to add functions to a table
+#define LIB_FUNC(state,fn)\
+  lua_pushcfunction(state, fn);\
+  lua_setfield(state, -2, #fn)
 
 namespace Forge {
 

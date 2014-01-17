@@ -160,16 +160,12 @@ void AssetsLibrary::import(lua_State* state)
   lua_newtable(state);
   lua_pushstring(state, ".");
   lua_setfield(state, -2, "pluginPath");
-  lua_pushcfunction(state, parsePath);
-  lua_setfield(state, -2, "parse");
-  lua_pushcfunction(state, setLoaderPath);
-  lua_setfield(state, -2, "setLoaderPath");
-  lua_pushcfunction(state, addLoader);
-  lua_setfield(state, -2, "addLoader");
-  lua_pushcfunction(state, load);
-  lua_setfield(state, -2, "load");
   lua_newtable(state);
   lua_setfield(state, -2, "loaders");
+  LIB_FUNC(state, parsePath);
+  LIB_FUNC(state, setLoaderPath);
+  LIB_FUNC(state, addLoader);
+  LIB_FUNC(state, load);
   lua_setglobal(state, "Assets");
 
   // Create the loader metatable
