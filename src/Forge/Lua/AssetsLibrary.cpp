@@ -159,7 +159,6 @@ void AssetsLibrary::import(lua_State* state)
   lua_setfield(state, -2, "pluginPath");
   lua_newtable(state);
   lua_setfield(state, -2, "loaders");
-  LIB_FUNC(state, parsePath);
   LIB_FUNC(state, setLoaderPath);
   LIB_FUNC(state, addLoader);
   LIB_FUNC(state, load);
@@ -175,29 +174,6 @@ void AssetsLibrary::remove(lua_State* state)
 {
   lua_pushnil(state);
   lua_setglobal(state, "Assets");
-}
-
-int AssetsLibrary::parsePath(lua_State* state)
-{
-  int found = 0;
-
-  FileSystem::Directory directory(luaL_checkstring(state, 1));
-  auto fileList = directory.listFiles();
-
-  std::unordered_map<std::string, int> fileCounts;
-  for (std::string& filename : fileList)
-  {
-    // Check if file is supported
-    ++fileCounts[FileSystem::File::getExtension(filename)];
-  }
-
-  for (auto pair : fileCounts)
-  {
-    Log::info << "Got " << pair.second << " of type '" << pair.first << "'.\n";
-  }
-
-  lua_pushinteger(state, found);
-  return 1;
 }
 
 int AssetsLibrary::setLoaderPath(lua_State* state)

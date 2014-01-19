@@ -22,7 +22,6 @@
 
 #include "ForgeExport.h"
 #include "LuaLibrary.hpp"
-#include <iosfwd>
 
 
 namespace Forge {
@@ -36,20 +35,6 @@ class FORGE_EXPORT AssetsLibrary : public LuaLibrary
     virtual void import(lua_State* state);
 
     virtual void remove(lua_State* state);
-
-    /* Lua: parse(path)
-     *
-     * Description:
-     *    parses the contents of a path and stores recognized assets in
-     *    a global table.
-     *
-     * Parameter(s):
-     *    path: The path to parse
-     *
-     * Return values:
-     *    The number of assets found
-     */
-    static int parsePath(lua_State* state);
 
     /* Lua: setLoaderPath(path)
      *
@@ -103,6 +88,7 @@ class FORGE_EXPORT AssetsLibrary : public LuaLibrary
      *    otherwise returns nil.
      */
     static int load(lua_State* state);
+
 };
 
 }
