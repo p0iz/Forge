@@ -33,6 +33,8 @@ class LoaderInterface
     virtual void* load(std::string const& filename) = 0;
 
     virtual void unload(void* asset) = 0;
+
+    virtual char const* category() const = 0;
 };
 
 }
@@ -47,6 +49,4 @@ extern "C"
   FORGE_EXPORT Forge::LoaderInterface* createInterface();
 
   FORGE_EXPORT const char* supportedExtensions();
-
-  FORGE_EXPORT const char* category();
 }

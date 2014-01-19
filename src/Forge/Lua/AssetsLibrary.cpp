@@ -56,9 +56,8 @@ int AssetsLibrary::addLoader(lua_State* state)
     return luaL_error(state, "Error loading loader plugin '%s'", loader.c_str());
   }
   LoaderCreateFn createInterface = loaderLib->loadSymbol<LoaderCreateFn>("createInterface");
-  LoaderInfoFn category = loaderLib->loadSymbol<LoaderInfoFn>("category");
   LoaderInfoFn supportedExtensions = loaderLib->loadSymbol<LoaderInfoFn>("supportedExtensions");
-  if (createInterface && category && supportedExtensions)
+  if (createInterface && supportedExtensions)
   {
     // Check that we actually support some extensions
     std::string extensions = supportedExtensions();
@@ -78,8 +77,6 @@ int AssetsLibrary::addLoader(lua_State* state)
     lua_setfield(state, -2, "loaderPtr");
     lua_pushlightuserdata(state, loaderLib);
     lua_setfield(state, -2, "libraryPtr");
-    lua_pushstring(state, category());
-    lua_setfield(state, -2, "category");
 
     // Set metatable
     luaL_getmetatable(state, "Assets.Loader");

@@ -183,6 +183,11 @@ void ObjLoader::unload(void* asset)
   delete static_cast<Mesh*>(asset);
 }
 
+const char*ObjLoader::category() const
+{
+  return "meshes";
+}
+
 }
 
 /* Library interface definition */

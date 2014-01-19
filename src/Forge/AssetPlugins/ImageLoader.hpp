@@ -31,6 +31,8 @@ class FORGE_EXPORT ImageLoader : public LoaderInterface
     virtual void* load(std::string const& filename);
 
     virtual void unload(void* asset);
+
+    virtual char const* category() const;
 };
 
 }

@@ -33,6 +33,7 @@ class FORGE_EXPORT ObjLoader : public LoaderInterface
 
     virtual void unload(void* asset);
 
+    virtual char const* category() const;
 };
 
 }

@@ -42,6 +42,11 @@ void ImageLoader::unload(void* asset)
   FreeImage_Unload(static_cast<FIBITMAP*>(asset));
 }
 
+const char*ImageLoader::category() const
+{
+  return "images";
+}
+
 }
 
 /* Library interface definition */
