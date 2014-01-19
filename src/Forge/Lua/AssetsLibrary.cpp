@@ -30,6 +30,8 @@
 
 namespace Forge {
 
+typedef std::unordered_map<std::string, void*> AssetMap;
+
 AssetsLibrary::AssetsLibrary()
 {
 }
@@ -78,6 +80,7 @@ int AssetsLibrary::addLoader(lua_State* state)
     lua_pushlightuserdata(state, loaderLib);
     lua_setfield(state, -2, "libraryPtr");
 
+
     // Set metatable
     luaL_getmetatable(state, "Assets.Loader");
     lua_setmetatable(state, -1);
@@ -99,6 +102,17 @@ int AssetsLibrary::addLoader(lua_State* state)
       ++count;
     }
     while (extEnd != std::string::npos);
+
+    lua_pop(state, 1);
+
+    std::string category = loaderInterface->category();
+    lua_getfield(state, -1, category.c_str());
+    if (lua_isnil(state, -1))
+    {
+      void* assetmap = new AssetMap;
+      lua_pushlightuserdata(state, assetmap);
+      lua_setfield(state, -3, category.c_str());
+    }
 
     lua_pushnumber(state, count);
 
@@ -134,22 +148,33 @@ int AssetsLibrary::load(lua_State* state)
     LoaderInterface* loader = static_cast<LoaderInterface*>(lua_touserdata(state, -1));
     if (loader)
     {
-      void* asset = loader->load(filename);
-      if (asset)
+      // Get the asset map for assets of the loader's category
+      lua_getfield(state, -3, loader->category());
+      AssetMap* assetmap = static_cast<AssetMap*>(lua_touserdata(state, -1));
+      if (assetmap && assetmap->count(filename) > 0)
       {
+        lua_pushlightuserdata(state, assetmap->at(filename));
+      }
+      else if(void* asset = loader->load(filename))
+      {
+        (*assetmap)[filename] = asset;
         lua_pushlightuserdata(state, asset);
       }
       else
       {
         lua_pushnil(state);
       }
+      return 1;
+    }
+    else
+    {
+      return luaL_error(state, "Null pointer loader for extension '%s' ", extension.c_str());
     }
   }
   else
   {
     return luaL_error(state, "No loader found for extension '%s'", extension.c_str());
   }
-  return 1;
 }
 
 void AssetsLibrary::import(lua_State* state)
