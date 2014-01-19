@@ -20,25 +20,26 @@
 
 #include "Attachable.hpp"
 
+
 namespace Forge {
 
 Attachable::Attachable(std::size_t maxAttachments) : mMaxAttachments(maxAttachments) { }
 
-void Attachable::attachToNode(std::size_t node)
+void Attachable::attachToNode(SceneNode* node)
 {
-	if (mAttachedNodes.size() < mMaxAttachments || mMaxAttachments == 0) {
-		mAttachedNodes.insert(node);
-	}
+  if (mAttachedNodes.size() < mMaxAttachments || mMaxAttachments == 0) {
+    mAttachedNodes.insert(node);
+  }
 }
 
-void Attachable::detachFromNode(std::size_t node)
+void Attachable::detachFromNode(SceneNode* node)
 {
-	mAttachedNodes.erase(node);
+  mAttachedNodes.erase(node);
 }
 
-const std::unordered_set<std::size_t>& Attachable::getAttachedNodes() const
+const std::unordered_set<SceneNode*>& Attachable::getAttachedNodes() const
 {
-	return mAttachedNodes;
+  return mAttachedNodes;
 }
 
 }

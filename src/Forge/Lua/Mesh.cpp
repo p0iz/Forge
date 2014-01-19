@@ -98,17 +98,17 @@ int Forge::Lua::Mesh::attachTo(lua_State* state)
     return 1;
   }
 
-  std::size_t id = lua_tonumber(state, -1);
+  SceneNode* node = static_cast<SceneNode*>(lua_touserdata(state, -1));
   lua_pop(state, 1);
   lua_getfield(state, -1, "name");
   std::string name = lua_tostring(state, -1);
   lua_pop(state, 1);
   MeshPtr mesh = Graphics::MeshLibrary::instance().getAssetInfo(name).asset;
-  mesh->attachToNode(id);
+  mesh->attachToNode(node);
 
   lua_pushboolean(state, true);
 
-  Forge::Log::info << "Attached mesh '" << name << "' to scene node with ID " << id << "\n";
+  Forge::Log::info << "Attached mesh '" << name << "' to scene node " << node << "\n";
 
   return 1;
 }

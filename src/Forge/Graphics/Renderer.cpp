@@ -96,12 +96,12 @@ void Renderer::drawScene(const glm::mat4& view,
         Light::updateBuffer(light.getShaderData());
         for (MeshPtr mesh : meshes) {
           // For each mesh, get the world transform
-          for (SceneNodeId nodeId : mesh->getAttachedNodes()) {
+          for (SceneNode* node : mesh->getAttachedNodes()) {
             if (!materialSelected) {
               material.beginMaterial();
               materialSelected = true;
             }
-            const glm::mat4& world = scene.getSceneNode(nodeId).mWorldTransform.getMatrix();
+            const glm::mat4& world = node->mWorldTransform.getMatrix();
             material.setTransforms(world, view, projection);
             mesh->draw();
           }

@@ -26,16 +26,18 @@
 
 namespace Forge {
 
+class SceneNode;
+
 class FORGE_EXPORT Attachable {
 public:
   /* Allow limiting the max number of attached nodes */
   explicit Attachable(std::size_t maxAttachments = 0);
-  void attachToNode(std::size_t node);
-  void detachFromNode(std::size_t node);
-  const std::unordered_set<std::size_t>& getAttachedNodes() const;
+  void attachToNode(Forge::SceneNode* node);
+  void detachFromNode(Forge::SceneNode* node);
+  const std::unordered_set<SceneNode*>& getAttachedNodes() const;
 private:
   const std::size_t mMaxAttachments;
-  std::unordered_set<std::size_t> mAttachedNodes;
+  std::unordered_set<SceneNode*> mAttachedNodes;
 };
 
 }

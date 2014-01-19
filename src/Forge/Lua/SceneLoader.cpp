@@ -186,7 +186,7 @@ int SceneLoader::getSceneNode(lua_State* state)
         try
         {
           SceneNode& node = sc->getSceneNode(nodeName);
-          lua_pushinteger(state, node.mId);
+          lua_pushlightuserdata(state, &node);
         }
         catch (NotFoundException nfe)
         {
@@ -219,7 +219,7 @@ int SceneLoader::createSceneNode(lua_State* state)
 
   sc->getSceneNode(node).mParent = parentId;
 
-  lua_pushnumber(state, node);
+  lua_pushlightuserdata(state, &sc->getSceneNode(node));
 
   return 1;
 }
