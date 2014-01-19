@@ -26,11 +26,11 @@
 
 namespace Forge {
 
-class FORGE_EXPORT Camera
+class FORGE_EXPORT PositionCamera
 {
 public:
-  Camera();
-  virtual ~Camera();
+  PositionCamera();
+  virtual ~PositionCamera();
 
   void setPerspectiveProjection(int width, int height);
   void setOrthogonalProjection(int width, int height);

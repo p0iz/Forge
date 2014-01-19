@@ -109,12 +109,12 @@ const SceneNode& SceneConfig::getSceneNode(SceneNodeId id) const {
   return mNodes[id];
 }
 
-const Camera& SceneConfig::getCamera() const
+const PositionCamera& SceneConfig::getCamera() const
 {
   return *mCurrentCamera;
 }
 
-void SceneConfig::setCamera(Camera& camera)
+void SceneConfig::setCamera(PositionCamera& camera)
 {
   mCurrentCamera = &camera;
 }

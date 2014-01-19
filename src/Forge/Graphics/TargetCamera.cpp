@@ -25,7 +25,7 @@
 namespace Forge {
 
 TargetCamera::TargetCamera():
-  Camera()
+  PositionCamera()
 {
 }
 

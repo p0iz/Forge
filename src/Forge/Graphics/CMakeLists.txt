@@ -20,7 +20,7 @@ add_subdirectory(Scene)
 
 set(GraphicsSources
   TargetCamera.cpp
-  Camera.cpp
+  PositionCamera.cpp
   DebugAxis.cpp
   Mesh.cpp
   OrbitalCamera.cpp

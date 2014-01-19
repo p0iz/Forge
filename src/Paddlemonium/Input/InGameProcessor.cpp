@@ -61,7 +61,7 @@ bool InGameProcessor::process(const float delta)
 
 void InGameProcessor::processMouseMove()
 {
-  const Forge::Camera& camera = mScene.getCamera();
+  const Forge::PositionCamera& camera = mScene.getCamera();
   Forge::SceneNode& paddleNode = mScene.getSceneNode("PaddleNode");
 
   float distance = (camera.getViewMatrix() * paddleNode.mWorldTransform.getMatrix())[3][2];

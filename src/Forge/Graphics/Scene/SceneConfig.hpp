@@ -22,7 +22,7 @@
 
 #include "ForgeExport.h"
 #include "SceneNode.hpp"
-#include "Graphics/Camera.h"
+#include "Graphics/PositionCamera.h"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Material/Material.h"
 #include "Graphics/Mesh.h"
@@ -60,8 +60,8 @@ public:
   // Lights array
   std::list<Light> lights;
 
-  const Camera& getCamera() const;
-  void setCamera(Camera& camera);
+  const PositionCamera& getCamera() const;
+  void setCamera(PositionCamera& camera);
 
   /* This function reorders nodes to create a sorted graph for fast access.
    * Should only be called when loading a scene. */
@@ -81,7 +81,7 @@ private:
   std::vector<SceneNodeId> collectChildNodes(SceneNodeId parent);
   void swapNodes(SceneNodeId node, SceneNodeId otherNode);
 
-  Camera* mCurrentCamera;
+  PositionCamera* mCurrentCamera;
 
   std::vector<SceneNode> mNodes;
   SceneNode& mRootNode;
