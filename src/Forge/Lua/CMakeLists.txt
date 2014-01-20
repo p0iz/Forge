@@ -12,6 +12,7 @@ set(ForgeLuaSources
 )
 
 set(ForgeLuaHeaders
+  AssetMap.hpp
   AssetsLibrary.hpp
   RendererLibrary.hpp
   AssetDir.hpp

@@ -19,7 +19,7 @@
  */
 
 #include "RendererThread.hpp"
-
+#include "Mesh.h"
 
 namespace Forge {
 
@@ -27,7 +27,8 @@ RendererThread::RendererThread():
   mRunning(false),
   mThread(),
   mRenderer(),
-  mWindow()
+  mWindow(),
+  mMeshes(nullptr)
 {
 }
 
@@ -64,6 +65,11 @@ void RendererThread::stop()
     mRunning = false;
     mThread.join();
   }
+}
+
+void RendererThread::setMeshAssets(AssetMap* meshmap)
+{
+  mMeshes = meshmap;
 }
 
 GraphicsContext* RendererThread::createAuxContext()

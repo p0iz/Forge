@@ -20,38 +20,11 @@
 
 #pragma once
 
-#include "Lua/AssetMap.hpp"
-#include "ForgeExport.h"
-#include "Graphics/Renderer.h"
-#include "Platform/Window/RenderWindow.hpp"
-#include <thread>
+#include <unordered_map>
 
 
 namespace Forge {
 
-class FORGE_EXPORT RendererThread
-{
-  public:
-    RendererThread();
-
-    bool start();
-
-    void stop();
-
-    void setMeshAssets(AssetMap* meshmap);
-
-    GraphicsContext* createAuxContext();
-
-    RenderWindow& window();
-
-    Renderer& renderer();
-
-  private:
-    bool mRunning;
-    std::thread mThread;
-    Renderer mRenderer;
-    RenderWindow mWindow;
-    AssetMap* mMeshes;
-};
+typedef std::unordered_map<std::string, void*> AssetMap;
 
 }

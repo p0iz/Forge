@@ -19,18 +19,17 @@
  */
 
 #include "AssetsLibrary.hpp"
+#include "AssetMap.hpp"
 #include "AssetPlugins/LoaderInterface.hpp"
 #include "Util/Log.h"
 #include "Platform/DynamicLoader/DynamicLoader.hpp"
 #include "Platform/FileSystem/Directory.hpp"
 #include "Platform/FileSystem/File.hpp"
 #include <lua.hpp>
-#include <unordered_map>
+
 
 
 namespace Forge {
-
-typedef std::unordered_map<std::string, void*> AssetMap;
 
 AssetsLibrary::AssetsLibrary()
 {

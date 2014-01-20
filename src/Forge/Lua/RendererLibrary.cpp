@@ -20,6 +20,7 @@
 
 #include "RendererLibrary.hpp"
 #include "Graphics/RendererThread.hpp"
+#include "AssetMap.hpp"
 #include "Util/Log.h"
 #include <lua.hpp>
 
@@ -43,6 +44,7 @@ void RendererLibrary::import(lua_State* state)
   lua_setfield(state, -2, "threadPtr");
   LIB_FUNC(state, start);
   LIB_FUNC(state, stop);
+  LIB_FUNC(state, findMeshAssets);
   lua_setglobal(state, "Renderer");
 }
 
@@ -64,6 +66,28 @@ int RendererLibrary::stop(lua_State* state)
   RendererThread* thread = getRendererThread(state);
   thread->stop();
   return 0;
+}
+
+int RendererLibrary::findMeshAssets(lua_State* state)
+{
+  lua_getglobal(state, "Assets");
+  if (lua_istable(state, -1))
+  {
+    lua_getfield(state, -1, "meshes");
+    AssetMap* meshmap = static_cast<AssetMap*>(lua_touserdata(state, -1));
+    if (!meshmap)
+    {
+      return luaL_error(state, "No asset map found for category 'meshes'");
+    }
+    RendererThread* thread = getRendererThread(state);
+    thread->setMeshAssets(meshmap);
+  }
+  else
+  {
+    return luaL_error(state, "Assets library is not loaded. It is required for this function.");
+  }
+  lua_pushboolean(state, false);
+  return 1;
 }
 
 RendererThread& RendererLibrary::thread()
