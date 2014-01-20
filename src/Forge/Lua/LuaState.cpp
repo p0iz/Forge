@@ -19,6 +19,7 @@
  */
 
 #include "LuaState.hpp"
+#include "Util/Log.h"
 #include <lua.hpp>
 #include <iostream>
 #include <string>
@@ -64,10 +65,10 @@ void LuaState::removeLibrary(LuaLibrary& library)
 
 void LuaState::runScript(std::string const& scriptFile)
 {
-  lua_getglobal(mState, "print");
-  lua_getglobal(mState, "dofile");
-  lua_pushstring(mState, scriptFile.c_str());
-  lua_pcall(mState, 1, LUA_MULTRET, 1);
+  if (luaL_dofile(mState, scriptFile.c_str()))
+  {
+    Log::error << "Lua error: " << lua_tostring(mState, -1) << "\n";
+  }
 }
 
 bool LuaState::isIncompleteChunk(const std::string& chunk)
