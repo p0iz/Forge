@@ -83,7 +83,7 @@ int AssetsLibrary::addLoader(lua_State* state)
 
     // Set metatable
     luaL_getmetatable(state, "Assets.Loader");
-    lua_setmetatable(state, -1);
+    lua_setmetatable(state, -2);
 
     // Store a reference to the same loader for all the supported extensions
     int count = 0;
@@ -105,13 +105,15 @@ int AssetsLibrary::addLoader(lua_State* state)
 
     lua_pop(state, 1);
 
-    std::string category = loaderInterface->category();
-    lua_getfield(state, -1, category.c_str());
+    char const* category = loaderInterface->category();
+    lua_getfield(state, -2, category);
     if (lua_isnil(state, -1))
     {
-      void* assetmap = new AssetMap;
+      Log::info << "Adding asset map for category '" << category << "'\n";
+      AssetMap* assetmap = new AssetMap;
+      lua_getglobal(state, "Assets");
       lua_pushlightuserdata(state, assetmap);
-      lua_setfield(state, -3, category.c_str());
+      lua_setfield(state, -2, category);
     }
 
     lua_pushnumber(state, count);
@@ -149,9 +151,13 @@ int AssetsLibrary::load(lua_State* state)
     if (loader)
     {
       // Get the asset map for assets of the loader's category
-      lua_getfield(state, -3, loader->category());
+      lua_getfield(state, -4, loader->category());
       AssetMap* assetmap = static_cast<AssetMap*>(lua_touserdata(state, -1));
-      if (assetmap && assetmap->count(filename) > 0)
+      if (!assetmap)
+      {
+        return luaL_error(state, "Asset map for category '%s' not found.", loader->category());
+      }
+      else if (assetmap->count(filename) > 0)
       {
         lua_pushlightuserdata(state, assetmap->at(filename));
       }
