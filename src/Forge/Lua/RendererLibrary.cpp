@@ -54,18 +54,14 @@ void RendererLibrary::remove(lua_State* state)
 
 int RendererLibrary::start(lua_State* state)
 {
-  lua_getglobal(state, "Renderer");
-  lua_getfield(state, -1, "threadPtr");
-  RendererThread* thread = static_cast<RendererThread*>(lua_touserdata(state, -1));
+  RendererThread* thread = getRendererThread(state);
   lua_pushboolean(state, thread->start());
   return 1;
 }
 
 int RendererLibrary::stop(lua_State* state)
 {
-  lua_getglobal(state, "Renderer");
-  lua_getfield(state, -1, "threadPtr");
-  RendererThread* thread = static_cast<RendererThread*>(lua_touserdata(state, -1));
+  RendererThread* thread = getRendererThread(state);
   thread->stop();
   return 0;
 }
@@ -73,6 +69,13 @@ int RendererLibrary::stop(lua_State* state)
 RendererThread& RendererLibrary::thread()
 {
   return mThread;
+}
+
+RendererThread* RendererLibrary::getRendererThread(lua_State* state)
+{
+  lua_getglobal(state, "Renderer");
+  lua_getfield(state, -1, "threadPtr");
+  return static_cast<RendererThread*>(lua_touserdata(state, -1));
 }
 
 }

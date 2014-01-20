@@ -63,6 +63,7 @@ class FORGE_EXPORT RendererLibrary : public LuaLibrary
 private:
     RendererThread mThread;
 
+    static RendererThread* getRendererThread(lua_State* state);
 };
 
 }
