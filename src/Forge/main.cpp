@@ -21,6 +21,7 @@
 #include "ForgeCLI.hpp"
 #include "Lua/AssetsLibrary.hpp"
 #include "Lua/RendererLibrary.hpp"
+#include "Lua/SceneLibrary.hpp"
 #include <iostream>
 
 
@@ -47,6 +48,9 @@ int main(int argc, char** argv)
   Forge::RendererLibrary renderer;
   cli.addLibrary(renderer);
 
+  Forge::SceneLibrary scene;
+  cli.addLibrary(scene);
+
   // Create an auxiliary context to use for loading asset data into OpenGL from scripts
   Forge::GraphicsContext* loaderContext = renderer.thread().createAuxContext();
   loaderContext->makeCurrent();
@@ -54,7 +58,6 @@ int main(int argc, char** argv)
   if (argc > 1)
   {
     cli.runScript(argv[1]);
-    return 0;
   }
 
   cli.start();
