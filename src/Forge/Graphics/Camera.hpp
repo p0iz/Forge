@@ -14,33 +14,44 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2014 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "ForgeExport.h"
+#include "Scene/Attachable.hpp"
 #include <glm/glm.hpp>
+
 
 namespace Forge {
 
-// A struct that contains a single transformation (translation, scaling and rotation)
-// from one space to another.
-struct FORGE_EXPORT Transformation {
-  Transformation& translate(float x, float y, float z);
-  Transformation& setPosition(float x, float y, float z);
+class Viewport;
 
-  glm::vec3 position() const;
+class Camera : public Attachable
+{
+  public:
+    explicit Camera(
+      float fovY = 45.0f,
+      float nearClip = 1.0f,
+      float farClip = 100.0f);
 
-  Transformation& scale(float size); // Only allow uniform scaling
-  Transformation& rotate(float angle, const glm::vec3& axis);
-  void reset();
-  Transformation& applyMatrix(const glm::mat4& matrix);
-  glm::mat4 getMatrix() const;
-private:
-  glm::mat4 mMatrix;
-  float mScale = 1.0f;
+    void lookAt(SceneNode* target);
+
+    void setFovY(float fovY);
+
+    void setClip(float near, float far);
+
+    glm::mat4 view() const;
+
+    glm::mat4 projection(Viewport const& viewport) const;
+
+  private:
+    float mFovY;
+    float mNearClip;
+    float mFarClip;
+
+    SceneNode* mTarget;
 };
 
 }

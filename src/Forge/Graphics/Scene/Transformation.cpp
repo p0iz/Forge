@@ -26,47 +26,52 @@ namespace Forge {
 
 Transformation& Transformation::translate(float x, float y, float z)
 {
-	mMatrix = glm::translate(mMatrix, glm::vec3(x, y, z));
-	return *this;
+  mMatrix = glm::translate(mMatrix, glm::vec3(x, y, z));
+  return *this;
 }
 
 Transformation& Transformation::setPosition(float x, float y, float z)
 {
-	mMatrix[3] = glm::vec4(x, y, z, mMatrix[3][3]);
-	return *this;
+  mMatrix[3] = glm::vec4(x, y, z, mMatrix[3][3]);
+  return *this;
+}
+
+glm::vec3 Transformation::position() const
+{
+  return glm::vec3(mMatrix[3]);
 }
 
 Transformation& Transformation::scale(float size)
 {
-	mScale *= size;
-	return *this;
+  mScale *= size;
+  return *this;
 }
 
 Transformation& Transformation::rotate(float angle, const glm::vec3 &axis)
 {
-	mMatrix = glm::rotate(mMatrix, angle, axis);
-	return *this;
+  mMatrix = glm::rotate(mMatrix, angle, axis);
+  return *this;
 }
 
 void Transformation::reset()
 {
-	mMatrix = glm::mat4();
-	mScale = 1.0f;
+  mMatrix = glm::mat4();
+  mScale = 1.0f;
 }
 
 Transformation& Transformation::applyMatrix(const glm::mat4& matrix)
 {
-	mMatrix = matrix * mMatrix;
-	return *this;
+  mMatrix = matrix * mMatrix;
+  return *this;
 }
 
 glm::mat4 Transformation::getMatrix() const
 {
-	glm::mat4x4 result(mMatrix);
-	result[0] *= mScale;
-	result[1] *= mScale;
-	result[2] *= mScale;
-	return result;
+  glm::mat4x4 result(mMatrix);
+  result[0] *= mScale;
+  result[1] *= mScale;
+  result[2] *= mScale;
+  return result;
 }
 
 }

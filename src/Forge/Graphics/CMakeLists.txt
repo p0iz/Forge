@@ -19,6 +19,7 @@ add_subdirectory(Material)
 add_subdirectory(Scene)
 
 set(GraphicsSources
+  Camera.cpp
   TargetCamera.cpp
   PositionCamera.cpp
   DebugAxis.cpp
@@ -26,6 +27,7 @@ set(GraphicsSources
   OrbitalCamera.cpp
   Renderer.cpp
   RendererThread.cpp
+  Viewport.cpp
 )
 
 set(GraphicsLibs
