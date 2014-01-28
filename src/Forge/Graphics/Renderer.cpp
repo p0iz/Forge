@@ -19,9 +19,12 @@
  */
 
 #include "Renderer.h"
+#include "Camera.hpp"
 #include "DebugAxis.h"
+#include "Lua/UserdataMap.hpp"
 #include "Libraries/MaterialLibrary.hpp"
 #include "Scene/SceneConfig.hpp"
+#include "Viewport.hpp"
 #include "Util/Log.h"
 #include "GL/glew.h"
 
@@ -47,6 +50,12 @@ void Renderer::initialize()
   glEnable(GL_CULL_FACE);
   glBlendFunc(GL_ONE, GL_ONE);
 
+  if (!glIsEnabled(GL_SCISSOR_TEST))
+  {
+    Log::info << "Enabling scissor test.\n";
+    glEnable(GL_SCISSOR_TEST);
+  }
+
   mDebugAxis.initialize();
 
   Light::createBuffer();
@@ -66,6 +75,20 @@ void Renderer::deinitialize()
 void Renderer::updateViewport(int width, int height)
 {
   glViewport(0, 0, width, height);
+}
+
+void Renderer::render(const Viewport& viewport, UserdataMap* meshes)
+{
+  glViewport(viewport.x(), viewport.y(), viewport.width(), viewport.height());
+  glScissor(viewport.x(), viewport.y(), viewport.width(), viewport.height());
+  static float colR, colG, colB;
+
+  colR = static_cast<float>(random() % 255) / 255;
+  colG = static_cast<float>(random() % 255) / 255;
+  colB = static_cast<float>(random() % 255) / 255;
+
+  glClearColor(colR,colG,colB,1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::updateLightData(const SceneConfig& scene, const glm::mat4& view)

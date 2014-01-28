@@ -20,6 +20,8 @@
 
 #include "RendererLibrary.hpp"
 #include "Graphics/RendererThread.hpp"
+#include "Graphics/Camera.hpp"
+#include "Graphics/Viewport.hpp"
 #include "UserdataMap.hpp"
 #include "Util/Log.h"
 #include <lua.hpp>
@@ -42,9 +44,16 @@ void RendererLibrary::import(lua_State* state)
   lua_newtable(state);
   lua_pushlightuserdata(state, &mThread);
   lua_setfield(state, -2, "threadPtr");
+
+  // Add table for viewports
+  lua_pushlightuserdata(state, new UserdataMap);
+  lua_setfield(state, -2, "viewports");
+
   LIB_FUNC(state, start);
   LIB_FUNC(state, stop);
-  LIB_FUNC(state, findMeshAssets);
+  LIB_FUNC(state, bindCamera);
+  LIB_FUNC(state, createViewport);
+
   lua_setglobal(state, "Renderer");
 }
 
@@ -56,6 +65,7 @@ void RendererLibrary::remove(lua_State* state)
 
 int RendererLibrary::start(lua_State* state)
 {
+  findMeshAssets(state);
   RendererThread* thread = getRendererThread(state);
   lua_pushboolean(state, thread->start());
   return 1;
@@ -86,8 +96,48 @@ int RendererLibrary::findMeshAssets(lua_State* state)
   {
     return luaL_error(state, "Assets library is not loaded. It is required for this function.");
   }
-  lua_pushboolean(state, false);
-  return 1;
+  return 0;
+}
+
+int RendererLibrary::createViewport(lua_State* state)
+{
+  Viewport* viewport = nullptr;
+  switch (lua_gettop(state))
+  {
+    case 1:
+    {
+      viewport = new Viewport(getRendererThread(state)->window());
+    }
+    break;
+    case 5:
+    {
+      float x = luaL_checknumber(state, 2);
+      float y = luaL_checknumber(state, 3);
+      float width = luaL_checknumber(state, 4);
+      float height = luaL_checknumber(state, 5);
+      viewport = new Viewport(getRendererThread(state)->window(), x, y, width, height);
+    }
+    break;
+    default:
+      return
+        luaL_error(state, "createViewport takes 1 (name) or 5 (name,x,y,width,height) parameters");
+  }
+  std::string name = luaL_checkstring(state, 1);
+  getRendererThread(state)->addViewport(name, viewport);
+
+  return 0;
+}
+
+int RendererLibrary::bindCamera(lua_State* state)
+{
+  std::string name = luaL_checkstring(state, 1);
+  Camera* camera = static_cast<Camera*>(lua_touserdata(state, 2));
+  Viewport* viewport = getRendererThread(state)->getViewport(name);
+  if (viewport)
+  {
+    viewport->setCamera(camera);
+  }
+  return 0;
 }
 
 RendererThread& RendererLibrary::thread()

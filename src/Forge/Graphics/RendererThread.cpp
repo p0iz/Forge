@@ -19,7 +19,10 @@
  */
 
 #include "RendererThread.hpp"
+#include "Graphics/Camera.hpp"
 #include "Mesh.h"
+#include "Util/Log.h"
+
 
 namespace Forge {
 
@@ -28,7 +31,8 @@ RendererThread::RendererThread():
   mThread(),
   mRenderer(),
   mWindow(),
-  mMeshes(nullptr)
+  mMeshes(nullptr),
+  mViewports()
 {
 }
 
@@ -43,12 +47,25 @@ bool RendererThread::start()
 
     mRunning = true;
     mThread = std::thread([this](){
+      mWindow.makeRenderCurrent();
       mWindow.resize(640,480);
       mWindow.show();
       mWindow.setTitle("Forge");
       mRenderer.initialize();
+      if (!mMeshes)
+      {
+        Log::error << "No meshes set! Rendering cannot be done.\n";
+        return;
+      }
       while(mRunning)
       {
+        for (auto nameViewport : mViewports)
+        {
+          if (nameViewport.second)
+          {
+            mRenderer.render(*static_cast<Viewport const*>(nameViewport.second), mMeshes);
+          }
+        }
         mWindow.swapBuffers();
       }
       mRenderer.deinitialize();
@@ -75,6 +92,21 @@ void RendererThread::setMeshAssets(UserdataMap* meshmap)
 GraphicsContext* RendererThread::createAuxContext()
 {
   return mWindow.createAuxContext();
+}
+
+RenderWindow const& RendererThread::window()
+{
+  return mWindow;
+}
+
+void RendererThread::addViewport(const std::string& name, Viewport* viewport)
+{
+  mViewports[name] = viewport;
+}
+
+Viewport* RendererThread::getViewport(const std::string& name)
+{
+  return mViewports[name];
 }
 
 }

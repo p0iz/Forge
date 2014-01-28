@@ -20,16 +20,20 @@
 
 #pragma once
 
+#include "Lua/UserdataMap.hpp"
 #include "DebugAxis.h"
 #include "ForgeExport.h"
 #include <glm/glm.hpp>
 
 
 namespace Forge {
+class Camera;
 class SceneConfig;
 }
 
 namespace Forge {
+
+class Viewport;
 
 /* A class that is used to render scenes from scene configurations */
 class FORGE_EXPORT Renderer
@@ -42,6 +46,9 @@ public:
   void deinitialize();
 
   void updateViewport(int width, int height);
+
+  void render(Viewport const& viewport, UserdataMap* meshes);
+
   void render(const SceneConfig& scene);
 
 private:

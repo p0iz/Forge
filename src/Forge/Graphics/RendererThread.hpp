@@ -23,11 +23,14 @@
 #include "Lua/UserdataMap.hpp"
 #include "ForgeExport.h"
 #include "Graphics/Renderer.h"
+#include "Graphics/Viewport.hpp"
 #include "Platform/Window/RenderWindow.hpp"
 #include <thread>
 
 
 namespace Forge {
+
+class Camera;
 
 class FORGE_EXPORT RendererThread
 {
@@ -42,9 +45,13 @@ class FORGE_EXPORT RendererThread
 
     GraphicsContext* createAuxContext();
 
-    RenderWindow& window();
+    RenderWindow const& window();
 
     Renderer& renderer();
+
+    void addViewport(std::string const& name, Viewport* viewport);
+
+    Viewport* getViewport(std::string const& name);
 
   private:
     bool mRunning;
@@ -52,6 +59,7 @@ class FORGE_EXPORT RendererThread
     Renderer mRenderer;
     RenderWindow mWindow;
     UserdataMap* mMeshes;
+    std::unordered_map<std::string, Viewport*> mViewports;
 };
 
 }

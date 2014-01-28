@@ -28,6 +28,8 @@
 
 namespace Forge {
 
+class Viewport;
+
 class FORGE_EXPORT RendererLibrary : public LuaLibrary
 {
   public:
@@ -58,6 +60,32 @@ class FORGE_EXPORT RendererLibrary : public LuaLibrary
      */
     static int stop(lua_State* state);
 
+    /* Lua: createViewport(name, [x, y, width, height])
+     *
+     * Description:
+     *    Creates a viewport in the render window. If no options are given, the viewport covers the
+     *    entire window.
+     *
+     * Return values:
+     *    Nothing.
+     */
+    static int createViewport(lua_State* state);
+
+    /* Lua: bindCamera(viewport, camera)
+     *
+     * Description:
+     *    Binds the given camera to a viewport in the render window.
+     *
+     * Return values:
+     *    Nothing.
+     */
+    static int bindCamera(lua_State* state);
+
+    RendererThread& thread();
+
+private:
+    RendererThread mThread;
+
     /* Lua: findMeshAssets()
      *
      * Description:
@@ -65,14 +93,19 @@ class FORGE_EXPORT RendererLibrary : public LuaLibrary
      *    and a loader for mesh assets to be loaded.
      *
      * Return values:
-     *    Boolean describing whether a mesh asset map was available or not.
+     *    Nothing.
      */
     static int findMeshAssets(lua_State* state);
 
-    RendererThread& thread();
-
-private:
-    RendererThread mThread;
+    /* Lua: findCameras()
+     *
+     * Description:
+     *    Finds the camera map for rendering. Requires the Scene library to be loaded.
+     *
+     * Return values:
+     *    Nothing.
+     */
+    static int findCameras(lua_State* state);
 
     static RendererThread* getRendererThread(lua_State* state);
 };
