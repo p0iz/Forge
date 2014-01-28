@@ -20,11 +20,11 @@
 
 #include "AssetsLibrary.hpp"
 #include "AssetPlugins/LoaderInterface.hpp"
-#include "Util/Log.h"
 #include "Platform/DynamicLoader/DynamicLoader.hpp"
 #include "Platform/FileSystem/Directory.hpp"
 #include "Platform/FileSystem/File.hpp"
 #include "UserdataMap.hpp"
+#include "Util/Log.h"
 #include <lua.hpp>
 
 
