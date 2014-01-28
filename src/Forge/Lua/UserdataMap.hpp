@@ -25,6 +25,7 @@
 
 namespace Forge {
 
-typedef std::unordered_map<std::string, void*> AssetMap;
+// Hash map for storing void pointers, i.e. userdata
+typedef std::unordered_map<std::string, void*> UserdataMap;
 
 }

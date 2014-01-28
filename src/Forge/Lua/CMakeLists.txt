@@ -12,7 +12,6 @@ set(ForgeLuaSources
 )
 
 set(ForgeLuaHeaders
-  AssetMap.hpp
   AssetsLibrary.hpp
   RendererLibrary.hpp
   AssetDir.hpp
@@ -26,6 +25,7 @@ set(ForgeLuaHeaders
   ObjectCreator.hpp
   SceneLoader.hpp
   SystemInfo.hpp
+  UserdataMap.hpp
   Utils.hpp
 )
 

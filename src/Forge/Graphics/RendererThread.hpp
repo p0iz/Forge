@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Lua/AssetMap.hpp"
+#include "Lua/UserdataMap.hpp"
 #include "ForgeExport.h"
 #include "Graphics/Renderer.h"
 #include "Platform/Window/RenderWindow.hpp"
@@ -38,7 +38,7 @@ class FORGE_EXPORT RendererThread
 
     void stop();
 
-    void setMeshAssets(AssetMap* meshmap);
+    void setMeshAssets(UserdataMap* meshmap);
 
     GraphicsContext* createAuxContext();
 
@@ -51,7 +51,7 @@ class FORGE_EXPORT RendererThread
     std::thread mThread;
     Renderer mRenderer;
     RenderWindow mWindow;
-    AssetMap* mMeshes;
+    UserdataMap* mMeshes;
 };
 
 }

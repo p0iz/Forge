@@ -20,7 +20,7 @@
 
 #include "RendererLibrary.hpp"
 #include "Graphics/RendererThread.hpp"
-#include "AssetMap.hpp"
+#include "UserdataMap.hpp"
 #include "Util/Log.h"
 #include <lua.hpp>
 
@@ -74,7 +74,7 @@ int RendererLibrary::findMeshAssets(lua_State* state)
   if (lua_istable(state, -1))
   {
     lua_getfield(state, -1, "meshes");
-    AssetMap* meshmap = static_cast<AssetMap*>(lua_touserdata(state, -1));
+    UserdataMap* meshmap = static_cast<UserdataMap*>(lua_touserdata(state, -1));
     if (!meshmap)
     {
       return luaL_error(state, "No asset map found for category 'meshes'");

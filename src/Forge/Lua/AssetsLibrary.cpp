@@ -19,12 +19,12 @@
  */
 
 #include "AssetsLibrary.hpp"
-#include "AssetMap.hpp"
 #include "AssetPlugins/LoaderInterface.hpp"
 #include "Util/Log.h"
 #include "Platform/DynamicLoader/DynamicLoader.hpp"
 #include "Platform/FileSystem/Directory.hpp"
 #include "Platform/FileSystem/File.hpp"
+#include "UserdataMap.hpp"
 #include <lua.hpp>
 
 
@@ -109,7 +109,7 @@ int AssetsLibrary::addLoader(lua_State* state)
     if (lua_isnil(state, -1))
     {
       Log::info << "Adding asset map for category '" << category << "'\n";
-      AssetMap* assetmap = new AssetMap;
+      UserdataMap* assetmap = new UserdataMap;
       lua_getglobal(state, "Assets");
       lua_pushlightuserdata(state, assetmap);
       lua_setfield(state, -2, category);
@@ -151,7 +151,7 @@ int AssetsLibrary::load(lua_State* state)
     {
       // Get the asset map for assets of the loader's category
       lua_getfield(state, -4, loader->category());
-      AssetMap* assetmap = static_cast<AssetMap*>(lua_touserdata(state, -1));
+      UserdataMap* assetmap = static_cast<UserdataMap*>(lua_touserdata(state, -1));
       if (!assetmap)
       {
         return luaL_error(state, "Asset map for category '%s' not found.", loader->category());

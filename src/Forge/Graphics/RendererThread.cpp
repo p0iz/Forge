@@ -67,7 +67,7 @@ void RendererThread::stop()
   }
 }
 
-void RendererThread::setMeshAssets(AssetMap* meshmap)
+void RendererThread::setMeshAssets(UserdataMap* meshmap)
 {
   mMeshes = meshmap;
 }
