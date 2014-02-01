@@ -49,6 +49,7 @@ RenderWindow::RenderWindow():
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+  SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, SDL_TRUE);
 
   SDL_GLContext context = SDL_GL_CreateContext(mWindow);
   mRenderingContext = new SDLGraphicsContext(context, mWindow);
