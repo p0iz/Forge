@@ -22,9 +22,9 @@
 
 layout(location = 0) in vec3 position;
 
-uniform mat4 WorldViewProjectionMatrix;
+uniform mat4 WorldViewProjection;
 
 void main()
 {
-	gl_Position = WorldViewProjectionMatrix * vec4(position,1);
+	gl_Position = WorldViewProjection * vec4(position,1);
 }
