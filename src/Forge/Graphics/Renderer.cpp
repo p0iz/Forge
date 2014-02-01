@@ -79,8 +79,14 @@ void Renderer::updateViewport(int width, int height)
 
 void Renderer::render(const Viewport& viewport, UserdataMap* meshes)
 {
-  glViewport(viewport.x(), viewport.y(), viewport.width(), viewport.height());
-  glScissor(viewport.x(), viewport.y(), viewport.width(), viewport.height());
+  int x = viewport.x();
+  int y = viewport.y();
+  int width = viewport.width();
+  int height = viewport.height();
+
+  glViewport(x, y, width, height);
+  glScissor(x, y, width, height);
+
   static float colR, colG, colB;
 
   colR = static_cast<float>(random() % 255) / 255;
