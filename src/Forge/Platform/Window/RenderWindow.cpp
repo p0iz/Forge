@@ -35,12 +35,6 @@ RenderWindow::RenderWindow():
   mWidth(640),
   mHeight(480)
 {
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
   mWindow = SDL_CreateWindow(
     mTitle.c_str(),
     SDL_WINDOWPOS_CENTERED,
@@ -49,6 +43,12 @@ RenderWindow::RenderWindow():
     mHeight,
     SDL_WINDOW_HIDDEN | SDL_WINDOW_OPENGL
   );
+
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
   SDL_GLContext context = SDL_GL_CreateContext(mWindow);
   mRenderingContext = new SDLGraphicsContext(context, mWindow);
