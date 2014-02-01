@@ -56,6 +56,8 @@ class FORGE_EXPORT Mesh : public Attachable
 
     void calculateBounds(const std::vector<Vertex>& vertices);
 
+    void createVAO();
+
     struct Bounds
     {
         float minX;

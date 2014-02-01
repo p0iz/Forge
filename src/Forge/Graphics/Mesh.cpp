@@ -40,47 +40,18 @@ Mesh::Mesh(
     mVertexArrayId(0),
     mVertexBufferId(0)
 {
-  const size_t vertexSize = sizeof(Vertex);
-
   // Generate vertex array and buffers
-  glGenVertexArrays(1, &mVertexArrayId);
   glGenBuffers(1, &mVertexBufferId);
-
-  glBindVertexArray(mVertexArrayId);
-
   glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
-  glBufferData(GL_ARRAY_BUFFER, vertexSize*vertices.size(), &vertices[0], GL_STATIC_DRAW);
-
-  // Positional attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexSize, 0);
-  glEnableVertexAttribArray(0);
-
-  // Texture coordinate attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->texcoord));
-  glEnableVertexAttribArray(1);
-
-  // Normal attribute
-  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->normal));
-  glEnableVertexAttribArray(2);
-
-  // Tangent attribute
-  glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->tangent));
-  glEnableVertexAttribArray(3);
-
-  // Bitangent attribute
-  glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, vertexSize, &(((Vertex*)0)->bitangent));
-  glEnableVertexAttribArray(4);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
   glGenBuffers(1, &mElementBufferId);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBufferId);
-
   glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
         sizeof(elements[0])*elements.size(),
       &elements[0],
       GL_STATIC_DRAW);
-
-  glBindVertexArray(0);
 
   calculateBounds(vertices);
 }
@@ -100,6 +71,11 @@ Mesh::~Mesh()
 
 void Mesh::draw()
 {
+  if (mVertexArrayId == 0)
+  {
+    createVAO();
+  }
+
   int currentVertexArray;
   glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentVertexArray);
   if (static_cast<unsigned int>(currentVertexArray) != mVertexArrayId) {
@@ -130,6 +106,38 @@ void Mesh::calculateBounds(const std::vector<Vertex>& vertices)
     mBounds.minZ = vertex.position[2] < mBounds.minZ ? vertex.position[2] : mBounds.minZ;
     mBounds.maxZ = vertex.position[2] > mBounds.maxZ ? vertex.position[2] : mBounds.maxZ;
   }
+}
+
+void Mesh::createVAO()
+{
+  glGenVertexArrays(1, &mVertexArrayId);
+  glBindVertexArray(mVertexArrayId);
+
+  glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
+
+  // Positional attribute
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+  glEnableVertexAttribArray(0);
+
+  // Texture coordinate attribute
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), &(((Vertex*)0)->texcoord));
+  glEnableVertexAttribArray(1);
+
+  // Normal attribute
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), &(((Vertex*)0)->normal));
+  glEnableVertexAttribArray(2);
+
+  // Tangent attribute
+  glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), &(((Vertex*)0)->tangent));
+  glEnableVertexAttribArray(3);
+
+  // Bitangent attribute
+  glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), &(((Vertex*)0)->bitangent));
+  glEnableVertexAttribArray(4);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBufferId);
+
+  glBindVertexArray(0);
 }
 
 } // namespace Forge
