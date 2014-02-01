@@ -34,8 +34,6 @@ class FORGE_EXPORT DefaultTechnique : public Technique
 public:
   DefaultTechnique();
   virtual TechniquePtr clone();
-  virtual void create();
-  virtual void destroy();
   virtual void beginMaterial();
   virtual void setTransforms(const glm::mat4& world,
               const glm::mat4& view,
