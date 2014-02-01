@@ -65,7 +65,7 @@ int Viewport::height() const
 
 float Viewport::aspectRatio() const
 {
-  return mWidth * mWindow.width() / mHeight * mWindow.height();
+  return (mWidth * mWindow.width()) / (mHeight * mWindow.height());
 }
 
 void Viewport::setCamera(const Camera* camera)
