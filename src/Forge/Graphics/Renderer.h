@@ -23,6 +23,7 @@
 #include "Lua/UserdataMap.hpp"
 #include "DebugAxis.h"
 #include "ForgeExport.h"
+#include "Material/Technique/Technique.hpp"
 #include <glm/glm.hpp>
 
 
@@ -60,6 +61,8 @@ private:
              const SceneConfig& scene);
 
   DebugAxis mDebugAxis;
+
+  Technique* mTechnique;
 };
 
 }

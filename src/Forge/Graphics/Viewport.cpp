@@ -19,7 +19,9 @@
  */
 
 #include "Viewport.hpp"
+#include "Camera.hpp"
 #include "Platform/Window/RenderWindow.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 
 namespace Forge {
@@ -76,6 +78,16 @@ void Viewport::setCamera(const Camera* camera)
 bool Viewport::hasCamera() const
 {
   return mCamera;
+}
+
+glm::mat4 Viewport::view() const
+{
+  return mCamera ? mCamera->view() : glm::mat4();
+}
+
+glm::mat4 Viewport::projection() const
+{
+  return mCamera ? mCamera->projection(*this) : glm::mat4();
 }
 
 }

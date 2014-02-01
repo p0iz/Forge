@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include "glm/glm.hpp"
+
 
 namespace Forge
 {
@@ -55,6 +57,10 @@ class Viewport
     void setCamera(Camera const* camera);
 
     bool hasCamera() const;
+
+    glm::mat4 view() const;
+
+    glm::mat4 projection() const;
 
   private:
     RenderWindow const& mWindow;

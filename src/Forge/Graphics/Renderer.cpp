@@ -58,6 +58,11 @@ void Renderer::initialize()
 
   mDebugAxis.initialize();
 
+  mTechnique = new Technique;
+  mTechnique->addShader(Shader::VertexShader, "data/shaders/DefaultTechnique.vs");
+  mTechnique->addShader(Shader::FragmentShader, "data/shaders/DefaultTechnique.fs");
+  mTechnique->create();
+
   Light::createBuffer();
 
   mInitialized = true;
@@ -66,6 +71,12 @@ void Renderer::initialize()
 void Renderer::deinitialize()
 {
   if (!mInitialized) return;
+
+  if (mTechnique)
+  {
+    delete mTechnique;
+    mTechnique = nullptr;
+  }
 
   Light::destroyBuffer();
   mDebugAxis.deinitialize();
@@ -95,6 +106,20 @@ void Renderer::render(const Viewport& viewport, UserdataMap* meshes)
 
   glClearColor(colR,colG,colB,1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  for (auto nameMesh : *meshes)
+  {
+    Mesh* mesh = static_cast<Mesh*>(nameMesh.second);
+    for (SceneNode const* node : mesh->getAttachedNodes())
+    {
+      glm::mat4 world = node->mWorldTransform.getMatrix();
+      glm::mat4 view = viewport.view();
+      glm::mat4 projection = viewport.projection();
+      mTechnique->beginMaterial();
+      mTechnique->setTransforms(world, view, projection);
+      mesh->draw();
+    }
+  }
 }
 
 void Renderer::updateLightData(const SceneConfig& scene, const glm::mat4& view)
