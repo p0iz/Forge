@@ -11,17 +11,25 @@ end
 Assets.setLoaderPath 'src/Forge/AssetPlugins'
 Assets.addLoader 'ObjLoader'
 Assets.addLoader 'ImageLoader'
-mesh = Assets.load 'data/meshes/paddle.obj'
+mesh = Assets.load 'data/meshes/alleyway_1.obj'
 
 -- Create test mesh and scene node
 Scene.createNode 'test'
 Scene.attach(Scene.nodes.test, mesh)
 
 -- Create camera and camera node
-Scene.createCamera('main', 45, 1, 100)
-Scene.createNode 'camera'
-Scene.translate(Scene.nodes.camera, 0, 5, -10)
-Scene.attach(Scene.nodes.camera, Scene.cameras.main)
+Scene.createCamera('main', 45, 1, 1000)
+Scene.createCamera('left', 45, 1, 1000)
+Scene.createCamera('right', 45, 1, 1000)
+Scene.createNode 'cameraMain'
+Scene.createNode 'cameraLeft'
+Scene.createNode 'cameraRight'
+Scene.translate(Scene.nodes.cameraMain, 0, 5, -30)
+Scene.translate(Scene.nodes.cameraLeft, -10, 5, -40)
+Scene.translate(Scene.nodes.cameraRight, 10, 5, -40)
+Scene.attach(Scene.nodes.cameraMain, Scene.cameras.main)
+Scene.attach(Scene.nodes.cameraLeft, Scene.cameras.left)
+Scene.attach(Scene.nodes.cameraRight, Scene.cameras.right)
 
 function print_table(table, indent)
   local indentation = indent or 0
@@ -44,16 +52,18 @@ Renderer.createViewport('bottomLeft', 0, 0, 0.5, 0.5)
 Renderer.createViewport('bottomRight', 0.5, 0, 0.5, 0.5)
 
 Renderer.bindCamera('top', Scene.cameras.main)
+Renderer.bindCamera('bottomLeft', Scene.cameras.left)
+Renderer.bindCamera('bottomRight', Scene.cameras.right)
 Renderer.start()
 
-print('\nAsset table contents:\n')
-print_table(Assets)
+--print('\nAsset table contents:\n')
+--print_table(Assets)
 
-print('\n Scene table contents:\n')
-print_table(Scene)
+--print('\n Scene table contents:\n')
+--print_table(Scene)
 
-print('\n Renderer table contents:\n')
-print_table(Renderer)
+--print('\n Renderer table contents:\n')
+--print_table(Renderer)
 
 start = os.clock()
 current = os.clock()
