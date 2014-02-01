@@ -45,10 +45,6 @@ void RendererLibrary::import(lua_State* state)
   lua_pushlightuserdata(state, &mThread);
   lua_setfield(state, -2, "threadPtr");
 
-  // Add table for viewports
-  lua_pushlightuserdata(state, new UserdataMap);
-  lua_setfield(state, -2, "viewports");
-
   LIB_FUNC(state, start);
   LIB_FUNC(state, stop);
   LIB_FUNC(state, bindCamera);
