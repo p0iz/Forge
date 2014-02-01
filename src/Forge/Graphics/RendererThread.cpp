@@ -46,7 +46,8 @@ bool RendererThread::start()
     }
 
     mRunning = true;
-    mThread = std::thread([this](){
+    mThread = std::thread([this]()
+    {
       mWindow.makeRenderCurrent();
       mWindow.resize(640,480);
       mWindow.show();
@@ -57,6 +58,7 @@ bool RendererThread::start()
         Log::error << "No meshes set! Rendering cannot be done.\n";
         return;
       }
+
       while(mRunning)
       {
         for (auto nameViewport : mViewports)
