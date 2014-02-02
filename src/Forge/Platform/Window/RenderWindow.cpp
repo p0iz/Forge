@@ -100,6 +100,7 @@ void RenderWindow::resize(int width, int height)
 {
   mWidth = width;
   mHeight = height;
+  SDL_SetWindowSize(mWindow, mWidth, mHeight);
 }
 
 int RenderWindow::width() const
