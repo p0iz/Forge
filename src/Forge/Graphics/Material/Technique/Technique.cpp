@@ -77,7 +77,10 @@ void Technique::setupLightBufferBinding()
 {
   // Setup light uniform buffer binding
   unsigned int lightsUniformIndex = glGetUniformBlockIndex(mProgram.getId(), "Lights");
-  glUniformBlockBinding(mProgram.getId(), lightsUniformIndex, Light::UNIFORM_BINDING_POINT);
+  if (lightsUniformIndex != GL_INVALID_INDEX)
+  {
+    glUniformBlockBinding(mProgram.getId(), lightsUniformIndex, Light::UNIFORM_BINDING_POINT);
+  }
 }
 
 void Technique::addShader(Shader::ShaderType type, const std::string& file)
