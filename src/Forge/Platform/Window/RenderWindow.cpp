@@ -136,7 +136,6 @@ bool RenderWindow::makeRenderCurrent()
 GraphicsContext* RenderWindow::createAuxContext() const
 {
   SDL_GLContext context = SDL_GL_CreateContext(mWindow);
-  mRenderingContext->makeCurrent();
   return new SDLGraphicsContext(context, mWindow);
 }
 
