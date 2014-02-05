@@ -29,8 +29,8 @@ namespace Forge {
 RendererThread::RendererThread():
   mRunning(false),
   mThread(),
-  mRenderer(),
   mWindow(),
+  mRenderer(),
   mMeshes(nullptr),
   mViewports()
 {

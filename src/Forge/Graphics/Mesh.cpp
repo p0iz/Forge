@@ -40,7 +40,7 @@ Mesh::Mesh(
     mVertexArrayId(0),
     mVertexBufferId(0)
 {
-  // Generate vertex array and buffers
+  // Generate vertex and element buffers
   glGenBuffers(1, &mVertexBufferId);
   glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
@@ -52,6 +52,8 @@ Mesh::Mesh(
         sizeof(elements[0])*elements.size(),
       &elements[0],
       GL_STATIC_DRAW);
+
+  glFlush();
 
   calculateBounds(vertices);
 }

@@ -56,8 +56,8 @@ class FORGE_EXPORT RendererThread
   private:
     bool mRunning;
     std::thread mThread;
-    Renderer mRenderer;
     RenderWindow mWindow;
+    Renderer mRenderer;
     UserdataMap* mMeshes;
     std::unordered_map<std::string, Viewport*> mViewports;
 };
