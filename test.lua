@@ -11,11 +11,11 @@ end
 Assets.setLoaderPath 'src/Forge/AssetPlugins'
 Assets.addLoader 'ObjLoader'
 Assets.addLoader 'ImageLoader'
-mesh = Assets.load 'data/meshes/alleyway_1.obj'
+mesh = Assets.load 'data/meshes/paddle.obj'
 
--- Create test mesh and scene node
-Scene.createNode 'test'
-Scene.attach(Scene.nodes.test, mesh)
+-- Lights!
+Scene.addDirectionalLight({1, -1, -1}, {0.0, 1.0, 0.0, 1.0})
+Scene.addPointLight({10, 10, 10}, {0.0, 0.0, 1.0, 1.0})
 
 -- Create camera and camera node
 Scene.createCamera('main', 45, 1, 1000)
@@ -67,10 +67,34 @@ Renderer.start()
 
 start = os.clock()
 current = os.clock()
-while current - start < 5.0
+while current - start < 1.0
 do
   current = os.clock()
 end
+
+-- Create test mesh and scene node
+Scene.createNode 'test'
+Scene.attach(Scene.nodes.test, mesh)
+
+start = os.clock()
+while current - start < 3.0
+do
+  current = os.clock()
+  Scene.translate(Scene.nodes.test, 0.0001 * (current - start), 0, 0)
+end
+
+alley = Assets.load 'data/meshes/alleyway_1.obj'
+
+-- Add alley to scene
+Scene.createNode 'Alley'
+Scene.attach(Scene.nodes.Alley, alley)
+
+start = os.clock()
+while current - start < 1.0
+do
+  current = os.clock()
+end
+
 
 --[[ 
 
