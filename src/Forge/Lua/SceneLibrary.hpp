@@ -27,6 +27,8 @@
 
 namespace Forge {
 
+class Light;
+
 class Camera;
 
 class SceneNode;
@@ -117,6 +119,57 @@ class FORGE_EXPORT SceneLibrary : public LuaLibrary
      *    Nothing.
      */
     static int translate(lua_State* state);
+
+    /* Lua: addDirectionalLight(direction, color)
+     *
+     * Description:
+     *    Adds a directional light to the scene with direction and color.
+     *
+     * Parameters:
+     *    direction: Vec3, direction of light
+     *    color: Vec4, color of light (4th component denotes intensity)
+     *
+     * Return values:
+     *    Nothing.
+     */
+    static int addDirectionalLight(lua_State* state);
+
+    /* Lua: addPointLight(position, color)
+     *
+     * Description:
+     *    Adds a point light to the scene with position and color.
+     *
+     * Parameters:
+     *    direction: Vec3, position of light
+     *    color: Vec4, color of light (4th component denotes intensity)
+     *
+     * Return values:
+     *    Nothing.
+     */
+    static int addPointLight(lua_State* state);
+
+    /* Lua: addDirectionalLight(direction, color)
+     *
+     * Description:
+     *    Adds a directional light to the scene with direction and color.
+     *
+     * Parameters:
+     *    position: Vec3, light's origin
+     *    direction: Vec3, direction of light
+     *    exponent: Light falloff exponent
+     *    falloff: Light falloff angle
+     *    cutoff: Light cutoff angle
+     *    color: Vec4, color of light (4th component denotes intensity)
+     *
+     * Return values:
+     *    Nothing.
+     */
+    static int addSpotLight(lua_State* state);
+
+  private:
+    static void addLightToScene(lua_State* state, Light&& light);
+
+    std::vector<Light> mLights;
 };
 
 }

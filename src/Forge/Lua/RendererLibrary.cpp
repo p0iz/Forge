@@ -21,6 +21,7 @@
 #include "RendererLibrary.hpp"
 #include "Graphics/RendererThread.hpp"
 #include "Graphics/Camera.hpp"
+#include "Graphics/Light/Light.hpp"
 #include "Graphics/Viewport.hpp"
 #include "UserdataMap.hpp"
 #include "Util/Log.h"
@@ -62,6 +63,7 @@ void RendererLibrary::remove(lua_State* state)
 int RendererLibrary::start(lua_State* state)
 {
   findMeshAssets(state);
+  findLights(state);
   RendererThread* thread = getRendererThread(state);
   lua_pushboolean(state, thread->start());
   return 1;
@@ -87,6 +89,27 @@ int RendererLibrary::findMeshAssets(lua_State* state)
     }
     RendererThread* thread = getRendererThread(state);
     thread->setMeshAssets(meshmap);
+  }
+  else
+  {
+    return luaL_error(state, "Assets library is not loaded. It is required for this function.");
+  }
+  return 0;
+}
+
+int RendererLibrary::findLights(lua_State* state)
+{
+  lua_getglobal(state, "Scene");
+  if (lua_istable(state, -1))
+  {
+    lua_getfield(state, -1, "lights");
+    std::vector<Light>* lights = static_cast<std::vector<Light>*>(lua_touserdata(state, -1));
+    if (!lights)
+    {
+      return luaL_error(state, "No lights found for current scene");
+    }
+    RendererThread* thread = getRendererThread(state);
+    thread->setLights(lights);
   }
   else
   {

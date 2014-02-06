@@ -22,6 +22,7 @@
 
 #include "Lua/UserdataMap.hpp"
 #include "ForgeExport.h"
+#include "Graphics/Light/Light.hpp"
 #include "Graphics/Renderer.h"
 #include "Graphics/Viewport.hpp"
 #include "Platform/Window/RenderWindow.hpp"
@@ -43,6 +44,8 @@ class FORGE_EXPORT RendererThread
 
     void setMeshAssets(UserdataMap* meshmap);
 
+    void setLights(std::vector<Light>* lights);
+
     GraphicsContext* createAuxContext();
 
     RenderWindow const& window();
@@ -59,6 +62,7 @@ class FORGE_EXPORT RendererThread
     RenderWindow mWindow;
     Renderer mRenderer;
     UserdataMap* mMeshes;
+    std::vector<Light>* mLights;
     std::unordered_map<std::string, Viewport*> mViewports;
 };
 
