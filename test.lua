@@ -90,8 +90,9 @@ Scene.createNode 'Alley'
 Scene.attach(Scene.nodes.Alley, alley)
 
 start = os.clock()
-while current - start < 1.0
+while current - start < 5.0
 do
+  Scene.translate(Scene.nodes.cameraMain, 0.000001, 0, 0.00001)
   current = os.clock()
 end
 
