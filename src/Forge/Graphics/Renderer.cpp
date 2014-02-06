@@ -97,14 +97,6 @@ void Renderer::render(const Viewport& viewport, UserdataMap* meshes)
 
   glViewport(x, y, width, height);
   glScissor(x, y, width, height);
-
-  static float colR, colG, colB;
-
-  colR = static_cast<float>(random() % 255) / 255;
-  colG = static_cast<float>(random() % 255) / 255;
-  colB = static_cast<float>(random() % 255) / 255;
-
-  glClearColor(colR,colG,colB,1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   for (auto nameMesh : *meshes)
