@@ -21,9 +21,11 @@
 #include "SceneLibrary.hpp"
 #include "Graphics/Scene/Attachable.hpp"
 #include "Graphics/Camera.hpp"
+#include "Graphics/Light/Light.hpp"
 #include "Graphics/Scene/SceneNode.hpp"
 #include "UserdataMap.hpp"
 #include "Util/Log.h"
+#include "Utils.hpp"
 #include <lua.hpp>
 #include <vector>
 
@@ -54,11 +56,17 @@ void SceneLibrary::import(lua_State* state)
   lua_newtable(state);
   lua_setfield(state, -2, "cameras");
 
+  lua_pushlightuserdata(state, new std::vector<Light>);
+  lua_setfield(state, -2, "lights");
+
   LIB_FUNC(state, setGridSize);
   LIB_FUNC(state, createNode);
   LIB_FUNC(state, attach);
   LIB_FUNC(state, createCamera);
   LIB_FUNC(state, translate);
+  LIB_FUNC(state, addDirectionalLight);
+  LIB_FUNC(state, addPointLight);
+  LIB_FUNC(state, addSpotLight);
 
   lua_setglobal(state, "Scene");
 }
@@ -148,6 +156,107 @@ int SceneLibrary::translate(lua_State* state)
   node->mWorldTransform.translate(x, y, z);
 
   return 0;
+}
+
+int SceneLibrary::addDirectionalLight(lua_State* state)
+{
+  if ((lua_gettop(state) != 2) || (!lua_istable(state, -2)) || (!lua_istable(state, -1)))
+  {
+    Log::error << "addDirectionalLight called with the wrong arguments\n";
+    return luaL_error(state, " Usage: addDirectionalLight(direction[3], color[4])");
+  }
+
+  glm::vec4 color;
+  Lua::Utils::parseVec(state, 4, &color[0]);
+  lua_pop(state, 1);
+
+  glm::vec3 direction;
+  Lua::Utils::parseVec(state, 3, &direction[0]);
+  lua_pop(state, 1);
+
+  Light light;
+  light.type = Light::DIRECTIONAL;
+  light.position = glm::vec4(direction, 0.0f);
+  light.getShaderData().color = color;
+
+  addLightToScene(state, std::move(light));
+
+  return 0;
+}
+
+int SceneLibrary::addPointLight(lua_State* state)
+{
+  if ((lua_gettop(state) != 2) || (!lua_istable(state, -2)) || (!lua_istable(state, -1)))
+  {
+    return luaL_error(state, " Usage: addPointLight(position[4], color[4])");
+  }
+
+  glm::vec4 color;
+  Lua::Utils::parseVec(state, 4, &color[0]);
+  lua_pop(state, 1);
+
+  glm::vec3 position;
+  Lua::Utils::parseVec(state, 3, &position[0]);
+  lua_pop(state, 1);
+
+  Light light;
+  light.type = Light::POINT;
+  light.position = glm::vec4(position, 1);
+  light.getShaderData().color = color;
+
+  addLightToScene(state, std::move(light));
+
+  return 0;
+}
+
+int SceneLibrary::addSpotLight(lua_State* state)
+{
+  if ((lua_gettop(state) != 6) || (!lua_istable(state, -6)) || (!lua_istable(state, -5)) || (!lua_istable(state, -1)))
+  {
+    return luaL_error(state, " Usage: addSpotLight(position[4], direction[3], exponent, falloff, cutoff, color[4])");
+  }
+
+  glm::vec4 color;
+  Lua::Utils::parseVec(state, 4, &color[0]);
+  lua_pop(state, 1);
+
+  float cutoff = lua_tonumber(state, -1);
+  lua_pop(state, 1);
+
+  float falloff = lua_tonumber(state, -1);
+  lua_pop(state, 1);
+
+  float exponent = lua_tonumber(state, -1);
+  lua_pop(state, 1);
+
+  glm::vec3 direction;
+  Lua::Utils::parseVec(state, 3, &direction[0]);
+  lua_pop(state, 1);
+
+  glm::vec3 position;
+  Lua::Utils::parseVec(state, 3, &position[0]);
+  lua_pop(state, 1);
+
+  Light light;
+  light.type = Light::SPOT;
+  light.position = glm::vec4(position, 1);
+  light.spotDirection = direction;
+  light.getShaderData().spotCutoff = cutoff;
+  light.getShaderData().spotFalloff = falloff;
+  light.getShaderData().spotExponent = exponent;
+  light.getShaderData().color = color;
+
+  addLightToScene(state, std::move(light));
+
+  return 0;
+}
+
+void SceneLibrary::addLightToScene(lua_State* state, Light&& light)
+{
+  lua_getglobal(state, "Scene");
+  lua_getfield(state, -1, "lights");
+  std::vector<Light>* lights = static_cast<std::vector<Light>*>(lua_touserdata(state, -1));
+  lights->push_back(light);
 }
 
 }

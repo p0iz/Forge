@@ -90,22 +90,23 @@ private:
      *
      * Description:
      *    Finds the mesh asset map for rendering. Requires the Assets library
-     *    and a loader for mesh assets to be loaded.
+     *    and a loader for mesh assets to be loaded. Used internally.
      *
      * Return values:
      *    Nothing.
      */
     static int findMeshAssets(lua_State* state);
 
-    /* Lua: findCameras()
+    /* Lua: findLights()
      *
      * Description:
-     *    Finds the camera map for rendering. Requires the Scene library to be loaded.
+     *    Finds the light vector for rendering. Requires the Scene library to be loaded.
+     *    Used internally.
      *
      * Return values:
      *    Nothing.
      */
-    static int findCameras(lua_State* state);
+    static int findLights(lua_State* state);
 
     static RendererThread* getRendererThread(lua_State* state);
 };

@@ -23,6 +23,7 @@
 #include "Lua/UserdataMap.hpp"
 #include "DebugAxis.h"
 #include "ForgeExport.h"
+#include "Graphics/Light/Light.hpp"
 #include "Material/Technique/Technique.hpp"
 #include <glm/glm.hpp>
 
@@ -48,7 +49,7 @@ public:
 
   void updateViewport(int width, int height);
 
-  void render(Viewport const& viewport, UserdataMap* meshes);
+  void render(Viewport const& viewport, UserdataMap* meshes, std::vector<Light> const& lights);
 
   void render(const SceneConfig& scene);
 
@@ -56,6 +57,9 @@ private:
   bool mInitialized;
   void renderDebugOverlay(const SceneConfig& scene);
   void updateLightData(const SceneConfig& scene, const glm::mat4& view);
+  void updateLightData(std::vector<Light> const& lights, const glm::mat4& view);
+
+
   void drawScene(const glm::mat4& view,
              const glm::mat4& projection,
              const SceneConfig& scene);

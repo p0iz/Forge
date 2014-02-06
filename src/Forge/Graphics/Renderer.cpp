@@ -59,9 +59,14 @@ void Renderer::initialize()
   mDebugAxis.initialize();
 
   mTechnique = new Technique;
-  mTechnique->addShader(Shader::VertexShader, "data/shaders/DefaultTechnique.vs");
-  mTechnique->addShader(Shader::FragmentShader, "data/shaders/DefaultTechnique.fs");
+  mTechnique->addShader(Shader::VertexShader, "data/shaders/SimpleTexture.vs");
+  mTechnique->addShader(Shader::FragmentShader, "data/shaders/SimpleColor.fs");
   mTechnique->create();
+
+  mTechnique->setUniform("ambient", glm::vec3(0.1f,0.1f,0.1f));
+  mTechnique->setUniform("diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
+  mTechnique->setUniform("specular", glm::vec3(1.0f, 1.0f, 1.0f));
+  mTechnique->setUniform("shininess", 512.0f);
 
   Light::createBuffer();
 
@@ -88,7 +93,7 @@ void Renderer::updateViewport(int width, int height)
   glViewport(0, 0, width, height);
 }
 
-void Renderer::render(const Viewport& viewport, UserdataMap* meshes)
+void Renderer::render(const Viewport& viewport, UserdataMap* meshes, std::vector<Light> const& lights)
 {
   int x = viewport.x();
   int y = viewport.y();
@@ -99,17 +104,27 @@ void Renderer::render(const Viewport& viewport, UserdataMap* meshes)
   glScissor(x, y, width, height);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  for (auto nameMesh : *meshes)
+  glm::mat4 view = viewport.view();
+  glm::mat4 projection = viewport.projection();
+
+  updateLightData(lights, view);
+
+  for (Light const& light : lights)
   {
-    Mesh* mesh = static_cast<Mesh*>(nameMesh.second);
-    for (SceneNode const* node : mesh->getAttachedNodes())
+    if (light.type != Light::DISABLED)
     {
-      glm::mat4 world = node->mWorldTransform.getMatrix();
-      glm::mat4 view = viewport.view();
-      glm::mat4 projection = viewport.projection();
-      mTechnique->beginMaterial();
-      mTechnique->setTransforms(world, view, projection);
-      mesh->draw();
+      Light::updateBuffer(light.getShaderData());
+      for (auto nameMesh : *meshes)
+      {
+        Mesh* mesh = static_cast<Mesh*>(nameMesh.second);
+        for (SceneNode const* node : mesh->getAttachedNodes())
+        {
+          glm::mat4 world = node->mWorldTransform.getMatrix();
+          mTechnique->beginMaterial();
+          mTechnique->setTransforms(world, view, projection);
+          mesh->draw();
+        }
+      }
     }
   }
 }
@@ -117,6 +132,18 @@ void Renderer::render(const Viewport& viewport, UserdataMap* meshes)
 void Renderer::updateLightData(const SceneConfig& scene, const glm::mat4& view)
 {
   for (Light const& light : scene.lights)
+  {
+    light.getShaderData().viewSpacePosition = view * light.position;
+    if (light.type == Light::SPOT)
+    {
+      light.getShaderData().spotDirection = glm::mat3(view) * light.spotDirection;
+    }
+  }
+}
+
+void Renderer::updateLightData(const std::vector<Light>& lights, const glm::mat4& view)
+{
+  for (Light const& light : lights)
   {
     light.getShaderData().viewSpacePosition = view * light.position;
     if (light.type == Light::SPOT)
