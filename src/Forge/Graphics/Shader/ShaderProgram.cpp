@@ -152,10 +152,8 @@ const std::string ShaderProgram::getProgramInfoLog() const
   std::string logString;
   int logLength = 0;
   glGetProgramiv(mId, GL_INFO_LOG_LENGTH, &logLength);
-  char* logChars = new char[logLength];
-  glGetProgramInfoLog(mId, logLength, nullptr, logChars);
-  logString.assign(logChars);
-  delete[] logChars;
+  logString.reserve(logLength);
+  glGetProgramInfoLog(mId, logLength, nullptr, &logString[0]);
   return logString;
 }
 
