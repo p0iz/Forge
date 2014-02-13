@@ -23,6 +23,7 @@
 
 #include "Util/Log.h"
 
+#include <glm/gtc/matrix_transform.hpp>
 #include <cassert>
 #include <vector>
 #include <iostream>
