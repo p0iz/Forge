@@ -47,7 +47,7 @@ if(WIN32)
 endif()
 
 # The library
-add_library(Forge SHARED Forge.cpp)
+add_library(Forge SHARED ForgeCLI.cpp)
 
 target_link_libraries(Forge
   "-Wl,--whole-archive"
