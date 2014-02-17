@@ -23,6 +23,7 @@
 
 #include "Util/Log.h"
 
+#include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <cassert>
 #include <vector>
@@ -36,8 +37,7 @@ namespace Forge {
 Mesh::Mesh(
     const std::vector<Vertex>& vertices,
     const std::vector<GLuint>& elements)
-  : mName(),
-    mNumberOfVertices(elements.size()),
+  : mNumberOfVertices(elements.size()),
     mVertexArrayId(0),
     mVertexBufferId(0)
 {
@@ -85,16 +85,6 @@ void Mesh::draw()
     glBindVertexArray(mVertexArrayId);
   }
   glDrawElements(GL_TRIANGLES, mNumberOfVertices, GL_UNSIGNED_INT, 0);
-}
-
-void Mesh::setName(std::string const& name)
-{
-  mName = name;
-}
-
-std::string const& Mesh::getName() const
-{
-  return mName;
 }
 
 void Mesh::calculateBounds(const std::vector<Vertex>& vertices)

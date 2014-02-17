@@ -18,21 +18,19 @@
  *
  */
 
-#ifndef VERTEXLISTDRAWABLE_H
-#define VERTEXLISTDRAWABLE_H
-
 #include "ForgeExport.h"
 #include "Vertex.h"
 
 #include "Shader/ShaderProgram.h"
 #include "Scene/Attachable.hpp"
 
-#include <GL/glew.h>
-
 #include <iostream>
 #include <memory>
 #include <unordered_set>
 #include <vector>
+
+#pragma once
+
 
 namespace Forge {
 
@@ -43,15 +41,11 @@ class FORGE_EXPORT Mesh : public Attachable
     ~Mesh();
     void draw();
 
-    void setName(std::string const& name);
-    std::string const& getName() const;
-
   private:
-    std::string mName;
     unsigned int mNumberOfVertices;
-    GLuint mVertexArrayId;
-    GLuint mVertexBufferId;
-    GLuint mElementBufferId;
+    unsigned int mVertexArrayId;
+    unsigned int mVertexBufferId;
+    unsigned int mElementBufferId;
 
     void calculateBounds(const std::vector<Vertex>& vertices);
 
@@ -73,5 +67,3 @@ class FORGE_EXPORT Mesh : public Attachable
 typedef std::shared_ptr<Mesh> MeshPtr;
 
 } // namespace Forge
-
-#endif // VERTEXLISTDRAWABLE_H

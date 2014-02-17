@@ -175,7 +175,6 @@ MeshPtr Graphics::MeshLibrary::loadAsset(std::string const& file)
   }
 
   mesh.reset(new Mesh(vertices, elements));
-  mesh->setName(meshName);
 
   return mesh;
 }

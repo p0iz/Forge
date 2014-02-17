@@ -173,7 +173,6 @@ void* ObjLoader::load(std::string const& filename)
   }
 
   mesh = new Mesh(vertices, elements);
-  mesh->setName(meshName);
 
   return mesh;
 }
