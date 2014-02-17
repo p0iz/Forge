@@ -14,18 +14,9 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2014 Tommi Martela
  *
  */
 
-#include "State/GameStateLibrary.hpp"
-
-void Forge::GameStateLibrary::add(Forge::GameStatePtr state)
-{
-  mGameStates.insert(std::pair<std::string, Forge::GameStatePtr>(state->getName(), state));
-}
-
-Forge::GameStatePtr Forge::GameStateLibrary::get(const std::string& name)
-{
-  return mGameStates[name];
-}
+// Just an empty file to prevent CMake from generating a warning
+// about no source files for the 'Forge' build target.

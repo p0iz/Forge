@@ -6,9 +6,6 @@ add_subdirectory(Shader)
 # Add Text component to build
 add_subdirectory(Text)
 
-# Add Libraries component to build
-add_subdirectory(Libraries)
-
 # Add Light component to build
 add_subdirectory(Light)
 
@@ -20,11 +17,8 @@ add_subdirectory(Scene)
 
 set(GraphicsSources
   Camera.cpp
-  TargetCamera.cpp
-  PositionCamera.cpp
   DebugAxis.cpp
   Mesh.cpp
-  OrbitalCamera.cpp
   Renderer.cpp
   RendererThread.cpp
   Viewport.cpp
@@ -32,10 +26,9 @@ set(GraphicsSources
 
 set(GraphicsLibs
   Light
-  Libraries
   Shader
   Scene
-  Material
+  Technique
   Text
 )
 

@@ -26,18 +26,6 @@
 
 namespace Forge {
 
-class SceneConfig;
-
-/* Scene node implementation
- *
- *	How to setup:
- *
- *	1. Create a scene config
- *	2. Create scene nodes from scene config
- *	3. Arrange nodes into parents/children
- *
- */
-
 typedef size_t SceneNodeId;
 
 struct SceneNode {

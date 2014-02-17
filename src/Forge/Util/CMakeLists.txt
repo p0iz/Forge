@@ -1,8 +1,6 @@
 
 set(UtilSources
-  Exceptions.cpp
-  HashUtils.cpp
-  JsonParser.cpp
+  HashUtils.h
   Log.cpp
   Singleton.hpp
   UniqueId.hpp

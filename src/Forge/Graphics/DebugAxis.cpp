@@ -19,14 +19,9 @@
  */
 
 #include "DebugAxis.h"
-
 #include "Light/Light.hpp"
-
-#include "Scene/SceneConfig.hpp"
-
 #include "Shader/Shader.h"
 #include "Shader/ShaderProgram.h"
-
 #include <glm/glm.hpp>
 #include <iostream>
 
@@ -140,23 +135,6 @@ void DebugAxis::setDebuggingInfo(bool state)
 bool DebugAxis::isDebugVisible()
 {
   return showDebug;
-}
-
-void DebugAxis::render(const SceneConfig& scene) const
-{
-  if (!initialized)
-    return;
-
-  debugShaderProgram.use();
-  for (auto node : scene.mNodes) {
-    glm::mat4 mvp =
-        scene.getCamera().getProjectionMatrix() *
-        scene.getCamera().getViewMatrix() *
-        node.mWorldTransform.getMatrix();
-    glUniformMatrix4fv(debugUniformMVP, 1, GL_FALSE, &mvp[0][0]);
-    glBindVertexArray(debugVertexArrayId);
-    glDrawArrays(GL_LINES, 0, 6);
-  }
 }
 
 DebugAxis::~DebugAxis()

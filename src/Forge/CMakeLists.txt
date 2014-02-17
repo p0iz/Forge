@@ -31,9 +31,6 @@ add_compiler_export_flags()
 add_definitions(-DForge_EXPORTS)
 
 # Add subsystems
-add_subdirectory(Asset)
-add_subdirectory(Config)
-add_subdirectory(State)
 add_subdirectory(Graphics)
 add_subdirectory(Lua)
 add_subdirectory(Time)
@@ -43,14 +40,6 @@ add_subdirectory(Platform)
 # Add standard asset plugins
 add_subdirectory(AssetPlugins)
 
-set(Forge_SRC
-  ForgeMain.cpp
-)
-
-set(Forge_HDR
-  ForgeMain.hpp
-)
-
 # Remove the unnecessary prefix from windows DLL and link statically to GCC and stdlibc++
 if(WIN32)
   set(CMAKE_SHARED_LIBRARY_PREFIX "")
@@ -58,16 +47,10 @@ if(WIN32)
 endif()
 
 # The library
-add_library(Forge SHARED
-  ${Forge_SRC}
-  ${Forge_HDR}
-  ${AssetHeaders}
-)
+add_library(Forge SHARED Forge.cpp)
 
 target_link_libraries(Forge
   "-Wl,--whole-archive"
-  Asset
-  Config
   Graphics
   Time
   Util
@@ -77,7 +60,6 @@ target_link_libraries(Forge
   PlatformInput
   PlatformWindow
   ForgeLua
-  State
   "-Wl,--no-whole-archive"
   ${ForgeLibDeps}
   ${Win32LinkerFlag}

@@ -29,11 +29,8 @@
 
 
 namespace Forge {
-class Camera;
-class SceneConfig;
-}
 
-namespace Forge {
+class Camera;
 
 class Viewport;
 
@@ -51,18 +48,9 @@ public:
 
   void render(Viewport const& viewport, UserdataMap* meshes, std::vector<Light> const& lights);
 
-  void render(const SceneConfig& scene);
-
 private:
   bool mInitialized;
-  void renderDebugOverlay(const SceneConfig& scene);
-  void updateLightData(const SceneConfig& scene, const glm::mat4& view);
   void updateLightData(std::vector<Light> const& lights, const glm::mat4& view);
-
-
-  void drawScene(const glm::mat4& view,
-             const glm::mat4& projection,
-             const SceneConfig& scene);
 
   DebugAxis mDebugAxis;
 

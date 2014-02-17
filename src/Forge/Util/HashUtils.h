@@ -33,8 +33,8 @@ namespace Forge { namespace HashUtils {
 template <int>
 struct FnvArchParameters
 {
-	static const size_t prime;
-	static const size_t init;
+  static const size_t prime;
+  static const size_t init;
 };
 
 /* 64-bit */
@@ -42,8 +42,8 @@ struct FnvArchParameters
 template <>
 struct FnvArchParameters<8>
 {
-	static const size_t prime = 1099511628211u;
-	static const size_t init = 14695981039346656037u;
+  static const size_t prime = 1099511628211u;
+  static const size_t init = 14695981039346656037u;
 };
 
 /* 32-bit */
@@ -51,8 +51,8 @@ struct FnvArchParameters<8>
 template <>
 struct FnvArchParameters<4>
 {
-	static const size_t prime = 16777619u;
-	static const size_t init = 2166136261u;
+  static const size_t prime = 16777619u;
+  static const size_t init = 2166136261u;
 };
 
 typedef FnvArchParameters<sizeof(size_t)> FnvParameters;
@@ -60,40 +60,38 @@ typedef FnvArchParameters<sizeof(size_t)> FnvParameters;
 template <unsigned int N, unsigned int Iterator>
 struct FnvHash
 {
-	static size_t Hash(const char (&str)[N])
-	{
-		return (FnvHash<N, Iterator-1>::Hash(str) ^ str[Iterator-1]) * FnvParameters::prime;
-	}
+  static size_t Hash(const char (&str)[N])
+  {
+    return (FnvHash<N, Iterator-1>::Hash(str) ^ str[Iterator-1]) * FnvParameters::prime;
+  }
 };
 
 template <unsigned int N>
 struct FnvHash<N, 1>
 {
-	static size_t Hash(const char (&str)[N])
-	{
-		return (FnvParameters::init ^ str[0]) * FnvParameters::prime;
-	}
+  static size_t Hash(const char (&str)[N])
+  {
+    return (FnvParameters::init ^ str[0]) * FnvParameters::prime;
+  }
 };
 
-// This class uses template expansion when possible to determine the hash value
+// This class uses template expansion to determine the hash value at compile time
 class StringHash
 {
 public:
-	template <unsigned int N>
-	inline StringHash(const char (&str)[N+1])
-		: mValue(FnvHash<N, N>::Hash(str))
-	{
-	}
+  template <unsigned int N>
+  constexpr inline StringHash(const char (&str)[N+1])
+    : mValue(FnvHash<N, N>::Hash(str))
+  {
+  }
 
-	explicit StringHash(const std::string& targetString);
-
-	operator size_t()
-	{
-		return mValue;
-	}
+  constexpr operator size_t()
+  {
+    return mValue;
+  }
 
 private:
-	size_t mValue;
+  size_t mValue;
 };
 
 size_t calculateFnv(const std::string& str);

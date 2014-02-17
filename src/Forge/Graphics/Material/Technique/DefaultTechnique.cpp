@@ -19,11 +19,7 @@
  */
 
 #include "DefaultTechnique.h"
-
-#include "Graphics/PositionCamera.h"
-#include "Graphics/Scene/SceneConfig.hpp"
 #include "Util/Log.h"
-
 #include <glm/glm.hpp>
 
 namespace Forge {

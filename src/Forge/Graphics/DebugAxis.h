@@ -28,8 +28,6 @@
 
 namespace Forge {
 
-class SceneConfig;
-
 class FORGE_EXPORT DebugAxis
 {
 public:
@@ -43,8 +41,6 @@ public:
   static void toggleDebuggingInfo();
   static void setDebuggingInfo(bool state);
   static bool isDebugVisible();
-
-  void render(const SceneConfig& scene) const;
 
 private:
   GLuint debugVertexArrayId;
