@@ -23,9 +23,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <cassert>
 #include <iostream>
 
 void Forge::Text::createShaders()
