@@ -8,7 +8,7 @@ include(GenerateExportHeader)
 include(ForgeDependencies.cmake)
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -fno-exceptions")
 
 # Do build type specific configuration
 if(CMAKE_BUILD_TYPE MATCHES Release)
