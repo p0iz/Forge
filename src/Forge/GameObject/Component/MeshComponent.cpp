@@ -14,32 +14,31 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2014 Tommi Martela
  *
  */
 
-#include "Attachable.hpp"
+#include "MeshComponent.hpp"
+#include "Graphics/Mesh.h"
+#include "Util/Internal/Keeper.hpp"
 
 
 namespace Forge {
 
-Attachable::Attachable(std::size_t maxAttachments) : mMaxAttachments(maxAttachments) { }
-
-void Attachable::attachToNode(SceneNode* node)
+MeshComponent::MeshComponent(GameObject* owner, Mesh* mesh):
+  Component(owner),
+  mMesh(mesh)
 {
-  if (mAttachedNodes.size() < mMaxAttachments || mMaxAttachments == 0) {
-    mAttachedNodes.insert(node);
-  }
 }
 
-void Attachable::detachFromNode(SceneNode* node)
+void MeshComponent::update()
 {
-  mAttachedNodes.erase(node);
+  mMesh->draw();
 }
 
-const std::unordered_set<SceneNode*>& Attachable::getAttachedNodes() const
+void MeshComponent::destroy()
 {
-  return mAttachedNodes;
+  Keeper<MeshComponent>::instance().destroy(this);
 }
 
 }

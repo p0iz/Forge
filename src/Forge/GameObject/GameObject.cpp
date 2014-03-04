@@ -18,24 +18,30 @@
  *
  */
 
-#pragma once
+#include "GameObject.hpp"
+#include "Util/Log.h"
 
-#include "LuaForwardDeclarations.hpp"
-
-// Helper macro to add functions to a table
-#define LIB_FUNC(state,fn)\
-  lua_pushcfunction(state, fn);\
-  lua_setfield(state, -2, #fn)
 
 namespace Forge {
 
-class LuaLibrary
+GameObject::GameObject(std::string const& name)
+  : mName(name), mWorldTransform()
 {
-  public:
-    virtual ~LuaLibrary() { }
+}
 
-    virtual void import(lua_State* state) = 0;
-    virtual void remove(lua_State* state) = 0;
-};
+Transformation const& GameObject::transform() const
+{
+  return mWorldTransform;
+}
+
+void GameObject::translate(float x, float y, float z)
+{
+  mWorldTransform.translate(x, y, z);
+}
+
+std::string const& GameObject::name() const
+{
+  return mName;
+}
 
 }

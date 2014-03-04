@@ -2,6 +2,7 @@
 
 set(ForgeLuaSources
   AssetsLibrary.cpp
+  ComponentsLibrary.cpp
   RendererLibrary.cpp
   SceneLibrary.cpp
   LuaState.cpp
@@ -9,6 +10,7 @@ set(ForgeLuaSources
 
 set(ForgeLuaHeaders
   AssetsLibrary.hpp
+  ComponentsLibrary.hpp
   RendererLibrary.hpp
   SceneLibrary.hpp
   LuaForwardDeclarations.hpp

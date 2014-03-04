@@ -22,11 +22,9 @@
 #include "Vertex.h"
 
 #include "Shader/ShaderProgram.h"
-#include "Scene/Attachable.hpp"
 
 #include <iostream>
 #include <memory>
-#include <unordered_set>
 #include <vector>
 
 #pragma once
@@ -34,7 +32,7 @@
 
 namespace Forge {
 
-class FORGE_EXPORT Mesh : public Attachable
+class FORGE_EXPORT Mesh
 {
   public:
     Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);

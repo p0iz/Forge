@@ -12,9 +12,6 @@ add_subdirectory(Light)
 # Add Material component to build
 add_subdirectory(Material)
 
-# Add Scene component to build
-add_subdirectory(Scene)
-
 set(GraphicsSources
   Camera.cpp
   DebugAxis.cpp
@@ -27,7 +24,6 @@ set(GraphicsSources
 set(GraphicsLibs
   Light
   Shader
-  Scene
   Technique
   Text
 )

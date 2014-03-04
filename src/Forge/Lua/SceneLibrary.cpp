@@ -19,10 +19,9 @@
  */
 
 #include "SceneLibrary.hpp"
-#include "Graphics/Scene/Attachable.hpp"
+#include "GameObject/GameObject.hpp"
 #include "Graphics/Camera.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Graphics/Scene/SceneNode.hpp"
 #include "UserdataMap.hpp"
 #include "Util/Log.h"
 #include "Utils.hpp"
@@ -51,7 +50,7 @@ void SceneLibrary::import(lua_State* state)
   lua_setfield(state, -2, "grid");
 
   lua_newtable(state);
-  lua_setfield(state, -2, "nodes");
+  lua_setfield(state, -2, "objects");
 
   lua_newtable(state);
   lua_setfield(state, -2, "cameras");
@@ -60,7 +59,7 @@ void SceneLibrary::import(lua_State* state)
   lua_setfield(state, -2, "lights");
 
   LIB_FUNC(state, setGridSize);
-  LIB_FUNC(state, createNode);
+  LIB_FUNC(state, createObject);
   LIB_FUNC(state, attach);
   LIB_FUNC(state, createCamera);
   LIB_FUNC(state, translate);
@@ -69,6 +68,11 @@ void SceneLibrary::import(lua_State* state)
   LIB_FUNC(state, addSpotLight);
 
   lua_setglobal(state, "Scene");
+
+  // Create the loader metatable
+  luaL_newmetatable(state, "Scene.GameObject");
+  lua_pushcfunction(state, deleteObject);
+  lua_setfield(state, -2, "__gc");
 }
 
 void SceneLibrary::remove(lua_State* state)
@@ -92,7 +96,7 @@ int SceneLibrary::setGridSize(lua_State* state)
   return 0;
 }
 
-int SceneLibrary::createNode(lua_State* state)
+int SceneLibrary::createObject(lua_State* state)
 {
   char const* name = luaL_checkstring(state, 1);
   float x = 0, y = 0, z = 0;
@@ -103,27 +107,43 @@ int SceneLibrary::createNode(lua_State* state)
     y = luaL_checknumber(state, 3);
     z = luaL_checknumber(state, 4);
   }
-  Log::info << "Node '" << name << "' created at point [" << x << "," << y << "," << z << "]\n";
-  // Store scene node in collection and set pointer to Scene.nodes.<name>
+  Log::info << "Game object '" << name << "' created at point [" << x << "," << y << "," << z << "]\n";
 
-  SceneNode* node = new SceneNode(name);
+  // Store game object in collection and set pointer to Scene.objects.<name>
+  void* objectData = lua_newuserdata(state, sizeof(GameObject));
+  luaL_getmetatable(state, "Scene.GameObject");
+  lua_setmetatable(state, -2);
+  if (objectData && new (objectData) GameObject(name))
+  {
+    lua_getglobal(state, "Scene");
+    lua_getfield(state, -1, "objects");
+    lua_pushvalue(state, -3);
+    lua_setfield(state, -2, name);
+    lua_pushvalue(state, -3);
+  }
+  else
+  {
+    lua_pushnil(state);
+  }
 
-  lua_getglobal(state, "Scene");
-  lua_getfield(state, -1, "nodes");
-  lua_pushlightuserdata(state, node);
-  lua_setfield(state, -2, name);
-  lua_pushlightuserdata(state, node);
   return 1;
+}
+
+int SceneLibrary::deleteObject(lua_State* state)
+{
+  GameObject* object = static_cast<GameObject*>(lua_touserdata(state, 1));
+  object->~GameObject();
+  return 0;
 }
 
 int SceneLibrary::attach(lua_State* state)
 {
-  SceneNode* node = static_cast<SceneNode*>(lua_touserdata(state, 1));
+  GameObject* object = static_cast<GameObject*>(lua_touserdata(state, 1));
   Attachable* attachable = static_cast<Attachable*>(lua_touserdata(state, 2));
-  if (node && attachable)
+  if (object && attachable)
   {
-    attachable->attachToNode(node);
-    Log::info << "Attached to node '" << node->mName << "'\n";
+    attachable->attach(object);
+    Log::info << "Attached to game object '" << object->name() << "'\n";
   }
   return 0;
 }
@@ -149,11 +169,11 @@ int SceneLibrary::createCamera(lua_State* state)
 
 int SceneLibrary::translate(lua_State* state)
 {
-  SceneNode* node = static_cast<SceneNode*>(lua_touserdata(state, 1));
+  GameObject* object = static_cast<GameObject*>(lua_touserdata(state, 1));
   float x = luaL_checknumber(state, 2);
   float y = luaL_checknumber(state, 3);
   float z = luaL_checknumber(state, 4);
-  node->mWorldTransform.translate(x, y, z);
+  object->translate(x, y, z);
 
   return 0;
 }

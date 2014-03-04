@@ -62,7 +62,6 @@ void RendererLibrary::remove(lua_State* state)
 
 int RendererLibrary::start(lua_State* state)
 {
-  findMeshAssets(state);
   findLights(state);
   RendererThread* thread = getRendererThread(state);
   lua_pushboolean(state, thread->start());
@@ -73,27 +72,6 @@ int RendererLibrary::stop(lua_State* state)
 {
   RendererThread* thread = getRendererThread(state);
   thread->stop();
-  return 0;
-}
-
-int RendererLibrary::findMeshAssets(lua_State* state)
-{
-  lua_getglobal(state, "Assets");
-  if (lua_istable(state, -1))
-  {
-    lua_getfield(state, -1, "meshes");
-    UserdataMap* meshmap = static_cast<UserdataMap*>(lua_touserdata(state, -1));
-    if (!meshmap)
-    {
-      return luaL_error(state, "No asset map found for category 'meshes'");
-    }
-    RendererThread* thread = getRendererThread(state);
-    thread->setMeshAssets(meshmap);
-  }
-  else
-  {
-    return luaL_error(state, "Assets library is not loaded. It is required for this function.");
-  }
   return 0;
 }
 

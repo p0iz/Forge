@@ -14,26 +14,40 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2014 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Graphics/Scene/Transformation.hpp"
-#include <string>
-#include <set>
+#include "ForgeExport.h"
+#include "Lua/LuaLibrary.hpp"
+
 
 namespace Forge {
 
-typedef size_t SceneNodeId;
+class FORGE_EXPORT ComponentsLibrary : public LuaLibrary
+{
+  public:
+    ComponentsLibrary();
 
-struct SceneNode {
-  SceneNode(const std::string& name, SceneNodeId parent = 0);
-  std::string mName;
-  SceneNodeId mId;
-  SceneNodeId mParent;
-  Transformation mWorldTransform;
+    virtual void import(lua_State* state);
+    virtual void remove(lua_State* state);
+
+    /* Lua: Mesh(owner, mesh)
+     *
+     * Description:
+     *    Creates a component with the given mesh asset.
+     *
+     * Parameter:
+     *    owner: The game object that owns this component.
+     *    mesh: The loaded mesh asset this component uses.
+     *
+     * Return values:
+     *    The created component or nil if creation failed.
+     */
+    static int mesh(lua_State* state);
+
 };
 
 }

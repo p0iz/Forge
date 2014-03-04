@@ -20,13 +20,15 @@
 
 #pragma once
 
-#include "Scene/Attachable.hpp"
+#include "GameObject/Attachable.hpp"
 #include <glm/glm.hpp>
 
 
 namespace Forge {
 
 class Viewport;
+
+class GameObject;
 
 class Camera : public Attachable
 {
@@ -36,7 +38,7 @@ class Camera : public Attachable
       float nearClip = 1.0f,
       float farClip = 100.0f);
 
-    void lookAt(SceneNode* target);
+    void lookAt(GameObject* target);
 
     void setFovY(float fovY);
 
@@ -51,7 +53,7 @@ class Camera : public Attachable
     float mNearClip;
     float mFarClip;
 
-    SceneNode* mTarget;
+    GameObject* mTarget;
 };
 
 }

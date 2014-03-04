@@ -18,13 +18,24 @@
  *
  */
 
-#include "SceneNode.hpp"
+#include "Attachable.hpp"
+
 
 namespace Forge {
 
-SceneNode::SceneNode(const std::string& name, SceneNodeId parent)
-	: mName(name), mParent(parent), mWorldTransform()
+void Attachable::attach(GameObject* object)
 {
+  mAttachedTo = object;
+}
+
+void Attachable::detach()
+{
+  mAttachedTo = nullptr;
+}
+
+GameObject const* Attachable::attachedTo() const
+{
+  return mAttachedTo;
 }
 
 }

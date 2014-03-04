@@ -31,7 +31,6 @@ RendererThread::RendererThread():
   mThread(),
   mWindow(),
   mRenderer(),
-  mMeshes(nullptr),
   mLights(nullptr),
   mViewports()
 {
@@ -54,9 +53,9 @@ bool RendererThread::start()
       mWindow.show();
       mWindow.setTitle("Forge");
       mRenderer.initialize();
-      if (!mMeshes || !mLights)
+      if (!mLights)
       {
-        Log::error << "No meshes set! Rendering cannot be done.\n";
+        Log::error << "No light array set! Rendering cannot be done.\n";
         return;
       }
 
@@ -66,7 +65,7 @@ bool RendererThread::start()
         {
           if (nameViewport.second)
           {
-            mRenderer.render(*static_cast<Viewport const*>(nameViewport.second), mMeshes, *mLights);
+            mRenderer.render(*static_cast<Viewport const*>(nameViewport.second), *mLights);
           }
         }
         mWindow.swapBuffers();
@@ -85,11 +84,6 @@ void RendererThread::stop()
     mRunning = false;
     mThread.join();
   }
-}
-
-void RendererThread::setMeshAssets(UserdataMap* meshmap)
-{
-  mMeshes = meshmap;
 }
 
 void RendererThread::setLights(std::vector<Light>* lights)

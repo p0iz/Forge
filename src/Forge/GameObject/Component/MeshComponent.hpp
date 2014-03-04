@@ -14,30 +14,35 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2014 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "ForgeExport.h"
-#include <unordered_set>
+#include "Component.hpp"
+#include <string>
 
 
 namespace Forge {
 
-class SceneNode;
+class Mesh;
 
-class FORGE_EXPORT Attachable {
-public:
-  /* Allow limiting the max number of attached nodes */
-  explicit Attachable(std::size_t maxAttachments = 0);
-  void attachToNode(Forge::SceneNode* node);
-  void detachFromNode(Forge::SceneNode* node);
-  const std::unordered_set<SceneNode*>& getAttachedNodes() const;
-private:
-  const std::size_t mMaxAttachments;
-  std::unordered_set<SceneNode*> mAttachedNodes;
+// Derived component
+class MeshComponent : public Component
+{
+  public:
+    // Acquire assets, load scripts etc. here
+    explicit MeshComponent(GameObject* owner, Mesh* mesh);
+
+    // Perform a frame update on the component
+    virtual void update();
+
+    // Release any acquired assets here
+    virtual void destroy();
+
+  private:
+    Mesh* mMesh;
 };
 
 }

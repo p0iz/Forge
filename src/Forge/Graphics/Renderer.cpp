@@ -21,9 +21,9 @@
 #include "Renderer.h"
 #include "Camera.hpp"
 #include "DebugAxis.h"
-#include "Lua/UserdataMap.hpp"
-#include "Mesh.h"
-#include "Scene/SceneNode.hpp"
+#include "GameObject/GameObject.hpp"
+#include "GameObject/Component/MeshComponent.hpp"
+#include "Util/Internal/Keeper.hpp"
 #include "Viewport.hpp"
 #include "Util/Log.h"
 #include "GL/glew.h"
@@ -88,7 +88,7 @@ void Renderer::deinitialize()
   mInitialized = false;
 }
 
-void Renderer::render(const Viewport& viewport, UserdataMap* meshes, std::vector<Light> const& lights)
+void Renderer::render(const Viewport& viewport, std::vector<Light> const& lights)
 {
   int x = viewport.x();
   int y = viewport.y();
@@ -104,21 +104,18 @@ void Renderer::render(const Viewport& viewport, UserdataMap* meshes, std::vector
 
   updateLightData(lights, view);
 
+  mTechnique->beginMaterial();
+
   for (Light const& light : lights)
   {
     if (light.type != Light::DISABLED)
     {
       Light::updateBuffer(light.getShaderData());
-      for (auto nameMesh : *meshes)
+      for (MeshComponent& mc : Keeper<MeshComponent>::instance().items())
       {
-        Mesh* mesh = static_cast<Mesh*>(nameMesh.second);
-        for (SceneNode const* node : mesh->getAttachedNodes())
-        {
-          glm::mat4 world = node->mWorldTransform.getMatrix();
-          mTechnique->beginMaterial();
-          mTechnique->setTransforms(world, view, projection);
-          mesh->draw();
-        }
+        glm::mat4 world = mc.owner().transform().getMatrix();
+        mTechnique->setTransforms(world, view, projection);
+        mc.update();
       }
     }
   }

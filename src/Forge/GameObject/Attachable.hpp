@@ -14,47 +14,28 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
 #pragma once
 
-#include "Lua/UserdataMap.hpp"
-#include "DebugAxis.h"
 #include "ForgeExport.h"
-#include "Graphics/Light/Light.hpp"
-#include "Material/Technique/Technique.hpp"
-#include <glm/glm.hpp>
 
 
 namespace Forge {
 
-class Camera;
+class GameObject;
 
-class Viewport;
-
-/* A class that is used to render scenes from scene configurations */
-class FORGE_EXPORT Renderer
+class FORGE_EXPORT Attachable
 {
-public:
-  Renderer();
-  ~Renderer();
+  public:
+    void attach(GameObject* object);
+    void detach();
+    GameObject const* attachedTo() const;
 
-  void initialize();
-  void deinitialize();
-
-  void updateViewport(int width, int height);
-
-  void render(Viewport const& viewport, std::vector<Light> const& lights);
-
-private:
-  bool mInitialized;
-  void updateLightData(std::vector<Light> const& lights, const glm::mat4& view);
-
-  DebugAxis mDebugAxis;
-
-  Technique* mTechnique;
+  private:
+    GameObject* mAttachedTo;
 };
 
 }

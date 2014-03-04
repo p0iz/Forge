@@ -31,8 +31,6 @@ class Light;
 
 class Camera;
 
-class SceneNode;
-
 class FORGE_EXPORT SceneLibrary : public LuaLibrary
 {
   public:
@@ -46,10 +44,10 @@ class FORGE_EXPORT SceneLibrary : public LuaLibrary
     /* Lua: setGridSize(width, height)
      *
      * Description:
-     *    Sets the grid size of the node containers in the world.
+     *    Sets the grid size of the object containers in the world.
      *    The values are stored in Scene.grid.width and Scene.grid.height.
      *
-     *    Any previously stored scene nodes will be moved to the new grid cells.
+     *    Any previously stored scene objects will be moved to the new grid cells.
      *
      * Parameters:
      *    width: The width of the grid cells
@@ -60,28 +58,41 @@ class FORGE_EXPORT SceneLibrary : public LuaLibrary
      */
     static int setGridSize(lua_State* state);
 
-    /* Lua: createSceneNode(name [, x, y, z])
+    /* Lua: createObject(name [, x, y, z])
      *
      * Description:
-     *    Creates a scene node at the given position with a default transformation.
+     *    Creates a game object at the given position with a default transformation.
      *
      * Parameters:
-     *    x: The node's position on the x axis
-     *    y: The node's position on the y axis
-     *    z: The node's position on the z axis
+     *    x: The object's position on the x axis
+     *    y: The object's position on the y axis
+     *    z: The object's position on the z axis
      *
      * Return values:
-     *    The created scene node.
+     *    The created game object.
      */
-    static int createNode(lua_State* state);
+    static int createObject(lua_State* state);
 
-    /* Lua: attach(node, attachable)
+    /* Lua: deleteObject(object)
+     *
+     * Description:
+     *    Destroys a game object.
+     *
+     * Parameters:
+     *    object: Game object's userdata.
+     *
+     * Return values:
+     *    Nothing.
+     */
+    static int deleteObject(lua_State* state);
+
+    /* Lua: attach(object, attachable)
      *
      * Description:
      *    Attaches the asset
      *
      * Parameters:
-     *    node: The scene node to attach to
+     *    object: The game object to attach to
      *    attachable: The attachable object
      *
      * Return values:
@@ -104,13 +115,13 @@ class FORGE_EXPORT SceneLibrary : public LuaLibrary
      */
     static int createCamera(lua_State* state);
 
-    /* Lua: translate(node, x, y, z)
+    /* Lua: translate(object, x, y, z)
      *
      * Description:
-     *    Translates a node by x, y, z
+     *    Translates a game object by x, y, z
      *
      * Parameters:
-     *    node: The scene node to translate
+     *    object: The game object to translate
      *    x: Translate by 'x' on X-axis
      *    y: Translate by 'y' on Y-axis
      *    z: Translate by 'z' on Z-axis

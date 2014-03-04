@@ -27,7 +27,8 @@ namespace Forge {
 
 // A struct that contains a single transformation (translation, scaling and rotation)
 // from one space to another.
-struct FORGE_EXPORT Transformation {
+struct FORGE_EXPORT Transformation
+{
   Transformation& translate(float x, float y, float z);
   Transformation& setPosition(float x, float y, float z);
 
@@ -38,6 +39,7 @@ struct FORGE_EXPORT Transformation {
   void reset();
   Transformation& applyMatrix(const glm::mat4& matrix);
   glm::mat4 getMatrix() const;
+
 private:
   glm::mat4 mMatrix;
   float mScale = 1.0f;

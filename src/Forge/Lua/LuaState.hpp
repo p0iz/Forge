@@ -50,7 +50,6 @@ class FORGE_EXPORT LuaState
 
   private:
     lua_State* mState;
-
 };
 
 }

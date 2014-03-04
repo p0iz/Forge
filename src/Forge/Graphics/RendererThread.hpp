@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "Lua/UserdataMap.hpp"
 #include "ForgeExport.h"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Renderer.h"
@@ -42,7 +41,6 @@ class FORGE_EXPORT RendererThread
 
     void stop();
 
-    void setMeshAssets(UserdataMap* meshmap);
 
     void setLights(std::vector<Light>* lights);
 
@@ -61,7 +59,6 @@ class FORGE_EXPORT RendererThread
     std::thread mThread;
     RenderWindow mWindow;
     Renderer mRenderer;
-    UserdataMap* mMeshes;
     std::vector<Light>* mLights;
     std::unordered_map<std::string, Viewport*> mViewports;
 };

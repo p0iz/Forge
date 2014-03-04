@@ -79,14 +79,12 @@ int AssetsLibrary::addLoader(lua_State* state)
     lua_pushlightuserdata(state, loaderLib);
     lua_setfield(state, -2, "libraryPtr");
 
-
     // Set metatable
     luaL_getmetatable(state, "Assets.Loader");
     lua_setmetatable(state, -2);
 
     // Store a reference to the same loader for all the supported extensions
     int count = 0;
-    std::string ext;
     std::string::size_type extStart = 0;
     std::string::size_type extEnd;
     do
@@ -109,10 +107,16 @@ int AssetsLibrary::addLoader(lua_State* state)
     if (lua_isnil(state, -1))
     {
       Log::info << "Adding asset map for category '" << category << "'\n";
-      UserdataMap* assetmap = new UserdataMap;
       lua_getglobal(state, "Assets");
-      lua_pushlightuserdata(state, assetmap);
-      lua_setfield(state, -2, category);
+      void* assetmapData = lua_newuserdata(state, sizeof(UserdataMap));
+      if (assetmapData && new (assetmapData) UserdataMap())
+      {
+        lua_setfield(state, -2, category);
+      }
+      else
+      {
+        return luaL_error(state, "Failed to allocate asset map for '%s'", category);
+      }
     }
 
     lua_pushnumber(state, count);

@@ -14,28 +14,27 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2014 Tommi Martela
  *
  */
 
-#pragma once
-
-#include "LuaForwardDeclarations.hpp"
-
-// Helper macro to add functions to a table
-#define LIB_FUNC(state,fn)\
-  lua_pushcfunction(state, fn);\
-  lua_setfield(state, -2, #fn)
+#include "Component.hpp"
 
 namespace Forge {
 
-class LuaLibrary
+Component::Component(GameObject* owner):
+  mOwner(owner)
 {
-  public:
-    virtual ~LuaLibrary() { }
+}
 
-    virtual void import(lua_State* state) = 0;
-    virtual void remove(lua_State* state) = 0;
-};
+GameObject& Component::owner()
+{
+  return *mOwner;
+}
+
+GameObject const& Component::owner() const
+{
+  return *mOwner;
+}
 
 }

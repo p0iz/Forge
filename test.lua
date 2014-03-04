@@ -1,17 +1,8 @@
-function print_table(table)
-  for k,v in pairs(Assets)
-  do
-    print(k, v)
-    if type(v) == 'table' then
-      print_table(v)
-    end
-  end
-end
 
+-- Asset file loaders
 Assets.setLoaderPath 'src/Forge/AssetPlugins'
 Assets.addLoader 'ObjLoader'
 Assets.addLoader 'ImageLoader'
-mesh = Assets.load 'data/meshes/paddle.obj'
 
 -- Lights!
 Scene.addDirectionalLight({1, -1, -1}, {0.0, 1.0, 0.0, 1.0})
@@ -21,15 +12,15 @@ Scene.addPointLight({10, 10, 10}, {0.0, 0.0, 1.0, 1.0})
 Scene.createCamera('main', 45, 1, 1000)
 Scene.createCamera('left', 45, 1, 1000)
 Scene.createCamera('right', 45, 1, 1000)
-Scene.createNode 'cameraMain'
-Scene.createNode 'cameraLeft'
-Scene.createNode 'cameraRight'
-Scene.translate(Scene.nodes.cameraMain, 0, 5, -30)
-Scene.translate(Scene.nodes.cameraLeft, -10, 5, -40)
-Scene.translate(Scene.nodes.cameraRight, 10, 5, -40)
-Scene.attach(Scene.nodes.cameraMain, Scene.cameras.main)
-Scene.attach(Scene.nodes.cameraLeft, Scene.cameras.left)
-Scene.attach(Scene.nodes.cameraRight, Scene.cameras.right)
+Scene.createObject 'cameraMain'
+Scene.createObject 'cameraLeft'
+Scene.createObject 'cameraRight'
+Scene.translate(Scene.objects.cameraMain, 0, 5, -30)
+Scene.translate(Scene.objects.cameraLeft, -10, 5, -40)
+Scene.translate(Scene.objects.cameraRight, 10, 5, -40)
+Scene.attach(Scene.objects.cameraMain, Scene.cameras.main)
+Scene.attach(Scene.objects.cameraLeft, Scene.cameras.left)
+Scene.attach(Scene.objects.cameraRight, Scene.cameras.right)
 
 function print_table(table, indent)
   local indentation = indent or 0
@@ -72,56 +63,34 @@ do
   current = os.clock()
 end
 
--- Create test mesh and scene node
-Scene.createNode 'test'
-Scene.attach(Scene.nodes.test, mesh)
+Scene.createObject 'test'
+mesh = Assets.load 'data/meshes/paddle.obj'
+Components.mesh(Scene.objects.test, mesh)
 
 start = os.clock()
 while current - start < 3.0
 do
   current = os.clock()
-  Scene.translate(Scene.nodes.test, 0.0001 * (current - start), 0, 0)
+  Scene.translate(Scene.objects.test, 0.0001 * (current - start), 0, 0)
 end
 
 alley = Assets.load 'data/meshes/alleyway_1.obj'
 
 -- Add alley to scene
-Scene.createNode 'Alley'
-Scene.attach(Scene.nodes.Alley, alley)
+Scene.createObject 'Alley'
+Components.mesh(Scene.objects.Alley, alley)
 
 start = os.clock()
 while current - start < 5.0
 do
-  Scene.translate(Scene.nodes.cameraMain, 0.000001, 0, 0.00001)
+  Scene.translate(Scene.objects.cameraMain, 0.000001, 0, 0.00001)
   current = os.clock()
 end
 
+start = os.clock()
+while current - start < 2.0
+do
+  Scene.translate(Scene.objects.cameraMain, 0.000001, 0, 0.00001)
+  current = os.clock()
+end
 
---[[ 
-
--- Acquire mesh assets and camera for rendering
-
--- Should be able to render meshes now!
-
-]]--
-
---[[
-
-Need the camera in renderer.
-
-1. get camera properties (perspective matrix)
-2. get camera node transform (view matrix) 
-
-For each mesh
-  3. Get mesh transform (world matrix)
-  4. Get mesh material
-  5. Apply matrices to material uniforms
-  6. Draw mesh using material
-
-RendererThread needs to know about assets and scene data
-
-AssetsLibrary must provide C++ with asset data
-
-SceneLibrary must provide C++ with scene data
-
-]]--

@@ -86,17 +86,6 @@ class FORGE_EXPORT RendererLibrary : public LuaLibrary
 private:
     RendererThread mThread;
 
-    /* Lua: findMeshAssets()
-     *
-     * Description:
-     *    Finds the mesh asset map for rendering. Requires the Assets library
-     *    and a loader for mesh assets to be loaded. Used internally.
-     *
-     * Return values:
-     *    Nothing.
-     */
-    static int findMeshAssets(lua_State* state);
-
     /* Lua: findLights()
      *
      * Description:

@@ -21,7 +21,6 @@
 #pragma once
 
 #include "ForgeExport.h"
-#include "Graphics/Scene/Attachable.hpp"
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <vector>

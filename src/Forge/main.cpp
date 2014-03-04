@@ -20,8 +20,10 @@
 
 #include "ForgeCLI.hpp"
 #include "Lua/AssetsLibrary.hpp"
+#include "Lua/ComponentsLibrary.hpp"
 #include "Lua/RendererLibrary.hpp"
 #include "Lua/SceneLibrary.hpp"
+#include "Platform/Window/GraphicsContext.hpp"
 #include <iostream>
 
 
@@ -44,6 +46,9 @@ int main(int argc, char** argv)
 
   Forge::AssetsLibrary assets;
   cli.addLibrary(assets);
+
+  Forge::ComponentsLibrary components;
+  cli.addLibrary(components);
 
   Forge::RendererLibrary renderer;
   cli.addLibrary(renderer);

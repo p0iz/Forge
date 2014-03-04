@@ -31,6 +31,7 @@ add_compiler_export_flags()
 add_definitions(-DForge_EXPORTS)
 
 # Add subsystems
+add_subdirectory(GameObject)
 add_subdirectory(Graphics)
 add_subdirectory(Lua)
 add_subdirectory(Time)
@@ -51,6 +52,7 @@ add_library(Forge SHARED ForgeCLI.cpp)
 
 target_link_libraries(Forge
   "-Wl,--whole-archive"
+  GameObject
   Graphics
   Time
   Util

@@ -20,41 +20,27 @@
 
 #pragma once
 
-#include "Lua/UserdataMap.hpp"
-#include "DebugAxis.h"
 #include "ForgeExport.h"
-#include "Graphics/Light/Light.hpp"
-#include "Material/Technique/Technique.hpp"
-#include <glm/glm.hpp>
-
+#include "Transformation.hpp"
+#include <string>
+#include <set>
 
 namespace Forge {
 
-class Camera;
-
-class Viewport;
-
-/* A class that is used to render scenes from scene configurations */
-class FORGE_EXPORT Renderer
+class FORGE_EXPORT GameObject
 {
-public:
-  Renderer();
-  ~Renderer();
+  public:
+    GameObject(std::string const& name);
 
-  void initialize();
-  void deinitialize();
+    Transformation const& transform() const;
 
-  void updateViewport(int width, int height);
+    void translate(float x, float y, float z);
 
-  void render(Viewport const& viewport, std::vector<Light> const& lights);
+    std::string const& name() const;
 
-private:
-  bool mInitialized;
-  void updateLightData(std::vector<Light> const& lights, const glm::mat4& view);
-
-  DebugAxis mDebugAxis;
-
-  Technique* mTechnique;
+  private:
+    std::string mName;
+    Transformation mWorldTransform;
 };
 
 }
