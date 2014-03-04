@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <functional>
 #include <SDL2/SDL_keycode.h>
 
 namespace Forge {

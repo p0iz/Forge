@@ -19,12 +19,12 @@
  */
 
 #include "InputHandler.hpp"
+#include "Util/Log.h"
 
 
-namespace Forge { namespace Input {
+namespace Forge {
 
 InputHandler::InputHandler():
-  mProcessor(nullptr),
   mMouseRelX(0),
   mMouseRelY(0),
   mMouseX(0),
@@ -44,7 +44,6 @@ InputHandler::~InputHandler()
 void InputHandler::injectKeyDown(Key key)
 {
   mActiveKeys.insert(key);
-  mPressedKeys.insert(key);
 }
 
 void InputHandler::injectKeyUp(Key key)
@@ -63,7 +62,6 @@ void InputHandler::injectMouseMove(int x, int y)
 void InputHandler::injectMouseDown(MouseButton button)
 {
   mActiveButtons = static_cast<MouseButton>(mActiveButtons | button);
-  mClickedButtons = static_cast<MouseButton>(mClickedButtons | button);
 }
 
 void InputHandler::injectMouseUp(MouseButton button)
@@ -76,33 +74,6 @@ void InputHandler::injectMouseWheel(int x, int y)
 
 }
 
-void InputHandler::setProcessor(InputProcessor* processor)
-{
-  mProcessor = processor;
-}
-
-InputProcessor*InputHandler::currentProcessor()
-{
-  return mProcessor;
-}
-
-bool InputHandler::process(float const delta)
-{
-  bool keepRunning = true;
-  if (mProcessor)
-  {
-    keepRunning = mProcessor->process(delta);
-  }
-  mPressedKeys.clear();
-  mClickedButtons = static_cast<MouseButton>(0);
-  return keepRunning;
-}
-
-bool InputHandler::isKeyPressed(Key key) const
-{
-  return mPressedKeys.count(key);
-}
-
 bool InputHandler::isKeyDown(Key key) const
 {
   return mActiveKeys.count(key);
@@ -113,19 +84,9 @@ bool InputHandler::isKeyUp(Key key) const
   return !mActiveKeys.count(key);
 }
 
-const std::unordered_set<Key>&InputHandler::getActiveKeys() const
+std::unordered_set<Key> const& InputHandler::getActiveKeys() const
 {
   return mActiveKeys;
-}
-
-const std::unordered_set<Key>& InputHandler::getPressedKeys() const
-{
-  return mPressedKeys;
-}
-
-bool InputHandler::isMouseClicked(MouseButton mask) const
-{
-  return mClickedButtons & mask;
 }
 
 bool InputHandler::isMouseDown(MouseButton mask) const
@@ -172,6 +133,6 @@ int InputHandler::getMouseRelY() const
   return mMouseRelY;
 }
 
-}}
+}
 
 

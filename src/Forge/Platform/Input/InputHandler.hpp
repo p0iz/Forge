@@ -21,14 +21,13 @@
 #pragma once
 
 #include "ForgeExport.h"
-#include "InputProcessor.hpp"
 #include "KeySymbols.hpp"
 #include "MouseButtons.hpp"
 #include <memory>
 #include <unordered_set>
 
 
-namespace Forge { namespace Input {
+namespace Forge {
 
 /* Base class for platform-specific implementations */
 class FORGE_EXPORT InputHandler
@@ -45,17 +44,9 @@ class FORGE_EXPORT InputHandler
     void injectMouseUp(MouseButton button);
     void injectMouseWheel(int x, int y);
 
-    /* Set the input processor to use for processing captured events */
-    void setProcessor(InputProcessor* processor);
-    InputProcessor* currentProcessor();
-    bool process(float const delta);
-
-    bool isKeyPressed(Key key) const;
     bool isKeyDown(Key key) const;
     bool isKeyUp(Key key) const;
     std::unordered_set<Key> const& getActiveKeys() const;
-    std::unordered_set<Key> const& getPressedKeys() const; // Cleared after each frame
-    bool isMouseClicked(MouseButton mask) const;
     bool isMouseDown(MouseButton mask) const;
     bool isMouseUp(MouseButton mask) const;
 
@@ -69,8 +60,6 @@ class FORGE_EXPORT InputHandler
     int getMouseRelY() const;
 
   private:
-    InputProcessor* mProcessor;
-
     int mMouseRelX;
     int mMouseRelY;
     int mMouseX;
@@ -80,10 +69,8 @@ class FORGE_EXPORT InputHandler
     int mMouseWheelY;
 
     std::unordered_set<Key> mActiveKeys;
-    std::unordered_set<Key> mPressedKeys; // Single-frame container
     MouseButton mActiveButtons;
-    MouseButton mClickedButtons; // Single-frame container
     Modifier mActiveModifiers;
 };
 
-}}
+}

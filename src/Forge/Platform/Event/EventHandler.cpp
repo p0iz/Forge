@@ -19,13 +19,14 @@
  */
 
 #include "EventHandler.hpp"
+#include "Platform/Input/InputHandler.hpp"
 #include "SDL2/SDL.h"
 
 
-namespace Forge { namespace Event {
+namespace Forge {
 
 EventHandler::EventHandler(
-  Input::InputHandler& input,
+  InputHandler& input,
   RenderWindow& window
 ):
   mInput(input),
@@ -65,4 +66,4 @@ bool EventHandler::pumpMessages()
   return true;
 }
 
-}}
+}
