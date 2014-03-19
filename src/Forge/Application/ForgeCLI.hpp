@@ -28,10 +28,12 @@
 namespace Forge {
 
 /** Class that represents the command-line Lua interface for the Forge engine */
-class ForgeCLI
+class FORGE_EXPORT ForgeCLI
 {
   public:
     explicit ForgeCLI(std::istream& input);
+
+    ~ForgeCLI();
 
     void readInput();
 
@@ -48,7 +50,6 @@ class ForgeCLI
   private:
     LuaState mState;
     std::istream& mInput;
-
 };
 
 }

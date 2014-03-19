@@ -19,6 +19,10 @@
  */
 
 #include "ForgeCLI.hpp"
+#include "Lua/AssetsLibrary.hpp"
+#include "Lua/ComponentsLibrary.hpp"
+#include "Lua/RendererLibrary.hpp"
+#include "Platform/Window/GraphicsContext.hpp"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -37,6 +41,24 @@ ForgeCLI::ForgeCLI(std::istream& input):
   mInput(input)
 {
   mState.initialize();
+
+  AssetsLibrary assets;
+  addLibrary(assets);
+
+  ComponentsLibrary components;
+  addLibrary(components);
+
+  RendererLibrary renderer;
+  addLibrary(renderer);
+
+  // Create an auxiliary context to use for loading asset data into OpenGL from scripts
+  GraphicsContext* loaderContext = renderer.thread().createAuxContext();
+  loaderContext->makeCurrent();
+}
+
+ForgeCLI::~ForgeCLI()
+{
+  RendererLibrary::thread().stop();
 }
 
 void ForgeCLI::readInput()

@@ -31,6 +31,7 @@ add_compiler_export_flags()
 add_definitions(-DForge_EXPORTS)
 
 # Add subsystems
+add_subdirectory(Application)
 add_subdirectory(GameObject)
 add_subdirectory(Graphics)
 add_subdirectory(Lua)
@@ -48,10 +49,11 @@ if(WIN32)
 endif()
 
 # The library
-add_library(Forge SHARED ForgeCLI.cpp)
+add_library(Forge SHARED Application)
 
 target_link_libraries(Forge
   "-Wl,--whole-archive"
+  Application
   GameObject
   Graphics
   Time
@@ -69,26 +71,3 @@ target_link_libraries(Forge
 generate_export_header(Forge
   EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/ForgeExport.h
 )
-
-
-# The CLI
-set(ForgeCLI_SRC
-  ForgeCLI.cpp
-  main.cpp
-)
-set(ForgeCLI_HDR
-  ForgeCLI.hpp
-)
-add_executable(forge-cli ${ForgeCLI_SRC} ${ForgeCLI_HDR})
-add_dependencies(forge-cli Forge)
-
-if(WIN32)
-  add_library(ForgeDLL SHARED IMPORTED)
-  set_property(TARGET ForgeDLL PROPERTY IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/src/Forge/Forge.dll)
-  set_property(TARGET ForgeDLL PROPERTY IMPORTED_IMPLIB ${CMAKE_BINARY_DIR}/src/Forge/libForge.dll.a)
-else()
-  add_library(ForgeDLL SHARED IMPORTED)
-  set_property(TARGET ForgeDLL PROPERTY IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/src/Forge/libForge.so)
-endif()
-
-target_link_libraries(forge-cli ForgeDLL ${Win32LinkerFlag})
