@@ -24,6 +24,11 @@
 
 namespace Forge {
 
+Transformation::Transformation(float x, float y, float z):
+  mMatrix(glm::translate(glm::mat4(), glm::vec3(x,y,z)))
+{
+}
+
 Transformation& Transformation::translate(float x, float y, float z)
 {
   mMatrix = glm::translate(mMatrix, glm::vec3(x, y, z));

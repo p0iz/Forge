@@ -29,6 +29,7 @@ namespace Forge {
 // from one space to another.
 struct FORGE_EXPORT Transformation
 {
+  explicit Transformation(float x = 0.0f, float y = 0.0f, float z = 0.0f);
   Transformation& translate(float x, float y, float z);
   Transformation& setPosition(float x, float y, float z);
 
