@@ -48,7 +48,7 @@ glm::vec3 Transformation::position() const
 
 Transformation& Transformation::scale(float size)
 {
-  mScale *= size;
+  mMatrix = glm::scale(mMatrix, glm::vec3(size));
   return *this;
 }
 
@@ -61,7 +61,6 @@ Transformation& Transformation::rotate(float angle, const glm::vec3 &axis)
 void Transformation::reset()
 {
   mMatrix = glm::mat4();
-  mScale = 1.0f;
 }
 
 Transformation& Transformation::applyMatrix(const glm::mat4& matrix)
@@ -72,11 +71,7 @@ Transformation& Transformation::applyMatrix(const glm::mat4& matrix)
 
 glm::mat4 Transformation::getMatrix() const
 {
-  glm::mat4x4 result(mMatrix);
-  result[0] *= mScale;
-  result[1] *= mScale;
-  result[2] *= mScale;
-  return result;
+  return mMatrix;
 }
 
 }

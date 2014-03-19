@@ -43,7 +43,6 @@ struct FORGE_EXPORT Transformation
 
 private:
   glm::mat4 mMatrix;
-  float mScale = 1.0f;
 };
 
 }
