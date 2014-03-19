@@ -19,7 +19,7 @@
  */
 
 #include "ObjLoader.hpp"
-#include "Graphics/Mesh.h"
+#include "Graphics/StaticMesh.h"
 #include "Util/Log.h"
 #include <algorithm>
 #include <glm/glm.hpp>
@@ -64,7 +64,7 @@ void parseVertex(std::string const& vertex, int& posIndex, int& texIndex, int&no
 
 void* ObjLoader::load(std::string const& filename)
 {
-  Mesh* mesh = nullptr;
+  StaticMesh* mesh = nullptr;
 
   std::ifstream inputFile(filename);
   if (!inputFile.is_open())
@@ -172,14 +172,14 @@ void* ObjLoader::load(std::string const& filename)
     }
   }
 
-  mesh = new Mesh(vertices, elements);
+  mesh = new StaticMesh(vertices, elements);
 
   return mesh;
 }
 
 void ObjLoader::unload(void* asset)
 {
-  delete static_cast<Mesh*>(asset);
+  delete static_cast<StaticMesh*>(asset);
 }
 
 const char*ObjLoader::category() const

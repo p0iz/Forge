@@ -19,13 +19,13 @@
  */
 
 #include "MeshComponent.hpp"
-#include "Graphics/Mesh.h"
+#include "Graphics/StaticMesh.h"
 #include "Util/Internal/Keeper.hpp"
 
 
 namespace Forge {
 
-MeshComponent::MeshComponent(GameObject* owner, Mesh* mesh):
+MeshComponent::MeshComponent(GameObject* owner, StaticMesh* mesh):
   Component(owner),
   mMesh(mesh)
 {

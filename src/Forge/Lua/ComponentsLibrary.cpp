@@ -27,7 +27,7 @@
 
 namespace Forge {
 
-class Mesh;
+class StaticMesh;
 
 ComponentsLibrary::ComponentsLibrary()
 {
@@ -51,7 +51,7 @@ void ComponentsLibrary::remove(lua_State* state)
 int ComponentsLibrary::mesh(lua_State* state)
 {
   GameObject* owner = static_cast<GameObject*>(lua_touserdata(state, 1));
-  Mesh* mesh = static_cast<Mesh*>(lua_touserdata(state, 2));
+  StaticMesh* mesh = static_cast<StaticMesh*>(lua_touserdata(state, 2));
   if (owner && mesh)
   {
     MeshComponent* component = Keeper<MeshComponent>::instance().create(owner, mesh);

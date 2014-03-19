@@ -26,14 +26,14 @@
 
 namespace Forge {
 
-class Mesh;
+class StaticMesh;
 
 // Derived component
 class MeshComponent : public Component
 {
   public:
     // Acquire assets, load scripts etc. here
-    explicit MeshComponent(GameObject* owner, Mesh* mesh);
+    explicit MeshComponent(GameObject* owner, StaticMesh* mesh = nullptr);
 
     // Perform a frame update on the component
     virtual void update();
@@ -42,7 +42,7 @@ class MeshComponent : public Component
     virtual void destroy();
 
   private:
-    Mesh* mMesh;
+    StaticMesh* mMesh;
 };
 
 }

@@ -32,11 +32,11 @@
 
 namespace Forge {
 
-class FORGE_EXPORT Mesh
+class FORGE_EXPORT StaticMesh
 {
   public:
-    Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);
-    ~Mesh();
+    StaticMesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);
+    ~StaticMesh();
     void draw();
 
   private:
@@ -61,7 +61,5 @@ class FORGE_EXPORT Mesh
 
     Bounds mBounds;
 };
-
-typedef std::shared_ptr<Mesh> MeshPtr;
 
 } // namespace Forge

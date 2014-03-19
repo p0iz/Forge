@@ -18,7 +18,7 @@
  *
  */
 
-#include "Mesh.h"
+#include "StaticMesh.h"
 #include "Vertex.h"
 
 #include "Util/Log.h"
@@ -34,7 +34,7 @@
 
 namespace Forge {
 
-Mesh::Mesh(
+StaticMesh::StaticMesh(
     const std::vector<Vertex>& vertices,
     const std::vector<GLuint>& elements)
   : mNumberOfVertices(elements.size()),
@@ -59,7 +59,7 @@ Mesh::Mesh(
   calculateBounds(vertices);
 }
 
-Mesh::~Mesh()
+StaticMesh::~StaticMesh()
 {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glDeleteBuffers(1, & mVertexBufferId);
@@ -72,7 +72,7 @@ Mesh::~Mesh()
   glDeleteVertexArrays(1, &mVertexArrayId);
 }
 
-void Mesh::draw()
+void StaticMesh::draw()
 {
   if (mVertexArrayId == 0)
   {
@@ -87,7 +87,7 @@ void Mesh::draw()
   glDrawElements(GL_TRIANGLES, mNumberOfVertices, GL_UNSIGNED_INT, 0);
 }
 
-void Mesh::calculateBounds(const std::vector<Vertex>& vertices)
+void StaticMesh::calculateBounds(const std::vector<Vertex>& vertices)
 {
   mBounds = { 0, 0, 0, 0, 0, 0 };
   for (const Vertex& vertex : vertices)
@@ -101,7 +101,7 @@ void Mesh::calculateBounds(const std::vector<Vertex>& vertices)
   }
 }
 
-void Mesh::createVAO()
+void StaticMesh::createVAO()
 {
   glGenVertexArrays(1, &mVertexArrayId);
   glBindVertexArray(mVertexArrayId);

@@ -20,7 +20,6 @@
 
 #include "RendererThread.hpp"
 #include "Graphics/Camera.hpp"
-#include "Mesh.h"
 #include "Util/Log.h"
 
 

@@ -15,7 +15,7 @@ add_subdirectory(Material)
 set(GraphicsSources
   Camera.cpp
   DebugAxis.cpp
-  Mesh.cpp
+  StaticMesh.cpp
   Renderer.cpp
   RendererThread.cpp
   Viewport.cpp
