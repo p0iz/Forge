@@ -88,7 +88,7 @@ void Renderer::deinitialize()
   mInitialized = false;
 }
 
-void Renderer::render(const Viewport& viewport, std::vector<Light> const& lights)
+void Renderer::render(Viewport const& viewport)
 {
   int x = viewport.x();
   int y = viewport.y();
@@ -102,11 +102,11 @@ void Renderer::render(const Viewport& viewport, std::vector<Light> const& lights
   glm::mat4 view = viewport.view();
   glm::mat4 projection = viewport.projection();
 
-  updateLightData(lights, view);
+  updateLightData(view);
 
   mTechnique->beginMaterial();
 
-  for (Light const& light : lights)
+  for (Light const& light : Keeper<Light>::instance().items())
   {
     if (light.type != Light::DISABLED)
     {
@@ -121,9 +121,9 @@ void Renderer::render(const Viewport& viewport, std::vector<Light> const& lights
   }
 }
 
-void Renderer::updateLightData(const std::vector<Light>& lights, const glm::mat4& view)
+void Renderer::updateLightData(glm::mat4 const& view)
 {
-  for (Light const& light : lights)
+  for (Light const& light : Keeper<Light>::instance().items())
   {
     light.getShaderData().viewSpacePosition = view * light.position;
     if (light.type == Light::SPOT)

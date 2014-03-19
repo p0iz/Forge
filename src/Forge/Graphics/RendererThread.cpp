@@ -20,6 +20,7 @@
 
 #include "RendererThread.hpp"
 #include "Graphics/Camera.hpp"
+#include "Graphics/Light/Light.hpp"
 #include "Util/Log.h"
 
 
@@ -30,7 +31,6 @@ RendererThread::RendererThread():
   mThread(),
   mWindow(),
   mRenderer(),
-  mLights(nullptr),
   mViewports()
 {
 }
@@ -52,11 +52,6 @@ bool RendererThread::start()
       mWindow.show();
       mWindow.setTitle("Forge");
       mRenderer.initialize();
-      if (!mLights)
-      {
-        Log::error << "No light array set! Rendering cannot be done.\n";
-        return;
-      }
 
       while(mRunning)
       {
@@ -64,7 +59,7 @@ bool RendererThread::start()
         {
           if (nameViewport.second)
           {
-            mRenderer.render(*static_cast<Viewport const*>(nameViewport.second), *mLights);
+            mRenderer.render(*static_cast<Viewport const*>(nameViewport.second));
           }
         }
         mWindow.swapBuffers();
@@ -83,11 +78,6 @@ void RendererThread::stop()
     mRunning = false;
     mThread.join();
   }
-}
-
-void RendererThread::setLights(std::vector<Light>* lights)
-{
-  mLights = lights;
 }
 
 GraphicsContext* RendererThread::createAuxContext()

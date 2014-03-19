@@ -46,11 +46,11 @@ public:
 
   void updateViewport(int width, int height);
 
-  void render(Viewport const& viewport, std::vector<Light> const& lights);
+  void render(Viewport const& viewport);
 
 private:
   bool mInitialized;
-  void updateLightData(std::vector<Light> const& lights, const glm::mat4& view);
+  void updateLightData(glm::mat4 const& view);
 
   DebugAxis mDebugAxis;
 

@@ -27,10 +27,6 @@
 
 namespace Forge {
 
-class Light;
-
-class Camera;
-
 class FORGE_EXPORT SceneLibrary : public LuaLibrary
 {
   public:
@@ -177,10 +173,6 @@ class FORGE_EXPORT SceneLibrary : public LuaLibrary
      */
     static int addSpotLight(lua_State* state);
 
-  private:
-    static void addLightToScene(lua_State* state, Light&& light);
-
-    std::vector<Light> mLights;
 };
 
 }

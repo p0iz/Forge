@@ -23,6 +23,7 @@
 #include "Graphics/Camera.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "UserdataMap.hpp"
+#include "Util/Internal/Keeper.hpp"
 #include "Util/Log.h"
 #include "Utils.hpp"
 #include <lua.hpp>
@@ -54,9 +55,6 @@ void SceneLibrary::import(lua_State* state)
 
   lua_newtable(state);
   lua_setfield(state, -2, "cameras");
-
-  lua_pushlightuserdata(state, &mLights);
-  lua_setfield(state, -2, "lights");
 
   LIB_FUNC(state, setGridSize);
   LIB_FUNC(state, createObject);
@@ -194,12 +192,10 @@ int SceneLibrary::addDirectionalLight(lua_State* state)
   Lua::Utils::parseVec(state, 3, &direction[0]);
   lua_pop(state, 1);
 
-  Light light;
-  light.type = Light::DIRECTIONAL;
-  light.position = glm::vec4(direction, 0.0f);
-  light.getShaderData().color = color;
-
-  addLightToScene(state, std::move(light));
+  Light* light = Keeper<Light>::instance().create();
+  light->type = Light::DIRECTIONAL;
+  light->position = glm::vec4(direction, 0.0f);
+  light->getShaderData().color = color;
 
   return 0;
 }
@@ -219,12 +215,10 @@ int SceneLibrary::addPointLight(lua_State* state)
   Lua::Utils::parseVec(state, 3, &position[0]);
   lua_pop(state, 1);
 
-  Light light;
-  light.type = Light::POINT;
-  light.position = glm::vec4(position, 1);
-  light.getShaderData().color = color;
-
-  addLightToScene(state, std::move(light));
+  Light* light = Keeper<Light>::instance().create();
+  light->type = Light::POINT;
+  light->position = glm::vec4(position, 1);
+  light->getShaderData().color = color;
 
   return 0;
 }
@@ -257,26 +251,16 @@ int SceneLibrary::addSpotLight(lua_State* state)
   Lua::Utils::parseVec(state, 3, &position[0]);
   lua_pop(state, 1);
 
-  Light light;
-  light.type = Light::SPOT;
-  light.position = glm::vec4(position, 1);
-  light.spotDirection = direction;
-  light.getShaderData().spotCutoff = cutoff;
-  light.getShaderData().spotFalloff = falloff;
-  light.getShaderData().spotExponent = exponent;
-  light.getShaderData().color = color;
-
-  addLightToScene(state, std::move(light));
+  Light* light = Keeper<Light>::instance().create();
+  light->type = Light::SPOT;
+  light->position = glm::vec4(position, 1);
+  light->spotDirection = direction;
+  light->getShaderData().spotCutoff = cutoff;
+  light->getShaderData().spotFalloff = falloff;
+  light->getShaderData().spotExponent = exponent;
+  light->getShaderData().color = color;
 
   return 0;
-}
-
-void SceneLibrary::addLightToScene(lua_State* state, Light&& light)
-{
-  lua_getglobal(state, "Scene");
-  lua_getfield(state, -1, "lights");
-  std::vector<Light>* lights = static_cast<std::vector<Light>*>(lua_touserdata(state, -1));
-  lights->push_back(light);
 }
 
 }
