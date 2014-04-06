@@ -1,9 +1,7 @@
 
 set(UtilSources
-  HashUtils.h
   Log.cpp
   Singleton.hpp
-  UniqueId.hpp
   Internal/Keeper.hpp
 )
 
