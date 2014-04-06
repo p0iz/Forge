@@ -19,7 +19,7 @@
  */
 
 #include "AssetsLibrary.hpp"
-#include "AssetPlugins/LoaderInterface.hpp"
+#include "Assets/LoaderInterface.hpp"
 #include "Platform/DynamicLoader/DynamicLoader.hpp"
 #include "Platform/FileSystem/Directory.hpp"
 #include "Platform/FileSystem/File.hpp"

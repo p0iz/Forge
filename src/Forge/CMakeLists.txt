@@ -32,15 +32,13 @@ add_definitions(-DForge_EXPORTS)
 
 # Add subsystems
 add_subdirectory(Application)
+add_subdirectory(Assets)
 add_subdirectory(GameObject)
 add_subdirectory(Graphics)
 add_subdirectory(Lua)
 add_subdirectory(Time)
 add_subdirectory(Util)
 add_subdirectory(Platform)
-
-# Add standard asset plugins
-add_subdirectory(AssetPlugins)
 
 # Remove the unnecessary prefix from windows DLL and link statically to GCC and stdlibc++
 if(WIN32)
@@ -55,6 +53,7 @@ target_link_libraries(Forge
   "-Wl,--whole-archive"
   Application
   GameObject
+  Component
   Graphics
   Time
   Util
