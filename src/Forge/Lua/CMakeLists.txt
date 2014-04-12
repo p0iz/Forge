@@ -16,7 +16,6 @@ set(ForgeLuaHeaders
   LuaForwardDeclarations.hpp
   LuaLibrary.hpp
   LuaState.hpp
-  UserdataMap.hpp
   Utils.hpp
 )
 
