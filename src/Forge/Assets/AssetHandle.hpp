@@ -20,40 +20,42 @@
 
 #pragma once
 
-#include "GameObject/Attachable.hpp"
-#include <glm/glm.hpp>
+#include "AssetTypes.hpp"
+#include <algorithm>
 
 
 namespace Forge {
 
-class Viewport;
-
-class GameObject;
-
-class Camera : public Attachable
+class AssetHandle
 {
   public:
-    explicit Camera(
-      float fovY = 45.0f,
-      float nearClip = 1.0f,
-      float farClip = 100.0f);
+    static constexpr unsigned int InvalidId = 0;
 
-    void lookAt(GameObject* target);
+    unsigned int id;
+    Asset type;
 
-    void setFovY(float fovY);
+    bool isValid();
 
-    void setClip(float near, float far);
+    static AssetHandle create();
 
-    glm::mat4 view() const;
-
-    glm::mat4 projection(Viewport const& viewport) const;
+    bool operator==(AssetHandle const& rhs) const;
 
   private:
-    float mFovY;
-    float mNearClip;
-    float mFarClip;
+    AssetHandle();
 
-    GameObject* mTarget;
+};
+
+}
+
+namespace std {
+
+template <>
+struct hash<Forge::AssetHandle>
+{
+    size_t operator()(Forge::AssetHandle const& handle) const
+    {
+      return handle.id;
+    }
 };
 
 }

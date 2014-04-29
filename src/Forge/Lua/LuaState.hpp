@@ -22,33 +22,43 @@
 
 #include "ForgeExport.h"
 #include "LuaForwardDeclarations.hpp"
-#include "LuaLibrary.hpp"
 #include <iosfwd>
 
 
 namespace Forge {
 
+class Application;
+
+class LuaClass;
+
+class LuaLibrary;
+
 class FORGE_EXPORT LuaState
 {
   public:
-    LuaState();
+    LuaState(Application& app);
     ~LuaState();
 
     bool initialize();
 
     bool isInitialized() const;
 
-    void importLibrary(LuaLibrary& library);
+    void addClass(LuaClass&& klass);
 
-    void removeLibrary(LuaLibrary& library);
+    void importLibrary(LuaLibrary&& library);
 
-    void runScript(std::string const& scriptFile);
+    void removeLibrary(LuaLibrary&& library);
+
+    bool runScript(std::string const& scriptFile);
 
     bool isIncompleteChunk(std::string const& chunk);
 
     bool runChunk(const std::string& programName, std::string const& chunk);
 
+    bool hasGlobal(std::string const& name) const;
+
   private:
+    Application& mApp;
     lua_State* mState;
 };
 

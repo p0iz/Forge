@@ -171,7 +171,7 @@ int SceneLibrary::translate(lua_State* state)
   float x = luaL_checknumber(state, 2);
   float y = luaL_checknumber(state, 3);
   float z = luaL_checknumber(state, 4);
-  object->translate(x, y, z);
+  object->localTransform().translate(x, y, z);
 
   return 0;
 }

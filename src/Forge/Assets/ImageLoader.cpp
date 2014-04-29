@@ -19,6 +19,7 @@
  */
 
 #include "ImageLoader.hpp"
+#include "AssetManager.hpp"
 #include "FreeImage.h"
 #include <string>
 
@@ -34,7 +35,7 @@ void* ImageLoader::load(const std::string& filename)
   {
     bitmap = FreeImage_ConvertTo32Bits(bitmap);
   }
-  return bitmap;
+  return std::move(bitmap);
 }
 
 void ImageLoader::unload(void* asset)
@@ -42,25 +43,14 @@ void ImageLoader::unload(void* asset)
   FreeImage_Unload(static_cast<FIBITMAP*>(asset));
 }
 
-const char*ImageLoader::category() const
-{
-  return "images";
-}
-
-}
-
-/* Library interface definition */
-Forge::LoaderInterface* createInterface()
-{
-  return new Forge::ImageLoader;
-}
-
-const char* supportedExtensions()
+char const* ImageLoader::extensions() const
 {
   return "bmp,dds,exr,gif,hdr,ico,iff,jbig,jng,jpeg,jpg,mng,pcx,pbm,pgm,ppm,pfm,png,pict,psd,raw,ras,sgi,tga,tiff,wbmp,xbm,xpm";
 }
 
-const char* category()
+bool initialize(AssetManager& manager)
 {
-  return "images";
+  manager.addLoader<();
+}
+
 }

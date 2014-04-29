@@ -33,7 +33,7 @@ class Viewport;
 class FORGE_EXPORT RendererLibrary : public LuaLibrary
 {
   public:
-    explicit RendererLibrary();
+    explicit RendererLibrary(RendererThread& thread);
     virtual ~RendererLibrary();
 
     virtual void import(lua_State* state);
@@ -81,23 +81,7 @@ class FORGE_EXPORT RendererLibrary : public LuaLibrary
      */
     static int bindCamera(lua_State* state);
 
-    RendererThread& thread();
-
-private:
-    RendererThread mThread;
-
-    /* Lua: findLights()
-     *
-     * Description:
-     *    Finds the light vector for rendering. Requires the Scene library to be loaded.
-     *    Used internally.
-     *
-     * Return values:
-     *    Nothing.
-     */
-    static int findLights(lua_State* state);
-
-    static RendererThread* getRendererThread(lua_State* state);
+    static RendererThread& thread();
 };
 
 }

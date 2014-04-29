@@ -19,19 +19,23 @@
  */
 
 #include "RendererThread.hpp"
-#include "Graphics/Camera.hpp"
+#include "GameObject/Component/Camera.hpp"
+#include "GameObject/Component/Script.hpp"
 #include "Graphics/Light/Light.hpp"
+#include "Util/Internal/Keeper.hpp"
 #include "Util/Log.h"
 
 
 namespace Forge {
 
-RendererThread::RendererThread():
+RendererThread::RendererThread(Application& app):
   mRunning(false),
   mThread(),
   mWindow(),
-  mRenderer(),
-  mViewports()
+  mEvents(mWindow),
+  mRenderer(app),
+  mViewports(),
+  mApp(app)
 {
 }
 
@@ -53,8 +57,23 @@ bool RendererThread::start()
       mWindow.setTitle("Forge");
       mRenderer.initialize();
 
+      // Run script initializations
+      for (Script& script : mApp.scripts())
+      {
+        script.init();
+      }
+
       while(mRunning)
       {
+        // Run script updates
+        for (Script& script : mApp.scripts())
+        {
+          if (script.active())
+          {
+            script.update();
+          }
+        }
+
         for (auto nameViewport : mViewports)
         {
           if (nameViewport.second)
@@ -63,11 +82,16 @@ bool RendererThread::start()
           }
         }
         mWindow.swapBuffers();
+        if (!mEvents.pumpMessages())
+        {
+          mRunning = false;
+        }
       }
       mRenderer.deinitialize();
       mWindow.hide();
     });
   }
+  mThread.join();
   return mThread.joinable();
 }
 

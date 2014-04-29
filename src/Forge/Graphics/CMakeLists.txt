@@ -13,7 +13,6 @@ add_subdirectory(Light)
 add_subdirectory(Material)
 
 set(GraphicsSources
-  Camera.cpp
   DebugAxis.cpp
   StaticMesh.cpp
   Renderer.cpp

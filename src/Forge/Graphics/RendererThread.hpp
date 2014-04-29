@@ -21,9 +21,12 @@
 #pragma once
 
 #include "ForgeExport.h"
+#include "Application/Application.hpp"
 #include "Graphics/Renderer.h"
 #include "Graphics/Viewport.hpp"
 #include "Platform/Window/RenderWindow.hpp"
+#include "Platform/Input/InputHandler.hpp"
+#include "Platform/Event/EventHandler.hpp"
 #include <thread>
 
 
@@ -34,7 +37,7 @@ class Camera;
 class FORGE_EXPORT RendererThread
 {
   public:
-    RendererThread();
+    RendererThread(Application& app);
 
     bool start();
 
@@ -52,10 +55,14 @@ class FORGE_EXPORT RendererThread
 
   private:
     bool mRunning;
+
     std::thread mThread;
     RenderWindow mWindow;
+    EventHandler mEvents;
     Renderer mRenderer;
     std::unordered_map<std::string, Viewport*> mViewports;
+
+    Application mApp;
 };
 
 }

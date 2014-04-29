@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include "ComponentTypes.hpp"
+
 
 namespace Forge {
 
@@ -29,17 +31,24 @@ class GameObject;
 class Component
 {
   public:
-    explicit Component(GameObject* owner);
+    explicit Component(GameObject* owner = nullptr);
     virtual ~Component() {}
+
+    virtual ComponentType getType() const = 0;
 
     virtual void update() = 0;
     virtual void destroy() = 0;
 
+    bool active() const;
+    void setActive(bool active);
+
+    void setOwner(GameObject* go);
     GameObject& owner();
     GameObject const& owner() const;
 
   private:
     GameObject* mOwner;
+    bool mActive;
 };
 
 }

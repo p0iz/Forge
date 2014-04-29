@@ -1,6 +1,6 @@
 
 -- Asset file loaders
-Assets.setLoaderPath 'src/Forge/AssetPlugins'
+Assets.setLoaderPath 'build/debug/src/Forge/AssetPlugins'
 Assets.addLoader 'ObjLoader'
 Assets.addLoader 'ImageLoader'
 
@@ -45,6 +45,7 @@ Renderer.createViewport('bottomRight', 0.5, 0, 0.5, 0.5)
 Renderer.bindCamera('top', Scene.cameras.main)
 Renderer.bindCamera('bottomLeft', Scene.cameras.left)
 Renderer.bindCamera('bottomRight', Scene.cameras.right)
+
 Renderer.start()
 
 --print('\nAsset table contents:\n')
@@ -58,6 +59,7 @@ Renderer.start()
 
 start = os.clock()
 current = os.clock()
+
 while current - start < 1.0
 do
   current = os.clock()
@@ -94,3 +96,8 @@ do
   current = os.clock()
 end
 
+-- Main loop
+while not Input.keyDown(Input.Key.A)
+do
+  
+end

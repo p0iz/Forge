@@ -20,16 +20,36 @@
 
 #include "EventHandler.hpp"
 #include "Platform/Input/InputHandler.hpp"
+#include "Platform/Window/RenderWindow.hpp"
 #include "SDL2/SDL.h"
 
 
 namespace Forge {
 
-EventHandler::EventHandler(
-  InputHandler& input,
-  RenderWindow& window
+// Handlers for special events
+namespace {
+
+bool handleWindowEvent(SDL_WindowEvent& we)
+{
+  switch (we.event)
+  {
+    case SDL_WINDOWEVENT_CLOSE:
+      return false;
+    case SDL_WINDOWEVENT_FOCUS_GAINED:
+      break;
+    case SDL_WINDOWEVENT_FOCUS_LOST:
+      break;
+    default:
+      break;
+  }
+  return true;
+}
+
+}
+
+EventHandler::EventHandler(RenderWindow& window
 ):
-  mInput(input),
+  mInput(InputHandler::instance()),
   mWindow(window)
 {
 }
@@ -39,10 +59,15 @@ bool EventHandler::pumpMessages()
   SDL_Event e;
   while(SDL_PollEvent(&e))
   {
+    bool keepRunning = true;
     switch (e.type)
     {
       case SDL_QUIT:
-        return false;
+        keepRunning = false;
+        break;
+      case SDL_WINDOWEVENT:
+        keepRunning = handleWindowEvent(e.window);
+        break;
       case SDL_KEYDOWN:
         mInput.injectKeyDown(static_cast<Forge::Key>(e.key.keysym.sym));
         break;
@@ -61,6 +86,10 @@ bool EventHandler::pumpMessages()
       case SDL_MOUSEWHEEL:
         mInput.injectMouseWheel(e.wheel.x, e.wheel.y);
         break;
+    }
+    if (!keepRunning)
+    {
+      return false;
     }
   }
   return true;

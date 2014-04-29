@@ -19,9 +19,7 @@
  */
 
 #include "ForgeCLI.hpp"
-#include "Lua/AssetsLibrary.hpp"
-#include "Lua/ComponentsLibrary.hpp"
-#include "Lua/RendererLibrary.hpp"
+#include "Application/Application.hpp"
 #include "Platform/Window/GraphicsContext.hpp"
 #include <fstream>
 #include <iostream>
@@ -37,28 +35,23 @@ static std::string const ProgramName = "=ForgeCLI";
 }
 
 ForgeCLI::ForgeCLI(std::istream& input):
-  mState(),
+  mApp(),
+  mState(mApp),
   mInput(input)
 {
+  mApp.initialize();
   mState.initialize();
 
-  AssetsLibrary assets;
-  addLibrary(assets);
-
-  ComponentsLibrary components;
-  addLibrary(components);
-
-  RendererLibrary renderer;
-  addLibrary(renderer);
-
-  // Create an auxiliary context to use for loading asset data into OpenGL from scripts
-  GraphicsContext* loaderContext = renderer.thread().createAuxContext();
+  // Create an auxiliary context to use for loading
+  // asset data into OpenGL from scripts
+  GraphicsContext* loaderContext = mApp.createAuxContext();
   loaderContext->makeCurrent();
+
 }
 
 ForgeCLI::~ForgeCLI()
 {
-  RendererLibrary::thread().stop();
+
 }
 
 void ForgeCLI::readInput()
@@ -71,14 +64,6 @@ void ForgeCLI::readInput()
   }
   while (mState.isIncompleteChunk(chunk) && std::cout << " ... ");
   mState.runChunk(ProgramName, chunk);
-}
-
-void ForgeCLI::addLibrary(LuaLibrary& library)
-{
-  if (mState.isInitialized())
-  {
-    mState.importLibrary(library);
-  }
 }
 
 void ForgeCLI::printPrompt()

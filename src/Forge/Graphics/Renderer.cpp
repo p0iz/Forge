@@ -19,10 +19,11 @@
  */
 
 #include "Renderer.h"
-#include "Camera.hpp"
+#include "Application/Application.hpp"
 #include "DebugAxis.h"
+#include "GameObject/Component/Camera.hpp"
 #include "GameObject/GameObject.hpp"
-#include "GameObject/Component/MeshComponent.hpp"
+#include "GameObject/Component/MeshInstance.hpp"
 #include "Util/Internal/Keeper.hpp"
 #include "Viewport.hpp"
 #include "Util/Log.h"
@@ -31,8 +32,9 @@
 
 namespace Forge {
 
-Renderer::Renderer():
-  mInitialized(false)
+Renderer::Renderer(Application& app):
+  mInitialized(false),
+  mApp(app)
 {
 }
 
@@ -106,16 +108,16 @@ void Renderer::render(Viewport const& viewport)
 
   mTechnique->beginMaterial();
 
-  for (Light const& light : Keeper<Light>::instance().items())
+  for (Light const& light : mApp.lights())
   {
     if (light.type != Light::DISABLED)
     {
       Light::updateBuffer(light.getShaderData());
-      for (MeshComponent& mc : Keeper<MeshComponent>::instance().items())
+      for (MeshInstance& mi : mApp.meshes())
       {
-        glm::mat4 world = mc.owner().transform().getMatrix();
+        glm::mat4 world = mi.owner().transform().getMatrix();
         mTechnique->setTransforms(world, view, projection);
-        mc.update();
+        mi.update();
       }
     }
   }
@@ -123,7 +125,7 @@ void Renderer::render(Viewport const& viewport)
 
 void Renderer::updateLightData(glm::mat4 const& view)
 {
-  for (Light const& light : Keeper<Light>::instance().items())
+  for (Light const& light : mApp.lights())
   {
     light.getShaderData().viewSpacePosition = view * light.position;
     if (light.type == Light::SPOT)

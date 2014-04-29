@@ -21,37 +21,23 @@
 #include "Camera.hpp"
 #include "GameObject/GameObject.hpp"
 #include "Platform/Window/RenderWindow.hpp"
-#include "Viewport.hpp"
+#include "Graphics/Viewport.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 
 namespace Forge {
 
 Camera::Camera(float fovY, float nearClip, float farClip):
-  Attachable(),
+  Component(),
   mFovY(fovY),
   mNearClip(nearClip),
-  mFarClip(farClip),
-  mTarget(nullptr)
+  mFarClip(farClip)
 {
-}
-
-void Camera::lookAt(GameObject* target)
-{
-  mTarget = target;
 }
 
 glm::mat4 Camera::view() const
 {
-  if (!attachedTo())
-  {
-    return glm::mat4();
-  }
-
-  // Create a view matrix here
-  glm::vec3 camera(attachedTo()->transform().position());
-  glm::vec3 target(mTarget ? mTarget->transform().position() : camera + glm::vec3(0,0,1));
-  return glm::lookAt(camera, target, glm::vec3(0,1,0));
+  return owner().transform().getMatrix();
 }
 
 glm::mat4 Camera::projection(Viewport const& viewport) const

@@ -34,6 +34,13 @@
 
 namespace Forge {
 
+StaticMesh::StaticMesh():
+  mNumberOfVertices(0),
+  mVertexArrayId(0),
+  mVertexBufferId(0)
+{
+}
+
 StaticMesh::StaticMesh(
     const std::vector<Vertex>& vertices,
     const std::vector<GLuint>& elements)
@@ -74,6 +81,11 @@ StaticMesh::~StaticMesh()
 
 void StaticMesh::draw()
 {
+  if (mNumberOfVertices == 0)
+  {
+    return;
+  }
+
   if (mVertexArrayId == 0)
   {
     createVAO();

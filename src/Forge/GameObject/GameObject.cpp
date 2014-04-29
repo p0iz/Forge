@@ -19,29 +19,74 @@
  */
 
 #include "GameObject.hpp"
-#include "Util/Log.h"
 
 
 namespace Forge {
 
-GameObject::GameObject(std::string const& name)
-  : mName(name), mWorldTransform()
+GameObject::GameObject(GameObject* parent)
+  : mName(""), mWorldTransform(), mParent(parent), mChildren()
 {
+  if (parent)
+  {
+    parent->addChild(this);
+  }
 }
 
-Transformation const& GameObject::transform() const
+GameObject::~GameObject()
+{
+  if (mParent)
+  {
+    mParent->removeChild(this);
+  }
+}
+
+Transformation GameObject::transform() const
+{
+  if (mParent)
+  {
+    return mParent->transform() * mWorldTransform;
+  }
+  else
+  {
+    return mWorldTransform;
+  }
+}
+
+Transformation& GameObject::localTransform()
 {
   return mWorldTransform;
 }
 
-void GameObject::translate(float x, float y, float z)
+Transformation const& GameObject::localTransform() const
 {
-  mWorldTransform.translate(x, y, z);
+  return mWorldTransform;
+}
+
+void GameObject::setName(const std::string& name)
+{
+  mName = name;
 }
 
 std::string const& GameObject::name() const
 {
   return mName;
+}
+
+void GameObject::addComponent(Component* component)
+{
+  component->setOwner(this);
+  mComponents.push_back(component);
+}
+
+void GameObject::addChild(GameObject* child)
+{
+  child->mParent = this;
+  mChildren.insert(child);
+}
+
+void GameObject::removeChild(GameObject* child)
+{
+  mChildren.erase(child);
 }
 
 }

@@ -21,18 +21,17 @@
 #pragma once
 
 #include "ForgeExport.h"
-#include "Platform/Window/RenderWindow.hpp"
 
 
 namespace Forge {
 
 class InputHandler;
+class RenderWindow;
 
 class FORGE_EXPORT EventHandler
 {
   public:
     EventHandler(
-      InputHandler& input,
       RenderWindow& window
     );
     virtual ~EventHandler() { }

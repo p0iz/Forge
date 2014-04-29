@@ -23,3 +23,5 @@
 /* Forward declarations for Lua structures */
 
 struct lua_State;
+
+typedef int (*LuaCFunction)(lua_State*);

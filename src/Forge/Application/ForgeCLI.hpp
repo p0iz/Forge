@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Application.hpp"
 #include "Lua/LuaState.hpp"
 #include "ForgeExport.h"
 #include <iosfwd>
@@ -37,8 +38,6 @@ class FORGE_EXPORT ForgeCLI
 
     void readInput();
 
-    void addLibrary(LuaLibrary& library);
-
     void printPrompt();
 
     bool endOfStream() const;
@@ -48,6 +47,7 @@ class FORGE_EXPORT ForgeCLI
     void start();
 
   private:
+    Application mApp;
     LuaState mState;
     std::istream& mInput;
 };

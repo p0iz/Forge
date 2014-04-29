@@ -20,9 +20,9 @@
 
 #pragma once
 
-#include "ForgeExport.h"
 #include "KeySymbols.hpp"
 #include "MouseButtons.hpp"
+#include "Util/Singleton.hpp"
 #include <memory>
 #include <unordered_set>
 
@@ -30,7 +30,7 @@
 namespace Forge {
 
 /* Base class for platform-specific implementations */
-class FORGE_EXPORT InputHandler
+class InputHandler : public Singleton<InputHandler>
 {
   public:
     InputHandler();

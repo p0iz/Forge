@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "Lua/UserdataMap.hpp"
 #include "DebugAxis.h"
 #include "ForgeExport.h"
 #include "Graphics/Light/Light.hpp"
@@ -30,6 +29,8 @@
 
 namespace Forge {
 
+class Application;
+
 class Camera;
 
 class Viewport;
@@ -38,7 +39,7 @@ class Viewport;
 class FORGE_EXPORT Renderer
 {
 public:
-  Renderer();
+  Renderer(Application& app);
   ~Renderer();
 
   void initialize();
@@ -55,6 +56,8 @@ private:
   DebugAxis mDebugAxis;
 
   Technique* mTechnique;
+
+  Application& mApp;
 };
 
 }

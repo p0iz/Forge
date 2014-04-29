@@ -1,10 +1,12 @@
 # Forge application
 
 set(ApplicationSource
+  Application.cpp
   ForgeCLI.cpp
 )
 
 set(ApplicationHeaders
+  Application.hpp
   ForgeCLI.hpp
 )
 
