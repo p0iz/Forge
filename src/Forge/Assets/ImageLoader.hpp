@@ -23,16 +23,19 @@
 #include "ForgeExport.h"
 #include "LoaderInterface.hpp"
 
+class FIBITMAP;
+
 namespace Forge {
 
-class FORGE_EXPORT ImageLoader : public LoaderInterface
+class FORGE_EXPORT ImageLoader : public LoaderInterface<FIBITMAP*>
 {
   public:
-    virtual void* load(std::string const& filename);
+    virtual FIBITMAP* load(std::string const& filename);
 
-    virtual void unload(void* asset);
-
-    virtual char const* category() const;
+    virtual char const* extensions() const;
 };
+
+// Adds the loader to an asset manager
+bool initialize(Forge::AssetManager& manager);
 
 }

@@ -1,13 +1,18 @@
 # Components for game objects
 
 set(ComponentSources
+  Camera.cpp
   Component.cpp
-  MeshComponent.cpp
+  MeshInstance.cpp
+  Script.cpp
 )
 
 set(ComponentHeaders
+  Camera.hpp
   Component.hpp
-  MeshComponent.hpp
+  ComponentTypes.hpp
+  MeshInstance.hpp
+  Script.hpp
 )
 
 add_library(Component ${ComponentSources} ${ComponentHeaders})

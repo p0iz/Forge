@@ -18,45 +18,40 @@
  *
  */
 
-#include "Camera.hpp"
+#pragma once
+
 #include "GameObject/GameObject.hpp"
-#include "Platform/Window/RenderWindow.hpp"
-#include "Viewport.hpp"
 #include "Util/Math.hpp"
 
 
 namespace Forge {
 
-Camera::Camera(float fovY, float nearClip, float farClip):
-  Attachable(),
-  mFovY(fovY),
-  mNearClip(nearClip),
-  mFarClip(farClip),
-  mTarget(nullptr)
-{
-}
+class Viewport;
 
-void Camera::lookAt(GameObject* target)
-{
-  mTarget = target;
-}
+class GameObject;
 
-glm::mat4 Camera::view() const
+class Camera : public Component
 {
-  if (!attachedTo())
-  {
-    return glm::mat4();
-  }
+  public:
+    explicit Camera(
+      float fovY = 45.0f,
+      float nearClip = 1.0f,
+      float farClip = 100.0f);
 
-  // Create a view matrix here
-  glm::vec3 camera(attachedTo()->transform().position());
-  glm::vec3 target(mTarget ? mTarget->transform().position() : camera + glm::vec3(0,0,1));
-  return glm::lookAt(camera, target, glm::vec3(0,1,0));
-}
+    void lookAt(GameObject* target);
 
-glm::mat4 Camera::projection(Viewport const& viewport) const
-{
-  return glm::perspective(mFovY, viewport.aspectRatio(), mNearClip, mFarClip);
-}
+    void setFovY(float fovY);
+
+    void setClip(float near, float far);
+
+    glm::mat4 view() const;
+
+    glm::mat4 projection(Viewport const& viewport) const;
+
+  private:
+    float mFovY;
+    float mNearClip;
+    float mFarClip;
+};
 
 }

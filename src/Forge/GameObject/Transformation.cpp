@@ -74,4 +74,11 @@ glm::mat4 Transformation::getMatrix() const
   return mMatrix;
 }
 
+Transformation operator*(Transformation const& lhs, Transformation const& rhs)
+{
+  Transformation t;
+  t.mMatrix = lhs.mMatrix * rhs.mMatrix;
+  return t;
+}
+
 }

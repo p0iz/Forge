@@ -62,6 +62,16 @@ void parseVertex(std::string const& vertex, int& posIndex, int& texIndex, int&no
   }
 }
 
+char const* ObjLoader::extensions() const
+{
+  return "obj";
+}
+
+Asset ObjLoader::type() const
+{
+  return Forge::Asset::Mesh;
+}
+
 void* ObjLoader::load(std::string const& filename)
 {
   StaticMesh* mesh = nullptr;
@@ -177,30 +187,23 @@ void* ObjLoader::load(std::string const& filename)
   return mesh;
 }
 
-void ObjLoader::unload(void* asset)
+std::function<void(void*)> ObjLoader::getDeleter()
 {
-  delete static_cast<StaticMesh*>(asset);
-}
-
-const char*ObjLoader::category() const
-{
-  return "meshes";
+  return [](void* asset)
+  {
+    delete static_cast<StaticMesh*>(asset);
+  };
 }
 
 }
 
 /* Library interface definition */
+extern "C"
+{
+
 Forge::LoaderInterface* createInterface()
 {
   return new Forge::ObjLoader();
 }
 
-const char* supportedExtensions()
-{
-  return "obj";
-}
-
-const char* category()
-{
-  return "meshes";
 }

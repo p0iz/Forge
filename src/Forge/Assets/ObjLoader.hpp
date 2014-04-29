@@ -29,11 +29,13 @@ namespace Forge {
 class FORGE_EXPORT ObjLoader : public LoaderInterface
 {
   public:
+    virtual char const* extensions() const;
+
+    virtual Asset type() const;
+
     virtual void* load(std::string const& filename);
 
-    virtual void unload(void* asset);
-
-    virtual char const* category() const;
+    virtual std::function<void(void*)> getDeleter();
 };
 
 }

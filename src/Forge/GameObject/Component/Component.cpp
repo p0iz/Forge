@@ -23,8 +23,24 @@
 namespace Forge {
 
 Component::Component(GameObject* owner):
-  mOwner(owner)
+  mOwner(owner),
+  mActive(true)
 {
+}
+
+bool Component::active() const
+{
+  return mActive;
+}
+
+void Component::setActive(bool active)
+{
+  mActive = active;
+}
+
+void Component::setOwner(GameObject* go)
+{
+  mOwner = go;
 }
 
 GameObject& Component::owner()

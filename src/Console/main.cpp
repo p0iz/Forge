@@ -18,6 +18,7 @@
  *
  */
 
+#include "Application/Application.hpp"
 #include "Application/ForgeCLI.hpp"
 #include <iostream>
 

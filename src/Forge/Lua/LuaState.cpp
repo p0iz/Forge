@@ -19,6 +19,15 @@
  */
 
 #include "LuaState.hpp"
+#include "Application/Application.hpp"
+#include "Lua/AssetsLibrary.hpp"
+#include "Lua/InputLibrary.hpp"
+#include "Lua/RendererLibrary.hpp"
+#include "Lua/Classes/LuaGameObject.hpp"
+#include "Lua/Classes/LuaMesh.hpp"
+#include "Lua/Classes/LuaScript.hpp"
+#include "Lua/Classes/LuaTransform.hpp"
+#include "LuaLibrary.hpp"
 #include "Util/Log.h"
 #include <lua.hpp>
 #include <iostream>
@@ -27,7 +36,8 @@
 
 namespace Forge {
 
-LuaState::LuaState():
+LuaState::LuaState(Application& app):
+  mApp(app),
   mState(nullptr)
 {
 }
@@ -44,7 +54,20 @@ LuaState::~LuaState()
 bool LuaState::initialize()
 {
   mState = luaL_newstate();
-  luaL_openlibs(mState);
+
+  if (mState)
+  {
+    luaL_openlibs(mState);
+
+    importLibrary(RendererLibrary(mApp.rendererThread()));
+    importLibrary(InputLibrary());
+
+    addClass(LuaGameObject(mApp));
+    addClass(LuaMesh(mApp));
+    addClass(LuaTransform(mApp));
+    addClass(LuaScript(mApp));
+  }
+
   return mState != nullptr;
 }
 
@@ -53,22 +76,29 @@ bool LuaState::isInitialized() const
   return mState != nullptr;
 }
 
-void LuaState::importLibrary(LuaLibrary& library)
+void LuaState::addClass(LuaClass&& klass)
+{
+  klass.add(mState);
+}
+
+void LuaState::importLibrary(LuaLibrary&& library)
 {
   library.import(mState);
 }
 
-void LuaState::removeLibrary(LuaLibrary& library)
+void LuaState::removeLibrary(LuaLibrary&& library)
 {
   library.remove(mState);
 }
 
-void LuaState::runScript(std::string const& scriptFile)
+bool LuaState::runScript(std::string const& scriptFile)
 {
   if (luaL_dofile(mState, scriptFile.c_str()))
   {
     Log::error << "Lua error: " << lua_tostring(mState, -1) << "\n";
+    return false;
   }
+  return true;
 }
 
 bool LuaState::isIncompleteChunk(const std::string& chunk)
@@ -112,6 +142,15 @@ bool LuaState::runChunk(std::string const& programName, std::string const& chunk
   }
   lua_settop(mState, 0);
   return status == LUA_OK;
+}
+
+bool LuaState::hasGlobal(std::string const& name) const
+{
+  bool exists = false;
+  lua_getglobal(mState, name.c_str());
+  exists = !lua_isnil(mState, -1);
+  lua_pop(mState, 1);
+  return exists;
 }
 
 }

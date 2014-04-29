@@ -20,29 +20,29 @@
 
 #pragma once
 
-#include "Component.hpp"
+#include "Lua/LuaForwardDeclarations.hpp"
 #include <string>
 
 
 namespace Forge {
 
-class StaticMesh;
-
-// Derived component
-class MeshComponent : public Component
+// Base class for Lua C classes
+class LuaClass
 {
   public:
-    // Acquire assets, load scripts etc. here
-    explicit MeshComponent(GameObject* owner, StaticMesh* mesh = nullptr);
+    explicit LuaClass(std::string const&& name);
+    virtual ~LuaClass() {}
 
-    // Perform a frame update on the component
-    virtual void update();
-
-    // Release any acquired assets here
-    virtual void destroy();
+    void add(lua_State* state);
 
   private:
-    StaticMesh* mMesh;
+    std::string const mName;
+
+    virtual LuaCFunction getCtorFn() = 0;
+    virtual LuaCFunction getDtorFn() = 0;
+
+    // Override this function to insert key-values into class table
+    virtual void addClassContent(lua_State* state) = 0;
 };
 
 }

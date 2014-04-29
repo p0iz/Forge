@@ -34,6 +34,7 @@ namespace Forge {
 class FORGE_EXPORT StaticMesh
 {
   public:
+    StaticMesh();
     StaticMesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);
     ~StaticMesh();
     void draw();

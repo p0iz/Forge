@@ -20,30 +20,32 @@
 
 #include "RendererLibrary.hpp"
 #include "Graphics/RendererThread.hpp"
-#include "Graphics/Camera.hpp"
+#include "GameObject/Component/Camera.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Viewport.hpp"
-#include "UserdataMap.hpp"
 #include "Util/Log.h"
 #include <lua.hpp>
 
 
 namespace Forge {
 
-RendererLibrary::RendererLibrary():
-  mThread()
+namespace {
+RendererThread* rendererThread = nullptr;
+}
+
+RendererLibrary::RendererLibrary(RendererThread& thread)
 {
+  rendererThread = &thread;
 }
 
 RendererLibrary::~RendererLibrary()
 {
-  mThread.stop();
 }
 
 void RendererLibrary::import(lua_State* state)
 {
   lua_newtable(state);
-  lua_pushlightuserdata(state, &mThread);
+  lua_pushlightuserdata(state, &rendererThread);
   lua_setfield(state, -2, "threadPtr");
 
   LIB_FUNC(state, start);
@@ -62,37 +64,13 @@ void RendererLibrary::remove(lua_State* state)
 
 int RendererLibrary::start(lua_State* state)
 {
-  findLights(state);
-  RendererThread* thread = getRendererThread(state);
-  lua_pushboolean(state, thread->start());
+  lua_pushboolean(state, rendererThread->start());
   return 1;
 }
 
 int RendererLibrary::stop(lua_State* state)
 {
-  RendererThread* thread = getRendererThread(state);
-  thread->stop();
-  return 0;
-}
-
-int RendererLibrary::findLights(lua_State* state)
-{
-  lua_getglobal(state, "Scene");
-  if (lua_istable(state, -1))
-  {
-    lua_getfield(state, -1, "lights");
-    std::vector<Light>* lights = static_cast<std::vector<Light>*>(lua_touserdata(state, -1));
-    if (!lights)
-    {
-      return luaL_error(state, "No lights found for current scene");
-    }
-    RendererThread* thread = getRendererThread(state);
-    thread->setLights(lights);
-  }
-  else
-  {
-    return luaL_error(state, "Assets library is not loaded. It is required for this function.");
-  }
+  rendererThread->stop();
   return 0;
 }
 
@@ -103,7 +81,7 @@ int RendererLibrary::createViewport(lua_State* state)
   {
     case 1:
     {
-      viewport = new Viewport(getRendererThread(state)->window());
+      viewport = new Viewport(rendererThread->window());
     }
     break;
     case 5:
@@ -112,7 +90,7 @@ int RendererLibrary::createViewport(lua_State* state)
       float y = luaL_checknumber(state, 3);
       float width = luaL_checknumber(state, 4);
       float height = luaL_checknumber(state, 5);
-      viewport = new Viewport(getRendererThread(state)->window(), x, y, width, height);
+      viewport = new Viewport(rendererThread->window(), x, y, width, height);
     }
     break;
     default:
@@ -120,7 +98,7 @@ int RendererLibrary::createViewport(lua_State* state)
         luaL_error(state, "createViewport takes 1 (name) or 5 (name,x,y,width,height) parameters");
   }
   std::string name = luaL_checkstring(state, 1);
-  getRendererThread(state)->addViewport(name, viewport);
+  rendererThread->addViewport(name, viewport);
 
   return 0;
 }
@@ -129,7 +107,7 @@ int RendererLibrary::bindCamera(lua_State* state)
 {
   std::string name = luaL_checkstring(state, 1);
   Camera* camera = static_cast<Camera*>(lua_touserdata(state, 2));
-  Viewport* viewport = getRendererThread(state)->getViewport(name);
+  Viewport* viewport = rendererThread->getViewport(name);
   if (viewport)
   {
     viewport->setCamera(camera);
@@ -139,14 +117,7 @@ int RendererLibrary::bindCamera(lua_State* state)
 
 RendererThread& RendererLibrary::thread()
 {
-  return mThread;
-}
-
-RendererThread* RendererLibrary::getRendererThread(lua_State* state)
-{
-  lua_getglobal(state, "Renderer");
-  lua_getfield(state, -1, "threadPtr");
-  return static_cast<RendererThread*>(lua_touserdata(state, -1));
+  return *rendererThread;
 }
 
 }

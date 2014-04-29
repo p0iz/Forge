@@ -43,6 +43,9 @@ struct FORGE_EXPORT Transformation
 
 private:
   glm::mat4 mMatrix;
+
+  friend Transformation operator *(Transformation const& lhs, Transformation const& rhs);
 };
+
 
 }

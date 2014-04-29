@@ -58,9 +58,9 @@ public:
 
   // Called when starting to draw a mesh (TODO: Optimize!)
   void setTransforms(
-      const glm::mat4& world,
-      const glm::mat4& view,
-      const glm::mat4& projection
+      glm::mat4 const& world,
+      glm::mat4 const& view,
+      glm::mat4 const& projection
   );
 
   void setName(std::string const& name);

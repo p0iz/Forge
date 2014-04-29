@@ -20,13 +20,15 @@
 
 #pragma once
 
-#include "Util/Singleton.hpp"
+#include <iterator>
 #include <vector>
 
 
+namespace Forge {
+
 // This class stores and allocates memory for any type of classes with a fixed size
 template <class ItemType>
-class Keeper : public Singleton<Keeper<ItemType>>
+class Keeper
 {
   public:
     void clear()
@@ -55,7 +57,6 @@ class Keeper : public Singleton<Keeper<ItemType>>
     void destroy(ItemType* item)
     {
       mFreeList.push_back(item);
-      item->~ItemType();
     }
 
     std::vector<ItemType>& items()
@@ -63,7 +64,29 @@ class Keeper : public Singleton<Keeper<ItemType>>
       return mItems;
     }
 
+    typename std::vector<ItemType>::iterator begin()
+    {
+      return mItems.begin();
+    }
+
+    typename std::vector<ItemType>::iterator end()
+    {
+      return mItems.end();
+    }
+
+    typename std::vector<ItemType>::const_iterator begin() const
+    {
+      return mItems.begin();
+    }
+
+    typename std::vector<ItemType>::const_iterator end() const
+    {
+      return mItems.end();
+    }
+
   private:
     std::vector<ItemType> mItems;
     std::vector<ItemType*> mFreeList;
 };
+
+}

@@ -55,6 +55,7 @@ add_library(Forge SHARED Application)
 target_link_libraries(Forge
   "-Wl,--whole-archive"
   Application
+  Assets
   GameObject
   Component
   Graphics

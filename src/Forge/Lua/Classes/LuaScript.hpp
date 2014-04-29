@@ -18,27 +18,26 @@
  *
  */
 
-#include "MeshComponent.hpp"
-#include "Graphics/StaticMesh.h"
-#include "Util/Internal/Keeper.hpp"
+#pragma once
+
+#include "LuaClass.hpp"
 
 
 namespace Forge {
 
-MeshComponent::MeshComponent(GameObject* owner, StaticMesh* mesh):
-  Component(owner),
-  mMesh(mesh)
-{
-}
+class Application;
 
-void MeshComponent::update()
+class LuaScript : public LuaClass
 {
-  mMesh->draw();
-}
+  public:
+    LuaScript(Application& app);
 
-void MeshComponent::destroy()
-{
-  Keeper<MeshComponent>::instance().destroy(this);
-}
+  private:
+    virtual LuaCFunction getCtorFn();
+
+    virtual LuaCFunction getDtorFn();
+
+    virtual void addClassContent(lua_State* state);
+};
 
 }

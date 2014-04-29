@@ -21,26 +21,40 @@
 #pragma once
 
 #include "ForgeExport.h"
+#include "Component/Component.hpp"
 #include "Transformation.hpp"
 #include <string>
-#include <set>
+#include <unordered_set>
+#include <vector>
+
 
 namespace Forge {
 
 class FORGE_EXPORT GameObject
 {
   public:
-    GameObject(std::string const& name);
+    explicit GameObject(GameObject* parent = nullptr);
+    ~GameObject();
 
-    Transformation const& transform() const;
+    Transformation transform() const;
 
-    void translate(float x, float y, float z);
+    Transformation& localTransform();
+    Transformation const& localTransform() const;
 
+    void setName(std::string const& name);
     std::string const& name() const;
+
+    void addComponent(Component* component);
+    void addChild(GameObject* child);
+    void removeChild(GameObject* child);
 
   private:
     std::string mName;
     Transformation mWorldTransform;
+    std::vector<Component*> mComponents;
+
+    GameObject* mParent;
+    std::unordered_set<GameObject*> mChildren;
 };
 
 }

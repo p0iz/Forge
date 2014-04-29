@@ -21,32 +21,38 @@
 #pragma once
 
 #include "ForgeExport.h"
+#include "AssetTypes.hpp"
+#include <functional>
 #include <iosfwd>
 
 namespace Forge {
 
-class LoaderInterface
+class AssetManager;
+
+class FORGE_EXPORT LoaderInterface
 {
   public:
-    virtual ~LoaderInterface() { }
+    typedef LoaderInterface* (*CreateFn)();
+    static constexpr char const* LoaderCreateInterfaceName = "createInterface";
+
+    virtual char const* extensions() const = 0;
+
+    virtual Asset type() const = 0;
 
     virtual void* load(std::string const& filename) = 0;
 
-    virtual void unload(void* asset) = 0;
-
-    virtual char const* category() const = 0;
+    virtual std::function<void(void*)> getDeleter() = 0;
 };
 
 }
 
-typedef Forge::LoaderInterface* (*LoaderCreateFn)();
+typedef Forge::LoaderInterface* (*LoaderCreateInterfaceFn)();
 
-typedef char const* (*LoaderInfoFn)();
-
-/* Library interface definition */
+/* Interface function for loading plugin */
 extern "C"
 {
-  FORGE_EXPORT Forge::LoaderInterface* createInterface();
 
-  FORGE_EXPORT const char* supportedExtensions();
+// Adds the loader to an asset manager
+FORGE_EXPORT Forge::LoaderInterface* createInterface();
+
 }

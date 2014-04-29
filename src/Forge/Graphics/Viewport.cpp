@@ -19,7 +19,7 @@
  */
 
 #include "Viewport.hpp"
-#include "Camera.hpp"
+#include "GameObject/Component/Camera.hpp"
 #include "Platform/Window/RenderWindow.hpp"
 #include "Util/Math.hpp"
 
