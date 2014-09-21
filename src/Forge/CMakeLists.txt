@@ -10,6 +10,9 @@ include(ForgeDependencies.cmake)
 # Set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -fno-exceptions")
 
+# Add deps prefix
+set(CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/deps ${CMAKE_PREFIX_PATH})
+
 # Do build type specific configuration
 if(CMAKE_BUILD_TYPE MATCHES Release)
   message(STATUS "Generating Release build.")
