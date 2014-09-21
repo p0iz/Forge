@@ -19,14 +19,11 @@
  */
 
 #include "Text.hpp"
-
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <cassert>
 #include <iostream>
+#include <SDL2/SDL_ttf.h>
 
 void Forge::Text::createShaders()
 {
@@ -72,19 +69,29 @@ void Forge::Text::createBuffer()
 
 Forge::Text::~Text()
 {
-  FT_Done_FreeType(static_cast<FT_Library>(mFontLibrary));
+  if (_font)
+  {
+    TTF_CloseFont(_font);
+  }
+  if (--_refCount == 0)
+  {
+    TTF_Quit();
+  }
 }
 
 void Forge::Text::initialize()
 {
   // Initialize FreeType
-  assert(!FT_Init_FreeType(&mFontLibrary));
+  if (!TTF_WasInit())
+  {
+    TTF_Init();
+    ++_refCount;
+  }
+
+  _textRendered = false;
 
   // Create shaders
   createShaders();
-
-  // Create glyph texture
-  createTexture();
 
   // Create VBO
   createBuffer();
@@ -92,19 +99,32 @@ void Forge::Text::initialize()
 
 void Forge::Text::setFont(const char * fileName)
 {
-  assert(!FT_New_Face(mFontLibrary, fileName, 0, &face));
-  glyph = face->glyph;
+  if (_font)
+  {
+    TTF_CloseFont(_font);
+    _font = nullptr;
+  }
+  _font = TTF_OpenFont(fileName, _fontPtSize);
+  _textRendered = false;
 }
 
 void Forge::Text::setFontSize(int pt)
 {
-  FT_Set_Pixel_Sizes(face, 0, pt);
+  if (pt != _fontPtSize)
+  {
+    _fontPtSize = pt;
+    _textRendered = false;
+  }
 }
 
 void Forge::Text::setPosition(float x, float y)
 {
-  mPosition.x = x;
-  mPosition.y = y;
+  if (x != mPosition.x || y != mPosition.y)
+  {
+    mPosition.x = x;
+    mPosition.y = y;
+    _textRendered = false;
+  }
 }
 
 void Forge::Text::draw()
@@ -117,61 +137,55 @@ void Forge::Text::draw()
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, glyphTextureId);
 
-  float posX = mPosition.x;
-  float posY = mPosition.y;
-
   glDisable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  for (char c : mText)
+  if (!_textRendered)
   {
-    if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-      continue;
+    SDL_Surface* surface = TTF_RenderUTF8_Blended(_font, mText.c_str(), { 0, 0, 0 });
+    int colors = surface->format->BytesPerPixel;
+    GLenum texture_format = GL_RGBA;
+    if (colors == 4) {   // alpha
+      if (surface->format->Rmask == 0x000000ff)
+        texture_format = GL_RGBA;
+      else
+        texture_format = GL_BGRA;
+    }
+    else {             // no alpha
+      if (surface->format->Rmask == 0x000000ff)
+        texture_format = GL_RGB;
+      else
+        texture_format = GL_BGR;
+    }
 
-    glTexImage2D(
-          GL_TEXTURE_2D,
-          0,
-          GL_RED,
-          glyph->bitmap.width,
-          glyph->bitmap.rows,
-          0,
-          GL_RED,
-          GL_UNSIGNED_BYTE,
-          glyph->bitmap.buffer);
-
-    float x = posX + (glyph->bitmap_left * mScale.x);
-    float y = posY - ((glyph->bitmap.rows - glyph->bitmap_top) * mScale.y);
-
-    float width = glyph->bitmap.width * mScale.x;
-    float height = glyph->bitmap.rows * mScale.y;
+    glTexImage2D(GL_TEXTURE_2D, 0, colors, surface->w, surface->h, 0,
+      texture_format, GL_UNSIGNED_BYTE, surface->pixels);
 
     glm::vec2 vertCoords[] =
     {
-      glm::vec2(x, y),
+      glm::vec2(mPosition.x, mPosition.y),
       glm::vec2(0, 1),
-      glm::vec2(x + width, y),
+      glm::vec2(mPosition.x + surface->w, mPosition.y),
       glm::vec2(1, 1),
-      glm::vec2(x, y + height),
+      glm::vec2(mPosition.x, mPosition.y + surface->h),
       glm::vec2(0, 0),
-      glm::vec2(x + width, y + height),
+      glm::vec2(mPosition.x + surface->w, mPosition.y + surface->h),
       glm::vec2(1, 0)
     };
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertCoords), vertCoords, GL_DYNAMIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2)*2, 0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2)*2, (void*)sizeof(glm::vec2));
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    posX += (glyph->advance.x >> 6) * mScale.x;
-    posY += (glyph->advance.y >> 6) * mScale.y;
+    _textRendered = true;
   }
+
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2)*2, 0);
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2)*2, (void*)sizeof(glm::vec2));
+
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
@@ -200,11 +214,13 @@ void Forge::Text::setScreenAttributes(int width, int height)
   mScale.x = 2.0f / width;
   mScale.y = 2.0f / height;
   textProgram.release();
+  _textRendered = false;
 }
 
 void Forge::Text::setText(const char* text)
 {
   mText.assign(text);
+  _textRendered = false;
 }
 
 
@@ -213,4 +229,5 @@ void Forge::Text::setColor(float r, float g, float b, float a)
   textProgram.use();
   glUniform4f(colorUniform, r, g, b, a);
   textProgram.release();
+  _textRendered = false;
 }

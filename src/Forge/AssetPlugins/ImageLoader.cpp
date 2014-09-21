@@ -19,8 +19,8 @@
  */
 
 #include "ImageLoader.hpp"
-#include "FreeImage.h"
 #include <string>
+#include <SDL2/SDL_image.h>
 
 
 namespace Forge {
@@ -28,18 +28,19 @@ namespace Forge {
 void* ImageLoader::load(const std::string& filename)
 {
   // Load image data
-  FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename.c_str());
-  FIBITMAP* bitmap = FreeImage_Load(format, filename.c_str());
-  if (bitmap)
+  SDL_Surface* surface = IMG_Load(filename.c_str());
+  SDL_Surface* bitmap = SDL_CreateRGBSurface(NULL, surface->w, surface->h, 24, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+  if (surface && bitmap)
   {
-    bitmap = FreeImage_ConvertTo32Bits(bitmap);
+    SDL_BlitSurface(surface, 0, bitmap, 0);
   }
+  SDL_FreeSurface(surface);
   return bitmap;
 }
 
 void ImageLoader::unload(void* asset)
 {
-  FreeImage_Unload(static_cast<FIBITMAP*>(asset));
+  SDL_FreeSurface(static_cast<SDL_Surface*>(asset));
 }
 
 const char*ImageLoader::category() const

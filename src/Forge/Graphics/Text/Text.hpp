@@ -24,12 +24,10 @@
 #include "Graphics/Shader/Shader.h"
 #include "Graphics/Shader/ShaderProgram.h"
 #include <glm/glm.hpp>
+#include <atomic>
 #include <string>
 
-// Some FreeType forward declarations
-struct FT_LibraryRec_;
-struct FT_FaceRec_;
-struct FT_GlyphSlotRec_;
+struct _TTF_Font;
 
 namespace Forge {
 
@@ -73,9 +71,10 @@ private:
   unsigned int glyphVertexArray;
   unsigned int glyphVertexBuffer;
 
-  FT_LibraryRec_* mFontLibrary;
-  FT_FaceRec_* face;
-  FT_GlyphSlotRec_* glyph;
+  static std::atomic<int> _refCount;
+  _TTF_Font* _font;
+  unsigned int _fontPtSize = 16;
+  bool _textRendered = false;
 };
 
 } // Forge

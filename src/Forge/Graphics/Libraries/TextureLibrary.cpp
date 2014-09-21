@@ -29,7 +29,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "FreeImage.h"
+#include "SDL2/SDL_image.h"
 
 namespace Forge { namespace Graphics {
 
@@ -58,28 +58,27 @@ TextureHandle const& TextureLibrary::loadTexture(const std::string& imageFile)
   }
 
   // Load image data
-  FREE_IMAGE_FORMAT format = FreeImage_GetFileType(imageFile.c_str());
-  FIBITMAP* bitmap = FreeImage_Load(format, imageFile.c_str());
-  if (bitmap)
+  SDL_Surface* surface = IMG_Load(imageFile.c_str());
+  SDL_Surface* rgbaSurface = SDL_CreateRGBSurface(NULL, surface->w, surface->h, 24, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+  if (surface && rgbaSurface)
   {
-    bitmap = FreeImage_ConvertTo32Bits(bitmap);
+    SDL_BlitSurface(surface, 0, rgbaSurface, 0);
     glGenTextures(1, &texHandle.handle);
     glBindTexture(GL_TEXTURE_2D, texHandle.handle);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexImage2D(
-          GL_TEXTURE_2D,
-          0,
-          GL_RGBA,
-          FreeImage_GetWidth(bitmap),
-          FreeImage_GetHeight(bitmap),
-          0,
-          GL_BGRA,
-          GL_UNSIGNED_BYTE,
-          bitmap->data);
+      GL_TEXTURE_2D,
+      0,
+      GL_RGBA,
+      rgbaSurface->w,
+      rgbaSurface->h,
+      0,
+      GL_BGRA,
+      GL_UNSIGNED_BYTE,
+      rgbaSurface->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
-    FreeImage_Unload(bitmap);
 
     texHandle.name = imageFile;
     texHandle.count = 1;
@@ -87,14 +86,10 @@ TextureHandle const& TextureLibrary::loadTexture(const std::string& imageFile)
   }
   else
   {
-    const char* formatStr = FreeImage_GetFormatFromFIF(format);
-    Log::LogStream& stream = Log::error << "Failed to read file '" << imageFile << "'";
-    if (formatStr) {
-      stream << " of type " << formatStr << '\n';
-    } else {
-      stream << '\n';
-    }
+    Log::LogStream& stream = Log::error << "Failed to read file '" << imageFile << "'\n";
   }
+  SDL_FreeSurface(surface);
+  SDL_FreeSurface(rgbaSurface);
   return mLoadedTextures[imageFile];
 }
 
