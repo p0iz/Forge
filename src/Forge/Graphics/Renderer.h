@@ -25,7 +25,7 @@
 #include "ForgeExport.h"
 #include "Graphics/Light/Light.hpp"
 #include "Material/Technique/Technique.hpp"
-#include <glm/glm.hpp>
+#include "Util/Math.hpp"
 
 
 namespace Forge {

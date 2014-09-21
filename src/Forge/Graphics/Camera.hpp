@@ -21,7 +21,7 @@
 #pragma once
 
 #include "GameObject/Attachable.hpp"
-#include <glm/glm.hpp>
+#include "Util/Math.hpp"
 
 
 namespace Forge {

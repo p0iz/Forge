@@ -21,7 +21,7 @@
 #pragma once
 
 #include "lua.hpp"
-#include "glm/glm.hpp"
+#include "Util/Math.hpp"
 
 
 namespace Forge { namespace Lua { namespace Utils {

@@ -22,7 +22,7 @@
 
 #include "ForgeExport.h"
 #include <GL/glew.h>
-#include <glm/glm.hpp>
+#include "Util/Math.hpp"
 #include <vector>
 
 

@@ -21,8 +21,8 @@
 #include "ObjLoader.hpp"
 #include "Graphics/StaticMesh.h"
 #include "Util/Log.h"
+#include "Util/Math.hpp"
 #include <algorithm>
-#include <glm/glm.hpp>
 #include <fstream>
 #include <sstream>
 

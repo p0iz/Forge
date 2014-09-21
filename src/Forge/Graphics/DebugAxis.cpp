@@ -22,7 +22,7 @@
 #include "Light/Light.hpp"
 #include "Shader/Shader.h"
 #include "Shader/ShaderProgram.h"
-#include <glm/glm.hpp>
+#include "Util/Math.hpp"
 #include <iostream>
 
 namespace Forge {

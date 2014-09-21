@@ -20,7 +20,7 @@
 
 #include "DefaultTechnique.h"
 #include "Util/Log.h"
-#include <glm/glm.hpp>
+#include "Util/Math.hpp"
 
 namespace Forge {
 

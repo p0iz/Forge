@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "glm/glm.hpp"
+#include "Util/Math.hpp"
 
 
 namespace Forge

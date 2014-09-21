@@ -20,7 +20,6 @@
 
 #include "ForgeExport.h"
 #include "Vertex.h"
-
 #include "Shader/ShaderProgram.h"
 
 #include <iostream>

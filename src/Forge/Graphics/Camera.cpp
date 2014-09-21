@@ -22,7 +22,7 @@
 #include "GameObject/GameObject.hpp"
 #include "Platform/Window/RenderWindow.hpp"
 #include "Viewport.hpp"
-#include <glm/gtc/matrix_transform.hpp>
+#include "Util/Math.hpp"
 
 
 namespace Forge {

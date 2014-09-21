@@ -24,6 +24,7 @@
 #include "ForgeExport.h"
 #include "Shader/Shader.h"
 #include "Shader/ShaderProgram.h"
+#include "Util/Math.hpp"
 #include <GL/glew.h>
 
 namespace Forge {

@@ -22,9 +22,9 @@
 #include "Vertex.h"
 
 #include "Util/Log.h"
+#include "Util/Math.hpp"
 
 #include <GL/glew.h>
-#include <glm/gtc/matrix_transform.hpp>
 #include <cassert>
 #include <vector>
 #include <iostream>

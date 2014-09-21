@@ -19,10 +19,10 @@
  */
 
 #include "Text.hpp"
+#include "Util/Math.hpp"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
 #include <iostream>
 
 void Forge::Text::createShaders()

@@ -21,7 +21,7 @@
 #pragma once
 
 #include "ForgeExport.h"
-#include <glm/glm.hpp>
+#include "Util/Math.hpp"
 
 namespace Forge {
 

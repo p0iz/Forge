@@ -23,7 +23,7 @@
 #include "ForgeExport.h"
 #include "Graphics/Shader/Shader.h"
 #include "Graphics/Shader/ShaderProgram.h"
-#include <glm/glm.hpp>
+#include "Util/Math.hpp"
 #include <memory>
 #include <string>
 #include <vector>
