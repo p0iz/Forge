@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Component.hpp"
-#include "Lua/LuaState.hpp"
+#include "Script/LuaState.hpp"
 #include <string>
 
 
@@ -33,7 +33,7 @@ class Application;
 class Script : public Component
 {
   public:
-    explicit Script(std::string const& scriptFile, Application& app);
+    explicit Script(std::string const& scriptFile);
     virtual ~Script();
 
     virtual ComponentType getType() const;

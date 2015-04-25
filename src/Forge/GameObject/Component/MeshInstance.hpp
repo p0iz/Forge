@@ -28,8 +28,6 @@
 
 namespace Forge {
 
-class Application;
-
 class StaticMesh;
 
 // Derived component
@@ -37,7 +35,7 @@ class MeshInstance : public Component
 {
   public:
     // Acquire assets, load scripts etc. here
-    explicit MeshInstance(std::string const& mesh, Application& app);
+    explicit MeshInstance(std::string const& mesh);
     virtual ~MeshInstance();
 
     virtual ComponentType getType() const;

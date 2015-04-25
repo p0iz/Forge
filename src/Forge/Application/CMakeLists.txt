@@ -1,13 +1,11 @@
 # Forge application
 
 set(ApplicationSource
-  Application.cpp
-  ForgeCLI.cpp
+  Runner.cpp
 )
 
 set(ApplicationHeaders
-  Application.hpp
-  ForgeCLI.hpp
+  Runner.hpp
 )
 
 add_library(Application ${ApplicationSource} ${ApplicationHeaders})

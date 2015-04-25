@@ -46,7 +46,7 @@ class Camera : public Component
 
     glm::mat4 view() const;
 
-    glm::mat4 projection(Viewport const& viewport) const;
+    glm::mat4 projection(float aspectRatio) const;
 
   private:
     float mFovY;

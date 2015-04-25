@@ -25,3 +25,5 @@ windows_deps/*
 *.sln
 .directory
 ForgeExport.h
+src/Dependencies/build/*
+src/Dependencies/prefix/*

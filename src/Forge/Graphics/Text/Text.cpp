@@ -1,4 +1,4 @@
-/* This file is part of Forge.
+/*
  *
  * Forge is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,11 +19,10 @@
  */
 
 #include "Text.hpp"
+#include "Util/Log.h"
 #include "Util/Math.hpp"
+#include <SDL2/SDL_ttf.h>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <iostream>
 
 void Forge::Text::createShaders()
 {
@@ -69,13 +68,14 @@ void Forge::Text::createBuffer()
 
 Forge::Text::~Text()
 {
-  FT_Done_FreeType(static_cast<FT_Library>(mFontLibrary));
 }
 
 void Forge::Text::initialize()
 {
-  // Initialize FreeType
-  assert(!FT_Init_FreeType(&mFontLibrary));
+  if (!TTF_WasInit() && TTF_Init() == -1)
+  {
+      Log::error << "TTF library failed to initialize! Error: " << TTF_GetError() << "\n";
+  }
 
   // Create shaders
   createShaders();
@@ -89,13 +89,12 @@ void Forge::Text::initialize()
 
 void Forge::Text::setFont(const char * fileName)
 {
-  assert(!FT_New_Face(mFontLibrary, fileName, 0, &face));
-  glyph = face->glyph;
+  _fontName = fileName;
 }
 
 void Forge::Text::setFontSize(int pt)
 {
-  FT_Set_Pixel_Sizes(face, 0, pt);
+  _fontSize = pt;
 }
 
 void Forge::Text::setPosition(float x, float y)
@@ -114,61 +113,74 @@ void Forge::Text::draw()
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, glyphTextureId);
 
-  float posX = mPosition.x;
-  float posY = mPosition.y;
-
   glDisable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  for (char c : mText)
+  TTF_Font* font = TTF_OpenFont(_fontName.c_str(), _fontSize);
+
+  static SDL_Color black { 0, 0, 0, 255 };
+
+  SDL_Surface* renderedText = TTF_RenderText_Blended(font, mText.c_str(), black);
+
+  float x = mPosition.x;
+  float y = mPosition.y;
+
+  int width = renderedText->w;
+  int height = renderedText->h;
+
+  unsigned char* convertedPixels = new unsigned char[width*height];
+
+  Log::info << "Colors in renderedText: " << renderedText->format->palette->ncolors << "\n";
+
+  Log::info << "Bytes per pixel: " << renderedText->pitch / renderedText->w << "\n";
+
+  for (int i = 0; i < width * height; ++i)
   {
-    if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-      continue;
-
-    glTexImage2D(
-          GL_TEXTURE_2D,
-          0,
-          GL_RED,
-          glyph->bitmap.width,
-          glyph->bitmap.rows,
-          0,
-          GL_RED,
-          GL_UNSIGNED_BYTE,
-          glyph->bitmap.buffer);
-
-    float x = posX + (glyph->bitmap_left * mScale.x);
-    float y = posY - ((glyph->bitmap.rows - glyph->bitmap_top) * mScale.y);
-
-    float width = glyph->bitmap.width * mScale.x;
-    float height = glyph->bitmap.rows * mScale.y;
-
-    glm::vec2 vertCoords[] =
-    {
-      glm::vec2(x, y),
-      glm::vec2(0, 1),
-      glm::vec2(x + width, y),
-      glm::vec2(1, 1),
-      glm::vec2(x, y + height),
-      glm::vec2(0, 0),
-      glm::vec2(x + width, y + height),
-      glm::vec2(1, 0)
-    };
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertCoords), vertCoords, GL_DYNAMIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2)*2, 0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2)*2, (void*)sizeof(glm::vec2));
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    posX += (glyph->advance.x >> 6) * mScale.x;
-    posY += (glyph->advance.y >> 6) * mScale.y;
+    int index = static_cast<int*>(renderedText->pixels)[i];
+    SDL_Color* color = &renderedText->format->palette->colors[index];
+    convertedPixels[i] = 0.212671f * color->r + 0.715160f * color->g + 0.072169f * color->b;
   }
+  SDL_FreeSurface(renderedText);
+
+  glTexImage2D(
+    GL_TEXTURE_2D,
+    0,
+    GL_RED,
+    width,
+    height,
+    0,
+    GL_RED,
+    GL_UNSIGNED_BYTE,
+    convertedPixels
+  );
+
+  delete[] convertedPixels;
+
+  glm::vec2 vertCoords[] =
+  {
+    glm::vec2(x, y),
+    glm::vec2(0, 1),
+    glm::vec2(x + width, y),
+    glm::vec2(1, 1),
+    glm::vec2(x, y + height),
+    glm::vec2(0, 0),
+    glm::vec2(x + width, y + height),
+    glm::vec2(1, 0)
+  };
+
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertCoords), vertCoords, GL_DYNAMIC_DRAW);
+
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2)*2, 0);
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2)*2, (void*)sizeof(glm::vec2));
+
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+  TTF_CloseFont(font);
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 

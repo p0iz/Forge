@@ -20,8 +20,6 @@
 
 #pragma once
 
-#include "Util/Math.hpp"
-
 
 namespace Forge
 {
@@ -54,17 +52,14 @@ class Viewport
 
     float aspectRatio() const;
 
+    void updateGLViewport() const;
+
+    Camera const* camera() const;
     void setCamera(Camera const* camera);
-
-    bool hasCamera() const;
-
-    glm::mat4 view() const;
-
-    glm::mat4 projection() const;
 
   private:
     RenderWindow const& mWindow;
-    Camera const* mCamera;
+    Camera const* _camera;
 
     float mX;
     float mY;

@@ -23,41 +23,28 @@
 #include "DebugAxis.h"
 #include "ForgeExport.h"
 #include "Graphics/Light/Light.hpp"
+#include "Graphics/Viewport.hpp"
 #include "Material/Technique/Technique.hpp"
 #include "Util/Math.hpp"
 
+#include <unordered_map>
 
 namespace Forge {
-
-class Application;
-
-class Camera;
-
-class Viewport;
 
 /* A class that is used to render scenes from scene configurations */
 class FORGE_EXPORT Renderer
 {
 public:
-  Renderer(Application& app);
+  Renderer();
   ~Renderer();
 
-  void initialize();
-  void deinitialize();
+  void render();
 
-  void updateViewport(int width, int height);
-
-  void render(Viewport const& viewport);
+  void addViewport(std::string const& name, Viewport* viewport);
+  Viewport* getViewport(std::string const& name);
 
 private:
-  bool mInitialized;
-  void updateLightData(glm::mat4 const& view);
-
-  DebugAxis mDebugAxis;
-
-  Technique* mTechnique;
-
-  Application& mApp;
+  std::unordered_map<std::string, Viewport*> _viewports;
 };
 
 }

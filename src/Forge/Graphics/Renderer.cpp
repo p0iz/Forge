@@ -19,33 +19,20 @@
  */
 
 #include "Renderer.h"
-#include "Application/Application.hpp"
 #include "DebugAxis.h"
 #include "GameObject/Component/Camera.hpp"
 #include "GameObject/GameObject.hpp"
 #include "GameObject/Component/MeshInstance.hpp"
 #include "Util/Internal/Keeper.hpp"
-#include "Viewport.hpp"
+#include "Util/ServiceProvider.hpp"
 #include "Util/Log.h"
 #include "GL/glew.h"
 
 
 namespace Forge {
 
-Renderer::Renderer(Application& app):
-  mInitialized(false),
-  mApp(app)
+Renderer::Renderer()
 {
-}
-
-Renderer::~Renderer()
-{
-}
-
-void Renderer::initialize()
-{
-  if (mInitialized) return;
-
   glClearColor(0.1f,0.1f,0.1f,1.0f);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
@@ -57,81 +44,34 @@ void Renderer::initialize()
     Log::info << "Enabling scissor test.\n";
     glEnable(GL_SCISSOR_TEST);
   }
-
-  mDebugAxis.initialize();
-
-  mTechnique = new Technique;
-  mTechnique->addShader(Shader::VertexShader, "data/shaders/SimpleTexture.vs");
-  mTechnique->addShader(Shader::FragmentShader, "data/shaders/SimpleColor.fs");
-  mTechnique->create();
-
-  mTechnique->setUniform("ambient", glm::vec3(0.1f,0.1f,0.1f));
-  mTechnique->setUniform("diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
-  mTechnique->setUniform("specular", glm::vec3(1.0f, 1.0f, 1.0f));
-  mTechnique->setUniform("shininess", 512.0f);
-
-  Light::createBuffer();
-
-  mInitialized = true;
 }
 
-void Renderer::deinitialize()
+Renderer::~Renderer()
 {
-  if (!mInitialized) return;
-
-  if (mTechnique)
+  for (auto vp : _viewports)
   {
-    delete mTechnique;
-    mTechnique = nullptr;
-  }
-
-  Light::destroyBuffer();
-  mDebugAxis.deinitialize();
-  mInitialized = false;
-}
-
-void Renderer::render(Viewport const& viewport)
-{
-  int x = viewport.x();
-  int y = viewport.y();
-  int width = viewport.width();
-  int height = viewport.height();
-
-  glViewport(x, y, width, height);
-  glScissor(x, y, width, height);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  glm::mat4 view = viewport.view();
-  glm::mat4 projection = viewport.projection();
-
-  updateLightData(view);
-
-  mTechnique->beginMaterial();
-
-  for (Light const& light : mApp.lights())
-  {
-    if (light.type != Light::DISABLED)
-    {
-      Light::updateBuffer(light.getShaderData());
-      for (MeshInstance& mi : mApp.meshes())
-      {
-        glm::mat4 world = mi.owner().transform().getMatrix();
-        mTechnique->setTransforms(world, view, projection);
-        mi.update();
-      }
-    }
+    delete vp.second;
   }
 }
 
-void Renderer::updateLightData(glm::mat4 const& view)
+void Renderer::addViewport(std::string const& name, Viewport* viewport)
 {
-  for (Light const& light : mApp.lights())
+  _viewports[name] = viewport;
+}
+
+Viewport* Renderer::getViewport(std::string const& name)
+{
+  return _viewports[name];
+}
+
+void Renderer::render()
+{
+  // Render all viewports
+  for (auto it : _viewports)
   {
-    light.getShaderData().viewSpacePosition = view * light.position;
-    if (light.type == Light::SPOT)
-    {
-      light.getShaderData().spotDirection = glm::mat3(view) * light.spotDirection;
-    }
+    Viewport* vp = it.second;
+    vp->updateGLViewport();
+    Camera const* cam = vp->camera();
   }
 }
 

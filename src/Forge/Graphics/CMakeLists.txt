@@ -16,7 +16,6 @@ set(GraphicsSources
   DebugAxis.cpp
   StaticMesh.cpp
   Renderer.cpp
-  RendererThread.cpp
   Viewport.cpp
 )
 

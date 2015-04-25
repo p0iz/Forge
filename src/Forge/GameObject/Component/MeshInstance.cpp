@@ -19,18 +19,23 @@
  */
 
 #include "MeshInstance.hpp"
-#include "Application/Application.hpp"
+#include "Assets/AssetManager.hpp"
 #include "Graphics/StaticMesh.h"
+#include "Util/ServiceProvider.hpp"
 
 
 namespace Forge {
 
-MeshInstance::MeshInstance(std::string const& mesh, Application& app):
+MeshInstance::MeshInstance(std::string const& mesh):
   Component(),
-  mHandle(app.loadAsset(mesh)),
-  mMeshPtr(mHandle.isValid() ? app.getAsset(mHandle) : nullptr),
-  mMesh(static_cast<StaticMesh*>(mMeshPtr.get()))
+  mHandle(AssetHandle::create()),
+  mMeshPtr(),
+  mMesh()
 {
+  AssetManager& assetMan = Service::get<AssetManager>();
+  mHandle = assetMan.load(mesh);
+  mMeshPtr = mHandle.isValid() ? assetMan.get(mHandle) : nullptr;
+  mMesh = static_cast<StaticMesh*>(mMeshPtr.get());
 }
 
 MeshInstance::~MeshInstance()

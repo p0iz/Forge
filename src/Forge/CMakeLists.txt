@@ -10,16 +10,12 @@ include(ForgeDependencies.cmake)
 # Set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -fno-exceptions")
 
-# Add deps prefix
-set(CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/deps ${CMAKE_PREFIX_PATH})
-
 # Do build type specific configuration
 if(CMAKE_BUILD_TYPE MATCHES Release)
   message(STATUS "Generating Release build.")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fomit-frame-pointer -O2")
 elseif(CMAKE_BUILD_TYPE MATCHES Debug)
   message(STATUS "Generating Debug build.")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
   set(CMAKE_EXECUTABLE_SUFFIX "_dbg")
 endif()
 
@@ -38,10 +34,10 @@ add_subdirectory(Application)
 add_subdirectory(Assets)
 add_subdirectory(GameObject)
 add_subdirectory(Graphics)
-add_subdirectory(Lua)
-add_subdirectory(Time)
+add_subdirectory(Input)
+add_subdirectory(Script)
 add_subdirectory(Util)
-add_subdirectory(Platform)
+add_subdirectory(Window)
 
 # Remove the unnecessary prefix from windows DLL and link statically to GCC and stdlibc++
 if(WIN32)
@@ -58,15 +54,11 @@ target_link_libraries(Forge
   Assets
   GameObject
   Component
-  Graphics
-  Time
-  Util
-  PlatformDynamicLoader
-  PlatformEvent
-  PlatformFileSystem
-  PlatformInput
-  PlatformWindow
   ForgeLua
+  Graphics
+  ForgeInput
+  Util
+  ForgeWindow
   "-Wl,--no-whole-archive"
   ${ForgeLibDeps}
   ${Win32LinkerFlag}

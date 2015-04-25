@@ -3,7 +3,8 @@
 Application.Screen
 {
   width = 1024,
-  height = 768
+  height = 768,
+  fullscreen = false
 }
 
 Application.Scenes

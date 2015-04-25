@@ -18,12 +18,8 @@
  *
  */
 
-#include "Application/Application.hpp"
-#include "Application/ForgeCLI.hpp"
-#include <iostream>
+#include "commands/cmdparse.hpp"
 
-
-// main function for CLI
 #ifdef _WIN32
 #include <windows.h>
 
@@ -35,19 +31,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 int main(int argc, char** argv)
 {
 #endif
-  // Optimization for freeing std::cin from syncing with stdin (makes Valgrind sad)
-  //std::cin.sync_with_stdio(false);
-
-  Forge::ForgeCLI cli(std::cin);
-
-  if (argc > 1)
-  {
-    cli.runScript(argv[1]);
-  }
-  else
-  {
-    cli.start();
-  }
-
-  return 0;
+  return parseArguments(argc, argv)->execute();
 }

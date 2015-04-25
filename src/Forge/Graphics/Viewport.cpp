@@ -20,15 +20,16 @@
 
 #include "Viewport.hpp"
 #include "GameObject/Component/Camera.hpp"
-#include "Platform/Window/RenderWindow.hpp"
+#include "Window/RenderWindow.hpp"
 #include "Util/Math.hpp"
+
+#include <GL/glew.h>
 
 
 namespace Forge {
 
 Viewport::Viewport(Forge::RenderWindow const& window, float x, float y, float width, float height):
   mWindow(window),
-  mCamera(nullptr),
   mX(x),
   mY(y),
   mWidth(width),
@@ -70,24 +71,26 @@ float Viewport::aspectRatio() const
   return (mWidth * mWindow.width()) / (mHeight * mWindow.height());
 }
 
-void Viewport::setCamera(const Camera* camera)
+void Viewport::updateGLViewport() const
 {
-  mCamera = camera;
+  int posX = x();
+  int posY = y();
+  int width = this->width();
+  int height = this->height();
+
+  glViewport(posX, posY, width, height);
+  glScissor(posX, posY, width, height);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-bool Viewport::hasCamera() const
+Camera const* Viewport::camera() const
 {
-  return mCamera;
+  return _camera;
 }
 
-glm::mat4 Viewport::view() const
+void Viewport::setCamera(Camera const* camera)
 {
-  return mCamera ? mCamera->view() : glm::mat4();
-}
-
-glm::mat4 Viewport::projection() const
-{
-  return mCamera ? mCamera->projection(*this) : glm::mat4();
+  _camera = camera;
 }
 
 }

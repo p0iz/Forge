@@ -26,11 +26,6 @@
 #include "Util/Math.hpp"
 #include <string>
 
-// Some FreeType forward declarations
-struct FT_LibraryRec_;
-struct FT_FaceRec_;
-struct FT_GlyphSlotRec_;
-
 namespace Forge {
 
 class FORGE_EXPORT Text
@@ -65,6 +60,8 @@ private:
   ShaderProgram textProgram;
 
   std::string mText;
+  std::string _fontName;
+  int _fontSize;
 
   unsigned int glyphTextureId;
   unsigned int glyphTextureUniform;
@@ -72,10 +69,6 @@ private:
 
   unsigned int glyphVertexArray;
   unsigned int glyphVertexBuffer;
-
-  FT_LibraryRec_* mFontLibrary;
-  FT_FaceRec_* face;
-  FT_GlyphSlotRec_* glyph;
 };
 
 } // Forge

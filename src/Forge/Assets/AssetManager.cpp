@@ -20,28 +20,26 @@
 
 #include "AssetManager.hpp"
 #include "LoaderInterface.hpp"
-#include "Platform/DynamicLoader/DynamicLoader.hpp"
-#include "Platform/FileSystem/Directory.hpp"
-#include "Platform/FileSystem/File.hpp"
 #include "Util/Log.h"
+#include <SDL2/SDL_loadso.h>
 #include <memory>
 
 
 namespace Forge {
 
-AssetManager::AssetManager(std::string const& searchPath):
-  mSearchPath(searchPath)
+AssetManager::AssetManager():
+  _loadedPlugins(),
+  _loaders(),
+  _assetData()
 {
-  // Register all found plugins
-  FileSystem::Directory pluginDir(searchPath);
-  for (std::string const& file : pluginDir.listFiles())
-  {
-    registerLoader(file);
-  }
 }
 
 AssetManager::~AssetManager()
 {
+  for (void* handle : _loadedPlugins)
+  {
+    SDL_UnloadObject(handle);
+  }
 }
 
 AssetHandle Forge::AssetManager::load(const std::string& file)
@@ -56,10 +54,10 @@ AssetHandle Forge::AssetManager::load(const std::string& file)
   else
   {
     std::string ext = file.substr(start+1);
-    if (mLoaders.count(ext) > 0)
+    if (_loaders.count(ext) > 0)
     {
-      std::shared_ptr<void> data(mLoaders.at(ext)->load(file), mLoaders[ext]->getDeleter());
-      mLoadedAssets[handle] = data;
+      std::shared_ptr<void> data(_loaders.at(ext)->load(file), _loaders[ext]->getDeleter());
+      _assetData[handle] = data;
       Log::info << "Loaded asset '" << file << "'\n";
     }
     else
@@ -72,73 +70,72 @@ AssetHandle Forge::AssetManager::load(const std::string& file)
 
 std::shared_ptr<void> AssetManager::get(const Forge::AssetHandle& handle)
 {
-  return mLoadedAssets.count(handle) == 0 ? std::shared_ptr<void>() : mLoadedAssets.at(handle);
+  return _assetData.count(handle) == 0 ? std::shared_ptr<void>() : _assetData.at(handle);
 }
 
 bool AssetManager::registerLoader(const std::string& lib)
 {
-  DynamicLoader dllLoader(mSearchPath);
-  std::shared_ptr<DynamicLibrary> loaderLib(dllLoader.open(lib));
+  bool loaded = false;
 
-  if (!loaderLib || !loaderLib->isValid())
+  void* handle = SDL_LoadObject(lib.c_str());
+  LoaderInterface::CreateFn createInterface = nullptr;
+
+  if (handle)
   {
-    return false;
+    createInterface =
+      reinterpret_cast<LoaderInterface::CreateFn>(
+        SDL_LoadFunction(handle, LoaderInterface::LoaderCreateInterfaceName));
   }
-
-  LoaderInterface::CreateFn createInterface =
-      loaderLib->loadSymbol<LoaderInterface::CreateFn>(LoaderInterface::LoaderCreateInterfaceName);
 
   if (createInterface)
   {
     std::shared_ptr<LoaderInterface> loader(createInterface());
 
-    if (!loader)
+    if (loader)
     {
-      Log::error << "Plugin failed to create loader.\n";
-      return false;
+      _loadedPlugins.push_back(handle);
+      loaded = true;
+
+      // Check that we actually support some extensions
+      std::string extensions = loader->extensions();
+
+      Log::info << "Loaded loader plugin '" << lib << "' [" << loader.get() << "]\n"
+                   "* Supported extensions: " << extensions << "\n";
+
+      if (extensions.length() == 0)
+      {
+        Log::error << "Library supports no extensions. Remember to add"
+                      "extensions into LoaderInterface::extensions!\n";
+      }
+      else
+      {
+        // Store a reference to the same loader for all the supported extensions
+        std::string::size_type extStart = 0;
+        std::string::size_type extEnd;
+
+        do
+        {
+          extEnd = extensions.find_first_of(",;", extStart);
+          std::string extension = extensions.substr(extStart, extEnd - extStart);
+          extStart = extEnd + 1;
+          _loaders[extension] = loader;
+        }
+        while (extEnd != std::string::npos);
+      }
     }
-
-    mLoadedPlugins.push_back(loaderLib);
-
-    // Check that we actually support some extensions
-    std::string extensions = loader->extensions();
-
-    Log::info << "Loaded loader plugin '" << lib << "' [" << loader.get() << "]\n"
-                 "* Supported extensions: " << extensions << "\n";
-
-    if (extensions.length() == 0)
+    else
     {
-      Log::error << "Library supports no extensions. Remember to add"
-                    "extensions into LoaderInterface::extensions!\n";
-      return false;
+      Log::error << "Failed to create asset loader from plugin '" << lib << "'\n";
     }
-
-    // Store a reference to the same loader for all the supported extensions
-    std::string::size_type extStart = 0;
-    std::string::size_type extEnd;
-    do
-    {
-      extEnd = extensions.find_first_of(",;", extStart);
-      std::string extension = extensions.substr(extStart, extEnd - extStart);
-      extStart = extEnd + 1;
-
-      mLoaders[extension] = loader;
-
-    }
-    while (extEnd != std::string::npos);
-
-    return true;
   }
-  else
+
+  if (!loaded)
   {
     Log::error << "Error loading loader symbols from plugin '" << lib << "'\n";
-    return false;
+    SDL_UnloadObject(handle);
   }
-}
 
-std::string const AssetManager::searchPath() const
-{
-  return mSearchPath;
+  return loaded;
 }
 
 }

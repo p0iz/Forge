@@ -17,6 +17,7 @@ ExternalProject_Add(SDL
 )
 
 ExternalProject_Add(SDL_image
+  DEPENDS SDL
   DOWNLOAD_COMMAND hg clone http://hg.libsdl.org/SDL_image
   UPDATE_COMMAND ./autogen.sh
   CONFIGURE_COMMAND ./configure --with-sdl-prefix=${DEPS_TARGET_DIR} --prefix=${DEPS_TARGET_DIR}
@@ -26,6 +27,7 @@ ExternalProject_Add(SDL_image
 )
 
 ExternalProject_Add(SDL_ttf
+  DEPENDS SDL
   DOWNLOAD_COMMAND hg clone http://hg.libsdl.org/SDL_ttf
   UPDATE_COMMAND ./autogen.sh
   CONFIGURE_COMMAND ./configure --with-sdl-prefix=${DEPS_TARGET_DIR} --prefix=${DEPS_TARGET_DIR}

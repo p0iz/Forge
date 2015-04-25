@@ -28,14 +28,12 @@
 
 namespace Forge {
 
-class DynamicLibrary;
-
 class LoaderInterface;
 
 class FORGE_EXPORT AssetManager
 {
   public:
-    AssetManager(std::string const& searchPath);
+    AssetManager();
     ~AssetManager();
 
     AssetHandle load(std::string const& file);
@@ -46,15 +44,10 @@ class FORGE_EXPORT AssetManager
 
     bool registerLoader(std::string const& lib);
 
-    std::string const searchPath() const;
-
   private:
-    // DLL search path
-    std::string mSearchPath;
-
-    std::vector<std::shared_ptr<DynamicLibrary>> mLoadedPlugins;
-    std::unordered_map<std::string, std::shared_ptr<LoaderInterface>> mLoaders;
-    std::unordered_map<AssetHandle, std::shared_ptr<void>> mLoadedAssets;
+    std::vector<void*> _loadedPlugins;
+    std::unordered_map<std::string, std::shared_ptr<LoaderInterface>> _loaders;
+    std::unordered_map<AssetHandle, std::shared_ptr<void>> _assetData;
 };
 
 }

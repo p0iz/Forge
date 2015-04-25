@@ -27,10 +27,10 @@
 
 namespace Forge {
 
-Script::Script(std::string const& scriptFile, Application& app):
+Script::Script(std::string const& scriptFile):
   Component(),
   mScriptFile(scriptFile),
-  mState(app)
+  mState()
 {
 }
 

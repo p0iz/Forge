@@ -20,9 +20,9 @@
 
 #include "Camera.hpp"
 #include "GameObject/GameObject.hpp"
-#include "Platform/Window/RenderWindow.hpp"
 #include "Graphics/Viewport.hpp"
 #include "Util/Math.hpp"
+#include "Window/RenderWindow.hpp"
 
 
 namespace Forge {
@@ -40,9 +40,9 @@ glm::mat4 Camera::view() const
   return owner().transform().getMatrix();
 }
 
-glm::mat4 Camera::projection(Viewport const& viewport) const
+glm::mat4 Camera::projection(float aspectRatio) const
 {
-  return glm::perspective(mFovY, viewport.aspectRatio(), mNearClip, mFarClip);
+  return glm::perspective(mFovY, aspectRatio, mNearClip, mFarClip);
 }
 
 }
