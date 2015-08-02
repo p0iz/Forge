@@ -11,6 +11,7 @@ bin/*
 build/*
 data/*/old/*
 data/test_models/*
+deps/*
 doc/*
 *.config
 *.creator
