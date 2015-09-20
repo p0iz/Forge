@@ -43,6 +43,8 @@ class FORGE_EXPORT SceneLibrary : public LuaLibrary
 
     virtual void remove(lua_State* state);
 
+    virtual void frameUpdate() { }
+
     /* Lua: setGridSize(width, height)
      *
      * Description:

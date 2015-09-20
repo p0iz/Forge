@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "ForgeExport.h"
 #include <fstream>
 #include <string>
 
@@ -28,7 +27,7 @@
 namespace Forge { namespace FileSystem {
 
 /* A class to encapsulate the file operations in one place */
-class FORGE_EXPORT File
+class File
 {
   public:
     // Use std::ios_base::in/out/app/etc when specifying access modes

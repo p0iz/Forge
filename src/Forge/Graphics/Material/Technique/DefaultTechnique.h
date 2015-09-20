@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "ForgeExport.h"
 #include "Technique.hpp"
 #include "../../Shader/Shader.h"
 #include "../../Shader/ShaderProgram.h"
@@ -29,7 +28,7 @@
 namespace Forge {
 
 /* Default technique that just renders and ugly pink */
-class FORGE_EXPORT DefaultTechnique : public Technique
+class DefaultTechnique : public Technique
 {
 public:
   DefaultTechnique();

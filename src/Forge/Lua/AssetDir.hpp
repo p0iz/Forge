@@ -41,7 +41,7 @@ class AssetDir
 
       if (lua_istable(state, -1))
       {
-        lua_len(state, -1);
+        lua_objlen(state, -1);
         mNumEntries = lua_tointeger(state, -1);
         lua_pop(state, 1);
       }

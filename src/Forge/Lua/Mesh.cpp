@@ -19,8 +19,9 @@
  */
 
 #include "Mesh.hpp"
-#include "Graphics/Libraries/MaterialLibrary.hpp"
-#include "Graphics/Libraries/MeshLibrary.hpp"
+#include "Graphics/Mesh.h"
+#include "Graphics/Material/Material.h"
+#include "Graphics/Scene/SceneNode.hpp"
 #include "Util/Log.h"
 #include "lua.hpp"
 
@@ -63,7 +64,8 @@ int Forge::Lua::Mesh::setMaterial(lua_State* state)
   char const* meshName = lua_tostring(state, -1);
   lua_pop(state, 3);
 
-  MaterialPtr material = Graphics::MaterialLibrary::instance().getAssetInfo(materialName).asset;
+  // TODO: Store material in Lua userdata
+  MaterialPtr material;
 
   if (!material)
   {
@@ -71,7 +73,8 @@ int Forge::Lua::Mesh::setMaterial(lua_State* state)
     return 0;
   }
 
-  MeshPtr mesh = Graphics::MeshLibrary::instance().getAssetInfo(meshName).asset;
+  // TODO: Store mesh in Lua userdata
+  MeshPtr mesh;
 
   if (!mesh)
   {
@@ -103,7 +106,8 @@ int Forge::Lua::Mesh::attachTo(lua_State* state)
   lua_getfield(state, -1, "name");
   std::string name = lua_tostring(state, -1);
   lua_pop(state, 1);
-  MeshPtr mesh = Graphics::MeshLibrary::instance().getAssetInfo(name).asset;
+  // TODO: Store mesh in Lua userdata
+  MeshPtr mesh;
   mesh->attachToNode(node);
 
   lua_pushboolean(state, true);

@@ -21,13 +21,12 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "ForgeExport.h"
 #include <GL/glew.h>
 #include <string>
 
 namespace Forge {
 
-class FORGE_EXPORT Shader
+class Shader
 {
 public:
   enum ShaderType
@@ -46,10 +45,7 @@ public:
   void loadCode(const std::string& file);
   const GLint compile();
 
-  GLuint getId() const
-  {
-    return mId;
-  }
+  GLuint getId() const;
 
   std::string getInfoLog() const;
 

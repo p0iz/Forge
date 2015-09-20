@@ -73,7 +73,7 @@ private:
 
   static std::atomic<int> _refCount;
   _TTF_Font* _font;
-  unsigned int _fontPtSize = 16;
+  int _fontPtSize = 16;
   bool _textRendered = false;
 };
 

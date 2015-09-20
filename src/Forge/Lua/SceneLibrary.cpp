@@ -44,9 +44,9 @@ void SceneLibrary::import(lua_State* state)
 {
   lua_newtable(state);
   lua_newtable(state);
-  lua_pushunsigned(state, 5);
+  lua_pushinteger(state, 5);
   lua_setfield(state, -2, "width");
-  lua_pushunsigned(state, 5);
+  lua_pushinteger(state, 5);
   lua_setfield(state, -2, "height");
   lua_setfield(state, -2, "grid");
 
@@ -79,14 +79,14 @@ void SceneLibrary::remove(lua_State* state)
 
 int SceneLibrary::setGridSize(lua_State* state)
 {
-  unsigned int width = luaL_checkunsigned(state, 1);
-  unsigned int height = luaL_checkunsigned(state, 2);
+  unsigned int width = luaL_checkinteger(state, 1);
+  unsigned int height = luaL_checkinteger(state, 2);
 
   lua_getglobal(state, "Scene");
   lua_getfield(state, -1, "grid");
-  lua_pushunsigned(state, width);
+  lua_pushinteger(state, width);
   lua_setfield(state, -2, "width");
-  lua_pushunsigned(state, height);
+  lua_pushinteger(state, height);
   lua_setfield(state, -2, "height");
 
   return 0;

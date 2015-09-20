@@ -5,3 +5,4 @@ set(PlatformEventSources
 )
 
 add_library(PlatformEvent ${PlatformEventSources})
+target_link_libraries(PlatformEvent PlatformInput)

@@ -21,7 +21,7 @@
 #pragma once
 
 #include "ForgeExport.h"
-#include <iosfwd>
+#include <string>
 
 namespace Forge {
 

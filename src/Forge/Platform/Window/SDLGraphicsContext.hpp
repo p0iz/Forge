@@ -18,7 +18,6 @@
  *
  */
 
-#include "GraphicsContext.hpp"
 #include <SDL2/SDL.h>
 
 #pragma once
@@ -26,13 +25,13 @@
 
 namespace Forge {
 
-class SDLGraphicsContext : public GraphicsContext
+class SDLGraphicsContext
 {
   public:
     SDLGraphicsContext(SDL_GLContext context, SDL_Window* window);
-    virtual ~SDLGraphicsContext();
+    ~SDLGraphicsContext();
 
-    virtual bool makeCurrent();
+    bool makeCurrent();
 
   private:
     SDL_GLContext mContext;

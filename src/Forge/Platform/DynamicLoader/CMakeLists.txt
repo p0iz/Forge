@@ -25,3 +25,4 @@ list(APPEND DynamicLoaderSources
 )
 
 add_library(PlatformDynamicLoader ${DynamicLoaderSources} ${DynamicLoaderHeaders})
+target_link_libraries(PlatformDynamicLoader PlatformFileSystem)

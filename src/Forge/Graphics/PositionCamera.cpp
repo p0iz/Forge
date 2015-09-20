@@ -19,7 +19,6 @@
  */
 
 #include "PositionCamera.h"
-
 #include "Util/Log.h"
 
 #include <glm/glm.hpp>

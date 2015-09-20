@@ -19,6 +19,7 @@
  */
 
 #include "LuaState.hpp"
+#include "LuaLibrary.hpp"
 #include "Util/Log.h"
 #include <lua.hpp>
 #include <iostream>
@@ -63,14 +64,6 @@ void LuaState::removeLibrary(LuaLibrary& library)
   library.remove(mState);
 }
 
-void LuaState::runScript(std::string const& scriptFile)
-{
-  if (luaL_dofile(mState, scriptFile.c_str()))
-  {
-    Log::error << "Lua error: " << lua_tostring(mState, -1) << "\n";
-  }
-}
-
 bool LuaState::isIncompleteChunk(const std::string& chunk)
 {
   int previousStackPos = lua_gettop(mState);
@@ -89,14 +82,14 @@ bool LuaState::isIncompleteChunk(const std::string& chunk)
 bool LuaState::runChunk(std::string const& programName, std::string const& chunk)
 {
   int status = luaL_loadbuffer(mState, chunk.data(), chunk.length(), programName.data());
-  if (status == LUA_OK)
+  if (status == 0)
   {
     lua_getglobal(mState, "print");
     lua_insert(mState, 1);
     lua_pcall(mState, 0, LUA_MULTRET, 1);
   }
 
-  if (status != LUA_OK && !lua_isnil(mState, -1))
+  if (status != 0 && !lua_isnil(mState, -1))
   {
     const char* msg = lua_tostring(mState, -1);
     if (msg)
@@ -111,7 +104,7 @@ bool LuaState::runChunk(std::string const& programName, std::string const& chunk
     lua_pop(mState, 1);
   }
   lua_settop(mState, 0);
-  return status == LUA_OK;
+  return status == 0;
 }
 
 }

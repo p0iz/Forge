@@ -19,6 +19,7 @@
  */
 
 #include "Light.hpp"
+#include <GL/glew.h>
 
 
 namespace Forge {

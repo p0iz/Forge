@@ -1,8 +1,8 @@
 # Window submodule
 set(PlatformWindowSources
-  RenderWindow.cpp
-  GraphicsContext.cpp
   SDLGraphicsContext.cpp
+  RenderWindow.cpp
 )
 
 add_library(PlatformWindow ${PlatformWindowSources})
+target_link_libraries(PlatformWindow Util ${ForgeLibDeps})

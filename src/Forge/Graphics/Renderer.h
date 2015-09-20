@@ -21,11 +21,10 @@
 #pragma once
 
 #include "Lua/UserdataMap.hpp"
-#include "DebugAxis.h"
-#include "ForgeExport.h"
 #include "Graphics/Light/Light.hpp"
 #include "Material/Technique/Technique.hpp"
 #include <glm/glm.hpp>
+#include "Platform/Window/RenderWindow.hpp"
 
 
 namespace Forge {
@@ -38,7 +37,7 @@ namespace Forge {
 class Viewport;
 
 /* A class that is used to render scenes from scene configurations */
-class FORGE_EXPORT Renderer
+class Renderer
 {
 public:
   Renderer();
@@ -49,22 +48,27 @@ public:
 
   void updateViewport(int width, int height);
 
-  void render(Viewport const& viewport, UserdataMap* meshes, std::vector<Light> const& lights);
+  void frameUpdate();
 
-  void render(const SceneConfig& scene);
+  RenderWindow const& window();
+
+  void addViewport(std::string const& name, Viewport* viewport);
+
+  Viewport* getViewport(std::string const& name);
+
+  void setMeshAssets(UserdataMap* meshmap);
+
+  void setLights(std::vector<Light>* lights);
 
 private:
   bool mInitialized;
-  void renderDebugOverlay(const SceneConfig& scene);
-  void updateLightData(const SceneConfig& scene, const glm::mat4& view);
   void updateLightData(std::vector<Light> const& lights, const glm::mat4& view);
+  RenderWindow mWindow;
+  UserdataMap* mMeshes;
+  std::vector<Light>* mLights;
+  std::unordered_map<std::string, Viewport*> mViewports;
 
-
-  void drawScene(const glm::mat4& view,
-             const glm::mat4& projection,
-             const SceneConfig& scene);
-
-  DebugAxis mDebugAxis;
+  void render(Viewport const& viewport, UserdataMap* meshes, std::vector<Light> const& lights);
 
   Technique* mTechnique;
 };

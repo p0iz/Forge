@@ -22,3 +22,4 @@ list(APPEND PlatformFileSystemSources
 )
 
 add_library(PlatformFileSystem ${PlatformFileSystemSources} ${PlatformFileSystemHeaders})
+target_link_libraries(PlatformFileSystem Util)

@@ -20,12 +20,11 @@
 
 #pragma once
 
-#include "ForgeExport.h"
 #include "LoaderInterface.hpp"
 
 namespace Forge {
 
-class FORGE_EXPORT ImageLoader : public LoaderInterface
+class ImageLoader : public LoaderInterface
 {
   public:
     virtual void* load(std::string const& filename);

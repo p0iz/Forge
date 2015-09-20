@@ -1,3 +1,5 @@
+#ifndef FORGECLI_HPP
+#define FORGECLI_HPP
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
@@ -18,12 +20,9 @@
  *
  */
 
-#pragma once
-
 #include "Lua/LuaState.hpp"
-#include "ForgeExport.h"
+#include <vector>
 #include <iosfwd>
-
 
 namespace Forge {
 
@@ -31,24 +30,27 @@ namespace Forge {
 class ForgeCLI
 {
   public:
-    explicit ForgeCLI(std::istream& input);
-
-    void readInput();
+    ForgeCLI();
 
     void addLibrary(LuaLibrary& library);
 
-    void printPrompt();
+    void start(std::istream& input);
 
-    bool endOfStream() const;
-
-    void runScript(std::string const& filename);
-
-    void start();
+    bool isRepl() const;
 
   private:
-    LuaState mState;
-    std::istream& mInput;
+    void readInput(std::istream& input);
 
+    void printPrompt();
+
+    bool endOfStream(std::istream const& input) const;
+
+    bool _isRepl;
+
+    std::vector<LuaLibrary*> _libraries;
+    LuaState _state;
 };
 
 }
+
+#endif // FORGECLI_HPP

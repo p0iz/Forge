@@ -54,6 +54,7 @@ RenderWindow::RenderWindow():
 
   SDL_GLContext context = SDL_GL_CreateContext(mWindow);
   mRenderingContext = new SDLGraphicsContext(context, mWindow);
+  mRenderingContext->makeCurrent();
 
   if (context)
   {
@@ -134,7 +135,7 @@ bool RenderWindow::makeRenderCurrent()
   return mRenderingContext->makeCurrent();
 }
 
-GraphicsContext* RenderWindow::createAuxContext() const
+SDLGraphicsContext* RenderWindow::createAuxContext() const
 {
   SDL_GLContext context = SDL_GL_CreateContext(mWindow);
   return new SDLGraphicsContext(context, mWindow);

@@ -6,9 +6,6 @@ add_subdirectory(Shader)
 # Add Text component to build
 add_subdirectory(Text)
 
-# Add Libraries component to build
-add_subdirectory(Libraries)
-
 # Add Light component to build
 add_subdirectory(Light)
 
@@ -22,22 +19,21 @@ set(GraphicsSources
   Camera.cpp
   TargetCamera.cpp
   PositionCamera.cpp
-  DebugAxis.cpp
   Mesh.cpp
   OrbitalCamera.cpp
   Renderer.cpp
-  RendererThread.cpp
   Viewport.cpp
 )
 
-set(GraphicsLibs
+
+add_library(Graphics ${GraphicsSources})
+target_link_libraries(Graphics
   Light
-  Libraries
   Shader
   Scene
   Material
   Text
-)
-
-add_library(Graphics ${GraphicsSources})
-target_link_libraries(Graphics ${GraphicsLibs})
+  PlatformFileSystem
+  PlatformWindow
+  Util
+  ${ForgeLibDeps})

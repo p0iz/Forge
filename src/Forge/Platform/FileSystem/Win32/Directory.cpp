@@ -25,6 +25,8 @@
 
 namespace Forge { namespace FileSystem {
 
+char const SEPARATOR = '\\';
+
 namespace {
 
 bool IsDir(DWORD fileAttributes)
@@ -33,8 +35,6 @@ bool IsDir(DWORD fileAttributes)
 }
 
 }
-
-char const Directory::SEPARATOR = '\\';
 
 Directory::Directory():
   mCurrentPath(getenv("%HOMEDRIVE%"))

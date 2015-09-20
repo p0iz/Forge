@@ -20,8 +20,7 @@
 
 #pragma once
 
-#include "ForgeExport.h"
-#include "GraphicsContext.hpp"
+#include "SDLGraphicsContext.hpp"
 #include <string>
 
 
@@ -36,7 +35,7 @@ class SDL_Window;
 
 namespace Forge {
 
-class FORGE_EXPORT RenderWindow
+class RenderWindow
 {
   public:
     RenderWindow();
@@ -61,14 +60,14 @@ class FORGE_EXPORT RenderWindow
     // Create additional contexts for processing graphics commands (buffering, loading, etc.)
     // Do NOT issue draw commands from these contexts. Draw commands should only be issued from
     // the rendering context.
-    GraphicsContext* createAuxContext() const;
+    SDLGraphicsContext* createAuxContext() const;
 
     // Make the rendering context the current graphics context
     bool makeRenderCurrent();
 
   private:
     SDL_Window* mWindow;
-    GraphicsContext* mRenderingContext;
+    SDLGraphicsContext* mRenderingContext;
 
     bool mFullscreen;
     std::string mTitle;

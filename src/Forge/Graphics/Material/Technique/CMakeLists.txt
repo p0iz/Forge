@@ -2,8 +2,7 @@
 
 set(TechniqueSources
   DefaultTechnique.cpp
-  Technique.cpp
-  TechniqueLoader.cpp)
+  Technique.cpp)
 
 add_library(Technique ${TechniqueSources})
-target_link_libraries(Technique Libraries Shader)
+target_link_libraries(Technique Shader)

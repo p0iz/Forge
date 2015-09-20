@@ -21,7 +21,6 @@
 #ifndef VERTEXLISTDRAWABLE_H
 #define VERTEXLISTDRAWABLE_H
 
-#include "ForgeExport.h"
 #include "Vertex.h"
 
 #include "Shader/ShaderProgram.h"
@@ -37,7 +36,7 @@
 
 namespace Forge {
 
-class FORGE_EXPORT Mesh : public Attachable
+class Mesh : public Attachable
 {
   public:
     Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& elements);

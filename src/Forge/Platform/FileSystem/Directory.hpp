@@ -20,20 +20,23 @@
 
 #pragma once
 
-#include "ForgeExport.h"
 #include <string>
 #include <vector>
 
 
 namespace Forge { namespace FileSystem {
 
-class FORGE_EXPORT Directory
+extern char const SEPARATOR;
+
+class Directory
 {
   public:
     Directory();
+    Directory(Directory const& rhs);
     explicit Directory(std::string const& path);
+    ~Directory();
 
-    static char const SEPARATOR;
+    Directory const& operator=(Directory const& rhs);
 
     std::string const& getCurrentPath() const;
     std::string getName() const;

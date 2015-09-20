@@ -35,6 +35,8 @@ class LuaLibrary
     virtual void import(lua_State* state) = 0;
 
     virtual void remove(lua_State* state) = 0;
+
+    virtual void frameUpdate() = 0;
 };
 
 }

@@ -8,4 +8,4 @@ set(UtilSources
   UniqueId.hpp
 )
 
-add_library(Util ${UtilSources})
+add_library(Util ${UtilSources} ${UtilHeaders})

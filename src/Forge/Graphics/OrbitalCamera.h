@@ -20,12 +20,11 @@
 
 #pragma once
 
-#include "ForgeExport.h"
 #include "PositionCamera.h"
 
 namespace Forge {
 
-class FORGE_EXPORT OrbitalCamera : public PositionCamera
+class OrbitalCamera : public PositionCamera
 {
 public:
   explicit OrbitalCamera(float radius = 1.0f);

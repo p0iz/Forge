@@ -19,10 +19,10 @@
  */
 
 #include "ForgeCLI.hpp"
-#include <fstream>
+#include "Lua/LuaLibrary.hpp"
+#include "Util\Log.h"
 #include <iostream>
 #include <string>
-
 
 namespace Forge {
 
@@ -32,30 +32,41 @@ static std::string const ProgramName = "=ForgeCLI";
 
 }
 
-ForgeCLI::ForgeCLI(std::istream& input):
-  mState(),
-  mInput(input)
+ForgeCLI::ForgeCLI():
+  _state(),
+  _isRepl(false)
 {
-  mState.initialize();
+  if (!_state.initialize())
+  {
+    Log::error << "Failed to initialize Lua state in ForgeCLI!";
+  }
 }
 
-void ForgeCLI::readInput()
+void ForgeCLI::readInput(std::istream& input)
 {
   std::string chunk, line;
+  bool isContinued = false;
   do {
-    std::getline(mInput, line);
+    std::getline(input, line);
     chunk.append(line);
     chunk.push_back('\n');
+    isContinued = _state.isIncompleteChunk(chunk);
+    if (_isRepl && isContinued)
+    {
+      std::cout << " ... ";
+    }
   }
-  while (mState.isIncompleteChunk(chunk) && std::cout << " ... ");
-  mState.runChunk(ProgramName, chunk);
+  while (isContinued);
+  _state.runChunk(ProgramName, chunk);
+
 }
 
 void ForgeCLI::addLibrary(LuaLibrary& library)
 {
-  if (mState.isInitialized())
+  if (_state.isInitialized())
   {
-    mState.importLibrary(library);
+    _state.importLibrary(library);
+    _libraries.push_back(&library);
   }
 }
 
@@ -64,23 +75,33 @@ void ForgeCLI::printPrompt()
   std::cout << "Forge > ";
 }
 
-bool ForgeCLI::endOfStream() const
+bool ForgeCLI::endOfStream(std::istream const& input) const
 {
-  return mInput.eof();
+  return input.eof();
 }
 
-void ForgeCLI::runScript(std::string const& filename)
+void ForgeCLI::start(std::istream& input)
 {
-  mState.runScript(filename);
-}
+  _isRepl = (&input == &std::cin);
 
-void ForgeCLI::start()
-{
-  while (!endOfStream())
+  while (!endOfStream(input))
   {
-    printPrompt();
-    readInput();
+    if (_isRepl)
+    {
+      printPrompt();
+    }
+    readInput(input);
+    for (LuaLibrary* lib : _libraries)
+    {
+      lib->frameUpdate();
+    }
   }
+  std::cout << std::endl;
+}
+
+bool ForgeCLI::isRepl() const
+{
+  return _isRepl;
 }
 
 }

@@ -27,7 +27,7 @@ namespace Forge {
 DynamicLibrary* DynamicLoader::open(std::string const& name)
 {
   std::string filename = mSearchPath;
-  filename.push_back(FileSystem::Directory::SEPARATOR);
+  filename.push_back(FileSystem::SEPARATOR);
   filename.append(createPlatformName(name));
   LibraryHandle handle = LoadLibrary(filename.c_str());
   return new DynamicLibrary(handle);

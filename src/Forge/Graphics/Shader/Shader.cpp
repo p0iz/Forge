@@ -61,6 +61,11 @@ const GLint Shader::compile()
   return result;
 }
 
+GLuint Shader::getId() const
+{
+  return mId;
+}
+
 std::string Shader::getInfoLog() const
 {
   std::string infoLog;

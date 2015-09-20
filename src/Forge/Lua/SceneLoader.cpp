@@ -43,8 +43,7 @@ SceneLoader::SceneLoader():
   luaL_openlibs(mState);
 
   // Register Scene management functions into 'Scene' table
-  luaL_newlib(mState, SceneLib);
-  lua_setglobal(mState, "Scene");
+  luaL_register(mState, "Scene", SceneLib);
 
   Lua::AssetLoader::import(mState);
 

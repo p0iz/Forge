@@ -22,9 +22,6 @@
 
 #include "ForgeExport.h"
 #include "LuaLibrary.hpp"
-#include "Graphics/RendererThread.hpp"
-#include <iosfwd>
-
 
 namespace Forge {
 
@@ -40,13 +37,12 @@ class FORGE_EXPORT RendererLibrary : public LuaLibrary
 
     virtual void remove(lua_State* state);
 
+    virtual void frameUpdate();
+
     /* Lua: start()
      *
      * Description:
      *    starts the renderer thread
-     *
-     * Return values:
-     *    Boolean describing whether or not the thread was started successfully.
      */
     static int start(lua_State* state);
 
@@ -54,9 +50,6 @@ class FORGE_EXPORT RendererLibrary : public LuaLibrary
      *
      * Description:
      *    stops the renderer thread
-     *
-     * Return values:
-     *    Nothing. (blocks until renderer thread is stopped)
      */
     static int stop(lua_State* state);
 
@@ -81,34 +74,28 @@ class FORGE_EXPORT RendererLibrary : public LuaLibrary
      */
     static int bindCamera(lua_State* state);
 
-    RendererThread& thread();
-
 private:
-    RendererThread mThread;
+  /* Lua: findMeshAssets()
+   *
+   * Description:
+   *    Finds the mesh asset map for rendering. Requires the Assets library
+   *    and a loader for mesh assets to be loaded. Used internally.
+   *
+   * Return values:
+   *    Nothing.
+   */
+  static int findMeshAssets(lua_State* state);
 
-    /* Lua: findMeshAssets()
-     *
-     * Description:
-     *    Finds the mesh asset map for rendering. Requires the Assets library
-     *    and a loader for mesh assets to be loaded. Used internally.
-     *
-     * Return values:
-     *    Nothing.
-     */
-    static int findMeshAssets(lua_State* state);
-
-    /* Lua: findLights()
-     *
-     * Description:
-     *    Finds the light vector for rendering. Requires the Scene library to be loaded.
-     *    Used internally.
-     *
-     * Return values:
-     *    Nothing.
-     */
-    static int findLights(lua_State* state);
-
-    static RendererThread* getRendererThread(lua_State* state);
+  /* Lua: findLights()
+   *
+   * Description:
+   *    Finds the light vector for rendering. Requires the Scene library to be loaded.
+   *    Used internally.
+   *
+   * Return values:
+   *    Nothing.
+   */
+  static int findLights(lua_State* state);
 };
 
 }

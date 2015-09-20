@@ -20,20 +20,19 @@
 
 #pragma once
 
-#include "ForgeExport.h"
 #include <unordered_set>
 
 
 namespace Forge {
 
-class SceneNode;
+struct SceneNode;
 
-class FORGE_EXPORT Attachable {
+class Attachable {
 public:
   /* Allow limiting the max number of attached nodes */
   explicit Attachable(std::size_t maxAttachments = 0);
-  void attachToNode(Forge::SceneNode* node);
-  void detachFromNode(Forge::SceneNode* node);
+  void attachToNode(SceneNode* node);
+  void detachFromNode(SceneNode* node);
   const std::unordered_set<SceneNode*>& getAttachedNodes() const;
 private:
   const std::size_t mMaxAttachments;

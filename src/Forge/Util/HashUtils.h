@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <iosfwd>
+#include <string>
 
 namespace Forge { namespace HashUtils {
 

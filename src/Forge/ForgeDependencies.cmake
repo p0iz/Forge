@@ -13,7 +13,7 @@ endif()
 
 # LuaJIT dependency
 if(WIN32)
-  set(LUA_DIR "${CMAKE_SOURCE_DIR}/deps/luajit")	
+  set(LUA_DIR "${CMAKE_SOURCE_DIR}/deps/luajit")
   if(NOT EXISTS "${LUA_DIR}")
     message(ERROR "You need to add a compiled LuaJIT release into 'deps/luajit' (http://luajit.org/download.html)")
   endif()
@@ -62,7 +62,7 @@ endif()
 # SDL2 dependency
 set(SDL2_LIB_PATH_SUFFIX "x86")
 if(Is64bit)
-  set(SDL2_LIB_PATH_SUFFIX "${SDL2_DIR}/lib/x64")
+  set(SDL2_LIB_PATH_SUFFIX "x64")
 endif()
 
 if(UNIX)

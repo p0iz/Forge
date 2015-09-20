@@ -42,8 +42,7 @@ luaL_Reg const AssetLoader::AssetsLib[] =
 void AssetLoader::import(lua_State* state)
 {
   // Register asset management functions into 'Assets' table
-  luaL_newlib(state, AssetsLib);
-  lua_setglobal(state, "Assets");
+  luaL_register(state, "Assets", AssetsLib);
 }
 
 int AssetLoader::loadMesh(lua_State* state)

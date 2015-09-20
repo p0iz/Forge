@@ -14,33 +14,23 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Tommi Martela
+ * Copyright 2015 Tommi Martela
  *
  */
+
+#define SDL_MAIN_HANDLED 1
 
 #include "ForgeCLI.hpp"
 #include "Lua/AssetsLibrary.hpp"
 #include "Lua/RendererLibrary.hpp"
 #include "Lua/SceneLibrary.hpp"
+#include <fstream>
 #include <iostream>
 
-
 // main function for CLI
-#ifdef _WIN32
-#include <windows.h>
-
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
-  int argc = __argc;
-  char** argv = __argv;
-#else
 int main(int argc, char** argv)
 {
-#endif
-  // Optimization for freeing std::cin from syncing with stdin (makes Valgrind sad)
-  //std::cin.sync_with_stdio(false);
-
-  Forge::ForgeCLI cli(std::cin);
+  Forge::ForgeCLI cli;
 
   Forge::AssetsLibrary assets;
   cli.addLibrary(assets);
@@ -51,19 +41,14 @@ int main(int argc, char** argv)
   Forge::SceneLibrary scene;
   cli.addLibrary(scene);
 
-  // Create an auxiliary context to use for loading asset data into OpenGL from scripts
-  Forge::GraphicsContext* loaderContext = renderer.thread().createAuxContext();
-  loaderContext->makeCurrent();
-
   if (argc > 1)
   {
-    cli.runScript(argv[1]);
-    return 0;
+    cli.start(std::ifstream(argv[1]));
   }
-
-  cli.start();
-
-  std::cout << std::endl;
+  else
+  {
+    cli.start(std::cin);
+  }
 
   return 0;
 }

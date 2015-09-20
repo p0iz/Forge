@@ -20,16 +20,16 @@
 
 #pragma once
 
-#include "ForgeExport.h"
 #include <fstream>
 #include <iostream>
 
 namespace Forge { namespace Log {
 
-class FORGE_EXPORT LogStream
+class LogStream
 {
 public:
   LogStream(std::ostream& output, const char* file);
+  ~LogStream();
 
   template <typename MessageType>
   LogStream& operator<<(MessageType message);
@@ -41,11 +41,11 @@ private:
   std::ostream& mOutputStream;
 };
 
-class FORGE_EXPORT LogStreamHandler
+class LogStreamHandler
 {
 public:
   LogStreamHandler(std::ostream& output, const char* file);
-
+  ~LogStreamHandler();
   bool openLogFile(const char* newFile);
 
   template <typename MessageType>

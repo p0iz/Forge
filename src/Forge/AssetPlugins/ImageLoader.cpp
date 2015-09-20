@@ -29,7 +29,7 @@ void* ImageLoader::load(const std::string& filename)
 {
   // Load image data
   SDL_Surface* surface = IMG_Load(filename.c_str());
-  SDL_Surface* bitmap = SDL_CreateRGBSurface(NULL, surface->w, surface->h, 24, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+  SDL_Surface* bitmap = SDL_CreateRGBSurface(0, surface->w, surface->h, 24, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
   if (surface && bitmap)
   {
     SDL_BlitSurface(surface, 0, bitmap, 0);

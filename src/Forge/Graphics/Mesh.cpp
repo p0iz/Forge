@@ -22,7 +22,6 @@
 #include "Vertex.h"
 
 #include "Util/Log.h"
-
 #include <cassert>
 #include <vector>
 #include <iostream>
@@ -40,6 +39,7 @@ Mesh::Mesh(
     mVertexArrayId(0),
     mVertexBufferId(0)
 {
+
   // Generate vertex and element buffers
   glGenBuffers(1, &mVertexBufferId);
   glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);

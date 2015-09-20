@@ -34,6 +34,21 @@ Directory::Directory(std::string const& path):
   convertToAbsolutePath();
 }
 
+Directory::Directory(Directory const& rhs):
+  mCurrentPath(rhs.mCurrentPath)
+{
+}
+
+Directory const& Directory::operator=(Directory const& rhs)
+{
+  mCurrentPath = rhs.mCurrentPath;
+  return *this;
+}
+
+Directory::~Directory()
+{
+}
+
 const std::string& Directory::getCurrentPath() const
 {
   return mCurrentPath;

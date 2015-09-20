@@ -36,6 +36,8 @@ class FORGE_EXPORT AssetsLibrary : public LuaLibrary
 
     virtual void remove(lua_State* state);
 
+    virtual void frameUpdate() { }
+
     /* Lua: setLoaderPath(path)
      *
      * Description:

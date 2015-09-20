@@ -42,6 +42,11 @@ LogStream::LogStream(std::ostream &output, const char* file)
 {
 }
 
+LogStream::~LogStream()
+{
+  mFileStream.close();
+}
+
 bool LogStream::openLogFile(const char *newFile)
 {
 	if (!mFileStream.is_open())
@@ -58,6 +63,10 @@ bool LogStreamHandler::openLogFile(const char* newFile)
 
 LogStreamHandler::LogStreamHandler(std::ostream &output, const char *file)
 	: mStream(output, file)
+{
+}
+
+LogStreamHandler::~LogStreamHandler()
 {
 }
 

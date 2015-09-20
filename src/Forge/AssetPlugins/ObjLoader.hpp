@@ -20,15 +20,16 @@
 
 #pragma once
 
-#include "ForgeExport.h"
 #include "LoaderInterface.hpp"
 
 
 namespace Forge {
 
-class FORGE_EXPORT ObjLoader : public LoaderInterface
+class ObjLoader : public LoaderInterface
 {
   public:
+    ObjLoader();
+
     virtual void* load(std::string const& filename);
 
     virtual void unload(void* asset);

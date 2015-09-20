@@ -44,6 +44,15 @@ struct VertexIdentifier
     }
 };
 
+ObjLoader::ObjLoader()
+{
+  static bool glewInitialized = false;
+  if (!glewInitialized)
+  {
+    glewInitialized = (glewInit() == GLEW_OK);
+  }
+}
+
 /* Parse a string of type "<pos>/<tex>/<nor>" and return true if at least <pos> was found */
 void parseVertex(std::string const& vertex, int& posIndex, int& texIndex, int&norIndex)
 {

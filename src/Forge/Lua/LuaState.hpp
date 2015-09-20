@@ -1,3 +1,5 @@
+#ifndef LUA_LUASTATE_HPP
+#define LUA_LUASTATE_HPP
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
@@ -18,15 +20,13 @@
  *
  */
 
-#pragma once
-
 #include "ForgeExport.h"
 #include "LuaForwardDeclarations.hpp"
-#include "LuaLibrary.hpp"
-#include <iosfwd>
-
+#include <string>
 
 namespace Forge {
+
+class LuaLibrary;
 
 class FORGE_EXPORT LuaState
 {
@@ -42,8 +42,6 @@ class FORGE_EXPORT LuaState
 
     void removeLibrary(LuaLibrary& library);
 
-    void runScript(std::string const& scriptFile);
-
     bool isIncompleteChunk(std::string const& chunk);
 
     bool runChunk(const std::string& programName, std::string const& chunk);
@@ -54,3 +52,5 @@ class FORGE_EXPORT LuaState
 };
 
 }
+
+#endif // LUA_LUASTATE_HPP

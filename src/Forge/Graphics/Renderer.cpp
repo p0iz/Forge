@@ -20,10 +20,9 @@
 
 #include "Renderer.h"
 #include "Camera.hpp"
-#include "DebugAxis.h"
+#include "Mesh.h"
+#include "Scene/SceneNode.hpp"
 #include "Lua/UserdataMap.hpp"
-#include "Libraries/MaterialLibrary.hpp"
-#include "Scene/SceneConfig.hpp"
 #include "Viewport.hpp"
 #include "Util/Log.h"
 #include "GL/glew.h"
@@ -44,6 +43,11 @@ void Renderer::initialize()
 {
   if (mInitialized) return;
 
+  mWindow.makeRenderCurrent();
+  mWindow.resize(640,480);
+  mWindow.show();
+  mWindow.setTitle("Forge");
+
   glClearColor(0.1f,0.1f,0.1f,1.0f);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
@@ -55,8 +59,6 @@ void Renderer::initialize()
     Log::info << "Enabling scissor test.\n";
     glEnable(GL_SCISSOR_TEST);
   }
-
-  mDebugAxis.initialize();
 
   mTechnique = new Technique;
   mTechnique->addShader(Shader::VertexShader, "data/shaders/SimpleTexture.vs");
@@ -77,6 +79,8 @@ void Renderer::deinitialize()
 {
   if (!mInitialized) return;
 
+  mWindow.hide();
+
   if (mTechnique)
   {
     delete mTechnique;
@@ -84,13 +88,32 @@ void Renderer::deinitialize()
   }
 
   Light::destroyBuffer();
-  mDebugAxis.deinitialize();
+
   mInitialized = false;
 }
 
 void Renderer::updateViewport(int width, int height)
 {
   glViewport(0, 0, width, height);
+}
+
+void Renderer::frameUpdate()
+{
+  if (!mMeshes || !mLights)
+  {
+    Log::error << "No meshes set! Rendering cannot be done.\n";
+    return;
+  }
+
+  for (auto nameViewport : mViewports)
+  {
+    if (nameViewport.second)
+    {
+      render(*static_cast<Viewport const*>(nameViewport.second), mMeshes, *mLights);
+    }
+  }
+
+  mWindow.swapBuffers();
 }
 
 void Renderer::render(const Viewport& viewport, UserdataMap* meshes, std::vector<Light> const& lights)
@@ -129,18 +152,6 @@ void Renderer::render(const Viewport& viewport, UserdataMap* meshes, std::vector
   }
 }
 
-void Renderer::updateLightData(const SceneConfig& scene, const glm::mat4& view)
-{
-  for (Light const& light : scene.lights)
-  {
-    light.getShaderData().viewSpacePosition = view * light.position;
-    if (light.type == Light::SPOT)
-    {
-      light.getShaderData().spotDirection = glm::mat3(view) * light.spotDirection;
-    }
-  }
-}
-
 void Renderer::updateLightData(const std::vector<Light>& lights, const glm::mat4& view)
 {
   for (Light const& light : lights)
@@ -153,77 +164,29 @@ void Renderer::updateLightData(const std::vector<Light>& lights, const glm::mat4
   }
 }
 
-void Renderer::drawScene(const glm::mat4& view,
-               const glm::mat4& projection,
-               const SceneConfig& scene)
+void Renderer::setMeshAssets(UserdataMap* meshmap)
 {
-  for (auto materialName : scene.getUsedMaterials()) {
-    Material const& material =
-        *Graphics::MaterialLibrary::instance().getAssetInfo(materialName).asset;
-    bool materialSelected = false;
-    std::vector<MeshPtr> const& meshes = material.getMeshes();
-    for (Light const& light : scene.lights)
-    {
-      if (light.type != Light::DISABLED)
-      {
-        Light::updateBuffer(light.getShaderData());
-        for (MeshPtr mesh : meshes) {
-          // For each mesh, get the world transform
-          for (SceneNode* node : mesh->getAttachedNodes()) {
-            if (!materialSelected) {
-              material.beginMaterial();
-              materialSelected = true;
-            }
-            const glm::mat4& world = node->mWorldTransform.getMatrix();
-            material.setTransforms(world, view, projection);
-            mesh->draw();
-          }
-        }
-      }
-    }
-  }
+  mMeshes = meshmap;
 }
 
-void Renderer::render(const SceneConfig& scene)
+void Renderer::setLights(std::vector<Light>* lights)
 {
-  glDepthMask(GL_TRUE);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  const glm::mat4 view = scene.getCamera().getViewMatrix();
-  const glm::mat4 projection = scene.getCamera().getProjectionMatrix();
-
-  // Update view space light positions
-  updateLightData(scene, view);
-
-  // Z-only prepass
-  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-  drawScene(view, projection, scene);
-
-  // Render debug overlay
-  if (DebugAxis::isDebugVisible()) {
-    mDebugAxis.render(scene);
-  }
-
-  // Actual rendering
-  glDepthFunc(GL_LEQUAL);
-  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-  glDepthMask(GL_FALSE);
-
-  glEnable(GL_BLEND);
-  drawScene(view, projection, scene);
-
-  // Render debug overlay
-  if (DebugAxis::isDebugVisible()) {
-    mDebugAxis.render(scene);
-  }
-
-  glDisable(GL_BLEND);
-
-  // Post process
+  mLights = lights;
 }
 
-void Renderer::renderDebugOverlay(const SceneConfig& scene)
+RenderWindow const& Renderer::window()
 {
+  return mWindow;
+}
+
+void Renderer::addViewport(const std::string& name, Viewport* viewport)
+{
+  mViewports[name] = viewport;
+}
+
+Viewport* Renderer::getViewport(const std::string& name)
+{
+  return mViewports[name];
 }
 
 }
