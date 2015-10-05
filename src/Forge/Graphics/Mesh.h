@@ -47,6 +47,12 @@ class Mesh : public Attachable
     std::string const& getName() const;
 
   private:
+    typedef std::vector<Vertex> VertexList;
+    typedef std::vector<GLuint> IndexList;
+
+    VertexList _vertices;
+    IndexList _indices;
+
     std::string mName;
     unsigned int mNumberOfVertices;
     GLuint mVertexArrayId;
@@ -55,7 +61,12 @@ class Mesh : public Attachable
 
     void calculateBounds(const std::vector<Vertex>& vertices);
 
+    void createBuffers();
+    void destroyBuffers();
+
     void createVAO();
+    void destroyVAO();
+
 
     struct Bounds
     {

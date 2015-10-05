@@ -34,45 +34,28 @@ namespace Forge {
 Mesh::Mesh(
     const std::vector<Vertex>& vertices,
     const std::vector<GLuint>& elements)
-  : mName(),
+  : _vertices(vertices),
+    _indices(elements),
+    mName(),
     mNumberOfVertices(elements.size()),
     mVertexArrayId(0),
     mVertexBufferId(0)
 {
-
-  // Generate vertex and element buffers
-  glGenBuffers(1, &mVertexBufferId);
-  glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
-
-  glGenBuffers(1, &mElementBufferId);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBufferId);
-  glBufferData(
-        GL_ELEMENT_ARRAY_BUFFER,
-        sizeof(elements[0])*elements.size(),
-      &elements[0],
-      GL_STATIC_DRAW);
-
-  glFlush();
-
   calculateBounds(vertices);
 }
 
 Mesh::~Mesh()
 {
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glDeleteBuffers(1, & mVertexBufferId);
-
-  // Delete index buffer object
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  glDeleteBuffers(1, &mElementBufferId);
-
-  // Delete vertex array
-  glDeleteVertexArrays(1, &mVertexArrayId);
+  destroyBuffers();
+  destroyVAO();
 }
 
 void Mesh::draw()
 {
+  if (mVertexBufferId == 0)
+  {
+    createBuffers();
+  }
   if (mVertexArrayId == 0)
   {
     createVAO();
@@ -110,6 +93,23 @@ void Mesh::calculateBounds(const std::vector<Vertex>& vertices)
   }
 }
 
+void Mesh::createBuffers()
+{
+  // Generate vertex and element buffers
+  glGenBuffers(1, &mVertexBufferId);
+  glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*_vertices.size(), &_vertices[0], GL_STATIC_DRAW);
+
+  glGenBuffers(1, &mElementBufferId);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBufferId);
+  glBufferData(
+      GL_ELEMENT_ARRAY_BUFFER,
+      sizeof(_indices[0]) * _indices.size(),
+      &_indices[0],
+      GL_STATIC_DRAW);
+  glFlush();
+}
+
 void Mesh::createVAO()
 {
   glGenVertexArrays(1, &mVertexArrayId);
@@ -140,6 +140,22 @@ void Mesh::createVAO()
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBufferId);
 
   glBindVertexArray(0);
+}
+
+void Mesh::destroyBuffers()
+{
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glDeleteBuffers(1, &mVertexBufferId);
+
+  // Delete index buffer object
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  glDeleteBuffers(1, &mElementBufferId);
+}
+
+void Mesh::destroyVAO()
+{
+  // Delete vertex array
+  glDeleteVertexArrays(1, &mVertexArrayId);
 }
 
 } // namespace Forge
