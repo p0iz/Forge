@@ -154,17 +154,3 @@ enum class Modifier
 };
 
 }
-
-/* Provide a hash function for keys */
-namespace std
-{
-  template<>
-  class hash<Forge::Key>
-  {
-    public:
-      size_t operator()(Forge::Key key) const noexcept
-      {
-        return static_cast<size_t>(key);
-      }
-  };
-}
