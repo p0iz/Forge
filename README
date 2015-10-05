@@ -1,20 +1,20 @@
 Forge - a modular game engine framework
 =======================================
 
-Forge aims to be a game engine framework in the sense that
-you can plug the functionality you need into it and run it
-without getting into every little detail in implementing a
-game.
+Forge aims to be a minimalistic game engine written in C++. The engine itself
+uses SDL2 and STL to be as portable as possible. 
 
-This project is far from finished yet.
+The engine runs either a REPL for interacting with the engine or as a Lua
+script interpreter. Both modes share the same input parsing code.
 
-It currently just loads a mesh and material from
-hard-coded paths and displays duplicates of it.
+The idea is that you extend the engine with asset plugins and custom Lua
+libraries written in C++ and use them from Lua code. The intention is to add
+data-driven development of materials and game objects by providing hot-reload
+and other niceties in interpreted Lua code.
 
-Currently only a Linux backend is implemented. The aim is
-to create enough of an abstraction between Forge and the
-underlying system to make implementing backends for
-other platforms easy.
+This project is far from finished yet and does not yet do anything
+useful.
+
 
 Licensing
 -------
@@ -29,31 +29,27 @@ See http://creativecommons.org/licenses/by-sa/3.0/ for license.
 
 Some models are textured using modified images from www.cgtextures.com.
 
-Forge uses the BaroqueScript TrueType font,
-available from http://www.1001freefonts.com/
-
 Forge uses the following third-party, open-source libraries:
-
-(The licensing selected is denoted if several choices are available.)
 
 GLM (http://glm.g-truc.net/copying.txt)
 GLEW (http://glew.sourceforge.net/glew.txt)
-FreeType2 (http://www.freetype.org/license.html, FTL license)
-FreeImage (http://freeimage.sourceforge.net/license.html, FIPL license)
-Qt5 (http://qt-project.org/products/licensing, LGPL license)
-Lua (http://www.lua.org/license.html)
+SDL2 (https://www.libsdl.org/license.php, zlib license)
+SDL2_image (https://www.libsdl.org/projects/SDL_image/, zlib license)
+SDL2_ttf (https://www.libsdl.org/projects/SDL_ttf/, zlib license)
+LuaJIT (http://luajit.org/luajit.html, MIT license)
+
 
 Building Forge
 --------------
 
 Forge is built using CMake.
 
-Verified to build using CMake 2.8 on Linux.
+Verified to build using CMake on MSVC2015.
 
 Forge has the following dependencies:
 
-Windows note: Place deps in windows_deps directory in the repo root
-so that the CMake find_library command can find them. Please see
+Windows note: Place SDL2, LuaJIT and GLEW deps in 'deps' directory in the repo
+root so that the CMake find_library command can find them. Please see
 src/Forge/CMakeLists.txt and src/Forge/Graphics/Text/CMakeLists.txt
-for library search paths.
+for library search paths. The CMake script will also try to be helpful.
 
