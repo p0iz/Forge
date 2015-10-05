@@ -20,18 +20,15 @@
 
 #pragma once
 
-#include "ForgeExport.h"
-#include "InputProcessor.hpp"
 #include "KeySymbols.hpp"
 #include "MouseButtons.hpp"
 #include <memory>
 #include <unordered_set>
 
 
-namespace Forge { namespace Input {
+namespace Forge {
 
-/* Base class for platform-specific implementations */
-class FORGE_EXPORT InputHandler
+class InputHandler
 {
   public:
     InputHandler();
@@ -45,10 +42,7 @@ class FORGE_EXPORT InputHandler
     void injectMouseUp(MouseButton button);
     void injectMouseWheel(int x, int y);
 
-    /* Set the input processor to use for processing captured events */
-    void setProcessor(InputProcessor* processor);
-    InputProcessor* currentProcessor();
-    bool process(float const delta);
+    bool frameUpdate();
 
     bool isKeyPressed(Key key) const;
     bool isKeyDown(Key key) const;
@@ -69,8 +63,6 @@ class FORGE_EXPORT InputHandler
     int getMouseRelY() const;
 
   private:
-    InputProcessor* mProcessor;
-
     int mMouseRelX;
     int mMouseRelY;
     int mMouseX;
@@ -86,4 +78,4 @@ class FORGE_EXPORT InputHandler
     Modifier mActiveModifiers;
 };
 
-}}
+}

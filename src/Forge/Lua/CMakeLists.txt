@@ -2,6 +2,7 @@
 
 set(ForgeLuaSources
   AssetsLibrary.cpp
+  EventLibrary.cpp
   RendererLibrary.cpp
   SceneLibrary.cpp
   LuaState.cpp
@@ -12,6 +13,7 @@ set(ForgeLuaSources
 
 set(ForgeLuaHeaders
   AssetsLibrary.hpp
+  EventLibrary.hpp
   RendererLibrary.hpp
   SceneLibrary.hpp
   Loader.hpp
@@ -27,4 +29,4 @@ set(ForgeLuaHeaders
 )
 
 add_library(ForgeLua SHARED ${ForgeLuaSources} ${ForgeLuaHeaders})
-target_link_libraries(ForgeLua PlatformFileSystem PlatformDynamicLoader PlatformWindow Graphics Util ${ForgeLibDeps})
+target_link_libraries(ForgeLua PlatformFileSystem PlatformDynamicLoader PlatformEvent PlatformInput PlatformWindow Graphics Util ${ForgeLibDeps})

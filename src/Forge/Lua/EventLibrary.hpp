@@ -1,3 +1,6 @@
+#ifndef LUA_EVENTLIBRARY_HPP
+#define LUA_EVENTLIBRARY_HPP
+
 /* This file is part of Forge.
  *
  * Forge is free software: you can redistribute it and/or modify
@@ -14,37 +17,24 @@
  * Public License along with Forge.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Tommi Martela
+ * Copyright 2013 Tommi Martela
  *
  */
 
-#include "InputHandler.hpp"
+#include "LuaLibrary.hpp"
+#include "ForgeExport.h"
 
-Forge::QtInputHandler::~QtInputHandler()
-{
-}
+namespace Forge {
 
-bool Forge::QtInputHandler::eventFilter(QObject*, QEvent* event)
+class FORGE_EXPORT EventLibrary : public LuaLibrary
 {
-	switch (event->type())
-	{
-	case QEvent::KeyPress:
-		keyPress(static_cast<QKeyEvent*>(event));
-		break;
-	case QEvent::KeyRelease:
-		keyRelease(static_cast<QKeyEvent*>(event));
-		break;
-	case QEvent::MouseButtonPress:
-		mousePress(static_cast<QMouseEvent*>(event));
-		break;
-	case QEvent::MouseButtonRelease:
-		mouseRelease(static_cast<QMouseEvent*>(event));
-		break;
-	case QEvent::MouseMove:
-		mouseMove(static_cast<QMouseEvent*>(event));
-		break;
-	default:
-		return false;
-	}
-	return true;
+public:
+  virtual void import(lua_State* state);
+
+  virtual void remove(lua_State* state);
+
+  virtual void frameUpdate();
+};
+
 }
+#endif // LUA_EVENTLIBRARY_HPP

@@ -20,28 +20,19 @@
 
 #pragma once
 
-#include "ForgeExport.h"
-#include "Platform/Input/InputHandler.hpp"
-#include "Platform/Window/RenderWindow.hpp"
+namespace Forge {
 
+class InputHandler;
 
-namespace Forge { namespace Event {
-
-class FORGE_EXPORT EventHandler
+class EventHandler
 {
   public:
-    EventHandler(
-      Input::InputHandler& input,
-      RenderWindow& window
-    );
-    virtual ~EventHandler() { }
+    EventHandler(InputHandler& input);
 
-    virtual bool pumpMessages();
+    bool pumpMessages();
 
   private:
-    Input::InputHandler& mInput;
-    RenderWindow& mWindow;
-
+    InputHandler& mInput;
 };
 
-}}
+}

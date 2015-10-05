@@ -21,10 +21,9 @@
 #include "InputHandler.hpp"
 
 
-namespace Forge { namespace Input {
+namespace Forge {
 
 InputHandler::InputHandler():
-  mProcessor(nullptr),
   mMouseRelX(0),
   mMouseRelY(0),
   mMouseX(0),
@@ -76,23 +75,9 @@ void InputHandler::injectMouseWheel(int x, int y)
 
 }
 
-void InputHandler::setProcessor(InputProcessor* processor)
-{
-  mProcessor = processor;
-}
-
-InputProcessor*InputHandler::currentProcessor()
-{
-  return mProcessor;
-}
-
-bool InputHandler::process(float const delta)
+bool InputHandler::frameUpdate()
 {
   bool keepRunning = true;
-  if (mProcessor)
-  {
-    keepRunning = mProcessor->process(delta);
-  }
   mPressedKeys.clear();
   mClickedButtons = static_cast<MouseButton>(0);
   return keepRunning;
@@ -172,6 +157,6 @@ int InputHandler::getMouseRelY() const
   return mMouseRelY;
 }
 
-}}
+}
 
 
