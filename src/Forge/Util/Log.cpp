@@ -62,7 +62,7 @@ bool LogStreamHandler::openLogFile(const char* newFile)
 }
 
 LogStreamHandler::LogStreamHandler(std::ostream &output, const char *file)
-	: mStream(output, file)
+  : mStream(output, file)
 {
 }
 

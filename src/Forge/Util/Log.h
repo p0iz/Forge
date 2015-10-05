@@ -22,6 +22,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <mutex>
 
 namespace Forge { namespace Log {
 
@@ -39,6 +40,7 @@ private:
   const char* mFileName;
   std::ofstream mFileStream;
   std::ostream& mOutputStream;
+  std::mutex _streamMutex;
 };
 
 class LogStreamHandler
@@ -54,16 +56,18 @@ public:
 private:
   static std::string timestamp();
   LogStream mStream;
+  std::mutex _handlerMutex;
 };
 
 template <typename MessageType>
 LogStream& LogStream::operator<<(MessageType logMessage)
 {
+  std::lock_guard<std::mutex> lock(_streamMutex);
   if (!mFileStream.is_open())
     openLogFile(mFileName);
 
   if (mFileStream.good())
-    mFileStream << logMessage;
+    mFileStream << logMessage << std::flush;
 
   mOutputStream << logMessage << std::flush;
   return *this;
@@ -72,6 +76,7 @@ LogStream& LogStream::operator<<(MessageType logMessage)
 template <typename MessageType>
 LogStream& LogStreamHandler::operator<<(MessageType message)
 {
+  std::lock_guard<std::mutex> lock(_handlerMutex);
   return mStream << timestamp() << message;
 }
 
