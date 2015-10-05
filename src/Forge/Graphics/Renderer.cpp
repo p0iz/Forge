@@ -56,7 +56,6 @@ void Renderer::initialize()
 
   if (!glIsEnabled(GL_SCISSOR_TEST))
   {
-    Log::info << "Enabling scissor test.\n";
     glEnable(GL_SCISSOR_TEST);
   }
 
@@ -101,7 +100,6 @@ void Renderer::frameUpdate()
 {
   if (!mMeshes || !mLights)
   {
-    Log::error << "No meshes set! Rendering cannot be done.\n";
     return;
   }
 
