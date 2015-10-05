@@ -21,8 +21,10 @@
 #include "ForgeCLI.hpp"
 #include "Lua/LuaLibrary.hpp"
 #include "Util\Log.h"
+#include <atomic>
 #include <iostream>
 #include <string>
+#include <thread>
 
 namespace Forge {
 
@@ -44,21 +46,28 @@ ForgeCLI::ForgeCLI():
 
 void ForgeCLI::readInput(std::istream& input)
 {
-  std::string chunk, line;
-  bool isContinued = false;
-  do {
-    std::getline(input, line);
-    chunk.append(line);
-    chunk.push_back('\n');
-    isContinued = _state.isIncompleteChunk(chunk);
-    if (_isRepl && isContinued)
+  while (!endOfStream(input))
+  {
+    if (_isRepl)
     {
-      std::cout << " ... ";
+      printPrompt();
     }
-  }
-  while (isContinued);
-  _state.runChunk(ProgramName, chunk);
 
+    std::string chunk, line;
+    bool isContinued = false;
+    do {
+      std::getline(input, line);
+      chunk.append(line);
+      chunk.push_back('\n');
+      isContinued = _state.isIncompleteChunk(chunk);
+      if (_isRepl && isContinued)
+      {
+        std::cout << " ... ";
+      }
+    } while (isContinued);
+    _state.runChunk(ProgramName, chunk);
+  }
+  std::cout << std::endl;
 }
 
 void ForgeCLI::addLibrary(LuaLibrary& library)
@@ -82,21 +91,23 @@ bool ForgeCLI::endOfStream(std::istream const& input) const
 
 void ForgeCLI::start(std::istream& input)
 {
+  std::atomic<bool> running;
   _isRepl = (&input == &std::cin);
-
-  while (!endOfStream(input))
-  {
-    if (_isRepl)
+  std::thread handler(
+    [this, &running, &input]()
     {
-      printPrompt();
-    }
-    readInput(input);
+      readInput(input);
+      running = false;
+    });
+  running = true;
+
+  while (running)
+  {
     for (LuaLibrary* lib : _libraries)
     {
       lib->frameUpdate();
     }
   }
-  std::cout << std::endl;
 }
 
 bool ForgeCLI::isRepl() const
