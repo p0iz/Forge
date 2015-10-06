@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(Forge)
 
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  message(STATUS "No install prefix provided, installing to binary dir")
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}"
+    CACHE PATH "Default install path" FORCE)
+endif()
+
 include(GenerateExportHeader)
 
 #Handle dependencies here
@@ -42,3 +48,4 @@ set(ForgeCLI_HDR
 )
 add_executable(forge-cli ${ForgeCLI_SRC} ${ForgeCLI_HDR})
 target_link_libraries(forge-cli ForgeLua)
+install(TARGETS forge-cli DESTINATION bin)

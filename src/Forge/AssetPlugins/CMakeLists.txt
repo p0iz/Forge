@@ -25,3 +25,5 @@ set(ImageLoaderHeaders
 
 add_library(ImageLoader SHARED ${ImageLoaderSources} ${ImageLoaderHeaders})
 target_link_libraries(ImageLoader Graphics)
+install(TARGETS ImageLoader ObjLoader
+        DESTINATION AssetPlugins)

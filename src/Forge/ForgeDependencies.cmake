@@ -19,6 +19,14 @@ if(WIN32)
   endif()
   include_directories(${LUA_DIR}/src)
   find_library(LUA_LIBRARIES NAMES lua51 PATHS ${LUA_DIR}/src)
+  if (LUA_LIBRARIES)
+    install(
+      DIRECTORY ${LUA_DIR}/src/
+      DESTINATION bin
+      FILES_MATCHING PATTERN "*.dll"
+      PATTERN "host" EXCLUDE
+      PATTERN "jit" EXCLUDE)
+  endif()
 else()
   set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}")
   find_package(Lua51 REQUIRED)
@@ -75,6 +83,12 @@ elseif(WIN32)
   find_library(SDL2_LIBRARIES NAMES SDL2 PATHS "${SDL2_DIR}/lib/${SDL2_LIB_PATH_SUFFIX}")
   find_library(SDL2_IMAGE_LIB NAMES sdl2_image PATHS ${SDL2_DIR}/lib/${SDL2_LIB_PATH_SUFFIX})
   find_library(SDL2_TTF_LIB NAMES sdl2_ttf PATHS ${SDL2_DIR}/lib/${SDL2_LIB_PATH_SUFFIX})
+  if (SDL2_LIBRARIES AND SDL2_IMAGE_LIB AND SDL2_TTF_LIB)
+    install(
+      DIRECTORY ${SDL2_DIR}/lib/${SDL2_LIB_PATH_SUFFIX}/
+      DESTINATION bin
+      FILES_MATCHING PATTERN "*.dll")
+  endif()
 endif()
 include_directories(${SDL2_INCLUDE_DIRS})
 

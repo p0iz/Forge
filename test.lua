@@ -8,7 +8,7 @@ function print_table(table)
   end
 end
 
-Assets.setLoaderPath 'src/Forge/AssetPlugins'
+Assets.setLoaderPath 'AssetPlugins'
 Assets.addLoader 'ObjLoader'
 Assets.addLoader 'ImageLoader'
 mesh = Assets.load 'data/meshes/paddle.obj'

@@ -30,3 +30,4 @@ set(ForgeLuaHeaders
 
 add_library(ForgeLua SHARED ${ForgeLuaSources} ${ForgeLuaHeaders})
 target_link_libraries(ForgeLua PlatformFileSystem PlatformDynamicLoader PlatformEvent PlatformInput PlatformWindow Graphics Util ${ForgeLibDeps})
+install(TARGETS ForgeLua DESTINATION bin)
