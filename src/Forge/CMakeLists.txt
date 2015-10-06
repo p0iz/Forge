@@ -8,8 +8,6 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     CACHE PATH "Default install path" FORCE)
 endif()
 
-include(GenerateExportHeader)
-
 #Handle dependencies here
 include(ForgeDependencies.cmake)
 
@@ -29,11 +27,6 @@ add_subdirectory(Platform)
 
 # Add Lua interface
 add_subdirectory(Lua)
-generate_export_header(ForgeLua
-  EXPORT_MACRO_NAME FORGE_EXPORT
-  EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/ForgeExport.h
-)
-add_definitions(-DForgeLua_EXPORTS)
 
 # Add standard asset plugins
 add_subdirectory(AssetPlugins)

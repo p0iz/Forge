@@ -1,5 +1,7 @@
 # Lua API
 
+include(GenerateExportHeader)
+
 set(ForgeLuaSources
   AssetsLibrary.cpp
   EventLibrary.cpp
@@ -29,5 +31,10 @@ set(ForgeLuaHeaders
 )
 
 add_library(ForgeLua SHARED ${ForgeLuaSources} ${ForgeLuaHeaders})
+generate_export_header(ForgeLua
+  EXPORT_MACRO_NAME FORGE_EXPORT
+  EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/ForgeExport.h
+)
+add_definitions(-DForgeLua_EXPORTS)
 target_link_libraries(ForgeLua PlatformFileSystem PlatformDynamicLoader PlatformEvent PlatformInput PlatformWindow Graphics Util ${ForgeLibDeps})
 install(TARGETS ForgeLua DESTINATION bin)
