@@ -39,6 +39,14 @@ set(ForgeCLI_SRC
 set(ForgeCLI_HDR
   ForgeCLI.hpp
 )
-add_executable(forge-cli ${ForgeCLI_SRC} ${ForgeCLI_HDR})
+
+# Set the resource file for Windows builds
+set(ForgeCLI_RES "")
+if (WIN32)
+  set(ForgeCLI_RES Forge.rc)
+endif()
+
+add_executable(forge-cli ${ForgeCLI_SRC} ${ForgeCLI_HDR} ${ForgeCLI_RES})
 target_link_libraries(forge-cli ForgeLua)
 install(TARGETS forge-cli DESTINATION bin)
+install(FILES Forge.ico DESTINATION ${CMAKE_INSTALL_PREFIX})
