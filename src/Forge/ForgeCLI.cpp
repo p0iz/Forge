@@ -108,6 +108,7 @@ void ForgeCLI::start(std::istream& input)
       lib->frameUpdate();
     }
   }
+  handler.join();
 }
 
 bool ForgeCLI::isRepl() const
