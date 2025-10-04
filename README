@@ -34,21 +34,24 @@ available from http://www.1001freefonts.com/
 
 Forge uses the following third-party, open-source libraries:
 
-(The licensing selected is denoted if several choices are available.)
-
 GLM (http://glm.g-truc.net/copying.txt)
 GLEW (http://glew.sourceforge.net/glew.txt)
 FreeType2 (http://www.freetype.org/license.html, FTL license)
 FreeImage (http://freeimage.sourceforge.net/license.html, FIPL license)
 Qt5 (http://qt-project.org/products/licensing, LGPL license)
 Lua (http://www.lua.org/license.html)
+SDL2 (https://www.libsdl.org/license.php)
 
-Building Forge
---------------
+(The licensing selected is denoted if several choices are available.)
 
-Forge is built using CMake.
+Bootstrapping dependencies
+--------------------------
 
-Verified to build using CMake 2.8 on Linux.
+Run `scripts/bootstrap_deps.sh` to install the compiler toolchain and third-party libraries on a supported platform (Ubuntu/Debian, Fedora, Arch, or macOS with Homebrew).
+The script requires sudo access when installing system packages.
+
+On macOS the script writes a `.env` file that pre-populates `CMAKE_PREFIX_PATH` with the Homebrew Qt5 location. Source this file before configuring a build, or export the variable manually if you prefer to manage environment setup yourself.
+
 
 Forge has the following dependencies:
 
